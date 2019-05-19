@@ -16,90 +16,98 @@ Pod::Spec.new do |s|
 
   s.source       = { :git => "https://github.com/iOS-Developer-Sun/Poodle", :tag => "#{s.version}" }
 
+  Base = 'Poodle/'
+
+  Private = Base + 'Private/'
+  Foundation = Base + 'Foundation/'
+  UIKit = Base + 'UIKit/'
+  CoreAnimation = Base + 'CoreAnimation/'
+  OS = Base + 'os/'
+
   s.subspec 'Private' do |ss|
-    ss.source_files = 'Private/**/*.{h,m}'
+    ss.source_files = Private + '**/*.{h,m}'
   end
 
   s.subspec 'NSObjectExtension' do |ss|
-    ss.source_files = 'NSObject+PDLExtension/**/*.{h,m}'
+    ss.source_files = Foundation + 'NSObject+PDLExtension/**/*.{h,m}'
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'NSObjectDebug' do |ss|
-    ss.source_files = 'NSObject+PDLDebug/**/*.{h,m}'
+    ss.source_files = Foundation + 'NSObject+PDLDebug/**/*.{h,m}'
     ss.frameworks = 'Foundation'
     ss.requires_arc = false
     ss.requires_arc = ['NSObject+PDLDebug/NSObject+PDLDebug.m']
   end
 
   s.subspec 'ImplementationInterceptor' do |ss|
-    ss.source_files = 'ImplementationInterceptor/**/*.{h,m,s}'
+    ss.source_files = Foundation + 'ImplementationInterceptor/**/*.{h,m,s}'
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'SafeOperation' do |ss|
-    ss.source_files = 'SafeOperation/**/*.{h,m}'
+    ss.source_files = Foundation + 'SafeOperation/**/*.{h,m}'
     ss.requires_arc = false
     ss.dependency 'Poodle/ImplementationInterceptor'
   end
 
   s.subspec 'NSCacheExtension' do |ss|
-    ss.source_files = 'NSCache+PDLExtension/**/*.{h,m}'
+    ss.source_files = Foundation + 'NSCache+PDLExtension/**/*.{h,m}'
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'NSMapTableExtension' do |ss|
-    ss.source_files = 'NSMapTable+PDLExtension/**/*.{h,m}'
+    ss.source_files = Foundation + 'NSMapTable+PDLExtension/**/*.{h,m}'
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'NSUserDefaultsExtension' do |ss|
-    ss.source_files = 'NSUserDefaults+PDLExtension/**/*.{h,m}'
+    ss.source_files = Foundation + 'NSUserDefaults+PDLExtension/**/*.{h,m}'
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'ObjectForKey' do |ss|
-    ss.source_files = 'NSDictionary+PDLObjectForKey/**/*.{h,m}'
+    ss.source_files = Foundation + 'NSDictionary+PDLObjectForKey/**/*.{h,m}'
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'JSONSerialization' do |ss|
-    ss.source_files = 'JSONSerialization/**/*.{h,m}'
+    ss.source_files = Foundation + 'JSONSerialization/**/*.{h,m}'
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'WeakifyUnsafeUnretainedProperty' do |ss|
-    ss.source_files = 'NSObject+PDLWeakifyUnsafeUnretainedProperty/**/*.{h,m}'
+    ss.source_files = Foundation + 'NSObject+PDLWeakifyUnsafeUnretainedProperty/**/*.{h,m}'
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'CAAnimationExtension' do |ss|
-    ss.source_files = 'CAAnimation+PDLExtension/**/*.{h,m}'
+    ss.source_files = CoreAnimation + 'CAAnimation+PDLExtension/**/*.{h,m}'
     ss.frameworks = 'UIKit'
   end
 
   s.subspec 'CAMediaTimingFunctionExtension' do |ss|
-    ss.source_files = 'CAMediaTimingFunction+PDLExtension/**/*.{h,m}'
+    ss.source_files = CoreAnimation + 'CAMediaTimingFunction+PDLExtension/**/*.{h,m}'
     ss.frameworks = 'UIKit'
   end
 
   s.subspec 'UIViewControllerNavigationBar' do |ss|
-    ss.source_files = 'UIViewController+PDLNavigationBar/**/*.{h,m}'
+    ss.source_files = UIKit + 'UIViewController+PDLNavigationBar/**/*.{h,m}'
     ss.frameworks = 'UIKit'
   end
 
   s.subspec 'UIViewControllerTrasitionAnimation' do |ss|
-    ss.source_files = 'UIViewController+PDLTrasitionAnimation/**/*.{h,m}'
+    ss.source_files = UIKit + 'UIViewController+PDLTrasitionAnimation/**/*.{h,m}'
     ss.frameworks = 'UIKit'
   end
 
   s.subspec 'die' do |ss|
-    ss.source_files = 'os/die/**/*.{h,c,s}'
+    ss.source_files = OS + 'die/**/*.{h,c,s}'
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'systemcall' do |ss|
-    ss.source_files = 'os/systemcall/**/*.{h,c,s}'
+    ss.source_files = OS + 'systemcall/**/*.{h,c,s}'
     ss.frameworks = 'Foundation'
   end
 
