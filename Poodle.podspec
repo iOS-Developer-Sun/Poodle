@@ -73,4 +73,24 @@ Pod::Spec.new do |s|
     ss.frameworks = 'Foundation'
   end
 
+  s.subspec 'CAAnimationExtension' do |ss|
+    ss.source_files = 'CAAnimation+PDLExtension/**/*.{h,m}'
+    ss.frameworks = 'UIKit'
+  end
+
+  s.subspec 'CAMediaTimingFunctionExtension' do |ss|
+    ss.source_files = 'CAMediaTimingFunction+PDLExtension/**/*.{h,m}'
+    ss.frameworks = 'UIKit'
+  end
+
+  s.subspec 'UIViewControllerNavigationBar' do |ss|
+    ss.source_files = 'UIViewController+PDLNavigationBar/**/*.{h,m}'
+    ss.frameworks = 'UIKit'
+  end
+
+  s.subspec 'UIViewControllerTrasitionAnimation' do |ss|
+    ss.source_files = 'UIViewController+PDLTrasitionAnimation/**/*.{h,m}'
+    ss.frameworks = 'UIKit'
+  end
+
 end
