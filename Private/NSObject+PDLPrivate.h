@@ -19,17 +19,17 @@
 @property (readonly) NSString *_rawBriefDescription;
 #endif
 
-extern id objc_retain(id object);
-extern void objc_release(id object);
-extern id objc_autorelease(id object);
+extern id objc_retain(__unsafe_unretained id object);
+extern void objc_release(__unsafe_unretained id object);
+extern id objc_autorelease(__unsafe_unretained id object);
 extern void _objc_autoreleasePoolPrint(void);
 
-extern id objc_storeStrong(id *location, id object);
+extern id objc_storeStrong(__unsafe_unretained id *location, __unsafe_unretained id object);
 extern void objc_copyStruct(void *dest, const void *src, ptrdiff_t size, BOOL atomic, BOOL hasStrong __unused);
-extern id objc_getProperty(id self, SEL _cmd, ptrdiff_t offset, BOOL atomic);
-extern void objc_setProperty_atomic(id self, SEL _cmd, id newValue, ptrdiff_t offset);
-extern id objc_loadWeakRetained(id *location);
-extern void objc_setProperty_nonatomic_copy(id self, SEL _cmd, id newValue, ptrdiff_t offset);
-extern void objc_setProperty_atomic_copy(id self, SEL _cmd, id newValue, ptrdiff_t offset);
+extern id objc_getProperty(__unsafe_unretained id self, SEL _cmd, ptrdiff_t offset, BOOL atomic);
+extern void objc_setProperty_atomic(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id newValue, ptrdiff_t offset);
+extern id objc_loadWeakRetained(__unsafe_unretained id *location);
+extern void objc_setProperty_nonatomic_copy(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id newValue, ptrdiff_t offset);
+extern void objc_setProperty_atomic_copy(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id newValue, ptrdiff_t offset);
 
 @end

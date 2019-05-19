@@ -93,4 +93,14 @@ Pod::Spec.new do |s|
     ss.frameworks = 'UIKit'
   end
 
+  s.subspec 'die' do |ss|
+    ss.source_files = 'os/die/**/*.{h,c,s}'
+    ss.frameworks = 'Foundation'
+  end
+
+  s.subspec 'systemcall' do |ss|
+    ss.source_files = 'os/systemcall/**/*.{h,c,s}'
+    ss.frameworks = 'Foundation'
+  end
+
 end
