@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
   Foundation = Base + 'Foundation/'
   UIKit = Base + 'UIKit/'
   CoreAnimation = Base + 'CoreAnimation/'
-  OS = Base + 'os/'
+  Lib = Base + 'lib/'
   Utils = Base + 'utils/'
 
   s.subspec 'Private' do |ss|
@@ -84,6 +84,21 @@ Pod::Spec.new do |s|
     ss.frameworks = 'Foundation'
   end
 
+  s.subspec 'NSLockExtension' do |ss|
+    ss.source_files = Foundation + 'NSLock+PDLExtension/' + Files
+    ss.frameworks = 'Foundation'
+    ss.requires_arc = false
+  end
+
+  s.subspec 'NSThreadExtension' do |ss|
+    ss.source_files = Foundation + 'NSThread+PDLExtension/' + Files
+    ss.frameworks = 'Foundation'
+    ss.dependency 'Poodle/pthread'
+    ss.dependency 'Poodle/mach'
+    ss.dependency 'Poodle/NSObjectExtension'
+    ss.dependency 'Poodle/mach_o_symbols'
+  end
+
   s.subspec 'CAAnimationExtension' do |ss|
     ss.source_files = CoreAnimation + 'CAAnimation+PDLExtension/' + Files
     ss.frameworks = 'UIKit'
@@ -110,17 +125,27 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'die' do |ss|
-    ss.source_files = OS + 'die/' + Files
+    ss.source_files = Lib + 'die/' + Files
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'systemcall' do |ss|
-    ss.source_files = OS + 'systemcall/' + Files
+    ss.source_files = Lib + 'systemcall/' + Files
     ss.frameworks = 'Foundation'
   end
 
   s.subspec 'mach_object' do |ss|
-    ss.source_files = OS + 'mach_object/' + Files
+    ss.source_files = Lib + 'mach_object/' + Files
+    ss.frameworks = 'Foundation'
+  end
+
+  s.subspec 'mach' do |ss|
+    ss.source_files = Lib + 'mach/' + Files
+    ss.frameworks = 'Foundation'
+  end
+
+  s.subspec 'os' do |ss|
+    ss.source_files = Lib + 'os/' + Files
     ss.frameworks = 'Foundation'
   end
 
@@ -129,9 +154,16 @@ Pod::Spec.new do |s|
   end
 
   s.subspec 'mach_o_symbols' do |ss|
-    ss.source_files = OS + 'mach_o_symbols/' + Files
+    ss.source_files = Lib + 'mach_o_symbols/' + Files
     ss.frameworks = 'Foundation'
     ss.libraries = 'c++'
+    ss.dependency 'Poodle/mach_object'
+  end
+
+  s.subspec 'pthread' do |ss|
+    ss.source_files = Lib + 'pthread/' + Files
+    ss.frameworks = 'Foundation'
+    ss.dependency 'Poodle/mach_o_symbols'
   end
 
 end
