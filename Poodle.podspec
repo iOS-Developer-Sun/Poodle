@@ -119,8 +119,19 @@ Pod::Spec.new do |s|
     ss.frameworks = 'Foundation'
   end
 
+  s.subspec 'mach_object' do |ss|
+    ss.source_files = OS + 'mach_object/' + Files
+    ss.frameworks = 'Foundation'
+  end
+
   s.subspec 'utils' do |ss|
     ss.source_files = Utils + Files
+  end
+
+  s.subspec 'mach_o_symbols' do |ss|
+    ss.source_files = OS + 'mach_o_symbols/' + Files
+    ss.frameworks = 'Foundation'
+    ss.libraries = 'c++'
   end
 
 end
