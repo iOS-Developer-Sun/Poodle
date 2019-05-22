@@ -99,8 +99,18 @@ Pod::Spec.new do |s|
     ss.dependency 'Poodle/mach_o_symbols'
   end
 
+  s.subspec 'NSCharacterSetExtension' do |ss|
+    ss.source_files = Foundation + 'NSCharacterSet+PDLExtension/' + Files
+    ss.frameworks = 'Foundation'
+  end
+
   s.subspec 'CAAnimationExtension' do |ss|
     ss.source_files = CoreAnimation + 'CAAnimation+PDLExtension/' + Files
+    ss.frameworks = 'UIKit'
+  end
+
+  s.subspec 'CADisplayLinkExtension' do |ss|
+    ss.source_files = CoreAnimation + 'CADisplayLink+PDLExtension/' + Files
     ss.frameworks = 'UIKit'
   end
 
@@ -116,6 +126,11 @@ Pod::Spec.new do |s|
 
   s.subspec 'UIViewControllerTrasitionAnimation' do |ss|
     ss.source_files = UIKit + 'UIViewController+PDLTrasitionAnimation/' + Files
+    ss.frameworks = 'UIKit'
+  end
+
+  s.subspec 'UIScreenExtension' do |ss|
+    ss.source_files = UIKit + 'UIScreen+PDLExtension/' + Files
     ss.frameworks = 'UIKit'
   end
 
