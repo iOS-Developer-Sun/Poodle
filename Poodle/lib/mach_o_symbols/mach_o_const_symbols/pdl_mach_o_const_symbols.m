@@ -17,7 +17,7 @@
 
 #define DYLD_NO_STRICT_ARCH_CHECKING 1
 
-@interface PDLDyldConstSymbol : NSObject <NSCoding>
+@interface PDLConstSymbol : NSObject <NSCoding>
 
 @property (nonatomic, assign) uint8_t n_type;
 @property (nonatomic, assign) uint8_t n_sect;
@@ -30,7 +30,7 @@
 
 @end
 
-@implementation PDLDyldConstSymbol
+@implementation PDLConstSymbol
 
 - (NSString *)description {
     NSString *description = [super description];
@@ -63,17 +63,17 @@
 
 @end
 
-@interface PDLDyldConstSymbols : NSObject
+@interface PDLConstSymbols : NSObject
 
 @property (nonatomic, assign) pdl_mach_o_const_symbols_state currentState;
 @property (atomic, copy) NSDictionary *table;
 
 @end
 
-@implementation PDLDyldConstSymbols
+@implementation PDLConstSymbols
 
 + (NSString *)key {
-    return @"PDLDyldConstSymbols_v1";
+    return @"PDLConstSymbols_v1";
 }
 
 + (NSDictionary *)table {
@@ -236,14 +236,14 @@
     imageNames[count] = NULL;
     NSString *path = [NSString stringWithFormat:@"/System/Library/Caches/com.apple.dyld/dyld_shared_cache_%@", arch];
     if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-        NSLog(@"PDLDyldConstSymbols failed to get symbols: %@ does not exist.", path);
+        NSLog(@"PDLConstSymbols failed to get symbols: %@ does not exist.", path);
         return nil;
     }
 
-    NSLog(@"PDLDyldConstSymbols task created.");
+    NSLog(@"PDLConstSymbols task created.");
     int ret = dyld_shared_cache_extract_dylibs(path.UTF8String, tmp.UTF8String, imageNames);
     if (ret != 0) {
-        NSLog(@"PDLDyldConstSymbols failed to get symbols: failed to extract, error is %d.", ret);
+        NSLog(@"PDLConstSymbols failed to get symbols: failed to extract, error is %d.", ret);
         return nil;
     }
 
@@ -303,7 +303,7 @@
             }
 
             if (header == NULL) {
-                NSLog(@"PDLDyldConstSymbols failed to find header for %@.", imageName);
+                NSLog(@"PDLConstSymbols failed to find header for %@.", imageName);
                 continue;
             }
 
@@ -311,14 +311,14 @@
             for (NSString *symbol in symbolNames) {
                 struct pdl_mach_o_symbol *symbols = pdl_get_mach_o_symbol_list_contains_symbol_name(header, (char *)symbol.UTF8String);
                 if (symbols == NULL) {
-                    NSLog(@"PDLDyldConstSymbols failed to find symbol for %@ in %@.", symbol, imageName);
+                    NSLog(@"PDLConstSymbols failed to find symbol for %@ in %@.", symbol, imageName);
                     continue;
                 }
 
                 NSMutableArray *array = [NSMutableArray array];
                 struct pdl_mach_o_symbol *current = symbols;
                 while (current) {
-                    PDLDyldConstSymbol *symbol = [[PDLDyldConstSymbol alloc] init];
+                    PDLConstSymbol *symbol = [[PDLConstSymbol alloc] init];
                     symbol.n_type = current->n_type;
                     symbol.n_sect = current->n_sect;
                     symbol.n_desc = current->n_desc;
@@ -338,7 +338,7 @@
             table[imageName] = dictionary.copy;
         }
     }
-    NSLog(@"PDLDyldConstSymbols task finished.");
+    NSLog(@"PDLConstSymbols task finished.");
     return table.copy;
 }
 
@@ -348,7 +348,7 @@
     struct pdl_mach_o_symbol *current = symbols;
     struct mach_header *header = pdl_mach_o_image(imageName.UTF8String);
     intptr_t vmaddr_slide = pdl_mach_o_image_vmaddr_slide(header);
-    for (PDLDyldConstSymbol *symbol in array) {
+    for (PDLConstSymbol *symbol in array) {
         struct pdl_mach_o_symbol *node = (struct pdl_mach_o_symbol *)malloc(sizeof(struct pdl_mach_o_symbol));
         if (node == NULL) {
             pdl_free_mach_o_symbol_list(symbols);
@@ -391,7 +391,7 @@ pdl_mach_o_const_symbols_state pdl_dyld_const_symbols_current_state(void) {
 #if TARGET_IPHONE_SIMULATOR
     return true;
 #else
-    return [PDLDyldConstSymbols sharedInstance].currentState;
+    return [PDLConstSymbols sharedInstance].currentState;
 #endif
 }
 
@@ -399,7 +399,7 @@ struct pdl_mach_o_symbol *pdl_dyld_const_symbols(const char *image_name, const c
 #if TARGET_IPHONE_SIMULATOR
     return NULL;
 #else
-    struct pdl_mach_o_symbol *symbols = [[PDLDyldConstSymbols sharedInstance] symbolsWithImageName:@(image_name) symbolName:@(symbol_name)];
+    struct pdl_mach_o_symbol *symbols = [[PDLConstSymbols sharedInstance] symbolsWithImageName:@(image_name) symbolName:@(symbol_name)];
     return symbols;
 #endif
 }
