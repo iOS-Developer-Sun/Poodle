@@ -23,6 +23,7 @@ Pod::Spec.new do |s|
   UIKit = Base + 'UIKit/'
   CoreAnimation = Base + 'CoreAnimation/'
   OS = Base + 'os/'
+  Utils = Base + 'utils/'
 
   s.subspec 'Private' do |ss|
     ss.source_files = Private + '**/*.{h,m}'
@@ -109,6 +110,10 @@ Pod::Spec.new do |s|
   s.subspec 'systemcall' do |ss|
     ss.source_files = OS + 'systemcall/**/*.{h,c,s}'
     ss.frameworks = 'Foundation'
+  end
+
+  s.subspec 'utils' do |ss|
+    ss.source_files = Utils + '**/*.{h,c}'
   end
 
 end
