@@ -6,6 +6,7 @@
 //
 //
 
+#import <Foundation/Foundation.h>
 #import <os/lock.h>
 
 #ifdef __cplusplus

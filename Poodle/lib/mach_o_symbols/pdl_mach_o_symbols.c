@@ -211,7 +211,7 @@ struct pdl_mach_o_symbol *pdl_mach_o_const_symbol(struct mach_header *header, co
         return NULL;
     }
 
-    struct pdl_mach_o_symbol *symbols = pdl_dyld_const_symbols(image_name, symbol_name);
+    struct pdl_mach_o_symbol *symbols = pdl_const_symbols(image_name, symbol_name);
     if (symbols == NULL) {
         return NULL;
     }

@@ -387,7 +387,7 @@
 
 #endif
 
-pdl_mach_o_const_symbols_state pdl_dyld_const_symbols_current_state(void) {
+pdl_mach_o_const_symbols_state pdl_const_symbols_current_state(void) {
 #if TARGET_IPHONE_SIMULATOR
     return true;
 #else
@@ -395,7 +395,7 @@ pdl_mach_o_const_symbols_state pdl_dyld_const_symbols_current_state(void) {
 #endif
 }
 
-struct pdl_mach_o_symbol *pdl_dyld_const_symbols(const char *image_name, const char *symbol_name) {
+struct pdl_mach_o_symbol *pdl_const_symbols(const char *image_name, const char *symbol_name) {
 #if TARGET_IPHONE_SIMULATOR
     return NULL;
 #else
