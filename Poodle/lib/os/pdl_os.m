@@ -7,7 +7,6 @@
 //
 
 #import "pdl_os.h"
-#import <os/lock.h>
 
 OS_UNFAIR_LOCK_AVAILABILITY
 mach_port_t pdl_os_unfair_lock_owner(os_unfair_lock_t lock) {
