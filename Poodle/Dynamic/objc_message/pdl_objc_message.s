@@ -354,7 +354,9 @@ ldp    x6, x7, [sp, #0xb0]
 ldr    x8, [sp, #0xc0]
 mov    sp, x29
 ldp    x29, x30, [sp], #0x10
-bl     _objc_msgSend
+
+b     _objc_msgSend
+
 stp    x29, x30, [sp, #-0x10]!
 mov    x29, sp
 sub    sp, sp, #0xd0
