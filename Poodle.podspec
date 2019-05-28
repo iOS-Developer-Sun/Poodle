@@ -27,6 +27,7 @@ Pod::Spec.new do |s|
     Lib = Base + 'lib/'
     Utils = Base + 'utils/'
     Dynamic = Base + 'Dynamic/'
+    Asm = Base + 'asm/'
 
     s.subspec 'Private' do |ss|
         ss.source_files = Private + Files
@@ -182,9 +183,15 @@ Pod::Spec.new do |s|
         ss.dependency 'Poodle/mach_o_symbols'
     end
 
+    s.subspec 'asm' do |ss|
+        ss.source_files = Asm + Files
+    end
+
     s.subspec 'objc_message' do |ss|
         ss.source_files = Dynamic + 'objc_message/' + Files
         ss.frameworks = 'Foundation'
+        ss.dependency 'Poodle/asm'
+        ss.dependency 'Poodle/Private'
     end
 
 end

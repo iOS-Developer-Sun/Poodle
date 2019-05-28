@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <objc/message.h>
 
 @interface NSObject (PDLPrivate)
 
@@ -31,5 +32,17 @@ extern void objc_setProperty_atomic(__unsafe_unretained id self, SEL _cmd, __uns
 extern id objc_loadWeakRetained(__unsafe_unretained id *location);
 extern void objc_setProperty_nonatomic_copy(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id newValue, ptrdiff_t offset);
 extern void objc_setProperty_atomic_copy(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id newValue, ptrdiff_t offset);
+
+OBJC_EXPORT void
+objc_msgSendSuper2(void /* struct objc_super *super, SEL op, ... */ )
+OBJC_AVAILABLE(10.0, 2.0, 9.0, 1.0, 2.0);
+
+#ifndef __arm64__
+OBJC_EXPORT void
+objc_msgSendSuper2_stret(void /* struct objc_super *super, SEL op, ... */ )
+OBJC_AVAILABLE(10.0, 2.0, 9.0, 1.0, 2.0)
+OBJC_ARM64_UNAVAILABLE;
+
+#endif
 
 @end
