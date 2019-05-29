@@ -13,7 +13,6 @@
 
 // PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL|STRET
 .macro PDL_ASM_OBJC_MESSAGE_STATE_SAVE
-
     pushl    %ebp
     movl    %esp, %ebp
     subl    $(8+5*16), %esp
