@@ -194,5 +194,10 @@ Pod::Spec.new do |s|
         ss.dependency 'Poodle/Private'
     end
 
+    s.subspec 'malloc' do |ss|
+        ss.source_files = Lib + 'malloc/' + Files
+        ss.frameworks = 'Foundation'
+    end
+
 end
 

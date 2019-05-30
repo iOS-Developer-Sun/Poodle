@@ -1,5 +1,5 @@
 //
-//  pdl_die.h
+//  pdl_malloc.h
 //  Poodle
 //
 //  Created by Poodle on 2019/5/15.
@@ -12,8 +12,9 @@
 extern "C" {
 #endif
 
-extern void pdl_die(int);
+extern bool pdl_malloc_check(void *address, size_t *size, void **header);
 
 #ifdef __cplusplus
 }
 #endif
+
