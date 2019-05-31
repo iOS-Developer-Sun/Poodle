@@ -136,8 +136,13 @@ Pod::Spec.new do |s|
         ss.frameworks = 'UIKit'
     end
 
-    s.subspec 'PDLResizableImageView' do |ss|
+    s.subspec 'ResizableImageView' do |ss|
         ss.source_files = UIKit + 'PDLResizableImageView/' + Files
+        ss.frameworks = 'UIKit'
+    end
+
+    s.subspec 'KeyboardNotificationObserver' do |ss|
+        ss.source_files = UIKit + 'PDLKeyboardNotificationObserver/' + Files
         ss.frameworks = 'UIKit'
     end
 
