@@ -204,5 +204,10 @@ Pod::Spec.new do |s|
         ss.frameworks = 'Foundation'
     end
 
+    s.subspec 'CollectionViewFlowLayout' do |ss|
+        ss.source_files = UIKit + 'PDLCollectionViewFlowLayout/' + Files
+        ss.frameworks = 'UIKit'
+    end
+
 end
 
