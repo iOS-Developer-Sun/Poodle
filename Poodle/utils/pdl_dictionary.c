@@ -1,6 +1,7 @@
 #import "pdl_dictionary.h"
 #import "pdl_hashMap.h"
 #import "pdl_array.h"
+#import <stdio.h>
 
 struct pdl_dictionary {
     pdl_hashMap hashMap;
@@ -88,3 +89,16 @@ unsigned int pdl_countOfDictionary(pdl_dictionary_t dictionary) {
     return pdl_hashMapCount(&(((struct pdl_dictionary *)dictionary)->hashMap));
 }
 
+void pdl_printDictionary(pdl_dictionary_t dictionary) {
+    unsigned int count = 0;
+    void **keys = NULL;
+    pdl_getAllKeys(dictionary, &keys, &count);
+    printf("[%d]", count);
+    for (unsigned int i = 0; i < count; i++) {
+        void *key = keys[i];
+        void *object = pdl_objectForKey(dictionary, key);
+        printf(" <%p : %p>", key, object);
+    }
+    printf("\n");
+    free(keys);
+}
