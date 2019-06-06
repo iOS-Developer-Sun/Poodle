@@ -199,6 +199,12 @@ Pod::Spec.new do |s|
         ss.dependency 'Poodle/Private'
     end
 
+    s.subspec 'lock_tracer' do |ss|
+        ss.source_files = Dynamic + 'lock_tracer/' + Files
+        ss.frameworks = 'Foundation'
+        ss.dependency 'Poodle/utils'
+    end
+
     s.subspec 'malloc' do |ss|
         ss.source_files = Lib + 'malloc/' + Files
         ss.frameworks = 'Foundation'
