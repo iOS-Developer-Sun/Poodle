@@ -32,14 +32,14 @@ static pdl_dictionary_t pdl_os_lock_map(void) {
     return os_lock_map;
 }
 
-static void pdl_log_os_lock(os_unfair_lock_t lock, mach_port_t thread) {
+static void pdl_trace_os_lock(os_unfair_lock_t lock, mach_port_t thread) {
     pthread_mutex_lock(pdl_os_map_mutex);
     pdl_dictionary_t map = pdl_os_lock_map();
     pdl_setObjectForKey(map, (void *)(unsigned long)thread, lock);
     pthread_mutex_unlock(pdl_os_map_mutex);
 }
 
-static void pdl_log_os_unlock(os_unfair_lock_t lock, mach_port_t thread) {
+static void pdl_trace_os_unlock(os_unfair_lock_t lock, mach_port_t thread) {
     pthread_mutex_lock(pdl_os_map_mutex);
     pdl_dictionary_t map = pdl_os_lock_map();
     pdl_removeObjectForKey(map, lock);
@@ -51,17 +51,17 @@ extern void os_unfair_lock_lock_with_options(os_unfair_lock_t lock, os_unfair_lo
 
 static void pdl_os_unfair_lock_lock(os_unfair_lock_t lock) {
     os_unfair_lock_lock(lock);
-    pdl_log_os_lock(lock, mach_thread_self());
+    pdl_trace_os_lock(lock, mach_thread_self());
 }
 
 static void pdl_os_unfair_lock_lock_with_options(os_unfair_lock_t lock, os_unfair_lock_options_t options) {
     os_unfair_lock_lock_with_options(lock, options);
-    pdl_log_os_lock(lock, mach_thread_self());
+    pdl_trace_os_lock(lock, mach_thread_self());
 }
 
 static void pdl_os_unfair_lock_unlock(os_unfair_lock_t lock) {
     os_unfair_lock_unlock(lock);
-    pdl_log_os_unlock(lock, mach_thread_self());
+    pdl_trace_os_unlock(lock, mach_thread_self());
 }
 
 DYLD_INTERPOSE(pdl_os_unfair_lock_lock, os_unfair_lock_lock);
@@ -82,7 +82,7 @@ static pdl_dictionary_t pdl_rw_lock_map(void) {
     return rw_lock_map;
 }
 
-static void pdl_log_rw_lock(pthread_rwlock_t *lock, mach_port_t thread) {
+static void pdl_trace_rw_lock(pthread_rwlock_t *lock, mach_port_t thread) {
     pthread_mutex_lock(pdl_rw_map_mutex);
     pdl_dictionary_t map = pdl_rw_lock_map();
     pdl_array_t array = NULL;
@@ -97,7 +97,7 @@ static void pdl_log_rw_lock(pthread_rwlock_t *lock, mach_port_t thread) {
     pthread_mutex_unlock(pdl_rw_map_mutex);
 }
 
-static void pdl_log_rw_unlock(pthread_rwlock_t *lock, mach_port_t thread) {
+static void pdl_trace_rw_unlock(pthread_rwlock_t *lock, mach_port_t thread) {
     pthread_mutex_lock(pdl_rw_map_mutex);
     pdl_dictionary_t map = pdl_rw_lock_map();
     pdl_array_t array = NULL;
@@ -112,24 +112,42 @@ static void pdl_log_rw_unlock(pthread_rwlock_t *lock, mach_port_t thread) {
     pthread_mutex_unlock(pdl_rw_map_mutex);
 }
 
+static int pdl_pthread_rwlock_tryrdlock(pthread_rwlock_t *lock) {
+    int ret = pthread_rwlock_tryrdlock(lock);
+    if (ret == 0) {
+        pdl_trace_rw_lock(lock, mach_thread_self());
+    }
+    return ret;
+}
+
+static int pdl_pthread_rwlock_trywrlock(pthread_rwlock_t *lock) {
+    int ret = pthread_rwlock_trywrlock(lock);
+    if (ret == 0) {
+        pdl_trace_rw_lock(lock, mach_thread_self());
+    }
+    return ret;
+}
+
 static int pdl_pthread_rwlock_rdlock(pthread_rwlock_t *lock) {
     int ret = pthread_rwlock_rdlock(lock);
-    pdl_log_rw_lock(lock, mach_thread_self());
+    pdl_trace_rw_lock(lock, mach_thread_self());
     return ret;
 }
 
 static int pdl_pthread_rwlock_wrlock(pthread_rwlock_t *lock) {
     int ret = pthread_rwlock_wrlock(lock);
-    pdl_log_rw_lock(lock, mach_thread_self());
+    pdl_trace_rw_lock(lock, mach_thread_self());
     return ret;
 }
 
 static int pdl_pthread_rwlock_unlock(pthread_rwlock_t *lock) {
     int ret = pthread_rwlock_unlock(lock);
-    pdl_log_rw_unlock(lock, mach_thread_self());
+    pdl_trace_rw_unlock(lock, mach_thread_self());
     return ret;
 }
 
+DYLD_INTERPOSE(pdl_pthread_rwlock_tryrdlock, pthread_rwlock_tryrdlock);
+DYLD_INTERPOSE(pdl_pthread_rwlock_trywrlock, pthread_rwlock_trywrlock);
 DYLD_INTERPOSE(pdl_pthread_rwlock_rdlock, pthread_rwlock_rdlock);
 DYLD_INTERPOSE(pdl_pthread_rwlock_wrlock, pthread_rwlock_wrlock);
 DYLD_INTERPOSE(pdl_pthread_rwlock_unlock, pthread_rwlock_unlock);

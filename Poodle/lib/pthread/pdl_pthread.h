@@ -27,7 +27,7 @@ typedef enum {
 } pthread_type_t;
 
 extern long pthread_sig(void *pthread_pointer);
-extern pthread_type_t pthread_type(void *pthread_pointer);
+extern pthread_type_t pdl_pthread_type(void *pthread_pointer);
 
 extern uint64_t pdl_pthread_thread_id(pthread_t thread);
 

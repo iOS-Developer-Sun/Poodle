@@ -188,7 +188,7 @@ pshared:2;
 #endif
 } _pthread_rwlock2; // libpthread-330.220.2
 
-pthread_type_t pthread_type(void *pthread_pointer) {
+pthread_type_t pdl_pthread_type(void *pthread_pointer) {
     pthread_type_t type = PTHREAD_TYPE_UNKNOWN;
     long sig = *((long *)pthread_pointer);
     switch (sig) {
@@ -357,7 +357,7 @@ int pdl_pthread_count(void) {
     return *pthreadCount;
 }
 
-__attribute__ ((constructor)) static void check_version(void) {
+__attribute__ ((constructor)) static void pdl_check_version(void) {
     const char *name = "libsystem_pthread.dylib";
     struct mach_header *header = pdl_mach_o_image(name);
     struct pdl_mach_object mach_object;
