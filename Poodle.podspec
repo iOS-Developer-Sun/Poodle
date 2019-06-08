@@ -192,9 +192,14 @@ Pod::Spec.new do |s|
         ss.source_files = Asm + Files
     end
 
+    s.subspec 'dynamic' do |ss|
+        ss.source_files = Dynamic + 'dynamic/' + Files
+    end
+
     s.subspec 'objc_message' do |ss|
         ss.source_files = Dynamic + 'objc_message/' + Files
         ss.frameworks = 'Foundation'
+        ss.dependency 'Poodle/dynamic'
         ss.dependency 'Poodle/asm'
         ss.dependency 'Poodle/Private'
     end
@@ -202,6 +207,7 @@ Pod::Spec.new do |s|
     s.subspec 'lock_tracer' do |ss|
         ss.source_files = Dynamic + 'lock_tracer/' + Files
         ss.frameworks = 'Foundation'
+        ss.dependency 'Poodle/dynamic'
         ss.dependency 'Poodle/utils'
     end
 
