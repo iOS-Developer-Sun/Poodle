@@ -7,10 +7,7 @@
 //
 
 #include <pdl_objc_message.h>
-
-#define DYLD_INTERPOSE(_replacement,_replacee) \
-__attribute__((used)) static struct{ const void* replacement; const void* replacee; } _interpose_##_replacee \
-__attribute__ ((section ("__DATA,__interpose"))) = { (const void*)(unsigned long)&_replacement, (const void*)(unsigned long)&_replacee };
+#include <pdl_dynamic.h>
 
 static void(*_pdl_objc_msgSend_before_action)(__unsafe_unretained id self, SEL _cmd) = NULL;
 static void(*_pdl_objc_msgSendSuper_before_action)(struct objc_super *super, SEL _cmd) = NULL;
@@ -47,24 +44,18 @@ void pdl_objc_msgSendSuper_before(struct objc_super *super, SEL _cmd) {
     }
 }
 
-__attribute__ ((constructor))
-//static
-void pdl_objc_message(void) {
-    printf("pdl_objc_message\n");
-}
-
 extern IMP pdl_objc_msgSend;
 extern IMP pdl_objc_msgSendSuper2;
 
-DYLD_INTERPOSE(pdl_objc_msgSend, objc_msgSend)
-DYLD_INTERPOSE(pdl_objc_msgSendSuper2, objc_msgSendSuper2)
+PDL_DYLD_INTERPOSE(pdl_objc_msgSend, objc_msgSend)
+PDL_DYLD_INTERPOSE(pdl_objc_msgSendSuper2, objc_msgSendSuper2)
 
 #ifndef __arm64__
 
 extern IMP pdl_objc_msgSend_stret;
 extern IMP pdl_objc_msgSendSuper2_stret;
 
-DYLD_INTERPOSE(pdl_objc_msgSend_stret, objc_msgSend_stret)
-DYLD_INTERPOSE(pdl_objc_msgSendSuper2_stret, objc_msgSendSuper2_stret)
+PDL_DYLD_INTERPOSE(pdl_objc_msgSend_stret, objc_msgSend_stret)
+PDL_DYLD_INTERPOSE(pdl_objc_msgSendSuper2_stret, objc_msgSendSuper2_stret)
 
 #endif
