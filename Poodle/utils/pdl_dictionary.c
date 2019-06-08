@@ -54,7 +54,6 @@ pdl_array_t pdl_allKeys(pdl_dictionary_t dictionary) {
     return array;
 }
 
-
 void pdl_getAllKeys(pdl_dictionary_t dictionary, void ***keys, unsigned int *count) {
     pdl_hashMapGetAllKeys(&(((struct pdl_dictionary *)dictionary)->hashMap), keys, count);
 }

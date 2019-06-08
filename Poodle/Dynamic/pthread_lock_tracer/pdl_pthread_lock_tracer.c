@@ -13,6 +13,7 @@
 #import <mach/mach.h>
 #import <dispatch/dispatch.h>
 #import <assert.h>
+#import <stdatomic.h>
 #import <pdl_dynamic.h>
 #import "pdl_dictionary.h"
 #import "pdl_array.h"
@@ -24,6 +25,12 @@
 
 static os_unfair_lock _pdl_rw_map_lock = OS_UNFAIR_LOCK_INIT;
 static os_unfair_lock_t pdl_rw_map_lock = &_pdl_rw_map_lock;
+#define PDL_MAP_LOCK os_unfair_lock_lock(pdl_rw_map_lock)
+#define PDL_MAP_UNLOCK os_unfair_lock_unlock(pdl_rw_map_lock)
+
+//atomic_bool pdl_rw_map_lock = false;
+//#define PDL_MAP_LOCK while(pdl_rw_map_lock) {pdl_rw_map_lock = true;}
+//#define PDL_MAP_UNLOCK pdl_rw_map_lock = false
 
 static pdl_dictionary_t pdl_rw_lock_map(void) {
     static pdl_dictionary_t rw_lock_map = NULL;
@@ -35,7 +42,7 @@ static pdl_dictionary_t pdl_rw_lock_map(void) {
 }
 
 static void pdl_trace_rw_lock(pthread_rwlock_t *lock, mach_port_t thread) {
-    os_unfair_lock_lock(pdl_rw_map_lock);
+    PDL_MAP_LOCK;
     pdl_dictionary_t map = pdl_rw_lock_map();
     pdl_array_t array = NULL;
     void **object = pdl_objectForKey(map, lock);
@@ -46,11 +53,11 @@ static void pdl_trace_rw_lock(pthread_rwlock_t *lock, mach_port_t thread) {
         array = *object;
     }
     pdl_addObject(array, (void *)(unsigned long)thread);
-    os_unfair_lock_unlock(pdl_rw_map_lock);
+    PDL_MAP_UNLOCK;
 }
 
 static void pdl_trace_rw_unlock(pthread_rwlock_t *lock, mach_port_t thread) {
-    os_unfair_lock_lock(pdl_rw_map_lock);
+    PDL_MAP_LOCK;
     pdl_dictionary_t map = pdl_rw_lock_map();
     pdl_array_t array = NULL;
     void **object = pdl_objectForKey(map, lock);
@@ -61,7 +68,7 @@ static void pdl_trace_rw_unlock(pthread_rwlock_t *lock, mach_port_t thread) {
         pdl_removeObjectForKey(map, lock);
         pdl_destroyArray(array);
     }
-    os_unfair_lock_unlock(pdl_rw_map_lock);
+    PDL_MAP_UNLOCK;
 }
 
 static int pdl_pthread_rwlock_tryrdlock(pthread_rwlock_t *lock) {

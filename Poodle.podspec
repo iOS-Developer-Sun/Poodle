@@ -204,8 +204,15 @@ Pod::Spec.new do |s|
         ss.dependency 'Poodle/Private'
     end
 
-    s.subspec 'lock_tracer' do |ss|
-        ss.source_files = Dynamic + 'lock_tracer/' + Files
+    s.subspec 'os_unfair_lock_tracer' do |ss|
+        ss.source_files = Dynamic + 'os_unfair_lock_tracer/' + Files
+        ss.frameworks = 'Foundation'
+        ss.dependency 'Poodle/dynamic'
+        ss.dependency 'Poodle/utils'
+    end
+
+    s.subspec 'pthread_lock_tracer' do |ss|
+        ss.source_files = Dynamic + 'pthread_lock_tracer/' + Files
         ss.frameworks = 'Foundation'
         ss.dependency 'Poodle/dynamic'
         ss.dependency 'Poodle/utils'
