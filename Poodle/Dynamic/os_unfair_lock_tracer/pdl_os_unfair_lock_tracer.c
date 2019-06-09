@@ -15,18 +15,21 @@
 #import <assert.h>
 #import <stdatomic.h>
 #import <pdl_dynamic.h>
+#import <pdl_spinlock.h>
 #import "pdl_dictionary.h"
 #import "pdl_array.h"
+
+#if !TARGET_IPHONE_SIMULATOR
 
 #define PDL_LOG_LOCK(lock, action) if (pdl_os_unfair_lock_log_enabled) { printf("PDL LOG LOCK %s: %p %u\n", #action, (lock), mach_thread_self()); }
 
 #define PDL_LOG_LOCK_BEGIN(lock) PDL_LOG_LOCK((lock), BEGIN)
 #define PDL_LOG_LOCK_END(lock) PDL_LOG_LOCK((lock), END)
 
-static pthread_mutex_t _pdl_rw_map_lock = PTHREAD_MUTEX_INITIALIZER;
-static pthread_mutex_t *pdl_rw_map_lock = &_pdl_rw_map_lock;
-#define PDL_MAP_LOCK pthread_mutex_lock(pdl_rw_map_lock)
-#define PDL_MAP_UNLOCK pthread_mutex_unlock(pdl_rw_map_lock)
+static pdl_spinlock _pdl_os_map_lock = PDL_SPINLOCK_INIT;
+static pdl_spinlock_t pdl_os_map_lock = &_pdl_os_map_lock;
+#define PDL_MAP_LOCK pdl_spinlock_lock(pdl_os_map_lock)
+#define PDL_MAP_UNLOCK pdl_spinlock_unlock(pdl_os_map_lock)
 
 static pdl_dictionary_t pdl_os_lock_map(void) {
     static pdl_dictionary_t os_lock_map = NULL;
@@ -93,3 +96,5 @@ void pdl_print_os_unfair_lock_map(void) {
     }
     pdl_destroyArray(allKeys);
 }
+
+#endif

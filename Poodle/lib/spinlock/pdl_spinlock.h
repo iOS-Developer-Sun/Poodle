@@ -6,14 +6,14 @@
 //
 //
 
-#import <Foundation/Foundation.h>
+#import <mach/mach.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 typedef struct pdl_spinlock_s {
-    uint32_t _pdl_spinlock_opaque;
+    uint64_t _pdl_spinlock_opaque;
 } pdl_spinlock, *pdl_spinlock_t;
 
 #ifndef PDL_SPINLOCK_INIT
