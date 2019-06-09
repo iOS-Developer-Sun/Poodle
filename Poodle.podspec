@@ -171,6 +171,11 @@ Pod::Spec.new do |s|
         ss.frameworks = 'Foundation'
     end
 
+    s.subspec 'spinlock' do |ss|
+        ss.source_files = Lib + 'spinlock/' + Files
+        ss.frameworks = 'Foundation'
+    end
+
     s.subspec 'utils' do |ss|
         ss.source_files = Utils + Files
     end
