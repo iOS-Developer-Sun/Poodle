@@ -75,9 +75,9 @@ static void pdl_os_unfair_lock_unlock(os_unfair_lock_t lock) {
     PDL_LOG_LOCK_END(lock);
 }
 
-PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_lock, os_unfair_lock_lock);
-PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_lock_with_options, os_unfair_lock_lock_with_options);
-PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_unlock, os_unfair_lock_unlock);
+//PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_lock, os_unfair_lock_lock);
+//PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_lock_with_options, os_unfair_lock_lock_with_options);
+//PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_unlock, os_unfair_lock_unlock);
 
 bool pdl_os_unfair_lock_log_enabled = false;
 
