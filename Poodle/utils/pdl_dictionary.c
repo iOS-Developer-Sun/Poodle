@@ -64,26 +64,6 @@ void pdl_destroyDictionary(pdl_dictionary_t dictionary) {
     free(dictionary);
 }
 
-void pdl_destroyDictionaryWithFunctions(pdl_dictionary_t dictionary, void (*keyFunction)(void *), void (*objectFunction)(void *)) {
-    if (keyFunction || objectFunction) {
-        unsigned int count = 0;
-        void **keys = NULL;
-        pdl_getAllKeys(dictionary, &keys, &count);
-        for (unsigned int i = 0; i < count; i++) {
-            void *key = keys[i];
-            void **object = pdl_hashMapGetValue(&(((struct pdl_dictionary *)dictionary)->hashMap), key);
-            if (keyFunction) {
-                keyFunction(key);
-            }
-            if (object && objectFunction) {
-                objectFunction(*object);
-            }
-        }
-        free(keys);
-    }
-    pdl_destroyDictionary(dictionary);
-}
-
 unsigned int pdl_countOfDictionary(pdl_dictionary_t dictionary) {
     return pdl_hashMapCount(&(((struct pdl_dictionary *)dictionary)->hashMap));
 }

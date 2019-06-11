@@ -5,6 +5,7 @@ void pdl_hashMapDelete(pdl_hashMap *map, void *key) {
     HASH_FIND_PTR(map->map, &key, item);
     if (item != NULL) {
         HASH_DEL(map->map, item);
+        free(item);
     }
 }
 

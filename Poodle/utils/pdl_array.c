@@ -16,7 +16,7 @@ pdl_array_t pdl_createArrayWithCapacity(unsigned int capacity) {
     }
     struct pdl_array *array = malloc(sizeof(struct pdl_array));
     array->count = 0;
-    array->array = malloc(capacity * sizeof(void *));
+    array->array = malloc(arrayCapacity * sizeof(void *));
     array->capacity = arrayCapacity;
     return array;
 }
@@ -91,16 +91,6 @@ pdl_array_t pdl_copyArray(pdl_array_t array) {
 void pdl_destroyArray(pdl_array_t array) {
     free(((struct pdl_array *)array)->array);
     free(array);
-}
-
-void pdl_destroyArrayWithFunction(pdl_array_t array, void (*objectFunction)(void *)) {
-    if (objectFunction) {
-        for (int i = 0; i < ((struct pdl_array *)array)->count; i++) {
-            void *object = ((struct pdl_array *)array)->array[i];
-            objectFunction(object);
-        }
-    }
-    pdl_destroyArray(array);
 }
 
 void pdl_sortByFunction(pdl_array_t array, int(*sort)(void *object1, void *object2)) {
