@@ -4,28 +4,30 @@
 #import <stdio.h>
 
 struct pdl_array {
+    char type[16];
     void **array;
     int count;
     int capacity;
 };
 
-pdl_array_t pdl_createArrayWithCapacity(unsigned int capacity) {
+pdl_array_t pdl_array_createWithCapacity(unsigned int capacity) {
     int arrayCapacity = capacity;
     if (arrayCapacity == 0) {
         arrayCapacity = 16;
     }
     struct pdl_array *array = malloc(sizeof(struct pdl_array));
+    strcpy(array->type, "array");
     array->count = 0;
     array->array = malloc(arrayCapacity * sizeof(void *));
     array->capacity = arrayCapacity;
     return array;
 }
 
-void *pdl_objectAtIndex(pdl_array_t array, unsigned int index) {
+void *pdl_array_objectAtIndex(pdl_array_t array, unsigned int index) {
     return ((struct pdl_array *)array)->array[index];
 }
 
-void pdl_removeObjectAtIndex(pdl_array_t array, unsigned int index) {
+void pdl_array_removeObjectAtIndex(pdl_array_t array, unsigned int index) {
     int count = ((struct pdl_array *)array)->count;
     if (index >= count) {
         return;
@@ -38,7 +40,7 @@ void pdl_removeObjectAtIndex(pdl_array_t array, unsigned int index) {
     ((struct pdl_array *)array)->count = count - 1;
 }
 
-void pdl_removeObject(pdl_array_t array, void *object) {
+void pdl_array_removeObject(pdl_array_t array, void *object) {
     int count = ((struct pdl_array *)array)->count;
     void **a = ((struct pdl_array *)array)->array;
     for (int i = count - 1; i >= 0; i--) {
@@ -52,11 +54,11 @@ void pdl_removeObject(pdl_array_t array, void *object) {
     ((struct pdl_array *)array)->count = count;
 }
 
-void pdl_addObject(pdl_array_t array, void *object) {
-    pdl_insertObjectAtIndex(array, object, ((struct pdl_array *)array)->count);
+void pdl_array_addObject(pdl_array_t array, void *object) {
+    pdl_array_insertObjectAtIndex(array, object, ((struct pdl_array *)array)->count);
 }
 
-void pdl_insertObjectAtIndex(pdl_array_t array, void *object, unsigned int index) {
+void pdl_array_insertObjectAtIndex(pdl_array_t array, void *object, unsigned int index) {
     int count = ((struct pdl_array *)array)->count;
     if (index > count) {
         return;
@@ -79,7 +81,7 @@ void pdl_insertObjectAtIndex(pdl_array_t array, void *object, unsigned int index
     ((struct pdl_array *)array)->count = count + 1;
 }
 
-pdl_array_t pdl_copyArray(pdl_array_t array) {
+pdl_array_t pdl_array_copy(pdl_array_t array) {
     struct pdl_array *copy = malloc(sizeof(struct pdl_array));
     copy->count = ((struct pdl_array *)array)->count;
     copy->array = malloc(((struct pdl_array *)array)->capacity * sizeof(void *));
@@ -88,12 +90,12 @@ pdl_array_t pdl_copyArray(pdl_array_t array) {
     return copy;
 }
 
-void pdl_destroyArray(pdl_array_t array) {
+void pdl_array_destroy(pdl_array_t array) {
     free(((struct pdl_array *)array)->array);
     free(array);
 }
 
-void pdl_sortByFunction(pdl_array_t array, int(*sort)(void *object1, void *object2)) {
+void pdl_array_sortByFunction(pdl_array_t array, int(*sort)(void *object1, void *object2)) {
     int count = ((struct pdl_array *)array)->count;
     for (int i = 0; i < count - 1; i++) {
         for (int j = 0; j < count - 1 - i; j++) {
@@ -109,7 +111,7 @@ void pdl_sortByFunction(pdl_array_t array, int(*sort)(void *object1, void *objec
     }
 }
 
-void pdl_sortByFunctionAndData(pdl_array_t array, int(*sort)(void *object1, void *object2, void *data), void *data) {
+void pdl_array_sortByFunctionAndData(pdl_array_t array, int(*sort)(void *object1, void *object2, void *data), void *data) {
     int count = ((struct pdl_array *)array)->count;
     for (int i = 0; i < count - 1; i++) {
         for (int j = 0; j < count - 1 - i; j++) {
@@ -125,11 +127,11 @@ void pdl_sortByFunctionAndData(pdl_array_t array, int(*sort)(void *object1, void
     }
 }
 
-unsigned int pdl_countOfArray(pdl_array_t array) {
+unsigned int pdl_array_count(pdl_array_t array) {
     return ((struct pdl_array *)array)->count;
 }
 
-void pdl_printArray(pdl_array_t array) {
+void pdl_array_print(pdl_array_t array) {
     printf("[%d]", ((struct pdl_array *)array)->count);
     for (int i = 0; i < ((struct pdl_array *)array)->count; i++) {
         printf(" %p", ((struct pdl_array *)array)->array[i]);

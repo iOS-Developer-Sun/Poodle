@@ -35,7 +35,7 @@ static pdl_dictionary_t pdl_os_lock_map(void) {
     static pdl_dictionary_t os_lock_map = NULL;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        os_lock_map = pdl_createDictionary();
+        os_lock_map = pdl_dictionary_create();
     });
     return os_lock_map;
 }
@@ -43,14 +43,14 @@ static pdl_dictionary_t pdl_os_lock_map(void) {
 static void pdl_trace_os_lock(os_unfair_lock_t lock, mach_port_t thread) {
     PDL_MAP_LOCK;
     pdl_dictionary_t map = pdl_os_lock_map();
-    pdl_setObjectForKey(map, (void *)(unsigned long)thread, lock);
+    pdl_dictionary_setObjectForKey(map, (void *)(unsigned long)thread, lock);
     PDL_MAP_UNLOCK;
 }
 
 static void pdl_trace_os_unlock(os_unfair_lock_t lock, mach_port_t thread) {
     PDL_MAP_LOCK;
     pdl_dictionary_t map = pdl_os_lock_map();
-    pdl_removeObjectForKey(map, lock);
+    pdl_dictionary_removeObjectForKey(map, lock);
     PDL_MAP_UNLOCK;
 }
 
@@ -86,15 +86,15 @@ bool pdl_os_unfair_lock_log_enabled = false;
 
 void pdl_print_os_unfair_lock_map(void) {
     pdl_dictionary_t map = pdl_os_lock_map();
-    pdl_array_t allKeys = pdl_allKeys(map);
-    unsigned int count = pdl_countOfArray(allKeys);
+    pdl_array_t allKeys = pdl_dictionary_allKeys(map);
+    unsigned int count = pdl_array_count(allKeys);
     printf("[%u]\n", count);
     for (unsigned int i = 0; i < count; i++) {
-        void *key = pdl_objectAtIndex(allKeys, i);
-        void **value = pdl_objectForKey(map, key);
+        void *key = pdl_array_objectAtIndex(allKeys, i);
+        void **value = pdl_dictionary_objectForKey(map, key);
         printf("%p : %p\n", key, *value);
     }
-    pdl_destroyArray(allKeys);
+    pdl_array_destroy(allKeys);
 }
 
 #endif
