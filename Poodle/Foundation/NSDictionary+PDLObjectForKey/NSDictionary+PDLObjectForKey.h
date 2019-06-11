@@ -10,7 +10,7 @@
 
 @interface NSDictionary (PDLObjectForKey)
 
-- (id)pdl_objectForKey:(id)key class:(Class)class;
+- (id)pdl_dictionary_objectForKey:(id)key class:(Class)class;
 
 - (NSNumber *)pdl_boolNumberForKey:(id)key;
 - (NSNumber *)pdl_integerNumberForKey:(id)key;

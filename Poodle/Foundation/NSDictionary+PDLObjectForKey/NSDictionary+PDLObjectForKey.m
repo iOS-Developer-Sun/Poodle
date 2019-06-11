@@ -10,7 +10,7 @@
 
 @implementation NSDictionary (PDLObjectForKey)
 
-- (id)pdl_objectForKey:(id)key class:(Class)class {
+- (id)pdl_dictionary_objectForKey:(id)key class:(Class)class {
     id object = self[key];
     if ([object isKindOfClass:class]) {
         return object;
@@ -65,19 +65,19 @@
 }
 
 - (NSString *)pdl_stringObjectForKey:(id)key {
-    return [self pdl_objectForKey:key class:[NSString class]];
+    return [self pdl_dictionary_objectForKey:key class:[NSString class]];
 }
 
 - (NSDictionary *)pdl_dictionaryObjectForKey:(id)key {
-    return [self pdl_objectForKey:key class:[NSDictionary class]];
+    return [self pdl_dictionary_objectForKey:key class:[NSDictionary class]];
 }
 
 - (NSArray *)pdl_arrayObjectForKey:(id)key {
-    return [self pdl_objectForKey:key class:[NSArray class]];
+    return [self pdl_dictionary_objectForKey:key class:[NSArray class]];
 }
 
 - (NSData *)pdl_dataObjectForKey:(id)key {
-    return [self pdl_objectForKey:key class:[NSData class]];
+    return [self pdl_dictionary_objectForKey:key class:[NSData class]];
 }
 
 @end
