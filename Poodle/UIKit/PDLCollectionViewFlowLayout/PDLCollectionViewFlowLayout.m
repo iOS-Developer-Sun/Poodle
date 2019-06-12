@@ -215,14 +215,14 @@ static NSString *const PDLCollectionViewFlowLayoutDecorationViewOfKind = @"PDLCo
     CGFloat (*frameGetLateralLength)(CGRect frame) = isVertical ? CGRectGetWidth : CGRectGetHeight;
     CGFloat (*frameGetLateralMax)(CGRect frame) = isVertical ? CGRectGetMaxX : CGRectGetMaxY;
 
-    CGFloat (^frameSetMin)(CGRect *frame, CGFloat m) = ^CGFloat (CGRect *frame, CGFloat m) {
+    void (^frameSetMin)(CGRect *frame, CGFloat m) = ^(CGRect *frame, CGFloat m) {
         if (isVertical) {
             frame->origin.y = m;
         } else {
             frame->origin.x = m;
         }
     };
-    CGFloat (^frameSetLateralMin)(CGRect *frame, CGFloat m) = ^CGFloat (CGRect *frame, CGFloat m) {
+    void (^frameSetLateralMin)(CGRect *frame, CGFloat m) = ^(CGRect *frame, CGFloat m) {
         if (isVertical) {
             frame->origin.x = m;
         } else {
