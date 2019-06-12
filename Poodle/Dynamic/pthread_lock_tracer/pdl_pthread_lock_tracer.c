@@ -7,7 +7,6 @@
 //
 
 #import <pdl_pthread_lock_tracer.h>
-#import <os/lock.h>
 #import <pthread.h>
 #import <stdio.h>
 #import <mach/mach.h>
@@ -28,11 +27,6 @@ static pdl_spinlock _pdl_rw_map_lock = PDL_SPINLOCK_INIT;
 static pdl_spinlock_t pdl_rw_map_lock = &_pdl_rw_map_lock;
 #define PDL_MAP_LOCK pdl_spinlock_lock(pdl_rw_map_lock)
 #define PDL_MAP_UNLOCK pdl_spinlock_unlock(pdl_rw_map_lock)
-
-//static os_unfair_lock _pdl_rw_map_lock = OS_UNFAIR_LOCK_INIT;
-//static os_unfair_lock_t pdl_rw_map_lock = &_pdl_rw_map_lock;
-//#define PDL_MAP_LOCK os_unfair_lock_lock(pdl_rw_map_lock)
-//#define PDL_MAP_UNLOCK os_unfair_lock_unlock(pdl_rw_map_lock)
 
 static pdl_dictionary_t pdl_rw_lock_map(void) {
     static pdl_dictionary_t rw_lock_map = NULL;
@@ -148,7 +142,7 @@ void pdl_print_rw_lock_map(void) {
                 printf(", %p", item);
             }
         }
-        printf("]\n", key);
+        printf("]\n");
     }
     pdl_array_destroy(allKeys);
 //    PDL_MAP_UNLOCK;
