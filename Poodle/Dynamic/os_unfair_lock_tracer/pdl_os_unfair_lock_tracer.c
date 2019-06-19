@@ -19,7 +19,7 @@
 #import "pdl_dictionary.h"
 #import "pdl_array.h"
 
-#if !TARGET_IPHONE_SIMULATOR
+#if !TARGET_IPHONE_SIMULATOR && PDL_OS_UNFAIR_LOCK_TRACER_ENABLED
 
 #define PDL_LOG_LOCK(lock, action) if (pdl_os_unfair_lock_log_enabled) { printf("PDL LOG LOCK %s: %p %u\n", #action, (lock), mach_thread_self()); }
 
@@ -87,8 +87,11 @@ static void pdl_os_unfair_lock_unlock(os_unfair_lock_t lock) {
     PDL_LOG_LOCK_END(lock);
 }
 
+API_AVAILABLE(ios(10.0))
 PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_lock, os_unfair_lock_lock);
+API_AVAILABLE(ios(10.0))
 PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_lock_with_options, os_unfair_lock_lock_with_options);
+API_AVAILABLE(ios(10.0))
 PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_unlock, os_unfair_lock_unlock);
 
 bool pdl_os_unfair_lock_log_enabled = false;
