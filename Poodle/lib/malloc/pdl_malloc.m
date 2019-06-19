@@ -22,9 +22,9 @@ static void recorder(task_t task, void *context, unsigned type, vm_range_t *rang
         vm_address_t address = range.address;
         vm_size_t size = range.size;
 
-        vm_address_t addr = recorder_context->address;
+        vm_address_t addr = (vm_address_t)recorder_context->address;
         if ((addr >= address) && (addr < address + size)) {
-            recorder_context->header = address;
+            recorder_context->header = (void *)address;
             recorder_context->size = size;
         }
     }
