@@ -37,7 +37,7 @@
     if (sel == NULL) {
         char sel_str[] = {'_', 's', 'o', 'l', 'v', 'e', 'F', 'o', 'r', 'I', 'n', 'p', 'u', 't', ':', '\0'};
         sel = sel_registerName(sel_str);
-        NSAssert(sel_isEqual(sel, @selector(_solveForInput:)), @"wrong selector initialized");
+        NSAssert(sel_isEqual(sel, sel_registerName("_solveForInput:")), @"wrong selector initialized");
     }
     float result = ((float(*)(id, SEL, float))objc_msgSend)(self, sel, input);
     return result;

@@ -32,14 +32,17 @@ static pdl_spinlock_t pdl_os_map_lock = &_pdl_os_map_lock;
 #define PDL_MAP_UNLOCK pdl_spinlock_unlock(pdl_os_map_lock)
 
 static pdl_dictionary_t pdl_os_lock_map(void) {
+    static pdl_spinlock lock = PDL_SPINLOCK_INIT;
+    pdl_spinlock_lock(&lock);
     static pdl_dictionary_t os_lock_map = NULL;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if (os_lock_map == NULL) {
         os_lock_map = pdl_dictionary_create();
-    });
+    }
+    pdl_spinlock_unlock(&lock);
     return os_lock_map;
 }
 
+API_AVAILABLE(ios(10.0))
 static void pdl_trace_os_lock(os_unfair_lock_t lock, mach_port_t thread) {
     PDL_MAP_LOCK;
     pdl_dictionary_t map = pdl_os_lock_map();
@@ -47,6 +50,7 @@ static void pdl_trace_os_lock(os_unfair_lock_t lock, mach_port_t thread) {
     PDL_MAP_UNLOCK;
 }
 
+API_AVAILABLE(ios(10.0))
 static void pdl_trace_os_unlock(os_unfair_lock_t lock, mach_port_t thread) {
     PDL_MAP_LOCK;
     pdl_dictionary_t map = pdl_os_lock_map();
@@ -55,8 +59,11 @@ static void pdl_trace_os_unlock(os_unfair_lock_t lock, mach_port_t thread) {
 }
 
 typedef long os_unfair_lock_options_t;
+
+API_AVAILABLE(ios(10.0))
 extern void os_unfair_lock_lock_with_options(os_unfair_lock_t lock, os_unfair_lock_options_t options);
 
+API_AVAILABLE(ios(10.0))
 static void pdl_os_unfair_lock_lock(os_unfair_lock_t lock) {
     PDL_LOG_LOCK_BEGIN(lock);
     os_unfair_lock_lock(lock);
@@ -64,6 +71,7 @@ static void pdl_os_unfair_lock_lock(os_unfair_lock_t lock) {
     PDL_LOG_LOCK_END(lock);
 }
 
+API_AVAILABLE(ios(10.0))
 static void pdl_os_unfair_lock_lock_with_options(os_unfair_lock_t lock, os_unfair_lock_options_t options) {
     PDL_LOG_LOCK_BEGIN(lock);
     os_unfair_lock_lock_with_options(lock, options);
@@ -71,6 +79,7 @@ static void pdl_os_unfair_lock_lock_with_options(os_unfair_lock_t lock, os_unfai
     PDL_LOG_LOCK_END(lock);
 }
 
+API_AVAILABLE(ios(10.0))
 static void pdl_os_unfair_lock_unlock(os_unfair_lock_t lock) {
     PDL_LOG_LOCK_BEGIN(lock);
     os_unfair_lock_unlock(lock);
@@ -78,9 +87,9 @@ static void pdl_os_unfair_lock_unlock(os_unfair_lock_t lock) {
     PDL_LOG_LOCK_END(lock);
 }
 
-//PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_lock, os_unfair_lock_lock);
-//PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_lock_with_options, os_unfair_lock_lock_with_options);
-//PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_unlock, os_unfair_lock_unlock);
+PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_lock, os_unfair_lock_lock);
+PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_lock_with_options, os_unfair_lock_lock_with_options);
+PDL_DYLD_INTERPOSE(pdl_os_unfair_lock_unlock, os_unfair_lock_unlock);
 
 bool pdl_os_unfair_lock_log_enabled = false;
 
