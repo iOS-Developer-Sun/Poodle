@@ -8,7 +8,7 @@
 
 #import "pdl_mach_o_const_symbols.h"
 #import <Foundation/Foundation.h>
-#import <mach-o/ldsyms.h>
+#import <mach-o/dyld.h>
 #import "pdl_mach_o_symbols.h"
 #import "dsc_extractor.h"
 #import "pdl_mach_object.h"
@@ -123,7 +123,7 @@
 }
 
 - (void)load {
-    struct mach_header *header = (struct mach_header *)&_mh_execute_header;
+    struct mach_header *header = (struct mach_header *)_dyld_get_image_header(0);
     NSString *arch = [self archWithHeader:header];
     if (arch == nil) {
         self.currentState = PDL_MACH_O_SYMBOLS_STATE_ERROR;
