@@ -233,5 +233,11 @@ Pod::Spec.new do |s|
         ss.frameworks = 'UIKit'
     end
 
+    s.subspec 'SystemImage' do |ss|
+        ss.source_files = Foundation + 'PDLSystemImage/' + Files
+        ss.frameworks = 'Foundation'
+        ss.dependency 'Poodle/mach_object'
+    end
+
 end
 
