@@ -9,8 +9,11 @@
 #import <Foundation/Foundation.h>
 #include <mach-o/loader.h>
 #include <mach/machine.h>
+#include <pdl_mach_object.h>
 
 @interface PDLSystemImage : NSObject
+
+@property (readonly) struct pdl_mach_object *machObject;
 
 @property (class, readonly) NSUInteger count;
 
