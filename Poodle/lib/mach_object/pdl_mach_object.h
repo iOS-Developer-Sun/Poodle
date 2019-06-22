@@ -89,8 +89,8 @@ struct pdl_mach_object {
     const struct routines_command *routines_command;
     
     uint64_t vmsize;
-    uintptr_t vmaddr;
-    uintptr_t linkedit_base;
+    uint64_t vmaddr;
+    uint64_t linkedit_base;
     uint32_t symtab_count;
     // nlist / nlist_64
     const struct nlist *symtab_list;
@@ -165,8 +165,8 @@ struct pdl_mach_object_64 {
     const struct routines_command_64 *routines_command;
 
     uint64_t vmsize;
-    uintptr_t vmaddr;
-    uintptr_t linkedit_base;
+    uint64_t vmaddr;
+    uint64_t linkedit_base;
     uint32_t symtab_count;
     // nlist / nlist_64
     const struct nlist_64 *symtab_list;

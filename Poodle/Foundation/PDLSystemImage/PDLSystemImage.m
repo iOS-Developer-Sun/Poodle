@@ -146,7 +146,7 @@
 }
 
 - (uintptr_t)vmAddress {
-    return self.machObject->vmaddr;
+    return (uintptr_t)self.machObject->vmaddr;
 }
 
 - (uint64_t)majorVersion {
