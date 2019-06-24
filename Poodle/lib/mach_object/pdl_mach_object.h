@@ -175,6 +175,9 @@ struct pdl_mach_object_64 {
     const char *strtab;
 };
 
+_Static_assert(sizeof(struct pdl_mach_object) == sizeof(struct pdl_mach_object_64),
+                   "Incorrect struct pdl_mach_object size");
+
 struct pdl_fat_object {
     bool is64;
     bool swaps;
@@ -196,6 +199,9 @@ struct pdl_fat_object_64 {
     uint32_t arch_count;
     struct fat_arch_64 *arch_list;
 };
+
+_Static_assert(sizeof(struct pdl_fat_object) == sizeof(struct pdl_fat_object_64),
+                   "Incorrect struct pdl_fat_object size");
 
 extern bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t vmaddr_slide, const char *name, uint32_t index, struct pdl_mach_object *mach_object);
 
