@@ -103,6 +103,7 @@ struct pdl_mach_object_64 {
     bool swaps;
     intptr_t vmaddr_slide;
     const char *name;
+    uint32_t index;
 
     // mach_header / mach_header_64
     const struct mach_header_64 *header;
