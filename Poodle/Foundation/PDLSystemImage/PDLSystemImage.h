@@ -40,4 +40,6 @@
 + (NSArray *)systemImages;
 + (NSArray *)systemImagesSortedByAddress;
 
+- (BOOL)dump:(NSString *)path;
+
 @end
