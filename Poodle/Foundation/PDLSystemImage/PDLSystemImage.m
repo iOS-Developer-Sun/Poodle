@@ -321,48 +321,20 @@
 }
 
 - (BOOL)dump:(NSString *)path {
-    NSMutableData *data = [NSMutableData data];
+    NSMutableData *data = [[NSMutableData alloc] init];
     BOOL is64 = self.machObject->is64;
-//    uint64_t linkedit_base = self.machObject->linkedit_base;
-
-    const struct segment_command *text_segment = self.machObject->text_segment_command;
-    if (text_segment) {
+    uint64_t slide = self.machObject->vmaddr_slide;
+    uint32_t segmentCount = self.machObject->segments_count;
+    for (uint32_t i = 0; i < segmentCount; i++) {
+        BOOL isLastOne = i == segmentCount - 1;
         if (!is64) {
-            [data appendBytes:(void *)(self.address + text_segment->fileoff) length:text_segment->filesize];
+            const struct segment_command *segment = self.machObject->segments[i];
+            [data appendBytes:(void *)(slide + segment->vmaddr) length:isLastOne ? segment->filesize : segment->vmsize];
         } else {
-            [data appendBytes:(void *)(self.address + ((struct segment_command_64 *)text_segment)->fileoff) length:(NSUInteger)((struct segment_command_64 *)text_segment)->filesize];
+            const struct segment_command_64 *segment = ((struct pdl_mach_object_64 *)self.machObject)->segments[i];
+            [data appendBytes:(void *)(slide + segment->vmaddr) length:(NSUInteger)(isLastOne ? segment->filesize : segment->vmsize)];
         }
     }
-
-    const struct segment_command *data_segment = self.machObject->data_segment_command;
-    if (data) {
-        if (!is64) {
-            [data appendBytes:(void *)(self.address + data_segment->fileoff) length:data_segment->filesize];
-        } else {
-            [data appendBytes:(void *)(self.address + ((struct segment_command_64 *)data_segment)->fileoff) length:(NSUInteger)((struct segment_command_64 *)data_segment)->filesize];
-        }
-    }
-
-    const struct segment_command *linkedit_segment = self.machObject->linkedit_segment_command;
-    if (data) {
-        if (!is64) {
-            [data appendBytes:(void *)(self.address + linkedit_segment->fileoff) length:linkedit_segment->filesize];
-        } else {
-            [data appendBytes:(void *)(self.address + ((struct segment_command_64 *)linkedit_segment)->fileoff) length:(NSUInteger)((struct segment_command_64 *)linkedit_segment)->filesize];
-        }
-    }
-
-//    int fd = open(path.UTF8String, O_RDWR|O_CREAT|O_TRUNC, 0644);
-//    if (fd == -1) {
-//        return NO;
-//    }
-//
-//    size_t size = (size_t)self.vmsize;
-//    size_t written = write(fd, (const void *)self.address, size);
-//    if (written != size) {
-//        close(fd);
-//        return NO;
-//    }
 
     BOOL ret = [data writeToFile:path atomically:YES];
     return ret;
