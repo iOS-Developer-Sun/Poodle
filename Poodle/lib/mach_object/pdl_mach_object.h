@@ -28,14 +28,19 @@ struct pdl_mach_object {
     const char *name;
     uint32_t index;
 
+    uint32_t segments_count;
+    const struct segment_command *segments[8];
+    uint32_t total_segments_count;
+    const struct segment_command *total_segments[8];
+
     // mach_header / mach_header_64
     const struct mach_header *header;
 
     // segment_command / segment_command_64
+    const struct segment_command *page_zero_segment_command;
     const struct segment_command *text_segment_command;
     const struct segment_command *data_segment_command;
     const struct segment_command *linkedit_segment_command;
-    const struct segment_command *page_zero_segment_command;
 
     const struct symtab_command *symtab_command;
     const struct symseg_command *symseg_command;
@@ -105,14 +110,19 @@ struct pdl_mach_object_64 {
     const char *name;
     uint32_t index;
 
+    uint32_t segments_count;
+    const struct segment_command_64 *segments[8];
+    uint32_t total_segments_count;
+    const struct segment_command_64 *total_segments[8];
+
     // mach_header / mach_header_64
     const struct mach_header_64 *header;
 
     // segment_command / segment_command_64
+    const struct segment_command_64 *page_zero_segment_command;
     const struct segment_command_64 *text_segment_command;
     const struct segment_command_64 *data_segment_command;
     const struct segment_command_64 *linkedit_segment_command;
-    const struct segment_command_64 *page_zero_segment_command;
 
     const struct segment_command_64 *symtab_command;
     const struct segment_command_64 *symseg_command;
