@@ -27,6 +27,19 @@ void *pdl_array_objectAtIndex(pdl_array_t array, unsigned int index) {
     return ((struct pdl_array *)array)->array[index];
 }
 
+unsigned int pdl_array_indexOfObject(pdl_array_t array, void *object) {
+    unsigned int index = -1;
+    int count = ((struct pdl_array *)array)->count;
+    void **a = ((struct pdl_array *)array)->array;
+    for (int i = 0; i < count; i++) {
+        if (a[i] == object) {
+            index = i;
+            break;
+        }
+    }
+    return index;
+}
+
 void pdl_array_removeObjectAtIndex(pdl_array_t array, unsigned int index) {
     int count = ((struct pdl_array *)array)->count;
     if (index >= count) {

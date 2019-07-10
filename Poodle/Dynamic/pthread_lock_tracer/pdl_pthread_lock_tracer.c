@@ -59,7 +59,8 @@ static void pdl_trace_rw_unlock(pthread_rwlock_t *lock, mach_port_t thread) {
     void **object = pdl_dictionary_objectForKey(map, lock);
     assert(object);
     array = *object;
-    pdl_array_removeObject(array, (void *)(unsigned long)thread);
+    unsigned int index = pdl_array_indexOfObject(array, (void *)(unsigned long)thread);
+    pdl_array_removeObjectAtIndex(array, index);
     if (pdl_array_count(array) == 0) {
         pdl_dictionary_removeObjectForKey(map, lock);
         pdl_array_destroy(array);
