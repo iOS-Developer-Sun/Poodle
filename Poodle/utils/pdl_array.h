@@ -3,6 +3,7 @@ typedef void *pdl_array_t;
 
 extern pdl_array_t pdl_array_createWithCapacity(unsigned int capacity);
 extern void *pdl_array_objectAtIndex(pdl_array_t array, unsigned int index);
+extern unsigned int pdl_array_indexOfObject(pdl_array_t array, void *object);
 extern void pdl_array_removeObjectAtIndex(pdl_array_t array, unsigned int index);
 extern void pdl_array_removeObject(pdl_array_t array, void *object);
 extern void pdl_array_addObject(pdl_array_t array, void *object);
