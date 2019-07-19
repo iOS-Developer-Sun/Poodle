@@ -12,6 +12,8 @@
 
 @interface PDLKeyboardNotificationObserver : NSObject
 
+@property (nonatomic, assign, readonly, class) CGFloat keyboardHeight;
+
 @property (nonatomic, weak) id <PDLKeyboardNotificationObserver>delegate;
 @property (nonatomic, copy, readonly) NSDictionary *currentInfo;
 

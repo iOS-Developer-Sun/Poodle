@@ -10,7 +10,7 @@
 
 @implementation NSDictionary (PDLObjectForKey)
 
-- (id)pdl_dictionary_objectForKey:(id)key class:(Class)class {
+- (id)pdl_dictionary_objectForKey:(id <NSCopying>)key class:(Class)class {
     id object = self[key];
     if ([object isKindOfClass:class]) {
         return object;
@@ -19,7 +19,7 @@
     }
 }
 
-- (NSNumber *)pdl_boolNumberForKey:(id)key {
+- (NSNumber *)pdl_boolNumberForKey:(id <NSCopying>)key {
     id object = self[key];
     if ([object respondsToSelector:@selector(boolValue)]) {
         return @([object boolValue]);
@@ -28,7 +28,7 @@
     }
 }
 
-- (NSNumber *)pdl_integerNumberForKey:(id)key {
+- (NSNumber *)pdl_integerNumberForKey:(id <NSCopying>)key {
     id object = self[key];
     if ([object respondsToSelector:@selector(integerValue)]) {
         return @([object integerValue]);
@@ -37,7 +37,7 @@
     }
 }
 
-- (NSNumber *)pdl_longLongNumberForKey:(id)key {
+- (NSNumber *)pdl_longLongNumberForKey:(id <NSCopying>)key {
     id object = self[key];
     if ([object respondsToSelector:@selector(longLongValue)]) {
         return @([object longLongValue]);
@@ -46,7 +46,7 @@
     }
 }
 
-- (NSNumber *)pdl_floatNumberForKey:(id)key {
+- (NSNumber *)pdl_floatNumberForKey:(id <NSCopying>)key {
     id object = self[key];
     if ([object respondsToSelector:@selector(floatValue)]) {
         return @([object floatValue]);
@@ -55,7 +55,7 @@
     }
 }
 
-- (NSNumber *)pdl_doubleNumberForKey:(id)key {
+- (NSNumber *)pdl_doubleNumberForKey:(id <NSCopying>)key {
     id object = self[key];
     if ([object respondsToSelector:@selector(doubleValue)]) {
         return @([object doubleValue]);
@@ -64,19 +64,19 @@
     }
 }
 
-- (NSString *)pdl_stringObjectForKey:(id)key {
+- (NSString *)pdl_stringObjectForKey:(id <NSCopying>)key {
     return [self pdl_dictionary_objectForKey:key class:[NSString class]];
 }
 
-- (NSDictionary *)pdl_dictionaryObjectForKey:(id)key {
+- (NSDictionary *)pdl_dictionaryObjectForKey:(id <NSCopying>)key {
     return [self pdl_dictionary_objectForKey:key class:[NSDictionary class]];
 }
 
-- (NSArray *)pdl_arrayObjectForKey:(id)key {
+- (NSArray *)pdl_arrayObjectForKey:(id <NSCopying>)key {
     return [self pdl_dictionary_objectForKey:key class:[NSArray class]];
 }
 
-- (NSData *)pdl_dataObjectForKey:(id)key {
+- (NSData *)pdl_dataObjectForKey:(id <NSCopying>)key {
     return [self pdl_dictionary_objectForKey:key class:[NSData class]];
 }
 

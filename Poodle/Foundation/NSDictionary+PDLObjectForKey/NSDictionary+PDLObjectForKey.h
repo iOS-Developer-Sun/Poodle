@@ -10,16 +10,16 @@
 
 @interface NSDictionary (PDLObjectForKey)
 
-- (id)pdl_dictionary_objectForKey:(id)key class:(Class)class;
+- (id)pdl_dictionary_objectForKey:(id <NSCopying>)key class:(Class)class;
 
-- (NSNumber *)pdl_boolNumberForKey:(id)key;
-- (NSNumber *)pdl_integerNumberForKey:(id)key;
-- (NSNumber *)pdl_longLongNumberForKey:(id)key;
-- (NSNumber *)pdl_floatNumberForKey:(id)key;
-- (NSNumber *)pdl_doubleNumberForKey:(id)key;
-- (NSString *)pdl_stringObjectForKey:(id)key;
-- (NSDictionary *)pdl_dictionaryObjectForKey:(id)key;
-- (NSArray *)pdl_arrayObjectForKey:(id)key;
-- (NSData *)pdl_dataObjectForKey:(id)key;
+- (NSNumber *)pdl_boolNumberForKey:(id <NSCopying>)key;
+- (NSNumber *)pdl_integerNumberForKey:(id <NSCopying>)key;
+- (NSNumber *)pdl_longLongNumberForKey:(id <NSCopying>)key;
+- (NSNumber *)pdl_floatNumberForKey:(id <NSCopying>)key;
+- (NSNumber *)pdl_doubleNumberForKey:(id <NSCopying>)key;
+- (NSString *)pdl_stringObjectForKey:(id <NSCopying>)key;
+- (NSDictionary *)pdl_dictionaryObjectForKey:(id <NSCopying>)key;
+- (NSArray *)pdl_arrayObjectForKey:(id <NSCopying>)key;
+- (NSData *)pdl_dataObjectForKey:(id <NSCopying>)key;
 
 @end

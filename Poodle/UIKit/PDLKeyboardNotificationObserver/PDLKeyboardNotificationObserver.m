@@ -10,6 +10,7 @@
 
 @interface PDLKeyboardNotificationObserver ()
 
+@property (nonatomic, assign, class) CGFloat keyboardHeight;
 @property (nonatomic, class, readonly) NSMapTable *observers;
 @property (nonatomic, assign) BOOL isObserving;
 
@@ -18,6 +19,32 @@
 @end
 
 @implementation PDLKeyboardNotificationObserver
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardWillHideNotification:) name:UIKeyboardWillHideNotification object:nil];
+    });
+}
+
+static CGFloat PDLKeyboardNotificationObserverKeyboardHeight = 0;
++ (CGFloat)keyboardHeight {
+    return PDLKeyboardNotificationObserverKeyboardHeight;
+}
+
++ (void)setKeyboardHeight:(CGFloat)keyboardHeight {
+    PDLKeyboardNotificationObserverKeyboardHeight = keyboardHeight;
+}
+
++ (void)handleKeyboardWillShowNotification:(NSNotification *)notification {
+    CGFloat height = [notification.userInfo[UIKeyboardFrameEndUserInfoKey] CGRectValue].size.height;
+    self.keyboardHeight = height;
+}
+
++ (void)handleKeyboardWillHideNotification:(NSNotification *)notification {
+    self.keyboardHeight = 0;
+}
 
 + (NSMapTable *)observers {
     static NSMapTable *observers = nil;
