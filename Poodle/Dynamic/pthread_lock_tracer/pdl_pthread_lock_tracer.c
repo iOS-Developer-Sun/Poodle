@@ -6,15 +6,15 @@
 //
 //
 
-#import <pdl_pthread_lock_tracer.h>
+#import "pdl_pthread_lock_tracer.h"
 #import <pthread.h>
 #import <stdio.h>
 #import <mach/mach.h>
 #import <dispatch/dispatch.h>
 #import <assert.h>
 #import <stdatomic.h>
-#import <pdl_dynamic.h>
-#import <pdl_spinlock.h>
+#import "pdl_dynamic.h"
+#import "pdl_spinlock.h"
 #import "pdl_dictionary.h"
 #import "pdl_array.h"
 
