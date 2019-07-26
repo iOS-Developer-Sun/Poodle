@@ -8,7 +8,7 @@
 
 #import "PDLSystemImage.h"
 #import <mach-o/dyld.h>
-#import <pdl_mach_object.h>
+#import "pdl_mach_object.h"
 
 @interface PDLSystemImage () {
     struct pdl_mach_object _mach_object;

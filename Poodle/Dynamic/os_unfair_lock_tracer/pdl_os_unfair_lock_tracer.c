@@ -6,7 +6,7 @@
 //
 //
 
-#import <pdl_os_unfair_lock_tracer.h>
+#import "pdl_os_unfair_lock_tracer.h"
 #import <os/lock.h>
 #import <pthread.h>
 #import <stdio.h>
@@ -14,8 +14,8 @@
 #import <dispatch/dispatch.h>
 #import <assert.h>
 #import <stdatomic.h>
-#import <pdl_dynamic.h>
-#import <pdl_spinlock.h>
+#import "pdl_dynamic.h"
+#import "pdl_spinlock.h"
 #import "pdl_dictionary.h"
 #import "pdl_array.h"
 

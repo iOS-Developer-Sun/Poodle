@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #include <mach-o/loader.h>
 #include <mach/machine.h>
-#include <pdl_mach_object.h>
+#include "pdl_mach_object.h"
 
 @interface PDLSystemImage : NSObject
 
