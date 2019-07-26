@@ -359,5 +359,11 @@ Pod::Spec.new do |s|
         ss.dependency 'Poodle/mach_object'
     end
 
+    s.subspec 'PageControl' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = UIKit + 'PDLPageControl/' + Files
+        ss.frameworks = 'UIKit'
+    end
 end
 
