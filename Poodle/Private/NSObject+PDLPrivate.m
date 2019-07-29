@@ -21,5 +21,4 @@
 @dynamic _rawBriefDescription;
 #endif
 
-
 @end
