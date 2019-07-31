@@ -1,3 +1,14 @@
+//
+//  pdl_array.h
+//  Poodle
+//
+//  Created by Poodle on 2016/5/15.
+//  Copyright © 2019 Poodle. All rights reserved.
+//
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef void *pdl_array_t;
 
@@ -14,3 +25,7 @@ extern void pdl_array_sortByFunction(pdl_array_t array, int(*sort)(void *object1
 extern void pdl_array_sortByFunctionAndData(pdl_array_t array, int(*sort)(void *object1, void *object2, void *data), void *data);
 extern unsigned int pdl_array_count(pdl_array_t array);
 extern void pdl_array_print(pdl_array_t array);
+
+#ifdef __cplusplus
+}
+#endif

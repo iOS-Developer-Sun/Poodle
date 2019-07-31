@@ -1,7 +1,19 @@
+//
+//  pdl_hashMap.h
+//  Poodle
+//
+//  Created by Poodle on 2016/5/15.
+//  Copyright © 2019 Poodle. All rights reserved.
+//
+
 #include <stdio.h>
 #include <stdbool.h>
 #include "uthash.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+    
 typedef struct pdl_structHashItem {
     void *key;
     void *value;
@@ -20,3 +32,7 @@ extern bool pdl_hashMapHasKey(pdl_hashMap *map, void *key);
 extern unsigned int pdl_hashMapCount(pdl_hashMap *map);
 extern void pdl_hashMapGetAllKeys(pdl_hashMap *map, void ***keys, unsigned int *count);
 extern void pdl_hashMapDestroy(pdl_hashMap *map);
+
+#ifdef __cplusplus
+}
+#endif
