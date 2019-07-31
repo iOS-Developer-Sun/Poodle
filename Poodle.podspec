@@ -29,6 +29,7 @@ Pod::Spec.new do |s|
     Utils = Base + 'utils/'
     Dynamic = Base + 'Dynamic/'
     Asm = Base + 'asm/'
+    Dev = Base + 'dev/'
 
     Platform_osx = :osx, "10.10"
     Platform_ios = :ios, "9.0"
@@ -363,6 +364,20 @@ Pod::Spec.new do |s|
         ss.platform = Platform_ios
         ss.ios.deployment_target  = '9.0'
         ss.source_files = UIKit + 'PDLPageControl/' + Files
+        ss.frameworks = 'UIKit'
+    end
+
+    s.subspec 'LongPressPop' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = UIKit + 'UINavigationController+PDLLongPressPop/' + Files
+        ss.frameworks = 'UIKit'
+    end
+
+    s.subspec 'ScreenDebugger' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = Dev + 'ScreenDebugger/' + Files
         ss.frameworks = 'UIKit'
     end
 end
