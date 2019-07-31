@@ -1,5 +1,16 @@
+//
+//  pdl_dictionary.h
+//  Poodle
+//
+//  Created by Poodle on 2016/5/15.
+//  Copyright © 2019 Poodle. All rights reserved.
+//
 
 #include "pdl_array.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef void *pdl_dictionary_t;
 
@@ -13,3 +24,7 @@ extern void pdl_dictionary_getAllKeys(pdl_dictionary_t dictionary, void ***keys,
 extern void pdl_dictionary_destroy(pdl_dictionary_t dictionary);
 extern unsigned int pdl_dictionary_count(pdl_dictionary_t dictionary);
 extern void pdl_dictionary_print(pdl_dictionary_t dictionary);
+
+#ifdef __cplusplus
+}
+#endif
