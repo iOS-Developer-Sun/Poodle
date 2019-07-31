@@ -227,6 +227,43 @@
     return viewController;
 }
 
+- (NSArray *)popToViewController:(UIViewController *)viewController duration:(NSTimeInterval)duration animations:(void (^)(id <UIViewControllerContextTransitioning> transitionContext))animations interactiveTransition:(UIPercentDrivenInteractiveTransition **)interactiveTransition {
+    PDLUINavigationControllerTrasitionAnimationDelegate *delegate = [[PDLUINavigationControllerTrasitionAnimationDelegate alloc] init];
+    delegate.transitionDuration = duration;
+    delegate.animation = ^(id <UIViewControllerContextTransitioning> transitionContext) {
+        if (animations) {
+            animations(transitionContext);
+        }
+    };
+    if (interactiveTransition) {
+        [delegate enableInteractiveTransitioning];
+        *interactiveTransition = delegate.interactiveTransitioning;
+    }
+    delegate.originalDelegate = self.delegate;
+    delegate.navigationController = self;
+    self.delegate = delegate;
+    NSArray *viewControllers = [self popToViewController:viewController animated:YES];
+    return viewControllers;
+}
+
+- (NSArray *)popToRootViewControllerWithDuration:(NSTimeInterval)duration animations:(void (^)(id <UIViewControllerContextTransitioning> transitionContext))animations interactiveTransition:(UIPercentDrivenInteractiveTransition **)interactiveTransition {    PDLUINavigationControllerTrasitionAnimationDelegate *delegate = [[PDLUINavigationControllerTrasitionAnimationDelegate alloc] init];
+    delegate.transitionDuration = duration;
+    delegate.animation = ^(id <UIViewControllerContextTransitioning> transitionContext) {
+        if (animations) {
+            animations(transitionContext);
+        }
+    };
+    if (interactiveTransition) {
+        [delegate enableInteractiveTransitioning];
+        *interactiveTransition = delegate.interactiveTransitioning;
+    }
+    delegate.originalDelegate = self.delegate;
+    delegate.navigationController = self;
+    self.delegate = delegate;
+    NSArray *viewControllers = [self popToRootViewControllerAnimated:YES];
+    return viewControllers;
+}
+
 @end
 
 @interface PDLUITabBarControllerTrasitionAnimationDelegate : PDLUIViewControllerTrasitionAnimationDelegate <UITabBarControllerDelegate>

@@ -9,8 +9,14 @@
 #import <UIKit/UIKit.h>
 
 /*
- *  [[transitionContext containerView] addSubview:[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey].view];
- *  [transitionContext completeTransition:![transitionContext transitionWasCancelled]];
+ // present / push
+ [transitionContext.containerView addSubview:[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey].view];
+
+ // dismiss / pop
+ [transitionContext.containerView insertSubview:[transitionContext viewControllerForKey:UITransitionContextToViewControllerKey].view belowSubview:[transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey]];
+
+ // all
+ [transitionContext completeTransition:!transitionContext.transitionWasCancelled];
  */
 
 @interface UIViewController (PDLTrasitionAnimation)
@@ -26,6 +32,8 @@
 - (void)pdl_pushViewController:(UIViewController *)viewController duration:(NSTimeInterval)duration animations:(void (^)(id <UIViewControllerContextTransitioning> transitionContext))animations interactiveTransition:(UIPercentDrivenInteractiveTransition **)interactiveTransition;
 
 - (UIViewController *)pdl_popViewControllerWithDuration:(NSTimeInterval)duration animations:(void (^)(id <UIViewControllerContextTransitioning> transitionContext))animations interactiveTransition:(UIPercentDrivenInteractiveTransition **)interactiveTransition;
+
+- (NSArray *)popToRootViewControllerWithDuration:(NSTimeInterval)duration animations:(void (^)(id <UIViewControllerContextTransitioning> transitionContext))animations interactiveTransition:(UIPercentDrivenInteractiveTransition **)interactiveTransition;
 
 @end
 
