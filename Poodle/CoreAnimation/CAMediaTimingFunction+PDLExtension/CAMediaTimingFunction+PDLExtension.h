@@ -1,9 +1,9 @@
 //
 //  CAMediaTimingFunction+PDLExtension.h
-//  Sun
+//  Poodle
 //
-//  Created by Sun on 2019/2/20.
-//
+//  Created by Poodle on 2019/2/20.
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #import <QuartzCore/QuartzCore.h>

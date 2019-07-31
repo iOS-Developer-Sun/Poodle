@@ -2,8 +2,8 @@
 //  NSObject+PDLExtension.m
 //  Poodle
 //
-//  Created by Sun on 14-6-26.
-//
+//  Created by Poodle on 14-6-26.
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #import "NSObject+PDLExtension.h"

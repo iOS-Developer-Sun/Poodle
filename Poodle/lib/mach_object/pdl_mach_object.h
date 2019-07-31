@@ -3,7 +3,7 @@
 //  Poodle
 //
 //  Created by Poodle on 25/09/2017.
-//  
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #ifndef pdl_mach_object_h

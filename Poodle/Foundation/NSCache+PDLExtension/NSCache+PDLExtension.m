@@ -1,9 +1,9 @@
 //
 //  NSCache+PDLExtension.m
+//  Poodle
 //
-//
-//  Created by Sun on 23/06/2017.
-//
+//  Created by Poodle on 23/06/2017.
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #import "NSCache+PDLExtension.h"

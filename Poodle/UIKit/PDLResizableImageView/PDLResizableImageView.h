@@ -1,9 +1,9 @@
 //
 //  PDLResizableImageView.h
+//  Poodle
 //
-//
-//  Created by Sun on 2019/1/17.
-//  Copyright © 2019 Sun. All rights reserved.
+//  Created by Poodle on 2019/1/17.
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

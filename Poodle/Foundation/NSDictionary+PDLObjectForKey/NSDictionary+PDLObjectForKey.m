@@ -1,9 +1,9 @@
 //
 //  NSDictionary+PDLObjectForKey.m
-//  Sun
+//  Poodle
 //
-//  Created by Sun on 14-7-25.
-//
+//  Created by Poodle on 14-7-25.
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #import "NSDictionary+PDLObjectForKey.h"
