@@ -3,7 +3,7 @@
 //  Poodle
 //
 //  Created by Poodle on 04/02/2017.
-//
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>

@@ -3,7 +3,7 @@
 //  Poodle
 //
 //  Created by Poodle on 22/09/2017.
-//  
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #import "PDLSystemImage.h"

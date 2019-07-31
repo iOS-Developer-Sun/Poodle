@@ -1,9 +1,9 @@
 //
 //  pdl_os.m
-//  Sun
+//  Poodle
 //
-//  Created by Sun on 14-6-27.
-//
+//  Created by Poodle on 14-6-27.
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #import "pdl_os.h"
