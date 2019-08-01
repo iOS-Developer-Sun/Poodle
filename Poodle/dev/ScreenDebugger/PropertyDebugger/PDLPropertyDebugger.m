@@ -1,39 +1,39 @@
 //
-//  PropertyDebugger.m
-//  Sunzj
+//  PDLPropertyDebugger.m
+//  Poodle
 //
-//  Created by sunzj on 6/11/2016.
-//  Copyright © 2016 sunzj. All rights reserved.
+//  Created by Poodle on 6/11/2016.
+//  Copyright © 2016 Poodle. All rights reserved.
 //
 
-#import "PropertyDebugger.h"
+#import "PDLPropertyDebugger.h"
 
-@interface PropertyDebuggerMainView : UIView
+@interface PDLPropertyDebuggerMainView : UIView
 
-@property (nonatomic, weak) PropertyDebugger *propertyDebugger;
+@property (nonatomic, weak) PDLPropertyDebugger *PDLPropertyDebugger;
 
 @end
 
-@implementation PropertyDebuggerMainView
+@implementation PDLPropertyDebuggerMainView
 
 - (void)layoutSubviews {
     [super layoutSubviews];
 
-    [self.propertyDebugger mainViewDidLayoutSubviews];
+    [self.PDLPropertyDebugger mainViewDidLayoutSubviews];
 }
 
 @end
 
-@interface PropertyDebugger ()
+@interface PDLPropertyDebugger ()
 
-@property (nonatomic, strong) PropertyDebuggerMainView *mainView;
+@property (nonatomic, strong) PDLPropertyDebuggerMainView *mainView;
 @property (nonatomic, strong) UIView *controlPanel;
 @property (nonatomic, assign) CGRect propertyDebuggerControlPanePanFrame;
 
 @end
 
 
-@implementation PropertyDebugger
+@implementation PDLPropertyDebugger
 
 - (id)value {
     if (self.getter) {
@@ -122,8 +122,8 @@
 
 - (UIView *)mainViewWithFrame:(CGRect)frame {
     if (self.mainView == nil) {
-        PropertyDebuggerMainView *mainView = [[PropertyDebuggerMainView alloc] initWithFrame:frame];
-        mainView.propertyDebugger = self;
+        PDLPropertyDebuggerMainView *mainView = [[PDLPropertyDebuggerMainView alloc] initWithFrame:frame];
+        mainView.PDLPropertyDebugger = self;
         mainView.backgroundColor = [UIColor clearColor];
         mainView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         self.mainView = mainView;

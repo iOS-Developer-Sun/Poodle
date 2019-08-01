@@ -1,18 +1,18 @@
 //
-//  ScreenDebuggerWindow.m
-//  Sunzj
+//  PDLScreenDebuggerWindow.m
+//  Poodle
 //
-//  Created by sunzj on 15/10/2016.
-//  Copyright © 2016 sunzj. All rights reserved.
+//  Created by Poodle on 15/10/2016.
+//  Copyright © 2016 Poodle. All rights reserved.
 //
 
-#import "ScreenDebuggerWindow.h"
+#import "PDLScreenDebuggerWindow.h"
 
-@interface ScreenDebuggerWindowComponentsView : UIView
+@interface PDLScreenDebuggerWindowComponentsView : UIView
 
 @end
 
-@implementation ScreenDebuggerWindowComponentsView
+@implementation PDLScreenDebuggerWindowComponentsView
 
 - (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
     UIView *view = [super hitTest:point withEvent:event];
@@ -24,10 +24,10 @@
 
 @end
 
-@interface ScreenDebuggerWindow ()
+@interface PDLScreenDebuggerWindow ()
 
 @property (nonatomic, weak) UIView *contentView;
-@property (nonatomic, weak) ScreenDebuggerWindowComponentsView *componentsView;
+@property (nonatomic, weak) PDLScreenDebuggerWindowComponentsView *componentsView;
 @property (nonatomic, weak) UIView *arrow;
 @property (nonatomic, assign) CGPoint currentPoint;
 @property (nonatomic, weak) UIWindow *previousKeyWindow;
@@ -39,7 +39,7 @@
 
 @end
 
-@implementation ScreenDebuggerWindow
+@implementation PDLScreenDebuggerWindow
 
 static NSString *closeImageDataBase64String = @"iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAAAXNSR0IArs4c6QAAAAlwSFlzAAAWJQAAFiUBSVIk8AAAABxpRE9UAAAAAgAAAAAAAAAUAAAAKAAAABQAAAAUAAABepLTgvsAAAFGSURBVFgJ7JVhkYNADIUrAQknoRJOAhJwgoRKWAlIQEIlVMJJ4L7MbDo726QsS3q/LjOZtNnkvUcIcLn8W+AEtm274mv2hTgEwrtQ8IyZcyW+56VgxtVWFzXoACIZyo8SEr93oSlKRUPabegsgKMWNzVD0SyjVrs1NzYWAjzgdyUgtosTjtMAb4Qa2H13yQA6dpWOSHDLu9MnTrEBK/dElvmqZz2R/oSr3XswXnpACxEJzqzKiLJ/ca8xwMYC/HEUnPrpTP/L1KxERdI8AfrKizu9Jpa2Zw6yWzGJ5Xng/KA2ZD0ceDsNaSpEuk9hJU5aJhvxA1nIVmHMNtcU5Adc1kDt78SJGFhdAcZZ+JeoHoj5Pwt5ENXGLH7RBNFdARM0OomA+iEoxe0+RNF6TLxKpA5P9i/uRWwyH0giJqmyHL8OtLulvwAAAP//NVs+cwAAAVRJREFU7ZRhEYMwDEYnAQmTgIRJmIQ6mQQkIGESkDAJkzAJ7H13zS3Xo4O2jF/LXS5Aki+vBXo67WDzPAc8tQcPuh3k2ySA6PFXpFO8x2uFR5t6YzcAHk5AQZLEUTfRxsYxde0M7/BnhFAIXon7SQ+jHQvJUMHpGzMbPJyuSaQ1Ia352T3DJyMjZneH3PGQAsLNprVdoLDH7SdS32WtpzqP+KAJ0fSKNx0j1HlIwfbVELlGRP1ZtxnO9Oi/4maCPFuuOSLm4ap3INEpXuTiQhDd9fWgd8PN2iBR8XASvS6uovAhOqPEomVPga+yNHf4M4oohK8NhUn07k67DJJGwWn7zW6F81fLEa6fQfNkZMSy1a2ifQrQTiHDJ5u5EhBu9jM4G8+gM/6ygcT8d05ycIV6xZsOYhtWG5nT4wapuHyQk7g4PwTOFsVc7aTNXwa04n8s2IE3S6awERNb0SAAAAAASUVORK5CYII=";
 
@@ -67,7 +67,7 @@ static NSString *closeImageDataBase64String = @"iVBORw0KGgoAAAANSUhEUgAAACgAAAAo
         [view addSubview:contentView];
         _contentView = contentView;
 
-        ScreenDebuggerWindowComponentsView *componentsView = [[ScreenDebuggerWindowComponentsView alloc] initWithFrame:view.bounds];
+        PDLScreenDebuggerWindowComponentsView *componentsView = [[PDLScreenDebuggerWindowComponentsView alloc] initWithFrame:view.bounds];
         componentsView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [view addSubview:componentsView];
         _componentsView = componentsView;

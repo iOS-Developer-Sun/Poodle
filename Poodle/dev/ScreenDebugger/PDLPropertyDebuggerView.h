@@ -1,16 +1,16 @@
 //
-//  PropertyDebuggerView.h
-//  Sunzj
+//  PDLPropertyDebuggerView.h
+//  Poodle
 //
-//  Created by sunzj on 5/11/2016.
-//  Copyright © 2016 sunzj. All rights reserved.
+//  Created by Poodle on 5/11/2016.
+//  Copyright © 2016 Poodle. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@class PropertyDebuggerView;
+@class PDLPropertyDebuggerView;
 
-@protocol PropertyDebugger <NSObject>
+@protocol PDLPropertyDebugger <NSObject>
 
 @property (nonatomic, weak) id object;
 
@@ -26,11 +26,11 @@
 
 @protocol PropertyDebuggerViewDelegate <NSObject>
 
-- (void)closeButtonDidTouchUpInside:(PropertyDebuggerView *)propertyDebuggerView;
+- (void)closeButtonDidTouchUpInside:(PDLPropertyDebuggerView *)propertyDebuggerView;
 
 @end
 
-@interface PropertyDebuggerView : UIControl
+@interface PDLPropertyDebuggerView : UIControl
 
 @property (nonatomic, weak) id <PropertyDebuggerViewDelegate> delegate;
 @property (nonatomic, copy) NSArray *propertyDebuggers;
