@@ -387,5 +387,15 @@ Pod::Spec.new do |s|
         ss.source_files = UIKit + 'PDLFormView/' + Files
         ss.frameworks = 'UIKit'
     end
+
+    s.subspec 'ImageListViewController' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = Dev + 'ImageListViewController/' + Files
+        ss.frameworks = 'UIKit'
+        ss.dependency 'Poodle/SystemImage'
+        ss.dependency 'Poodle/NSObjectDebug'
+        ss.dependency 'Poodle/KeyboardNotificationObserver'
+    end
 end
 
