@@ -7,26 +7,22 @@
 //
 
 #import "PDLDatabase.h"
-
-#define DATABASE_FMDB 0
-
-#if DATABASE_FMDB
-
+#import <objc/message.h>
+#import <sqlite3.h>
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
 #import "FMDatabaseQueue.h"
 #import "FMResultSet.h"
-#import <sqlite3.h>
 
-@interface Database()
+@interface PDLDatabase ()
 
-@property (nonatomic, strong) FMDatabaseQueue *sqliteQueue;
 @property (nonatomic, weak) NSThread *inDatabaseThread;
+@property (nonatomic, strong) FMDatabaseQueue *sqliteQueue;
 @property (nonatomic, weak) FMDatabase *databaseIn;
 
 @end
 
-@implementation Database
+@implementation PDLDatabase
 
 + (instancetype)databaseWithPath:(NSString *)path {
     return [[self alloc] initWithPath:path];
@@ -35,16 +31,21 @@
 - (instancetype)initWithPath:(NSString *)name {
     self = [super init];
     if (self) {
-        _sqliteQueue = [FMDatabaseQueue databaseQueueWithPath:name flags:SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FILEPROTECTION_NONE];
-        if (self.sqliteQueue == nil) {
-            self = nil;
+        Class queueClass = NSClassFromString(@"FMDatabaseQueue");
+        if (queueClass) {
+            int flags = SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE | SQLITE_OPEN_FILEPROTECTION_NONE;
+            _sqliteQueue = ((id(*)(id, SEL, id, int))objc_msgSend)(queueClass, @selector(databaseQueueWithPath:flags:), name, flags);
+//            _sqliteQueue = [FMDatabaseQueue databaseQueueWithPath:name flags:flags];
+            if (_sqliteQueue == nil) {
+                self = nil;
+            }
         }
     }
     return self;
 }
 
 - (void)dealloc {
-    [self.sqliteQueue inDatabase:^(FMDatabase *db) {
+    [_sqliteQueue inDatabase:^(FMDatabase *db) {
         [db closeOpenResultSets];
         [db close];
     }];
@@ -421,189 +422,3 @@
 }
 
 @end
-
-#else
-
-@interface PDLDatabase()
-
-@end
-
-@implementation PDLDatabase
-
-+ (instancetype)databaseWithPath:(NSString *)path {
-    return [[self alloc] initWithPath:path];
-}
-
-- (instancetype)initWithPath:(NSString *)name {
-    self = [super init];
-    if (self) {
-        ;
-    }
-    return self;
-}
-
-- (BOOL)insert:(NSDictionary *)row intoTable:(NSString *)table withReplace:(BOOL)replace {
-    return NO;
-}
-
-#pragma mark - public methods
-
-#pragma mark - execute
-
-- (BOOL)executeUpdate:(NSString *)sql {
-    return NO;
-}
-
-- (NSArray *)executeQuery:(NSString *)sql {
-    return [self executeQuery:sql error:NULL];
-}
-
-- (NSArray *)executeQuery:(NSString *)sql error:(NSError * __autoreleasing *)error {
-    return nil;
-}
-
-- (BOOL)executeTransaction:(BOOL (^)(void))transaction {
-    return NO;
-}
-
-#pragma mark - version
-
-- (NSInteger)version {
-    return 0;
-}
-
-- (void)setVersion:(NSInteger)version {
-    ;
-}
-
-#pragma mark - table
-
-- (NSArray *)allTables {
-    return nil;
-}
-
-- (NSArray *)customTables {
-    return nil;
-}
-
-- (BOOL)isTableExistent:(NSString *)tableName {
-    return NO;
-}
-
-- (NSArray *)fieldsFromTable:(NSString *)table {
-    return nil;
-}
-
-#pragma mark - state
-
-- (NSInteger)countFromTable:(NSString *)table {
-    return [self countFromTable:table withCondition:nil];
-}
-
-- (NSInteger)countFromTable:(NSString *)table withCondition:(NSString *)condition {
-    return 0;
-}
-
-#pragma mark - insert delete update
-
-- (BOOL)insert:(NSDictionary *)row intoTable:(NSString *)table {
-    return [self insert:row intoTable:table withReplace:NO];
-}
-
-- (BOOL)replace:(NSDictionary *)row intoTable:(NSString *)table {
-    return [self insert:row intoTable:table withReplace:YES];
-}
-
-- (BOOL)deleteFromTable:(NSString *)table {
-    return [self deleteFromTable:table withCondition:nil];
-}
-
-- (BOOL)deleteFromTable:(NSString *)table withCondition:(NSString *)condition {
-    return NO;
-}
-
-- (BOOL)update:(NSDictionary *)data inTable:(NSString *)table withCondition:(NSString *)condition {
-    return NO;
-}
-
-#pragma mark - findOne
-
-- (NSDictionary *)findOne:(NSString *)fields fromTable:(NSString *)table {
-    return [self findOne:fields fromTable:table withOrder:nil withCondition:nil];
-}
-
-- (NSDictionary *)findOne:(NSString *)fields fromTable:(NSString *)table withOrder:(NSString *)order {
-    return [self findOne:fields fromTable:table withOrder:order withCondition:nil];
-}
-
-- (NSDictionary *)findOne:(NSString *)fields fromTable:(NSString *)table withCondition:(NSString *)condition {
-    NSDictionary *one = [self findOne:fields fromTable:table withOrder:nil withCondition:condition];
-    return one;
-}
-
-- (NSDictionary *)findOne:(NSString *)fields fromTable:(NSString *)table withOrder:(NSString *)order withCondition:(NSString *)condition {
-    NSArray *list = [self findAll:fields fromTable:table withOffset:0 withCount:1 withOrder:order withCondition:condition];
-    if ([list count] <= 0) {
-        return nil;
-    }
-    return list[0];
-}
-
-#pragma mark - findAll
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table {
-    return [self findAll:fields fromTable:table withOffset:0 withCount:-1 withOrder:nil withCondition:nil];
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withLimit:(NSInteger)limit {
-    return [self findAll:fields fromTable:table withOffset:0 withCount:limit withOrder:nil withCondition:nil];
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withOffset:(NSInteger)offset withCount:(NSInteger)count {
-    return [self findAll:fields fromTable:table withOffset:offset withCount:count withOrder:nil withCondition:nil];
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withOrder:(NSString *)order {
-    return [self findAll:fields fromTable:table withOffset:0 withCount:-1 withOrder:order withCondition:nil];
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withCondition:(NSString *)condition {
-    NSArray *all = [self findAll:fields fromTable:table withOffset:0 withCount:-1 withOrder:nil withCondition:condition];
-    return all;
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withLimit:(NSInteger)limit withOrder:(NSString *)order {
-    return [self findAll:fields fromTable:table withOffset:0 withCount:limit withOrder:order withCondition:nil];
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withOffset:(NSInteger)offset withCount:(NSInteger)count withOrder:(NSString *)order {
-    return [self findAll:fields fromTable:table withOffset:offset withCount:count withOrder:order withCondition:nil];
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withLimit:(NSInteger)limit withCondition:(NSString *)condition {
-    NSArray *all = [self findAll:fields fromTable:table withOffset:0 withCount:limit withOrder:nil withCondition:condition];
-    return all;
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withOffset:(NSInteger)offset withCount:(NSInteger)count withCondition:(NSString *)condition {
-    NSArray *all = [self findAll:fields fromTable:table withOffset:offset withCount:count withOrder:nil withCondition:condition];
-    return all;
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withOrder:(NSString *)order withCondition:(NSString *)condition {
-    NSArray *all = [self findAll:fields fromTable:table withOffset:0 withCount:-1 withOrder:order withCondition:condition];
-    return all;
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withLimit:(NSInteger)limit withOrder:(NSString *)order withCondition:(NSString *)condition {
-    NSArray *all = [self findAll:fields fromTable:table withOffset:0 withCount:limit withOrder:order withCondition:condition];
-    return all;
-}
-
-- (NSArray *)findAll:(NSString *)fields fromTable:(NSString *)table withOffset:(NSInteger)offset withCount:(NSInteger)count withOrder:(NSString *)order withCondition:(NSString *)condition {
-    return nil;
-}
-
-@end
-
-#endif
