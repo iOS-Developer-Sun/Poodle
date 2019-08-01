@@ -10,7 +10,7 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import "PDLClassViewController.h"
-#import <PDLKeyboardNotificationObserver.h>
+#import "PDLKeyboardNotificationObserver.h"
 
 @interface PDLClassListViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, PDLKeyboardNotificationObserver>
 
