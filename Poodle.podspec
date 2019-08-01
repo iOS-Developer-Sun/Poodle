@@ -380,5 +380,12 @@ Pod::Spec.new do |s|
         ss.source_files = Dev + 'ScreenDebugger/' + Files
         ss.frameworks = 'UIKit'
     end
+
+    s.subspec 'FormView' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = UIKit + 'PDLFormView/' + Files
+        ss.frameworks = 'UIKit'
+    end
 end
 
