@@ -397,5 +397,12 @@ Pod::Spec.new do |s|
         ss.dependency 'Poodle/NSObjectDebug'
         ss.dependency 'Poodle/KeyboardNotificationObserver'
     end
+
+    s.subspec 'FileSystemViewController' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = Dev + 'FileSystemViewController/' + Files
+        ss.frameworks = 'UIKit'
+    end
 end
 
