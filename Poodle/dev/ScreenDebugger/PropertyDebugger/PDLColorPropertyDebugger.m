@@ -1,14 +1,14 @@
 //
-//  ColorPropertyDebugger.m
-//  Sunzj
+//  PDLColorPropertyDebugger.m
+//  Poodle
 //
-//  Created by sunzj on 6/11/2016.
-//  Copyright © 2016 sunzj. All rights reserved.
+//  Created by Poodle on 6/11/2016.
+//  Copyright © 2016 Poodle. All rights reserved.
 //
 
-#import "ColorPropertyDebugger.h"
+#import "PDLColorPropertyDebugger.h"
 
-@interface ColorPropertyDebugger ()
+@interface PDLColorPropertyDebugger ()
 
 @property (nonatomic, weak) UILabel *redLabel;
 @property (nonatomic, weak) UILabel *greenLabel;
@@ -36,7 +36,7 @@
 
 @end
 
-@implementation ColorPropertyDebugger
+@implementation PDLColorPropertyDebugger
 
 - (void)setValue:(id)value {
     [super setValue:value];

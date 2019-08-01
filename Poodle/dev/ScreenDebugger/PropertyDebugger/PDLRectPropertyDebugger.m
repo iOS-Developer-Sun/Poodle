@@ -1,14 +1,14 @@
 //
-//  RectPropertyDebugger.m
-//  Sunzj
+//  PDLRectPropertyDebugger.m
+//  Poodle
 //
-//  Created by sunzj on 5/11/2016.
-//  Copyright © 2016 sunzj. All rights reserved.
+//  Created by Poodle on 5/11/2016.
+//  Copyright © 2016 Poodle. All rights reserved.
 //
 
-#import "RectPropertyDebugger.h"
+#import "PDLRectPropertyDebugger.h"
 
-@interface RectPropertyDebugger ()
+@interface PDLRectPropertyDebugger ()
 
 @property (nonatomic, weak) UIView *gestureView;
 @property (nonatomic, weak) UILabel *xLabel;
@@ -29,7 +29,7 @@
 
 @end
 
-@implementation RectPropertyDebugger
+@implementation PDLRectPropertyDebugger
 
 - (CGRect)frame {
      NSValue *value = self.value;

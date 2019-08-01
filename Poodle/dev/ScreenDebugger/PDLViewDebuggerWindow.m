@@ -1,30 +1,30 @@
 //
-//  ViewDebuggerWindow.m
-//  Sunzj
+//  PDLViewDebuggerWindow.m
+//  Poodle
 //
-//  Created by sunzj on 15/10/2016.
-//  Copyright © 2016 sunzj. All rights reserved.
+//  Created by Poodle on 15/10/2016.
+//  Copyright © 2016 Poodle. All rights reserved.
 //
 
-#import "ViewDebuggerWindow.h"
+#import "PDLViewDebuggerWindow.h"
 
-#import "RectPropertyDebugger.h"
-#import "FloatPropertyDebugger.h"
-#import "ColorPropertyDebugger.h"
-#import "BoolPropertyDebugger.h"
+#import "PDLRectPropertyDebugger.h"
+#import "PDLFloatPropertyDebugger.h"
+#import "PDLColorPropertyDebugger.h"
+#import "PDLBoolPropertyDebugger.h"
 
-@interface ViewDebuggerViewDetail : NSObject
+@interface PDLViewDebuggerViewDetail : NSObject
 
 @property (nonatomic, weak) UIView *view;
 @property (nonatomic, assign) NSInteger indentationLevel;
 
 @end
 
-@implementation ViewDebuggerViewDetail
+@implementation PDLViewDebuggerViewDetail
 
 @end
 
-@interface ViewDebuggerWindow () <UITableViewDataSource, UITableViewDelegate, PropertyDebuggerViewDelegate>
+@interface PDLViewDebuggerWindow () <UITableViewDataSource, UITableViewDelegate, PropertyDebuggerViewDelegate>
 
 @property (nonatomic, weak) UIControl *selectedIndicatorView;
 @property (nonatomic, weak) UIView *framesView;
@@ -38,11 +38,11 @@
 
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 
-@property (nonatomic, weak) PropertyDebuggerView *propertyDebuggerView;
+@property (nonatomic, weak) PDLPropertyDebuggerView *propertyDebuggerView;
 
 @end
 
-@implementation ViewDebuggerWindow
+@implementation PDLViewDebuggerWindow
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -84,25 +84,25 @@
         [self.contentView bringSubviewToFront:self.detailView];
 
         UIView *view = self.rootViewController.view;
-        PropertyDebuggerView *propertyDebuggerView = [[PropertyDebuggerView alloc] initWithFrame:view.bounds];
+        PDLPropertyDebuggerView *propertyDebuggerView = [[PDLPropertyDebuggerView alloc] initWithFrame:view.bounds];
         propertyDebuggerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         propertyDebuggerView.hidden = YES;
         propertyDebuggerView.delegate = self;
         [view addSubview:propertyDebuggerView];
         _propertyDebuggerView = propertyDebuggerView;
 
-        RectPropertyDebugger *framePropertyDebugger = [[RectPropertyDebugger alloc] init];
+        PDLRectPropertyDebugger *framePropertyDebugger = [[PDLRectPropertyDebugger alloc] init];
         framePropertyDebugger.keyPath = @"frame";
 
-        FloatPropertyDebugger *alphaPropertyDebugger = [[FloatPropertyDebugger alloc] init];
+        PDLFloatPropertyDebugger *alphaPropertyDebugger = [[PDLFloatPropertyDebugger alloc] init];
         alphaPropertyDebugger.keyPath = @"alpha";
         alphaPropertyDebugger.minimumValue = 0;
         alphaPropertyDebugger.maximumValue = 1;
 
-        ColorPropertyDebugger *backgroundColorPropertyDebugger = [[ColorPropertyDebugger alloc] init];
+        PDLColorPropertyDebugger *backgroundColorPropertyDebugger = [[PDLColorPropertyDebugger alloc] init];
         backgroundColorPropertyDebugger.keyPath = @"backgroundColor";
 
-        BoolPropertyDebugger *hiddenPropertyDebugger = [[BoolPropertyDebugger alloc] init];
+        PDLBoolPropertyDebugger *hiddenPropertyDebugger = [[PDLBoolPropertyDebugger alloc] init];
         hiddenPropertyDebugger.keyPath = @"hidden";
 
         propertyDebuggerView.propertyDebuggers = @[framePropertyDebugger, alphaPropertyDebugger, backgroundColorPropertyDebugger, hiddenPropertyDebugger];
@@ -131,13 +131,13 @@
     NSMutableArray *viewDetails = [NSMutableArray array];
     UIView *view = currentView;
     while (view) {
-        ViewDebuggerViewDetail *viewDetail = [[ViewDebuggerViewDetail alloc] init];
+        PDLViewDebuggerViewDetail *viewDetail = [[PDLViewDebuggerViewDetail alloc] init];
         viewDetail.view = view;
         [viewDetails addObject:viewDetail];
         view = view.superview;
     }
     for (NSInteger i = 0; i < viewDetails.count; i++) {
-        ViewDebuggerViewDetail *viewDetail = viewDetails[i];
+        PDLViewDebuggerViewDetail *viewDetail = viewDetails[i];
         viewDetail.indentationLevel = viewDetails.count - 1 - i;
     }
     self.currentAscendants = viewDetails;
@@ -275,7 +275,7 @@
     if (view) {
         CGPoint pointInView = [self.class convertPoint:point fromView:self.arrow.superview toView:view];
         if (CGRectContainsPoint(view.bounds, pointInView)) {
-            ViewDebuggerViewDetail *viewDetail = [[ViewDebuggerViewDetail alloc] init];
+            PDLViewDebuggerViewDetail *viewDetail = [[PDLViewDebuggerViewDetail alloc] init];
             viewDetail.view = view;
             viewDetail.indentationLevel = 0;
             [stack addObject:viewDetail];
@@ -284,7 +284,7 @@
 
     NSMutableArray *viewDetails = [NSMutableArray array];
     while (stack.count > 0) {
-        ViewDebuggerViewDetail *viewDetail = stack.lastObject;
+        PDLViewDebuggerViewDetail *viewDetail = stack.lastObject;
         [stack removeLastObject];
         [viewDetails addObject:viewDetail];
 
@@ -293,7 +293,7 @@
             UIView *subview = viewDetail.view.subviews[count - 1 - i];
             CGPoint pointInView = [self.class convertPoint:point fromView:self.arrow.superview toView:subview];
             if ([subview isKindOfClass:NSClassFromString(@"UITableViewWrapperView")] || CGRectContainsPoint(subview.bounds, pointInView)) {
-                ViewDebuggerViewDetail *subviewDetail = [[ViewDebuggerViewDetail alloc] init];
+                PDLViewDebuggerViewDetail *subviewDetail = [[PDLViewDebuggerViewDetail alloc] init];
                 subviewDetail.view = subview;
                 subviewDetail.indentationLevel = viewDetail.indentationLevel + 1;
                 [stack addObject:subviewDetail];
@@ -302,7 +302,7 @@
     }
 
     NSMutableArray *inverseViewDetails = [NSMutableArray array];
-    for (ViewDebuggerViewDetail *viewDetail in viewDetails) {
+    for (PDLViewDebuggerViewDetail *viewDetail in viewDetails) {
         [inverseViewDetails insertObject:viewDetail atIndex:0];
     }
 
@@ -316,7 +316,7 @@
         [view removeFromSuperview];
     }
 
-    for (ViewDebuggerViewDetail *viewDetail in self.viewsContainsPoint) {
+    for (PDLViewDebuggerViewDetail *viewDetail in self.viewsContainsPoint) {
         UIView *v = [[UIView alloc] init];
         v.backgroundColor = [UIColor clearColor];
         v.layer.borderWidth = 1 / [UIScreen mainScreen].scale;
@@ -410,8 +410,8 @@
     [self.rootViewController presentViewController:alertController animated:YES completion:nil];
 }
 
-- (ViewDebuggerViewDetail *)viewDetailAtIndexPath:(NSIndexPath *)indexPath {
-    ViewDebuggerViewDetail *viewDetail = nil;
+- (PDLViewDebuggerViewDetail *)viewDetailAtIndexPath:(NSIndexPath *)indexPath {
+    PDLViewDebuggerViewDetail *viewDetail = nil;
     if (indexPath.section == 0) {
         viewDetail = self.currentAscendants[indexPath.row];
     } else {
@@ -420,7 +420,7 @@
     return viewDetail;
 }
 
-- (void)closeButtonDidTouchUpInside:(PropertyDebuggerView *)propertyDebuggerView {
+- (void)closeButtonDidTouchUpInside:(PDLPropertyDebuggerView *)propertyDebuggerView {
     self.contentView.hidden = NO;
     self.componentsView.hidden = NO;
     self.propertyDebuggerView.hidden = YES;

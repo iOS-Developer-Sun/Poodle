@@ -1,21 +1,21 @@
 //
-//  FloatPropertyDebugger.m
-//  Sunzj
+//  PDLFloatPropertyDebugger.m
+//  Poodle
 //
-//  Created by sunzj on 6/11/2016.
-//  Copyright © 2016 sunzj. All rights reserved.
+//  Created by Poodle on 6/11/2016.
+//  Copyright © 2016 Poodle. All rights reserved.
 //
 
-#import "FloatPropertyDebugger.h"
+#import "PDLFloatPropertyDebugger.h"
 
-@interface FloatPropertyDebugger ()
+@interface PDLFloatPropertyDebugger ()
 
 @property (nonatomic, weak) UILabel *label;
 @property (nonatomic, weak) UISlider *slider;
 
 @end
 
-@implementation FloatPropertyDebugger
+@implementation PDLFloatPropertyDebugger
 
 - (instancetype)init {
     self =  [super init];

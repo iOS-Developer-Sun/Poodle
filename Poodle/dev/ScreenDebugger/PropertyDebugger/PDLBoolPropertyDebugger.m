@@ -1,20 +1,20 @@
 //
-//  BoolPropertyDebugger.m
-//  Sunzj
+//  PDLBoolPropertyDebugger.m
+//  Poodle
 //
-//  Created by sunzj on 6/11/2016.
-//  Copyright © 2016 sunzj. All rights reserved.
+//  Created by Poodle on 6/11/2016.
+//  Copyright © 2016 Poodle. All rights reserved.
 //
 
-#import "BoolPropertyDebugger.h"
+#import "PDLBoolPropertyDebugger.h"
 
-@interface BoolPropertyDebugger ()
+@interface PDLBoolPropertyDebugger ()
 
 @property (nonatomic, weak) UISwitch *aSwitch;
 
 @end
 
-@implementation BoolPropertyDebugger
+@implementation PDLBoolPropertyDebugger
 
 - (void)setValue:(id)value {
     [super setValue:value];

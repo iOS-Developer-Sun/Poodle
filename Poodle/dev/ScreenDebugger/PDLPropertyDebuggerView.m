@@ -1,24 +1,24 @@
 //
-//  PropertyDebuggerView.m
-//  Sunzj
+//  PDLPropertyDebuggerView.m
+//  Poodle
 //
-//  Created by sunzj on 5/11/2016.
-//  Copyright © 2016 sunzj. All rights reserved.
+//  Created by Poodle on 5/11/2016.
+//  Copyright © 2016 Poodle. All rights reserved.
 //
 
-#import "PropertyDebuggerView.h"
+#import "PDLPropertyDebuggerView.h"
 
-@interface PropertyDebuggerView () <UITableViewDataSource, UITableViewDelegate>
+@interface PDLPropertyDebuggerView () <UITableViewDataSource, UITableViewDelegate>
 
 @property (nonatomic, weak) UIView *headerView;
 @property (nonatomic, weak) UIButton *currentButton;
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, weak) UIView *containerView;
-@property (nonatomic, weak) id <PropertyDebugger> currentPropertyDebugger;
+@property (nonatomic, weak) id <PDLPropertyDebugger> currentPropertyDebugger;
 
 @end
 
-@implementation PropertyDebuggerView
+@implementation PDLPropertyDebuggerView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
@@ -131,15 +131,15 @@
         cell.backgroundColor = [UIColor colorWithWhite:0.7 alpha:0.7];
         cell.contentView.backgroundColor = [UIColor clearColor];
     }
-    id <PropertyDebugger> propertyDebugger = self.propertyDebuggers[indexPath.row];
-    id value = [self.object valueForKeyPath:propertyDebugger.keyPath];
+    id <PDLPropertyDebugger> PDLPropertyDebugger = self.propertyDebuggers[indexPath.row];
+    id value = [self.object valueForKeyPath:PDLPropertyDebugger.keyPath];
     NSString *description = nil;
-    if ([propertyDebugger respondsToSelector:@selector(valueDescription:)]) {
-        description = [propertyDebugger valueDescription:value];
+    if ([PDLPropertyDebugger respondsToSelector:@selector(valueDescription:)]) {
+        description = [PDLPropertyDebugger valueDescription:value];
     } else {
         description = [NSString stringWithFormat:@"%@", value];
     }
-    cell.textLabel.text = [NSString stringWithFormat:@"%@: %@", propertyDebugger.keyPath, description];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@: %@", PDLPropertyDebugger.keyPath, description];
     return cell;
 }
 

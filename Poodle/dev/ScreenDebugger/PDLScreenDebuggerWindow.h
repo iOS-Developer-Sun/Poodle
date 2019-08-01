@@ -1,14 +1,14 @@
 //
-//  ScreenDebuggerWindow.h
-//  Sunzj
+//  PDLScreenDebuggerWindow.h
+//  Poodle
 //
-//  Created by sunzj on 15/10/2016.
-//  Copyright © 2016 sunzj. All rights reserved.
+//  Created by Poodle on 15/10/2016.
+//  Copyright © 2016 Poodle. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@interface ScreenDebuggerWindow : UIWindow
+@interface PDLScreenDebuggerWindow : UIWindow
 
 @property (nonatomic, weak, readonly) UIView *contentView;
 @property (nonatomic, weak, readonly) UIView *componentsView;
