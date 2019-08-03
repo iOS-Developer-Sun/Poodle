@@ -404,5 +404,20 @@ Pod::Spec.new do |s|
         ss.source_files = Dev + 'FileSystemViewController/' + Files
         ss.frameworks = 'UIKit'
     end
+
+    s.subspec 'AddressQueryViewController' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = Dev + 'AddressQueryViewController/' + Files
+        ss.frameworks = 'UIKit'
+    end
+
+    s.subspec 'MemoryQueryViewController' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = Dev + 'MemoryQueryViewController/' + Files
+        ss.frameworks = 'UIKit'
+    end
+
 end
 
