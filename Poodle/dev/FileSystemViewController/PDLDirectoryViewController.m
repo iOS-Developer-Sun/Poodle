@@ -7,6 +7,7 @@
 //
 
 #import "PDLDirectoryViewController.h"
+#import "PDLDirectoryViewControllerResources.h"
 #import <dlfcn.h>
 #import <AVKit/AVKit.h>
 #import "PDLTextViewController.h"
@@ -30,7 +31,7 @@ static UIImage *PDLDirectoryViewController_AspectFitImageWithImageAndSize(UIImag
     return ret;
 }
 
-static UIImage *DirectoryViewController_ImageWithColorAndSize(UIColor *color, CGSize size) {
+static UIImage *PDLDirectoryViewController_ImageWithColorAndSize(UIColor *color, CGSize size) {
     if (!color || size.width <= 0 || size.height <= 0) {
         return nil;
     }
@@ -46,28 +47,26 @@ static UIImage *DirectoryViewController_ImageWithColorAndSize(UIColor *color, CG
 
 static UIImage *DirectoryViewController_CheckboxImage() {
     static __weak UIImage *_checkboxImage = nil;
-    UIImage *image = nil;
-    if (_checkboxImage == nil) {
-        const char *checkboxImageData =  "iVBORw0KGgoAAAANSUhEUgAAACMAAAAiCAYAAADVhWD8AAAAAXNSR0IArs4c6QAAAzFJREFUWAnNmL+LE0EUx7ObFAcW2wjCNYqS4grJz+4aG9GIhVxx/ir8IzxsDhU87PS/8CLaXCM5rjnOxiqJSe8VgUO0TCFETDZ+v+PMsD9mls1lNziwzOx7b9775M2PnYlTWKAMh8ML0+n01nw+v4Nu1/CsO46zTheQfUfF5xSyTqlUOqpUKr+oS1ucNIaDwaA2m82eI2AL9mtp+sBmAqjDYrG4V61Wv6bpkwjT7/cvA+A1HD1CnWhrCwagOXRt1Lv1en1ks6PcGgAgLd/338PGS3KwgG7suu5DAB3a+rgmRbfbfYpMfIIuKxCG8eiTvk0xKYtlRhq/sXXISL7TbDbfRn2FYDg0pMdjzFi083nfMX98PHejQ6ZhOFkxR4YIkOXQJPFyDlWCk1pnANngqlkVCCE5hxhTF5EZuY/0oNSZ0hY5NrjssQ811D4kMoNd9UVOID8Q8DODmn4TY3IzVTqXWzxebitBhnXH87wrjUbjBoK+tPmFriUZCi6/NTBMu8XbfEblBNkql8u/qcBE/RY1CLyvSYaCCzJ+9LIsIRDsWxcRQw+FKZBi4Jzh1zepnGHMvyQZBHQxEOiOEWwjYGNqCgbCiCOAyQKyMzxXMe6bAHqA9tRiR7ERBPLrCX2USjC4CJIEM8K2/Yc9APQBto/RNAEtA1JQDHrTU4iRerPX691XMgB9NAAtBaJ8s+YE5unMWqB/B6BtZRABygREMTAziTDQl2C8HwXCznkzuHy5amB7jCfNHIFZqAgGwpyGxOaXGFCtVjtR+8iSIIwoGDiBO+b4MWkMiBYZgHACCwaXp3j4nMRCmwUCCABPMHQOag7JCZ7zDI2KMJEM/056cHoAzT2lTVn/hN2llLZWM2TlAItiiwZiaYPsFYTGL6vVSzYgPELsqRgCRp4n2kq4wrqtzjKMKWDYQGZ2UY3ZXlEZy5g6nIbhWZT3Ghj4WptTgzHkHWoUDKFhKORpHavkWdAgjzZjRG8GjBOCoUDeZ3byyJD0abwzMbb1AP7fXG9JyTTyXoNfs49n0WVPF6KwL33Ql2lolB1ra2aCRrzK8AYBGQ/uac/L2f4lEgRiO+8/i/4CEQJw3Z5VQTMAAAAASUVORK5CYII=";
-        NSData *data = [[NSData alloc] initWithBase64EncodedString:@(checkboxImageData) options:0];
+    UIImage *image = _checkboxImage;
+    if (image == nil) {
+        NSData *data = [[NSData alloc] initWithBytes:PDLDirectoryViewControllerCheckboxImageData length:PDLDirectoryViewControllerCheckboxImageDataLength];
         image = [UIImage imageWithData:data];
         image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
         _checkboxImage = image;
     }
-    return _checkboxImage;
+    return image;
 }
 
 static UIImage *DirectoryViewController_CheckboxHighlightedImage() {
     static __weak UIImage *_checkboxHighlightedImage = nil;
-    UIImage *image = nil;
-    if (_checkboxHighlightedImage == nil) {
-        const char *checkboxHighlightedImageData =  "iVBORw0KGgoAAAANSUhEUgAAACMAAAAiCAYAAADVhWD8AAAAAXNSR0IArs4c6QAAA1NJREFUWAnNWD1oFFEQnnmGKASxEQQbozZeIIqkTGMjmmAhKdQoaCOIZ6nYiAqKnSmNBKzEKNqkkRw2Ehu7IIrkLLQIhKClSCSJYcdv3rvd7O29t9kze8GBu9t9M2++7/3NmzmmNkSeHu6hX6sniHmYSA6S8F5014/KIrEsEvE3Epmmnd1v+OKnJacq9s1FzORx31GK5DbAhkhoR5E+xLQMsjUyfJ+vzn0o0ieXjDyp7KMVeQDH50Ei1zYIxugp9Jy28y2+XJ8P2kERBJDxviGi6AUc7cpzUFjH9JPIjHJ1rhbqY3wKLMt1kuh1aUQURAcFn9a3DxRtLTNjjaPoYcC+nGZjbmAfjWWdNZGxS6MzgvnMGpb8HhGbU9klS8jYzboqH0tdmrwR6B7q5iPpTb0+A3pqytqseSRinWIpZkrszNg4ItEsyCQzlbLp3KMeezYDcRxyMyNypzNE+Dui9TsMUbwj0sFrMG2IsSGe5GTcUN4vT9P+3l6u1o+B0N2gX0R1x0FPjd41RUN80GNWYYmM8HBtxWpYvmYtknfFVg4Q4y69RFXCQzMRmRjYTREnS+EFsBevjSe4ffNlASv7Pt8k1nqIrC29xS1eiS38v46DaaQBfhuiBerqOcDVL4MI1ufwWQsZQqd7JFkaOyNKhKg/3KehcamIjbRxPtLah2mer8z+UQVfq79EOnDBT2gTRByq5bAe9Fqp6OU2KI8qZ2MV4sGrVkKbJhK7tzOD7CxXniEonoktmgmVRsRywGnSVDFPpAuBabKV0Lbj/7xHsnANDlgm5Kwbio/Q55k4jrS1Wb1YjgNOE5LnQtJKSLttnog6cRyMZvGII8uF+FCD0PihSyLCMtHfT2u/Z9B34+MbAlBs5QCxt7SMV6bA7nTI3t/OPzCkPX5dO608hbAxoj3c0Wa+B1r+mzXotwQiiolSJoawZGw+oeXEVgsw41xGodeDHuoazA7KiS0SxVLMlCRkXC5qRqGLUvpOPQIDNVSmqEvIKKrN1o252SkGiV9gZCsD1TWR0Qas4RihrsFjJ2YoUt8WQ8EyYo92ps2+/jflrbKx04i6Bo+T7R97Ox735ULGpK2RcupsNQ7OTModuVIGFYQm7kXz5bL/EkkT0udO/1n0F/Hma5iJynVMAAAAAElFTkSuQmCC";
-        NSData *data = [[NSData alloc] initWithBase64EncodedString:@(checkboxHighlightedImageData) options:0];
+    UIImage *image = _checkboxHighlightedImage;
+    if (image == nil) {
+        NSData *data = [[NSData alloc] initWithBytes:PDLDirectoryViewControllerCheckboxHighlightedImageData length:PDLDirectoryViewControllerCheckboxHighlightedImageDataLength];
         image = [UIImage imageWithData:data];
         image = [UIImage imageWithCGImage:image.CGImage scale:2 orientation:image.imageOrientation];
         _checkboxHighlightedImage = image;
     }
-    return _checkboxHighlightedImage;
+    return image;
 }
 
 static NSString *DirectoryViewController_SizeStringOfBytes(uint64_t bytes) {
@@ -237,31 +236,31 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
         UIImage *thumbnailImage = nil;
         switch (type) {
             case DirectoryContentTypeDirectory:
-                thumbnailImage = DirectoryViewController_ImageWithColorAndSize([UIColor yellowColor], size);
+                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor yellowColor], size);
                 break;
             case DirectoryContentTypeText:
-                thumbnailImage = DirectoryViewController_ImageWithColorAndSize([UIColor grayColor], size);
+                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor grayColor], size);
                 break;
             case DirectoryContentTypeImage:
                 thumbnailImage = PDLDirectoryViewController_AspectFitImageWithImageAndSize([UIImage imageWithContentsOfFile:filePath], imageSize);
                 break;
             case DirectoryContentTypeAudio:
-                thumbnailImage = DirectoryViewController_ImageWithColorAndSize([UIColor blueColor], size);
+                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor blueColor], size);
                 break;
             case DirectoryContentTypeVideo:
-                thumbnailImage = DirectoryViewController_ImageWithColorAndSize([UIColor redColor], size);
+                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor redColor], size);
                 break;
             case DirectoryContentTypeDatabase:
-                thumbnailImage = DirectoryViewController_ImageWithColorAndSize([UIColor greenColor], size);
+                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor greenColor], size);
                 break;
             case DirectoryContentTypePropertyList:
-                thumbnailImage = DirectoryViewController_ImageWithColorAndSize([UIColor purpleColor], size);
+                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor purpleColor], size);
                 break;
             case DirectoryContentTypeWebPage:
-                thumbnailImage = DirectoryViewController_ImageWithColorAndSize([UIColor magentaColor], size);
+                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor magentaColor], size);
                 break;
             case DirectoryContentTypeDynamicLibrary:
-                thumbnailImage = DirectoryViewController_ImageWithColorAndSize([UIColor cyanColor], size);
+                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor cyanColor], size);
                 break;
             case DirectoryContentTypeUnknown: {
                 UIImage *image = [UIImage imageWithContentsOfFile:filePath];
@@ -269,7 +268,7 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
                     thumbnailImage = PDLDirectoryViewController_AspectFitImageWithImageAndSize(image, imageSize);
                     type = DirectoryContentTypeImage;
                 } else {
-                    thumbnailImage = DirectoryViewController_ImageWithColorAndSize([UIColor blackColor], size);
+                    thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor blackColor], size);
                 }
             } break;
             default:
@@ -449,7 +448,7 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
     checkboxButton.autoresizingMask = UIViewAutoresizingFlexibleHeight;
     [checkboxButton setImage:DirectoryViewController_CheckboxImage() forState:UIControlStateNormal];
     [checkboxButton setImage:DirectoryViewController_CheckboxHighlightedImage() forState:UIControlStateSelected];
-    [checkboxButton setTitle:@"Select All" forState:UIControlStateNormal];
+    [checkboxButton setTitle:@" Select All" forState:UIControlStateNormal];
     [checkboxButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     checkboxButton.titleLabel.font = [UIFont systemFontOfSize:14];
     [actionView addSubview:checkboxButton];
