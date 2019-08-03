@@ -35,8 +35,8 @@
     self.view.backgroundColor = [UIColor whiteColor];
 
     self.navigationItem.rightBarButtonItems = @[
-                                                [[UIBarButtonItem alloc] initWithTitle:@"classes" style:UIBarButtonItemStylePlain target:self action:@selector(toClasses)],
-                                                [[UIBarButtonItem alloc] initWithTitle:@"protocols" style:UIBarButtonItemStylePlain target:self action:@selector(toProtocols)]
+                                                [[UIBarButtonItem alloc] initWithTitle:@"Classes" style:UIBarButtonItemStylePlain target:self action:@selector(toClasses)],
+                                                [[UIBarButtonItem alloc] initWithTitle:@"Protocols" style:UIBarButtonItemStylePlain target:self action:@selector(toProtocols)]
                                                 ];
 
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
