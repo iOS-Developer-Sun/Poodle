@@ -417,7 +417,15 @@ Pod::Spec.new do |s|
         ss.ios.deployment_target  = '9.0'
         ss.source_files = Dev + 'MemoryQueryViewController/' + Files
         ss.frameworks = 'UIKit'
+        ss.dependency 'Poodle/malloc'
+        ss.dependency 'Poodle/KeyboardNotificationObserver'
     end
 
+    s.subspec 'FontViewController' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = Dev + 'FontViewController/' + Files
+        ss.frameworks = 'UIKit'
+    end
 end
 

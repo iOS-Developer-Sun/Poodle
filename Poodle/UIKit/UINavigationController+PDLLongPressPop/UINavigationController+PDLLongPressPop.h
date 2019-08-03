@@ -1,9 +1,9 @@
 //
 //  UINavigationController+PDLLongPressPop.h
-//  Sunzj
+//  Poodle
 //
-//  Created by sunzj on 14-6-26.
-//
+//  Created by Poodle on 2019/1/17.
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
