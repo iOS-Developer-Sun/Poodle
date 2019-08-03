@@ -15,7 +15,7 @@
 #import "PDLDatabaseViewController.h"
 #import "PDLWebViewController.h"
 
-static UIImage *PDLDirectoryViewController_AspectFitImageWithImageAndSize(UIImage *image, CGSize size) {
+static UIImage *PDLDirectoryViewControllerAspectFitImageWithImageAndSize(UIImage *image, CGSize size) {
     if (image == nil) {
         return nil;
     }
@@ -31,7 +31,7 @@ static UIImage *PDLDirectoryViewController_AspectFitImageWithImageAndSize(UIImag
     return ret;
 }
 
-static UIImage *PDLDirectoryViewController_ImageWithColorAndSize(UIColor *color, CGSize size) {
+static UIImage *PDLDirectoryViewControllerImageWithColorAndSize(UIColor *color, CGSize size) {
     if (!color || size.width <= 0 || size.height <= 0) {
         return nil;
     }
@@ -45,7 +45,7 @@ static UIImage *PDLDirectoryViewController_ImageWithColorAndSize(UIColor *color,
     return image;
 }
 
-static UIImage *DirectoryViewController_CheckboxImage() {
+static UIImage *PDLDirectoryViewControllerCheckboxImage() {
     static __weak UIImage *_checkboxImage = nil;
     UIImage *image = _checkboxImage;
     if (image == nil) {
@@ -57,7 +57,7 @@ static UIImage *DirectoryViewController_CheckboxImage() {
     return image;
 }
 
-static UIImage *DirectoryViewController_CheckboxHighlightedImage() {
+static UIImage *PDLDirectoryViewControllerCheckboxHighlightedImage() {
     static __weak UIImage *_checkboxHighlightedImage = nil;
     UIImage *image = _checkboxHighlightedImage;
     if (image == nil) {
@@ -69,7 +69,7 @@ static UIImage *DirectoryViewController_CheckboxHighlightedImage() {
     return image;
 }
 
-static NSString *DirectoryViewController_SizeStringOfBytes(uint64_t bytes) {
+static NSString *PDLDirectoryViewControllerSizeStringOfBytes(uint64_t bytes) {
     double gigaBytes = bytes / 1024.0 / 1024.0 / 1024.0;
     if (gigaBytes >= 1) {
         return [NSString stringWithFormat:@"%.2fG", gigaBytes];
@@ -88,7 +88,7 @@ static NSString *DirectoryViewController_SizeStringOfBytes(uint64_t bytes) {
     return [NSString stringWithFormat:@"%@B", @(bytes)];
 }
 
-static uint64_t DirectoryViewController_FileSizeAtPath(NSString *filePath) {
+static uint64_t PDLDirectoryViewControllerFileSizeAtPath(NSString *filePath) {
     uint64_t totalFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
     NSArray *subpaths = nil;
     @autoreleasepool {
@@ -103,20 +103,20 @@ static uint64_t DirectoryViewController_FileSizeAtPath(NSString *filePath) {
     return totalFileSize;
 }
 
-typedef NS_ENUM(NSInteger, DirectoryContentType) {
-    DirectoryContentTypeUnknown = -1,
-    DirectoryContentTypeDirectory,
-    DirectoryContentTypeText,
-    DirectoryContentTypeImage,
-    DirectoryContentTypeAudio,
-    DirectoryContentTypeVideo,
-    DirectoryContentTypeDatabase,
-    DirectoryContentTypePropertyList,
-    DirectoryContentTypeWebPage,
-    DirectoryContentTypeDynamicLibrary,
-    DirectoryContentTypeOther,
+typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
+    PDLDirectoryContentTypeUnknown = -1,
+    PDLDirectoryContentTypeDirectory,
+    PDLDirectoryContentTypeText,
+    PDLDirectoryContentTypeImage,
+    PDLDirectoryContentTypeAudio,
+    PDLDirectoryContentTypeVideo,
+    PDLDirectoryContentTypeDatabase,
+    PDLDirectoryContentTypePropertyList,
+    PDLDirectoryContentTypeWebPage,
+    PDLDirectoryContentTypeDynamicLibrary,
+    PDLDirectoryContentTypeOther,
 
-    DirectoryContentTypeCount,
+    PDLDirectoryContentTypeCount,
 };
 
 @interface DirectoryContent : NSObject
@@ -127,7 +127,7 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
 @property (nonatomic, readonly) BOOL hasFinishCalculatingSize;
 @property (nonatomic, readonly) UIImage *thumbnailImage;
 @property (nonatomic, readonly) NSString *extension;
-@property (nonatomic, readonly) DirectoryContentType type;
+@property (nonatomic, readonly) PDLDirectoryContentType type;
 @property (nonatomic, copy) void (^sizeCalculatingCompletion)(DirectoryContent *content);
 
 - (instancetype)initWithFilePath:(NSString *)filePath;
@@ -157,40 +157,40 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
     return sizeCalculatingQueue;
 }
 
-+ (DirectoryContentType)contentTypeOfFilePath:(NSString *)filePath {
-    DirectoryContentType type = DirectoryContentTypeUnknown;
++ (PDLDirectoryContentType)contentTypeOfFilePath:(NSString *)filePath {
+    PDLDirectoryContentType type = PDLDirectoryContentTypeUnknown;
     BOOL isDirectory = NO;
     [[NSFileManager defaultManager] fileExistsAtPath:filePath isDirectory:&isDirectory];
     NSString *extension = [filePath pathExtension];
     if (isDirectory) {
-        type = DirectoryContentTypeDirectory;
+        type = PDLDirectoryContentTypeDirectory;
     } else {
-        NSDictionary *typeMap = @{@"txt" : @(DirectoryContentTypeText),
-                                  @"log" : @(DirectoryContentTypeText),
+        NSDictionary *typeMap = @{@"txt" : @(PDLDirectoryContentTypeText),
+                                  @"log" : @(PDLDirectoryContentTypeText),
 
-                                  @"png" : @(DirectoryContentTypeImage),
-                                  @"jpg" : @(DirectoryContentTypeImage),
-                                  @"jpeg" : @(DirectoryContentTypeImage),
+                                  @"png" : @(PDLDirectoryContentTypeImage),
+                                  @"jpg" : @(PDLDirectoryContentTypeImage),
+                                  @"jpeg" : @(PDLDirectoryContentTypeImage),
 
-                                  @"mp3" : @(DirectoryContentTypeAudio),
-                                  @"aac" : @(DirectoryContentTypeAudio),
+                                  @"mp3" : @(PDLDirectoryContentTypeAudio),
+                                  @"aac" : @(PDLDirectoryContentTypeAudio),
 
-                                  @"mp4" : @(DirectoryContentTypeVideo),
-                                  @"mov" : @(DirectoryContentTypeVideo),
-                                  @"m3u8" : @(DirectoryContentTypeVideo),
+                                  @"mp4" : @(PDLDirectoryContentTypeVideo),
+                                  @"mov" : @(PDLDirectoryContentTypeVideo),
+                                  @"m3u8" : @(PDLDirectoryContentTypeVideo),
 
-                                  @"db" : @(DirectoryContentTypeDatabase),
-                                  @"sqlite" : @(DirectoryContentTypeDatabase),
+                                  @"db" : @(PDLDirectoryContentTypeDatabase),
+                                  @"sqlite" : @(PDLDirectoryContentTypeDatabase),
 
-                                  @"plist" : @(DirectoryContentTypePropertyList),
-                                  @"json" : @(DirectoryContentTypePropertyList),
+                                  @"plist" : @(PDLDirectoryContentTypePropertyList),
+                                  @"json" : @(PDLDirectoryContentTypePropertyList),
 
-                                  @"htm" : @(DirectoryContentTypeWebPage),
-                                  @"html" : @(DirectoryContentTypeWebPage),
+                                  @"htm" : @(PDLDirectoryContentTypeWebPage),
+                                  @"html" : @(PDLDirectoryContentTypeWebPage),
 
-                                  @"framework" : @(DirectoryContentTypeDynamicLibrary),
-                                  @"tbd" : @(DirectoryContentTypeDynamicLibrary),
-                                  @"dylib" : @(DirectoryContentTypeDynamicLibrary),
+                                  @"framework" : @(PDLDirectoryContentTypeDynamicLibrary),
+                                  @"tbd" : @(PDLDirectoryContentTypeDynamicLibrary),
+                                  @"dylib" : @(PDLDirectoryContentTypeDynamicLibrary),
                                   };
         NSNumber *typeNumber = typeMap[extension];
         if (typeNumber) {
@@ -215,7 +215,7 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
         if (isDirectory) {
             __weak __typeof(self) weakSelf = self;
             dispatch_async([self.class sizeCalculatingQueue], ^{
-                weakSelf.size = DirectoryViewController_FileSizeAtPath(filePath);
+                weakSelf.size = PDLDirectoryViewControllerFileSizeAtPath(filePath);
                 weakSelf.hasFinishCalculatingSize = YES;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     __strong __typeof(self) strongSelf = self;
@@ -225,50 +225,50 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
                 });
             });
         } else {
-            _size = DirectoryViewController_FileSizeAtPath(filePath);
+            _size = PDLDirectoryViewControllerFileSizeAtPath(filePath);
             _hasFinishCalculatingSize = YES;
         }
         _extension = [filePath pathExtension];
 
-        DirectoryContentType type = [self.class contentTypeOfFilePath:filePath];
+        PDLDirectoryContentType type = [self.class contentTypeOfFilePath:filePath];
         CGSize size = CGSizeMake(10, 20);
         CGSize imageSize = CGSizeMake(60, 40);
         UIImage *thumbnailImage = nil;
         switch (type) {
-            case DirectoryContentTypeDirectory:
-                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor yellowColor], size);
+            case PDLDirectoryContentTypeDirectory:
+                thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor yellowColor], size);
                 break;
-            case DirectoryContentTypeText:
-                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor grayColor], size);
+            case PDLDirectoryContentTypeText:
+                thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor grayColor], size);
                 break;
-            case DirectoryContentTypeImage:
-                thumbnailImage = PDLDirectoryViewController_AspectFitImageWithImageAndSize([UIImage imageWithContentsOfFile:filePath], imageSize);
+            case PDLDirectoryContentTypeImage:
+                thumbnailImage = PDLDirectoryViewControllerAspectFitImageWithImageAndSize([UIImage imageWithContentsOfFile:filePath], imageSize);
                 break;
-            case DirectoryContentTypeAudio:
-                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor blueColor], size);
+            case PDLDirectoryContentTypeAudio:
+                thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor blueColor], size);
                 break;
-            case DirectoryContentTypeVideo:
-                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor redColor], size);
+            case PDLDirectoryContentTypeVideo:
+                thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor redColor], size);
                 break;
-            case DirectoryContentTypeDatabase:
-                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor greenColor], size);
+            case PDLDirectoryContentTypeDatabase:
+                thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor greenColor], size);
                 break;
-            case DirectoryContentTypePropertyList:
-                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor purpleColor], size);
+            case PDLDirectoryContentTypePropertyList:
+                thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor purpleColor], size);
                 break;
-            case DirectoryContentTypeWebPage:
-                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor magentaColor], size);
+            case PDLDirectoryContentTypeWebPage:
+                thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor magentaColor], size);
                 break;
-            case DirectoryContentTypeDynamicLibrary:
-                thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor cyanColor], size);
+            case PDLDirectoryContentTypeDynamicLibrary:
+                thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor cyanColor], size);
                 break;
-            case DirectoryContentTypeUnknown: {
+            case PDLDirectoryContentTypeUnknown: {
                 UIImage *image = [UIImage imageWithContentsOfFile:filePath];
                 if (image) {
-                    thumbnailImage = PDLDirectoryViewController_AspectFitImageWithImageAndSize(image, imageSize);
-                    type = DirectoryContentTypeImage;
+                    thumbnailImage = PDLDirectoryViewControllerAspectFitImageWithImageAndSize(image, imageSize);
+                    type = PDLDirectoryContentTypeImage;
                 } else {
-                    thumbnailImage = PDLDirectoryViewController_ImageWithColorAndSize([UIColor blackColor], size);
+                    thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor blackColor], size);
                 }
             } break;
             default:
@@ -291,27 +291,27 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
     NSString *contentDescription = self.filePath;
     contentDescription = [contentDescription stringByAppendingFormat:@"\nfile size:%@ bytes", @(self.size)];
     switch (self.type) {
-        case DirectoryContentTypeDirectory:
+        case PDLDirectoryContentTypeDirectory:
             break;
-        case DirectoryContentTypeText:
+        case PDLDirectoryContentTypeText:
             break;
-        case DirectoryContentTypeImage: {
+        case PDLDirectoryContentTypeImage: {
             UIImage *image = [UIImage imageWithContentsOfFile:self.filePath];
             contentDescription = [contentDescription stringByAppendingFormat:@"\nimage size:%@, image scale:%@", NSStringFromCGSize(image.size), @(image.scale)];
         } break;
-        case DirectoryContentTypeAudio:
+        case PDLDirectoryContentTypeAudio:
             break;
-        case DirectoryContentTypeVideo:
+        case PDLDirectoryContentTypeVideo:
             break;
-        case DirectoryContentTypeDatabase:
+        case PDLDirectoryContentTypeDatabase:
             break;
-        case DirectoryContentTypePropertyList:
+        case PDLDirectoryContentTypePropertyList:
             break;
-        case DirectoryContentTypeWebPage:
+        case PDLDirectoryContentTypeWebPage:
             break;
-        case DirectoryContentTypeDynamicLibrary:
+        case PDLDirectoryContentTypeDynamicLibrary:
             break;
-        case DirectoryContentTypeUnknown:
+        case PDLDirectoryContentTypeUnknown:
             break;
         default:
             break;
@@ -354,7 +354,7 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
 }
 
 - (void)refreshSelected {
-    self.selectionImageView.image = self.cellSelected ? DirectoryViewController_CheckboxHighlightedImage() : DirectoryViewController_CheckboxImage();
+    self.selectionImageView.image = self.cellSelected ? PDLDirectoryViewControllerCheckboxHighlightedImage() : PDLDirectoryViewControllerCheckboxImage();
 }
 
 - (void)addSubview:(UIView *)view {
@@ -446,8 +446,8 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
 
     UIButton *checkboxButton = [[UIButton alloc] initWithFrame:CGRectMake(0, 0, 120, actionView.frame.size.height)];
     checkboxButton.autoresizingMask = UIViewAutoresizingFlexibleHeight;
-    [checkboxButton setImage:DirectoryViewController_CheckboxImage() forState:UIControlStateNormal];
-    [checkboxButton setImage:DirectoryViewController_CheckboxHighlightedImage() forState:UIControlStateSelected];
+    [checkboxButton setImage:PDLDirectoryViewControllerCheckboxImage() forState:UIControlStateNormal];
+    [checkboxButton setImage:PDLDirectoryViewControllerCheckboxHighlightedImage() forState:UIControlStateSelected];
     [checkboxButton setTitle:@" Select All" forState:UIControlStateNormal];
     [checkboxButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     checkboxButton.titleLabel.font = [UIFont systemFontOfSize:14];
@@ -649,31 +649,31 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
         __weak __typeof(self) weakSelf = self;
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Actions" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a text file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf openContent:content type:DirectoryContentTypeText];
+            [weakSelf openContent:content type:PDLDirectoryContentTypeText];
         }]];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as an image file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf openContent:content type:DirectoryContentTypeImage];
+            [weakSelf openContent:content type:PDLDirectoryContentTypeImage];
         }]];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as an audio file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf openContent:content type:DirectoryContentTypeAudio];
+            [weakSelf openContent:content type:PDLDirectoryContentTypeAudio];
         }]];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a video file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf openContent:content type:DirectoryContentTypeVideo];
+            [weakSelf openContent:content type:PDLDirectoryContentTypeVideo];
         }]];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a database file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf openContent:content type:DirectoryContentTypeDatabase];
+            [weakSelf openContent:content type:PDLDirectoryContentTypeDatabase];
         }]];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a property list file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf openContent:content type:DirectoryContentTypePropertyList];
+            [weakSelf openContent:content type:PDLDirectoryContentTypePropertyList];
         }]];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a web page file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf openContent:content type:DirectoryContentTypeWebPage];
+            [weakSelf openContent:content type:PDLDirectoryContentTypeWebPage];
         }]];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a dynamic library file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf openContent:content type:DirectoryContentTypeDynamicLibrary];
+            [weakSelf openContent:content type:PDLDirectoryContentTypeDynamicLibrary];
         }]];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Other" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf openContent:content type:DirectoryContentTypeOther];
+            [weakSelf openContent:content type:PDLDirectoryContentTypeOther];
         }]];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             ;
@@ -693,24 +693,24 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
 }
 
 - (void)openContent:(DirectoryContent *)content {
-    if (content.type <= DirectoryContentTypeUnknown || content.type >= DirectoryContentTypeCount) {
+    if (content.type <= PDLDirectoryContentTypeUnknown || content.type >= PDLDirectoryContentTypeCount) {
         return;
     }
 
     [self openContent:content type:content.type];
 }
 
-- (void)openContent:(DirectoryContent *)content type:(DirectoryContentType)type {
+- (void)openContent:(DirectoryContent *)content type:(PDLDirectoryContentType)type {
     switch (type) {
-        case DirectoryContentTypeDirectory: {
+        case PDLDirectoryContentTypeDirectory: {
             PDLDirectoryViewController *viewController = [[self.class alloc] initWithDirectory:content.filePath];
             [self.navigationController pushViewController:viewController animated:YES];
         } break;
-        case DirectoryContentTypeText: {
+        case PDLDirectoryContentTypeText: {
             PDLTextViewController *viewController = [[PDLTextViewController alloc] initWithPath:content.filePath];
             [self.navigationController pushViewController:viewController animated:YES];
         } break;
-        case DirectoryContentTypeImage: {
+        case PDLDirectoryContentTypeImage: {
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.window.bounds];
             imageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
             imageView.userInteractionEnabled = YES;
@@ -722,32 +722,32 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
             NSData *imageData = [NSData dataWithContentsOfFile:content.filePath];
             imageView.image = [UIImage imageWithData:imageData];
         } break;
-        case DirectoryContentTypeAudio: {
+        case PDLDirectoryContentTypeAudio: {
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc] init];
             AVPlayer *player = [AVPlayer playerWithURL:[NSURL fileURLWithPath:content.filePath]];
             viewController.player = player;
             [self.navigationController presentViewController:viewController animated:YES completion:nil];
         } break;
-        case DirectoryContentTypeVideo: {
+        case PDLDirectoryContentTypeVideo: {
             AVPlayerViewController *viewController = [[AVPlayerViewController alloc] init];
             AVPlayer *player = [AVPlayer playerWithURL:[NSURL fileURLWithPath:content.filePath]];
             viewController.player = player;
             [self.navigationController presentViewController:viewController animated:YES completion:nil];
         } break;
-        case DirectoryContentTypeDatabase: {
+        case PDLDirectoryContentTypeDatabase: {
             PDLDatabaseViewController *viewController = [[PDLDatabaseViewController alloc] initWithPath:content.filePath];
             [self.navigationController pushViewController:viewController animated:YES];
         } break;
-        case DirectoryContentTypePropertyList: {
+        case PDLDirectoryContentTypePropertyList: {
             PDLPropertyListViewController *viewController = [[PDLPropertyListViewController alloc] initWithPath:content.filePath];
             [self.navigationController pushViewController:viewController animated:YES];
         } break;
-        case DirectoryContentTypeWebPage: {
+        case PDLDirectoryContentTypeWebPage: {
             NSURL *url = [NSURL fileURLWithPath:content.filePath];
             PDLWebViewController *viewController = [[PDLWebViewController alloc] initWithUrlString:url.absoluteString];
             [self.navigationController pushViewController:viewController animated:YES];
         } break;
-        case DirectoryContentTypeDynamicLibrary: {
+        case PDLDirectoryContentTypeDynamicLibrary: {
 #ifdef DEBUG
             void *ret = dlopen(content.filePath.UTF8String, RTLD_NOW);
             if (ret) {
@@ -766,12 +766,12 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
             }
 #endif
         } break;
-        case DirectoryContentTypeOther: {
+        case PDLDirectoryContentTypeOther: {
             NSURL *url = [NSURL fileURLWithPath:content.filePath];
             UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:nil];
             [self presentViewController:activityViewController animated:YES completion:nil];
         } break;
-        case DirectoryContentTypeUnknown: {
+        case PDLDirectoryContentTypeUnknown: {
             ;
         } break;
         default:
@@ -795,7 +795,7 @@ typedef NS_ENUM(NSInteger, DirectoryContentType) {
 - (void)applyContent:(DirectoryContent *)content forCell:(DirectoryTableViewCell *)cell {
     cell.imageView.image = content.thumbnailImage;
     cell.textLabel.text = content.filename;
-    cell.detailTextLabel.text = content.hasFinishCalculatingSize ? DirectoryViewController_SizeStringOfBytes(content.size) : @"calculating size...";
+    cell.detailTextLabel.text = content.hasFinishCalculatingSize ? PDLDirectoryViewControllerSizeStringOfBytes(content.size) : @"calculating size...";
     cell.accessoryType = content.isDirectory ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
 }
 
