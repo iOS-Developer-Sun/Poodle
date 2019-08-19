@@ -427,5 +427,13 @@ Pod::Spec.new do |s|
         ss.source_files = Dev + 'FontViewController/' + Files
         ss.frameworks = 'UIKit'
     end
+
+    s.subspec 'OpenUrlViewController' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = Dev + 'OpenUrlViewController/' + Files
+        ss.frameworks = 'UIKit'
+        ss.dependency 'Poodle/KeyboardNotificationObserver'
+    end
 end
 
