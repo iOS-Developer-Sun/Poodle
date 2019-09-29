@@ -509,11 +509,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
         [contents sortUsingSelector:@selector(compare:)];
         dispatch_async(dispatch_get_main_queue(), ^{
             if (error) {
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-                [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                    ;
-                }]];
-                [self presentViewController:alertController animated:YES completion:nil];
+                [self alertWithTitle:@"Error" message:error.localizedDescription];
             }
 
             if (@available(iOS 10.0, *)) {
@@ -617,11 +613,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
         }
     }
     if (!isRemoved) {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            ;
-        }]];
-        [self presentViewController:alertController animated:YES completion:nil];
+        [self alertWithTitle:@"Error" message:error.localizedDescription];
     }
     self.isEditing = NO;
     [self reloadData];
@@ -708,7 +700,11 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
         } break;
         case PDLDirectoryContentTypeText: {
             PDLTextViewController *viewController = [[PDLTextViewController alloc] initWithPath:content.filePath];
-            [self.navigationController pushViewController:viewController animated:YES];
+            if (viewController) {
+                [self.navigationController pushViewController:viewController animated:YES];
+            } else {
+                [self alertWithTitle:@"Error" message:nil];
+            }
         } break;
         case PDLDirectoryContentTypeImage: {
             UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.view.window.bounds];
@@ -751,18 +747,10 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 #ifdef DEBUG
             void *ret = dlopen(content.filePath.UTF8String, RTLD_NOW);
             if (ret) {
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Success" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                    ;
-                }]];
-                [self presentViewController:alertController animated:YES completion:nil];
+                [self alertWithTitle:@"Success" message:nil];
                 dlclose(ret);
             } else {
-                UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Failure" message:nil preferredStyle:UIAlertControllerStyleAlert];
-                [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                    ;
-                }]];
-                [self presentViewController:alertController animated:YES completion:nil];
+                [self alertWithTitle:@"Failure" message:nil];
             }
 #endif
         } break;
@@ -797,6 +785,14 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     cell.textLabel.text = content.filename;
     cell.detailTextLabel.text = content.hasFinishCalculatingSize ? PDLDirectoryViewControllerSizeStringOfBytes(content.size) : @"calculating size...";
     cell.accessoryType = content.isDirectory ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
+}
+
+- (void)alertWithTitle:(NSString *)title message:(NSString *)message {
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        ;
+    }]];
+    [self presentViewController:alertController animated:YES completion:nil];;;
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
@@ -871,11 +867,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
         self.infoLabel.text = [NSString stringWithFormat:@"%@ %@", @(self.contents.count), (self.contents.count > 1 ? @"items" : @"item")];
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
     } else {
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Error" message:error.localizedDescription preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            ;
-        }]];
-        [self presentViewController:alertController animated:YES completion:nil];
+        [self alertWithTitle:@"Error" message:error.localizedDescription];
     }
 }
 
@@ -886,12 +878,8 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     }];
     UITableViewRowAction *infoAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"信息" handler:^(UITableViewRowAction *action, NSIndexPath * indexPath) {
         weakSelf.tableView.editing = NO;
-        DirectoryContent *content = self.contents[indexPath.row];
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Info" message:content.contentDescription preferredStyle:UIAlertControllerStyleAlert];
-        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-            ;
-        }]];
-        [weakSelf presentViewController:alertController animated:YES completion:nil];
+        DirectoryContent *content = weakSelf.contents[indexPath.row];
+        [weakSelf alertWithTitle:@"Info" message:content.contentDescription];
     }];
     infoAction.backgroundColor = [UIColor blueColor];
     return @[deleteAction, infoAction];
