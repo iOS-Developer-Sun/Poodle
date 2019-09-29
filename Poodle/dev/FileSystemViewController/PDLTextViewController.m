@@ -12,6 +12,7 @@
 
 @property (nonatomic, copy) NSFileHandle *fileHandle;
 @property (nonatomic, weak) UITextView *textView;
+@property (nonatomic, assign) BOOL isReadOnly;
 
 @end
 
@@ -22,7 +23,11 @@
     if (self) {
         NSFileHandle *fileHandle = [NSFileHandle fileHandleForUpdatingAtPath:path];
         if (fileHandle == nil) {
-            return nil;
+            _isReadOnly = YES;
+            fileHandle = [NSFileHandle fileHandleForReadingAtPath:path];
+            if (fileHandle == nil) {
+                return nil;
+            }
         }
         _fileHandle = fileHandle;
         self.title = path;
@@ -36,11 +41,14 @@
 
     self.view.backgroundColor = [UIColor whiteColor];
 
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(save)];
+    if (!self.isReadOnly) {
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(save)];
+    }
 
     UITextView *textView = [[UITextView alloc] initWithFrame:CGRectInset(self.view.bounds, 5, 5)];
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textView.font = [UIFont systemFontOfSize:10];
+    textView.editable = !self.isReadOnly;
     [self.view addSubview:textView];
     self.textView = textView;
 
