@@ -14,10 +14,19 @@
 @property (nonatomic, copy) NSArray *fontFamilyNames;
 @property (nonatomic, copy) NSArray *fontFamilyNamesIndexesKeys;
 @property (nonatomic, copy) NSDictionary *fontFamilyNamesIndexesDictionary;
+@property (nonatomic, strong) UITableViewCell *tableViewCell;
 
 @end
 
 @implementation PDLFontViewController
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+    if (self) {
+        _exampleText = @"ABCDEFGHIJKLMNOPQRSTUVWXYZ\nabcdefghijklmnopqrstuvwxyz\n1234567890\n简体中文\n繁體中文\n日本語あいうえお\n~`!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
+    }
+    return self;
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -56,6 +65,11 @@
     self.tableView = tableView;
 
     [self.view addSubview:tableView];
+
+    UITableViewCell *tableViewCell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:nil];
+    tableViewCell.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
+    [self setupCell:tableViewCell];
+    self.tableViewCell = tableViewCell;
 }
 
 - (void)setExampleText:(NSString *)exampleText {
@@ -68,8 +82,56 @@
     _tableView.delegate = nil;
 }
 
+- (void)setupCell:(UITableViewCell *)cell {
+    UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, cell.contentView.frame.size.width - 30, 30)];
+    textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    textLabel.font = [UIFont systemFontOfSize:14];
+    textLabel.backgroundColor = [UIColor clearColor];
+    [cell.contentView addSubview:textLabel];
+    textLabel.tag = 1;
+
+    UILabel *detailTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 30, cell.contentView.frame.size.width - 30, 120)];
+    detailTextLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
+    detailTextLabel.backgroundColor = [UIColor clearColor];
+    detailTextLabel.numberOfLines = 0;
+    detailTextLabel.text = self.exampleText;
+    detailTextLabel.lineBreakMode = NSLineBreakByCharWrapping;
+    [cell.contentView addSubview:detailTextLabel];
+    detailTextLabel.tag = 2;
+
+    UILabel *testLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 150, cell.contentView.frame.size.width - 30, 30)];
+    testLabel.backgroundColor = [UIColor lightGrayColor];
+    testLabel.text = @"ABCxyz123890";
+    [cell.contentView addSubview:testLabel];
+    testLabel.tag = 3;
+}
+
+- (CGFloat)applyCell:(UITableViewCell *)cell fontName:(NSString *)fontName {
+    UILabel *textLabel = (UILabel *)[cell.contentView viewWithTag:1];
+    textLabel.text = fontName;
+
+    UILabel *detailTextLabel = (UILabel *)[cell.contentView viewWithTag:2];
+    detailTextLabel.font = [UIFont fontWithName:fontName size:12];
+    detailTextLabel.frame = CGRectMake(15, 30, cell.contentView.frame.size.width - 30, 0);
+    [detailTextLabel sizeToFit];
+
+    UILabel *testLabel = (UILabel *)[cell.contentView viewWithTag:3];
+    testLabel.font = [UIFont fontWithName:fontName size:12];
+    testLabel.frame = CGRectMake(15, detailTextLabel.frame.origin.y + detailTextLabel.frame.size.height + 10, cell.contentView.frame.size.width - 30, 0);
+    [testLabel sizeToFit];
+
+    return testLabel.frame.origin.y + testLabel.frame.size.height + 5;
+}
+
+
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 150;
+    NSString *familyName = self.fontFamilyNames[indexPath.section];
+    NSArray *fontNames = [UIFont fontNamesForFamilyName:familyName];
+    NSString *fontName = fontNames[indexPath.row];
+
+    UITableViewCell *cell = self.tableViewCell;
+    CGFloat height = [self applyCell:cell fontName:fontName];
+    return height;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
@@ -92,35 +154,14 @@
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-
-        UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, cell.contentView.frame.size.width - 30, 30)];
-        textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        textLabel.backgroundColor = [UIColor clearColor];
-        [cell.contentView addSubview:textLabel];
-        textLabel.tag = 1;
-
-        UILabel *detailTextLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 30, cell.contentView.frame.size.width - 30, 120)];
-        detailTextLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-        detailTextLabel.backgroundColor = [UIColor clearColor];
-        [cell.contentView addSubview:detailTextLabel];
-        detailTextLabel.tag = 2;
-        detailTextLabel.numberOfLines = 0;
-
-        detailTextLabel.text = self.exampleText ?: @"abcdefghijklmnopqrstuvwxyz\n1234567890\n简体中文\n繁體中文\n日本語あいうえお\n~`!@#$%^&*()-_=+[{]}\\|;:'\",<.>/?";
-        detailTextLabel.lineBreakMode = NSLineBreakByCharWrapping;
+        [self setupCell:cell];
     }
 
     NSString *familyName = self.fontFamilyNames[indexPath.section];
     NSArray *fontNames = [UIFont fontNamesForFamilyName:familyName];
     NSString *fontName = fontNames[indexPath.row];
 
-    UILabel *textLabel = (UILabel *)[cell.contentView viewWithTag:1];
-    UILabel *detailTextLabel = (UILabel *)[cell.contentView viewWithTag:2];
-
-    textLabel.font = [UIFont fontWithName:fontName size:14];
-    textLabel.text = fontName;
-    detailTextLabel.font = [UIFont fontWithName:fontName size:12];
-
+    [self applyCell:cell fontName:fontName];
     return cell;
 }
 
