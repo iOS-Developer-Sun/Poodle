@@ -403,6 +403,7 @@ Pod::Spec.new do |s|
         ss.ios.deployment_target  = '9.0'
         ss.source_files = Dev + 'FileSystemViewController/' + Files
         ss.frameworks = 'UIKit'
+        ss.dependency 'Poodle/Database'
     end
 
     s.subspec 'AddressQueryViewController' do |ss|
@@ -435,5 +436,13 @@ Pod::Spec.new do |s|
         ss.frameworks = 'UIKit'
         ss.dependency 'Poodle/KeyboardNotificationObserver'
     end
+
+    s.subspec 'Database' do |ss|
+        ss.platform = Platform_ios
+        ss.ios.deployment_target  = '9.0'
+        ss.source_files = Foundation + 'PDLDatabase/' + Files
+        ss.frameworks = 'Foundation'
+    end
+
 end
 
