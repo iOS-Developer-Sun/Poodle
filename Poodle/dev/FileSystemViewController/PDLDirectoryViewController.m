@@ -119,7 +119,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     PDLDirectoryContentTypeCount,
 };
 
-@interface DirectoryContent : NSObject
+@interface PDLDirectoryContent : NSObject
 
 @property (nonatomic, readonly) NSString *filename;
 @property (nonatomic, readonly) BOOL isDirectory;
@@ -128,13 +128,13 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 @property (nonatomic, readonly) UIImage *thumbnailImage;
 @property (nonatomic, readonly) NSString *extension;
 @property (nonatomic, readonly) PDLDirectoryContentType type;
-@property (nonatomic, copy) void (^sizeCalculatingCompletion)(DirectoryContent *content);
+@property (nonatomic, copy) void (^sizeCalculatingCompletion)(PDLDirectoryContent *content);
 
 - (instancetype)initWithFilePath:(NSString *)filePath;
 
 @end
 
-@interface DirectoryContent ()
+@interface PDLDirectoryContent ()
 
 @property (nonatomic, copy) NSString *filePath;
 @property (nonatomic, copy) NSString *filename;
@@ -146,7 +146,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 @end
 
-@implementation DirectoryContent
+@implementation PDLDirectoryContent
 
 + (dispatch_queue_t)sizeCalculatingQueue {
     static dispatch_queue_t sizeCalculatingQueue;
@@ -280,7 +280,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     return self;
 }
 
-- (NSComparisonResult)compare:(DirectoryContent *)content {
+- (NSComparisonResult)compare:(PDLDirectoryContent *)content {
     if (self.isDirectory != content.isDirectory) {
         return self.isDirectory ? NSOrderedAscending : NSOrderedDescending;
     }
@@ -321,20 +321,20 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 @end
 
-@interface DirectoryTableViewCell : UITableViewCell
+@interface PDLDirectoryTableViewCell : UITableViewCell
 
 @property (nonatomic, assign) BOOL cellSelected;
 @property (nonatomic, weak) UILongPressGestureRecognizer *longPressGestureRecognizer;
 
 @end
 
-@interface DirectoryTableViewCell ()
+@interface PDLDirectoryTableViewCell ()
 
 @property (nonatomic, strong) UIImageView *selectionImageView;
 
 @end
 
-@implementation DirectoryTableViewCell
+@implementation PDLDirectoryTableViewCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
@@ -491,13 +491,13 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
         NSArray *filenames = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.directory error:&error];
         for (NSString *filename in filenames) {
             NSString *filePath = [self.directory stringByAppendingPathComponent:filename];
-            DirectoryContent *content = [[DirectoryContent alloc] initWithFilePath:filePath];
+            PDLDirectoryContent *content = [[PDLDirectoryContent alloc] initWithFilePath:filePath];
             if (!content) {
                 continue;
             }
             [contents addObject:content];
             __weak __typeof(self) weakSelf = self;
-            content.sizeCalculatingCompletion = ^(DirectoryContent *content) {
+            content.sizeCalculatingCompletion = ^(PDLDirectoryContent *content) {
                 NSInteger index = [weakSelf.contents indexOfObject:content];
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
                 NSArray *indexPathsForVisibleRows = weakSelf.tableView.indexPathsForVisibleRows;
@@ -532,9 +532,9 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 - (void)reloadDataSilently {
     NSArray *indexPaths = [self.tableView indexPathsForVisibleRows];
     for (NSIndexPath *indexPath in indexPaths) {
-        DirectoryTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
+        PDLDirectoryTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         if (cell) {
-            DirectoryContent *content = self.contents[indexPath.row];
+            PDLDirectoryContent *content = self.contents[indexPath.row];
             [self applyContent:content forCell:cell];
             cell.cellSelected = ([self.selected containsObject:content]);
         }
@@ -604,7 +604,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 - (void)deleteSelected {
     BOOL isRemoved = YES;
     NSError *error = nil;
-    for (DirectoryContent *content in self.selected) {
+    for (PDLDirectoryContent *content in self.selected) {
         NSString *filePath = content.filePath;
         if (error) {
             isRemoved &= [[NSFileManager defaultManager] removeItemAtPath:filePath error:NULL];
@@ -621,7 +621,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 - (void)doOtherForSelected {
     NSMutableArray *urls = [NSMutableArray array];
-    for (DirectoryContent *content in self.selected) {
+    for (PDLDirectoryContent *content in self.selected) {
         NSURL *url = [NSURL fileURLWithPath:content.filePath];
         [urls addObject:url];
     }
@@ -631,13 +631,13 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 - (void)longPress:(UILongPressGestureRecognizer *)longPressGestureRecognizer {
     if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        DirectoryTableViewCell *cell = (DirectoryTableViewCell *)longPressGestureRecognizer.view;
+        PDLDirectoryTableViewCell *cell = (PDLDirectoryTableViewCell *)longPressGestureRecognizer.view;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
         if (indexPath == nil) {
             return;
         }
 
-        DirectoryContent *content = self.contents[indexPath.row];
+        PDLDirectoryContent *content = self.contents[indexPath.row];
         __weak __typeof(self) weakSelf = self;
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Actions" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a text file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -684,7 +684,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     [tapGestureRecognizer.view removeFromSuperview];
 }
 
-- (void)openContent:(DirectoryContent *)content {
+- (void)openContent:(PDLDirectoryContent *)content {
     if (content.type <= PDLDirectoryContentTypeUnknown || content.type >= PDLDirectoryContentTypeCount) {
         return;
     }
@@ -692,7 +692,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     [self openContent:content type:content.type];
 }
 
-- (void)openContent:(DirectoryContent *)content type:(PDLDirectoryContentType)type {
+- (void)openContent:(PDLDirectoryContent *)content type:(PDLDirectoryContentType)type {
     switch (type) {
         case PDLDirectoryContentTypeDirectory: {
             PDLDirectoryViewController *viewController = [[self.class alloc] initWithDirectory:content.filePath];
@@ -772,7 +772,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
         return NO;
     }
 
-    DirectoryTableViewCell *cell = (DirectoryTableViewCell *)gestureRecognizer.view;
+    PDLDirectoryTableViewCell *cell = (PDLDirectoryTableViewCell *)gestureRecognizer.view;
     NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
     if (indexPath == nil) {
         return NO;
@@ -780,7 +780,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     return YES;
 }
 
-- (void)applyContent:(DirectoryContent *)content forCell:(DirectoryTableViewCell *)cell {
+- (void)applyContent:(PDLDirectoryContent *)content forCell:(PDLDirectoryTableViewCell *)cell {
     cell.imageView.image = content.thumbnailImage;
     cell.textLabel.text = content.filename;
     cell.detailTextLabel.text = content.hasFinishCalculatingSize ? PDLDirectoryViewControllerSizeStringOfBytes(content.size) : @"calculating size...";
@@ -812,16 +812,16 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *identifier = @"";
-    DirectoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
+    PDLDirectoryTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil) {
-        cell = [[DirectoryTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
+        cell = [[PDLDirectoryTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
         cell.textLabel.numberOfLines = 0;
         UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longPressGestureRecognizer.delegate = self;
         [cell addGestureRecognizer:longPressGestureRecognizer];
         cell.longPressGestureRecognizer = longPressGestureRecognizer;
     }
-    DirectoryContent *content = self.contents[indexPath.row];
+    PDLDirectoryContent *content = self.contents[indexPath.row];
     [self applyContent:content forCell:cell];
     cell.cellSelected = ([self.selected containsObject:content]);
     cell.longPressGestureRecognizer.enabled = !tableView.isEditing;
@@ -830,9 +830,9 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    DirectoryContent *content = self.contents[indexPath.row];
+    PDLDirectoryContent *content = self.contents[indexPath.row];
     if (tableView.isEditing) {
-        DirectoryTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+        PDLDirectoryTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         if ([self.selected containsObject:content]) {
             [self.selected removeObject:content];
             [self refreshCheckbox];
@@ -856,7 +856,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    DirectoryContent *content = self.contents[indexPath.row];
+    PDLDirectoryContent *content = self.contents[indexPath.row];
     NSString *filePath = content.filePath;
     NSError *error = nil;
     BOOL isRemoved = [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
@@ -878,7 +878,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     }];
     UITableViewRowAction *infoAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"信息" handler:^(UITableViewRowAction *action, NSIndexPath * indexPath) {
         weakSelf.tableView.editing = NO;
-        DirectoryContent *content = weakSelf.contents[indexPath.row];
+        PDLDirectoryContent *content = weakSelf.contents[indexPath.row];
         [weakSelf alertWithTitle:@"Info" message:content.contentDescription];
     }];
     infoAction.backgroundColor = [UIColor blueColor];
