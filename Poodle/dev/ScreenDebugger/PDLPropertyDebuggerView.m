@@ -25,7 +25,7 @@
     if (self) {
         CGFloat top = 0;
         CGFloat bottom = 0;
-        if (@available(iOS 11, *)) {
+        if (@available(iOS 11.0, *)) {
             UIEdgeInsets safeAreaInsets = [UIApplication sharedApplication].keyWindow.safeAreaInsets;
             top = safeAreaInsets.top;
             bottom = safeAreaInsets.bottom;
