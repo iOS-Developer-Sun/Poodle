@@ -433,7 +433,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     self.infoLabel = infoLabel;
 
     CGFloat bottom = 0;
-    if (@available(iOS 11, *)) {
+    if (@available(iOS 11.0, *)) {
         bottom = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
     }
     UIView *selectAllView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 49 + bottom)];
