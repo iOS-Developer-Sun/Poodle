@@ -34,7 +34,7 @@ struct NSLockIndexedIvars2 {
 @implementation NSLock (Extension)
 
 - (pthread_mutex_t *)mutex {
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         struct NSLockIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->mutex;
     } else {
@@ -44,7 +44,7 @@ struct NSLockIndexedIvars2 {
 }
 
 - (pthread_t)thread {
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         return NULL;
     } else {
         struct NSLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
@@ -53,7 +53,7 @@ struct NSLockIndexedIvars2 {
 }
 
 - (pthread_mutex_t *)cond_mutex {
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         struct NSLockIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->cond->mutex;
     } else {
@@ -63,7 +63,7 @@ struct NSLockIndexedIvars2 {
 }
 
 - (pthread_cond_t *)cond_cond {
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         struct NSLockIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->cond->cond;
     } else {
@@ -151,7 +151,7 @@ struct NSConditionIndexedIvars2 {
 @implementation NSCondition (Extension)
 
 - (pthread_mutex_t *)mutex {
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         struct NSConditionIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->mutex;
     } else {
@@ -161,7 +161,7 @@ struct NSConditionIndexedIvars2 {
 }
 
 - (pthread_t)thread {
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         return NULL;
     } else {
         struct NSConditionIndexedIvars *indexedIvars = object_getIndexedIvars(self);
@@ -170,7 +170,7 @@ struct NSConditionIndexedIvars2 {
 }
 
 - (pthread_cond_t *)cond {
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         struct NSConditionIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->cond;
     } else {

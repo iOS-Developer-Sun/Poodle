@@ -419,8 +419,12 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
     UIRefreshControl *refreshControl = [[UIRefreshControl alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 44)];
     [refreshControl addTarget:self action:@selector(reloadData) forControlEvents:UIControlEventValueChanged];
-    if (@available(iOS 10.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 10) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
         tableView.refreshControl = refreshControl;
+#pragma clang diagnostic pop
     } else {
         // Fallback on earlier versions
     }
@@ -433,8 +437,12 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     self.infoLabel = infoLabel;
 
     CGFloat bottom = 0;
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
         bottom = [UIApplication sharedApplication].keyWindow.safeAreaInsets.bottom;
+#pragma clang diagnostic pop
     }
     UIView *selectAllView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 49 + bottom)];
     selectAllView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
@@ -512,8 +520,12 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
                 [self alertWithTitle:@"Error" message:error.localizedDescription];
             }
 
-            if (@available(iOS 10.0, *)) {
+            if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 10) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
                 [self.tableView.refreshControl endRefreshing];
+#pragma clang diagnostic pop
             } else {
                 // Fallback on earlier versions
             }

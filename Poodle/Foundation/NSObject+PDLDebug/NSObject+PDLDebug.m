@@ -204,7 +204,7 @@ NSArray *protocol_adoptedProtocols(Protocol *protocol) {
 
 NSArray *protocol_properties(Protocol *protocol) {
     NSMutableArray *properties = [NSMutableArray array];
-    if (@available(iOS 10.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 10) {
         NSArray *types = @[@{@"isRequiredMethod" : @(YES), @"isInstanceMethod" : @(NO)},
                            @{@"isRequiredMethod" : @(YES), @"isInstanceMethod" : @(YES)},
                            @{@"isRequiredMethod" : @(NO), @"isInstanceMethod" : @(NO)},
@@ -213,7 +213,11 @@ NSArray *protocol_properties(Protocol *protocol) {
             BOOL isRequiredMethod = [type[@"isRequiredMethod"] boolValue];
             BOOL isInstanceMethod = [type[@"isInstanceMethod"] boolValue];
             unsigned int count = 0;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
             objc_property_t *propertyList = protocol_copyPropertyList2(protocol, &count, isRequiredMethod, isInstanceMethod);
+#pragma clang diagnostic pop
             for (unsigned int i = 0; i < count; i++) {
                 objc_property_t property = propertyList[i];
                 [properties addObject:@{@"name" : @(property_getName(property)), @"attributes" : @(property_getAttributes(property)), @"isRequiredMethod" : @(isRequiredMethod), @"isInstanceMethod" : @(isInstanceMethod)}];

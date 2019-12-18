@@ -7,7 +7,6 @@
 //
 
 #import "NSThread+PDLExtension.h"
-#import "pdl_mach_o_symbols.h"
 #import "pdl_pthread.h"
 #import "pdl_mach.h"
 #import "NSObject+PDLExtension.h"
@@ -32,6 +31,7 @@
     return [[self valueForKeyPath:@"private.seqNum"] intValue];
 }
 
+#if 0
 PDL_MACH_O_SYMBOLS_POINTER_FUNCTION_DECLARATION(oAllThreads_pointer, "Foundation", "__NSThreads.oAllThreads")
 + (NSArray *)pdl_allThreads {
     void **oAllThreads = oAllThreads_pointer();
@@ -74,5 +74,6 @@ PDL_MACH_O_SYMBOLS_POINTER_FUNCTION_DECLARATION(oAllThreads_pointer, "Foundation
 NSString *pdl_NSThreadsDescription(void) {
     return [NSThread pdl_allThreadsDescription];
 }
+#endif
 
 @end

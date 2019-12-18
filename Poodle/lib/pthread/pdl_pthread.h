@@ -44,10 +44,6 @@ extern uint64_t pdl_pthread_rwlock_locked_tid(pthread_rwlock_t *rwlock);
 extern uint32_t pdl_pthread_rwlock_lockers(pthread_rwlock_t *rwlock);
 
 extern pthread_mutex_t *pdl_pthread_cond_busy(pthread_cond_t *cond);
-    
-extern NSThread *pdl_pthread_nsthread(pthread_t thread);
-
-extern int pdl_pthread_count(void);
 
 #ifdef __cplusplus
 }

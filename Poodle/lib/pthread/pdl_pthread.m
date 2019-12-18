@@ -9,8 +9,8 @@
 #import "pdl_pthread.h"
 #import <os/lock.h>
 #import <dlfcn.h>
-#import "pdl_mach_o_symbols.h"
 #import "pdl_mach_object.h"
+#import "pdl_mach_o_symbols.h"
 
 static uint32_t _majorVersion = 0;
 static uint32_t _minorVersion = 0;
@@ -337,6 +337,7 @@ pthread_mutex_t *pdl_pthread_cond_busy(pthread_cond_t *ocond) {
     return (pthread_mutex_t *)cond->busy;
 }
 
+#if 0
 PDL_MACH_O_SYMBOLS_POINTER_FUNCTION_DECLARATION(nsthread_get_0_pointer, "Foundation", "_NSThreadGet0")
 NSThread *pdl_pthread_nsthread(pthread_t thread) {
     NSThread *(*_NSThreadGet0)(pthread_t) = (typeof(_NSThreadGet0))nsthread_get_0_pointer();
@@ -356,6 +357,7 @@ int pdl_pthread_count(void) {
     }
     return *pthreadCount;
 }
+#endif
 
 __attribute__ ((constructor)) static void pdl_check_version(void) {
     const char *name = "libsystem_pthread.dylib";
