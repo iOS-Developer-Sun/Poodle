@@ -25,8 +25,12 @@
     if (self) {
         CGFloat top = 0;
         CGFloat bottom = 0;
-        if (@available(iOS 11.0, *)) {
+        if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
             UIEdgeInsets safeAreaInsets = [UIApplication sharedApplication].keyWindow.safeAreaInsets;
+#pragma clang diagnostic pop
             top = safeAreaInsets.top;
             bottom = safeAreaInsets.bottom;
         }

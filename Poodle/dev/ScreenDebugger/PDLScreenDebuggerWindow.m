@@ -73,8 +73,12 @@ static NSString *closeImageDataBase64String = @"iVBORw0KGgoAAAANSUhEUgAAACgAAAAo
         _componentsView = componentsView;
 
         CGFloat verticalMargin = 0;
-        if (@available(iOS 11.0, *)) {
+        if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
             verticalMargin = self.safeAreaInsets.top + self.safeAreaInsets.bottom;
+#pragma clang diagnostic pop
         }
         UIView *detailView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, floor(contentView.bounds.size.width * 0.9), floor((contentView.bounds.size.height - verticalMargin) * 0.45))];
         detailView.backgroundColor = [UIColor colorWithWhite:0 alpha:0.5];
@@ -112,8 +116,12 @@ static NSString *closeImageDataBase64String = @"iVBORw0KGgoAAAANSUhEUgAAACgAAAAo
     [super layoutSubviews];
 
     CGFloat verticalMargin = 0;
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
         verticalMargin = self.safeAreaInsets.top + self.safeAreaInsets.bottom;
+#pragma clang diagnostic pop
     }
     self.detailView.frame = CGRectMake(self.detailView.frame.origin.x, self.detailView.frame.origin.y, floor(self.detailView.superview.bounds.size.width * 0.9), floor((self.detailView.superview.bounds.size.height - verticalMargin) * 0.45));
 
@@ -223,12 +231,20 @@ static NSString *closeImageDataBase64String = @"iVBORw0KGgoAAAANSUhEUgAAACgAAAAo
     }
 
     CGFloat top = 0;
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
         top = self.safeAreaInsets.top;
+#pragma clang diagnostic pop
     }
     CGFloat bottom = 0;
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
         bottom = self.safeAreaInsets.bottom;
+#pragma clang diagnostic pop
     }
     if (point.y <= top + (self.bounds.size.height - top - bottom) / 2) {
         detailViewFrame.origin.y = self.contentView.bounds.size.height - bottom - detailViewFrame.size.height;

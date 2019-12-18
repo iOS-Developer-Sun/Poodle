@@ -78,7 +78,7 @@
 }
 
 + (NSDictionary *)table {
-    if (@available(iOS 12.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 12) {
         return @{
                  @"Foundation" : @[@"_NSThreadGet0"],
                  @"libsystem_pthread.dylib" : @[@"_pthread_count"],

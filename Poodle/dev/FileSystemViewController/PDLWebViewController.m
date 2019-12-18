@@ -144,7 +144,7 @@ static void *WebViewControllerObservingEstimatedProgressContext = NULL;
 }
 
 - (void)clearCache {
-    if (@available(iOS 9.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 9) {
         NSSet *websiteDataTypes = [WKWebsiteDataStore allWebsiteDataTypes];
         NSDate *dateFrom = [NSDate dateWithTimeIntervalSince1970:0];
         __weak __typeof(self) weakSelf = self;

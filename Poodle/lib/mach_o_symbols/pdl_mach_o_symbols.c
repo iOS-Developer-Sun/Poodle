@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <mach-o/dyld.h>
 #include "pdl_mach_object.h"
-#include "pdl_mach_o_const_symbols.h"
 
 // filters
 
@@ -198,25 +197,3 @@ void pdl_free_mach_o_symbol_list(struct pdl_mach_o_symbol *symbol_list) {
         free(node_to_free);
     }
 }
-
-#if !TARGET_IPHONE_SIMULATOR
-
-struct pdl_mach_o_symbol *pdl_mach_o_const_symbol(struct mach_header *header, const char *symbol_name) {
-    if (header == NULL || symbol_name == NULL) {
-        return NULL;
-    }
-
-    const char *image_name = pdl_mach_o_image_name(header);
-    if (image_name == NULL) {
-        return NULL;
-    }
-
-    struct pdl_mach_o_symbol *symbols = pdl_const_symbols(image_name, symbol_name);
-    if (symbols == NULL) {
-        return NULL;
-    }
-
-    return symbols;
-}
-
-#endif

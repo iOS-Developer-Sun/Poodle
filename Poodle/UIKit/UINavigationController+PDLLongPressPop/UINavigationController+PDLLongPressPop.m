@@ -37,7 +37,7 @@
 
 - (UIView *)currentBackButtonView {
     UIView *backButtonView = nil;
-    if (@available(iOS 11.0, *)) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         UINavigationBar *navigationBar = self.navigationController.navigationBar;
         @try {
             backButtonView = [navigationBar valueForKeyPath:@"visualProvider.contentView.layout.backButton"]; // "layout.leadingBar.stackView" for left and "layout.trailingBar.stackView" for right

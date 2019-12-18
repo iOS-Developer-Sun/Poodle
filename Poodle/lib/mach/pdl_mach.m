@@ -8,6 +8,7 @@
 
 #import "pdl_mach.h"
 
+__attribute__((used))
 thread_array_t pdl_mach_threads(mach_msg_type_number_t *count) {
     thread_array_t thread_list = NULL;
     mach_msg_type_number_t thread_count = 0;
@@ -30,6 +31,7 @@ thread_array_t pdl_mach_threads(mach_msg_type_number_t *count) {
     return ret;
 }
 
+__attribute__((used))
 NSArray *pdl_mach_threadsArray(void) {
     mach_msg_type_number_t thread_count = 0;
     thread_array_t threads = pdl_mach_threads(&thread_count);
