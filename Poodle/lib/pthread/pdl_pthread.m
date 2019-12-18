@@ -359,7 +359,7 @@ int pdl_pthread_count(void) {
 }
 #endif
 
-__attribute__ ((constructor)) static void pdl_check_version(void) {
+__attribute__ ((constructor)) static void pdl_pthread_check_version(void) {
     const char *name = "libsystem_pthread.dylib";
     struct mach_header *header = pdl_mach_o_image(name);
     struct pdl_mach_object mach_object;
