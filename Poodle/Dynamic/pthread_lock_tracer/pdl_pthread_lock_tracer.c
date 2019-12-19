@@ -3,7 +3,7 @@
 //  Poodle
 //
 //  Created by Poodle on 2019/5/25.
-//
+//  Copyright © 2019 Poodle. All rights reserved.
 //
 
 #import "pdl_pthread_lock_tracer.h"
