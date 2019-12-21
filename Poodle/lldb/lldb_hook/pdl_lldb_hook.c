@@ -7,12 +7,14 @@
 //
 
 #include <stdio.h>
+#include <string.h>
 #include "pdl_lldb_hook.h"
 
 #ifdef __arm64__
 
 static const int branch_instructions_count = 5;
 static const int bytes_per_instruction = 4;
+static char lldb_command[1024] = {0};
 
 #define PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry) \
 static uintptr_t lldb_entry##_original_with_offset = 0;\
@@ -180,19 +182,21 @@ static void generate_branch_instructions(uintptr_t address, unsigned int branch_
 
 static void print_lldb_memory_write_command(uintptr_t dst, uintptr_t src, int size) {
     unsigned int *memory = (unsigned int *)src;
+    char buffer[128] = {0};
     for (int i = 0; i < size; i++) {
-        printf("memory write -s %d 0x%lx 0x%x\n", bytes_per_instruction, dst + i * bytes_per_instruction, memory[i]);
+        sprintf(buffer, "memory write -s %d 0x%lx 0x%x\n", bytes_per_instruction, dst + i * bytes_per_instruction, memory[i]);
+        strcat(lldb_command, buffer);
     }
 }
 
 static void print_lldb_command(uintptr_t hooked_function, uintptr_t custom_function, uintptr_t entry) {
     unsigned int branch_to_custom_function[5];
+    lldb_command[0] = '\0';
     generate_branch_instructions(custom_function, branch_to_custom_function);
-    printf("\n");
     print_lldb_memory_write_command(entry, hooked_function, branch_instructions_count);
-    printf("\n");
+    strcat(lldb_command, "\n");
     print_lldb_memory_write_command(hooked_function, (uintptr_t)branch_to_custom_function, branch_instructions_count);
-    printf("\n");
+    strcat(lldb_command, "\n");
 }
 
 static uintptr_t hook_table_key[PDL_LLDB_HOOK_MAX_COUNT] = {0};
@@ -245,6 +249,10 @@ bool pdl_lldb_hook(IMP hooked_function, IMP custom_function) {
     }
 
     return lldb_hook((uintptr_t)hooked_function, (uintptr_t)custom_function);
+}
+
+char *pdl_lldb_command(void) {
+    return lldb_command;
 }
 
 IMP pdl_lldb_hooked_function_new_entry(IMP custom_function) {
