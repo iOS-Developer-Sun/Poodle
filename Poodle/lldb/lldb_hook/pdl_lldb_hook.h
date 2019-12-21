@@ -15,6 +15,8 @@ extern "C" {
 #endif
 
 extern bool pdl_lldb_hook(IMP hooked_function, IMP custom_function);
+extern char *pdl_lldb_command(void);
+
 extern IMP pdl_lldb_hooked_function_new_entry(IMP custom_function);
 
 #ifdef __cplusplus
