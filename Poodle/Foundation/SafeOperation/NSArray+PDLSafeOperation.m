@@ -25,17 +25,17 @@
             NSAssert(ret, @"arrayWithObjects:count: not protected");
         }
         {
-            NSUInteger ret = [NSArray interceptClusterSelector:@selector(objectAtIndex:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_objectAtIndex_Imps];
+            NSUInteger ret = [NSArray pdl_interceptClusterSelector:@selector(objectAtIndex:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_objectAtIndex_Imps];
             (void)ret;
             NSAssert(ret > 0, @"objectAtIndex: not protected");
         }
         {
-            NSUInteger ret = [NSArray interceptClusterSelector:@selector(objectAtIndexedSubscript:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_objectAtIndex_Imps];
+            NSUInteger ret = [NSArray pdl_interceptClusterSelector:@selector(objectAtIndexedSubscript:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_objectAtIndex_Imps];
             (void)ret;
             NSAssert(ret > 0, @"objectAtIndexedSubscript: not pretected");
         }
         {
-            NSUInteger ret = [NSMutableArray interceptClusterSelector:@selector(setObject:atIndexedSubscript:) withInterceptorImplementation:(IMP)&NSMutableArray_SafeOperation_setObject_atIndexedSubscript_Imp];
+            NSUInteger ret = [NSMutableArray pdl_interceptClusterSelector:@selector(setObject:atIndexedSubscript:) withInterceptorImplementation:(IMP)&NSMutableArray_SafeOperation_setObject_atIndexedSubscript_Imp];
             (void)ret;
             NSAssert(ret > 0, @"setObject:atIndexedSubscript: not pretected");
         }
