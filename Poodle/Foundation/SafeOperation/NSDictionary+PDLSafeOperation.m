@@ -25,12 +25,12 @@
             NSAssert(ret, @"dictionaryWithObjects:forKeys:count:");
         }
         {
-            NSUInteger ret = [NSMutableDictionary interceptClusterSelector:@selector(setObject:forKey:) withInterceptorImplementation:(IMP)&NSMutableDictionary_SafeOperation_setObject_forKey_Imps];
+            NSUInteger ret = [NSMutableDictionary pdl_interceptClusterSelector:@selector(setObject:forKey:) withInterceptorImplementation:(IMP)&NSMutableDictionary_SafeOperation_setObject_forKey_Imps];
             (void)ret;
             NSAssert(ret > 0, @"setObject:forKeyedSubscript: not pretected");
         }
         {
-            NSUInteger ret = [NSMutableDictionary interceptClusterSelector:@selector(setObject:forKeyedSubscript:) withInterceptorImplementation:(IMP)&NSMutableDictionary_SafeOperation_setObject_forKey_Imps];
+            NSUInteger ret = [NSMutableDictionary pdl_interceptClusterSelector:@selector(setObject:forKeyedSubscript:) withInterceptorImplementation:(IMP)&NSMutableDictionary_SafeOperation_setObject_forKey_Imps];
             (void)ret;
             NSAssert(ret > 0, @"setObject:forKeyedSubscript: not pretected");
         }
