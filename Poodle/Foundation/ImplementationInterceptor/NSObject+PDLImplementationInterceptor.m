@@ -154,11 +154,11 @@ static NSUInteger interceptClusterSelector(Class aClass, SEL selector, IMP inter
     return ret;
 }
 
-+ (NSUInteger)interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation {
++ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation {
     return interceptClusterSelector(self, selector, interceptorImplementation, nil);
 }
 
-+ (NSUInteger)interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet {
++ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet {
     return interceptClusterSelector(self, selector, interceptorImplementation, @(isStructRet));
 }
 

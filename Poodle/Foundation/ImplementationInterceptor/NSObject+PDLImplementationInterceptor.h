@@ -30,8 +30,8 @@ _cmd = ((struct PDLImplementationInterceptorData *)(void *)_cmd)->method_name
 + (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation;
 + (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet addIfNotExistent:(BOOL)addIfNotExistent;
 
-+ (NSUInteger)interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation;
-+ (NSUInteger)interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet;
++ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation;
++ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet;
 
 @end
 
