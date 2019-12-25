@@ -1,11 +1,3 @@
-#
-#  pdl_lldb_hook.py
-#  Poodle
-#
-#  Created by Poodle on 2019/12/19.
-#  Copyright © 2019 Poodle. All rights reserved.
-#
-
 import lldb;
 import re;
 
@@ -42,9 +34,35 @@ def pdl_evaluateExpressionValue(expression, printErrors=True, language=lldb.eLan
 
     return value
 
-def pdl_getAddr(functionString):
+def pdl_getAddr(string):
+    loadAddr = 0;
+
+    try:
+        loadAddr = int(string);
+    except ValueError:
+        pass;
+    else:
+        pass;
+    if loadAddr:
+        return loadAddr;
+
+    try:
+        loadAddr = int(string, 16);
+    except ValueError:
+        pass;
+    else:
+        pass;
+    if loadAddr:
+        return loadAddr;
+
     target = lldb.debugger.GetSelectedTarget();
-    hookedListFound = target.FindFunctions(functionString, lldb.eFunctionNameTypeFull); # SBSymbolContextList
+    strings = string.split('`');
+    functionString = string;
+    moduleString = None;
+    if len(strings) == 2:
+        moduleString = strings[0];
+        functionString = strings[1];
+    hookedListFound = target.FindFunctions(functionString, lldb.eFunctionNameTypeFull);
     if not hookedListFound.IsValid():
         print('Invalid name' + functionString);
         return None;
@@ -52,6 +70,20 @@ def pdl_getAddr(functionString):
         print('No function found with name ' + functionString);
         return None;
     context = hookedListFound.GetContextAtIndex(0);
+    if moduleString:
+        contextFound = None;
+        for i in range(0, hookedListFound.GetSize()):
+            context = hookedListFound.GetContextAtIndex(i);
+            module = context.GetModule();
+            fileSpec = module.GetFileSpec();
+            filename = fileSpec.GetFilename();
+            if filename == moduleString:
+                contextFound = context;
+                break;
+        if not contextFound:
+            print('No function found with name ' + string);
+            return;
+
     pdl_print('context:');
     pdl_print(context);
     function = context.GetFunction();
@@ -144,7 +176,7 @@ def pdl_hook(debugger, command, result, dict):
         if error:
             print(error);
             return;
-    print('pdl_hook ' + hex(hookedFunctionAddr) + ' with '+ hex(customFunctionAddr) + ' succeeded');
+    print('pdl_hook ' + hookedFunction + '(' + hex(hookedFunctionAddr) + ') with ' + customFunction + '(' + hex(customFunctionAddr) + ') succeeded');
     return;
 
 def __lldb_init_module(debugger, internal_dict):
