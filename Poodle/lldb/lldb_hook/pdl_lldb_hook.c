@@ -12,13 +12,13 @@
 
 #ifdef __arm64__
 
-static const int branch_instructions_count = 5;
+static const int branch_instructions_max_count = 5;
 static const int bytes_per_instruction = 4;
 static char lldb_command[1024] = {0};
 
 #define PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry) \
 static uintptr_t lldb_entry##_original_with_offset = 0;\
-__attribute__((naked)) static void lldb_entry(void) {\
+__attribute__((naked, aligned(4))) static void lldb_entry(void) {\
     __asm__ volatile (\
                       "nop\n"\
                       "nop\n"\
@@ -140,7 +140,27 @@ static uintptr_t *lldb_entry_original_with_offsets[PDL_LLDB_HOOK_MAX_COUNT] = {
 
 #pragma mark -
 
-static void generate_branch_instructions(uintptr_t address, unsigned int branch_to_custom_function[5]) {
+static int get_branch_instructions_count(uintptr_t from, uintptr_t to) {
+    uintptr_t address = to;
+
+    unsigned short imm[4];
+    imm[0] = (uintptr_t)address & 0xFFFF;
+    imm[1] = ((uintptr_t)address >> 16) & 0xFFFF;
+    imm[2] = ((uintptr_t)address >> 32) & 0xFFFF;
+    imm[3] = ((uintptr_t)address >> 48) & 0xFFFF;
+
+    int count = 5;
+    for (int i = 3; i >= 0; i--) {
+        if (imm[i] == 0) {
+            count--;
+        } else {
+            break;
+        }
+    }
+    return count;
+}
+
+static void generate_branch_instructions(uintptr_t address, unsigned int branch_to_custom_function[branch_instructions_max_count], int branch_instructions_count) {
     unsigned short imm[4];
     imm[0] = (uintptr_t)address & 0xFFFF;
     imm[1] = ((uintptr_t)address >> 16) & 0xFFFF;
@@ -148,37 +168,37 @@ static void generate_branch_instructions(uintptr_t address, unsigned int branch_
     imm[3] = ((uintptr_t)address >> 48) & 0xFFFF;
     unsigned int reg = 9;
     unsigned int imm_mask = 0xFFFF << 5;
-    {
+    if (branch_instructions_count >= 2) {
         unsigned int mov = 0b11010010100000000000000000000000;
         unsigned int i = imm[0];
         mov = mov | reg | ((i << 5) & imm_mask);
         branch_to_custom_function[0] = mov;
     }
-    {
+    if (branch_instructions_count >= 3) {
         unsigned int movk = 0b11110010101000000000000000000000;
         unsigned int i = imm[1];
         movk = movk | reg | ((i << 5) & imm_mask);
         branch_to_custom_function[1] = movk;
     }
-    {
+    if (branch_instructions_count >= 4) {
         unsigned int movk = 0b11110010110000000000000000000000;
         unsigned int i = imm[2];
         movk = movk | reg | ((i << 5) & imm_mask);
         branch_to_custom_function[2] = movk;
     }
-    {
+    if (branch_instructions_count >= 5) {
         unsigned int movk = 0b11110010111000000000000000000000;
         unsigned int i = imm[3];
         movk = movk | reg | ((i << 5) & imm_mask);
         branch_to_custom_function[3] = movk;
     }
+
     {
         unsigned int brIns = 0b11010110000111110000000000000000;
         brIns = brIns + (reg << 5);
-        branch_to_custom_function[4] = brIns;
+        branch_to_custom_function[branch_instructions_count - 1] = brIns;
     }
 }
-
 
 static void print_lldb_memory_write_command(uintptr_t dst, uintptr_t src, int size) {
     unsigned int *memory = (unsigned int *)src;
@@ -189,10 +209,10 @@ static void print_lldb_memory_write_command(uintptr_t dst, uintptr_t src, int si
     }
 }
 
-static void print_lldb_command(uintptr_t hooked_function, uintptr_t custom_function, uintptr_t entry) {
-    unsigned int branch_to_custom_function[5];
+static void print_lldb_command(uintptr_t hooked_function, uintptr_t custom_function, uintptr_t entry, int branch_instructions_count) {
+    unsigned int branch_to_custom_function[branch_instructions_max_count];
     lldb_command[0] = '\0';
-    generate_branch_instructions(custom_function, branch_to_custom_function);
+    generate_branch_instructions(custom_function, branch_to_custom_function, branch_instructions_count);
     print_lldb_memory_write_command(entry, hooked_function, branch_instructions_count);
     strcat(lldb_command, "\n");
     print_lldb_memory_write_command(hooked_function, (uintptr_t)branch_to_custom_function, branch_instructions_count);
@@ -233,12 +253,14 @@ static bool lldb_hook(uintptr_t hooked_function, uintptr_t custom_function) {
         return false;
     }
 
+    int branch_instructions_count = get_branch_instructions_count(hooked_function, custom_function);
+
     hook_table_key[first_empty_index] = custom_function;
     hook_table_value[first_empty_index] = hooked_function;
     uintptr_t *shiftedEntry = lldb_entry_original_with_offsets[first_empty_index];
     *shiftedEntry = hooked_function + branch_instructions_count * bytes_per_instruction;
     uintptr_t entry = (uintptr_t)lldb_entrys[first_empty_index];
-    print_lldb_command(hooked_function, custom_function, entry);
+    print_lldb_command(hooked_function, custom_function, entry, branch_instructions_count);
 
     return true;
 }
