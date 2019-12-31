@@ -6,9 +6,9 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PDLViewController.h"
 
-@interface PDLClassListViewController : UIViewController
+@interface PDLClassListViewController : PDLViewController
 
 - (instancetype)initWithImageName:(NSString *)imageName;
 

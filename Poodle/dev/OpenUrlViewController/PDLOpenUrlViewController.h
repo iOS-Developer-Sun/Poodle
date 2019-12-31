@@ -6,9 +6,9 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PDLViewController.h"
 
-@interface PDLOpenUrlViewController : UIViewController
+@interface PDLOpenUrlViewController : PDLViewController
 
 @property (nonatomic, copy, class) void (^openUrlAction)(NSString *urlString);
 
