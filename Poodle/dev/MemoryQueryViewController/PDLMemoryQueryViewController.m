@@ -337,8 +337,6 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
 
     self.title = @"Memory Query";
 
-    self.view.backgroundColor = [UIColor whiteColor];
-
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Execute" style:UIBarButtonItemStylePlain target:self action:@selector(executeQuery)];
 
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];

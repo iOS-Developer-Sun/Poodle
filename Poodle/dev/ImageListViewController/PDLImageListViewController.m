@@ -32,10 +32,6 @@
 
     self.title = @"Images";
 
-    self.extendedLayoutIncludesOpaqueBars;
-
-    self.view.backgroundColor = [UIColor whiteColor];
-
     self.navigationItem.rightBarButtonItems = @[
                                                 [[UIBarButtonItem alloc] initWithTitle:@"Classes" style:UIBarButtonItemStylePlain target:self action:@selector(toClasses)],
                                                 [[UIBarButtonItem alloc] initWithTitle:@"Protocols" style:UIBarButtonItemStylePlain target:self action:@selector(toProtocols)]

@@ -31,8 +31,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [UIColor whiteColor];
-
     self.fontFamilyNames = [[UIFont familyNames] sortedArrayUsingComparator:^NSComparisonResult(id obj1, id obj2) {
         NSString *name1 = (NSString *)obj1;
         NSString *name2 = (NSString *)obj2;

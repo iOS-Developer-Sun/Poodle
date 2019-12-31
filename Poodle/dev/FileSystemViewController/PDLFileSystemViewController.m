@@ -24,8 +24,6 @@
 
     self.title = @"File System";
 
-    self.view.backgroundColor = [UIColor whiteColor];
-
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     tableView.dataSource = self;
