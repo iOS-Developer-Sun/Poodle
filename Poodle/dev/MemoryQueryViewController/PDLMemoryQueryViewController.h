@@ -6,7 +6,7 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PDLViewController.h"
 
 typedef NS_ENUM(NSUInteger, PDLMemoryQueryResultType) {
     PDLMemoryQueryResultTypeUnknown,
@@ -45,7 +45,7 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryResultType) {
 
 @end
 
-@interface PDLMemoryQueryViewController : UIViewController
+@interface PDLMemoryQueryViewController : PDLViewController
 
 + (void)addConstantQueryWithTitle:(NSString *)title action:(void(^)(PDLMemoryQueryResult *result))action;
 

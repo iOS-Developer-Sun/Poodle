@@ -6,9 +6,9 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PDLViewController.h"
 
-@interface PDLFontViewController : UIViewController
+@interface PDLFontViewController : PDLViewController
 
 @property (nonatomic, copy) NSString *exampleText;
 @property (nonatomic, copy) void(^fontSelectAction)(PDLFontViewController *fontViewController, NSString *familyName, NSString *fontName);

@@ -32,6 +32,8 @@
 
     self.title = @"Images";
 
+    self.extendedLayoutIncludesOpaqueBars;
+
     self.view.backgroundColor = [UIColor whiteColor];
 
     self.navigationItem.rightBarButtonItems = @[

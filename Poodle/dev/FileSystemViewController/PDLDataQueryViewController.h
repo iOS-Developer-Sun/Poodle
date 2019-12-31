@@ -6,10 +6,10 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PDLViewController.h"
 #import "PDLDatabase.h"
 
-@interface PDLDataQueryViewController : UIViewController
+@interface PDLDataQueryViewController : PDLViewController
 
 @property (nonatomic, strong) PDLDatabase *database;
 

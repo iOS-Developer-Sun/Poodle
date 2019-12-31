@@ -6,9 +6,9 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PDLViewController.h"
 
-@interface PDLDirectoryViewController : UIViewController
+@interface PDLDirectoryViewController : PDLViewController
 
 - (instancetype)initWithDirectory:(NSString *)directory;
 

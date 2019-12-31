@@ -6,8 +6,8 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import <UIKit/UIKit.h>
+#import "PDLViewController.h"
 
-@interface PDLImageListViewController : UIViewController
+@interface PDLImageListViewController : PDLViewController
 
 @end
