@@ -40,8 +40,6 @@
 
     self.title = @"Classes";
 
-    self.view.backgroundColor = [UIColor whiteColor];
-
     UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
     searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     searchBar.delegate = self;

@@ -25,8 +25,6 @@
 
     self.title = self.tableName;
 
-    self.view.backgroundColor = [UIColor whiteColor];
-
     PDLFormView *formView = [[PDLFormView alloc] initWithFrame:self.view.bounds];
     formView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     formView.delegate = self;

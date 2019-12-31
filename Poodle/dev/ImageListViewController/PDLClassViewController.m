@@ -33,8 +33,6 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    self.view.backgroundColor = [UIColor whiteColor];
-
     Class aClass = NSClassFromString(self.className);
     self.title = [NSString stringWithFormat:@"%@(%@)", self.className, @(class_getInstanceSize(aClass))];
 

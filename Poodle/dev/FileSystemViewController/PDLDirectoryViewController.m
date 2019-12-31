@@ -404,8 +404,6 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
     self.title = [self.directory lastPathComponent];
 
-    self.view.backgroundColor = [UIColor whiteColor];
-
     UIBarButtonItem *rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Edit" style:UIBarButtonItemStylePlain target:self action:@selector(edit)];
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
     self.rightBarButtonItem = rightBarButtonItem;
