@@ -10,6 +10,8 @@
 
 @interface NSObject (SelectorProxy)
 
++ (BOOL)pdl_kvoObjectEnabled; // default NO
+
 - (BOOL)pdl_setSelectorProxyForSelector:(SEL)selector withImplementation:(IMP)implemetation;
 - (BOOL)pdl_setSelectorProxyForSelector:(SEL)selector withImplementation:(IMP)implemetation isStructRet:(BOOL)isStructRet;
 

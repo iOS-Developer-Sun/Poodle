@@ -11,12 +11,23 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <dlfcn.h>
+#import <pthread/pthread.h>
 
 static void *NSObjectSelectorProxyKVOClassKey;
 static void *NSObjectSelectorProxyClassKey;
 static void *NSObjectSelectorProxyMapTableKey;
 
+static pthread_mutex_t NSObjectSelectorProxyLock = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+
 @implementation NSObject (SelectorProxy)
+
+static void NSObjectSelectorProxyLockLock() {
+    pthread_mutex_lock(&NSObjectSelectorProxyLock);
+}
+
+static void NSObjectSelectorProxyLockUnlock() {
+    pthread_mutex_unlock(&NSObjectSelectorProxyLock);
+}
 
 static BOOL NSObjectSelectorProxyIsObjectSupported(__unsafe_unretained id object) {
 #if TARGET_OS_OSX && __x86_64__
@@ -113,15 +124,13 @@ static Class NSObjectSelectorProxyClass(__unsafe_unretained id self, SEL _cmd) {
 }
 
 static void NSObjectSelectorProxyAddObserverForKeyPathOptionsContext(__unsafe_unretained id self, SEL _cmd, NSObject *observer, NSString *keyPath, NSKeyValueObservingOptions options, void *context) {
-    @synchronized (@"PDLSelectorProxy") {
-        PDLImplementationInterceptorRecover(_cmd);
-        
-        NSObject *object = self;
-        if (NSObjectSelectorProxyIsObjectSupported(object) == NO) {
-            ((void (*)(id, SEL, NSObject *, NSString *, NSKeyValueObservingOptions, void *))_imp)(self, _cmd, observer, keyPath, options, context);
-            return;
-        }
+    PDLImplementationInterceptorRecover(_cmd);
 
+    NSObjectSelectorProxyLockLock();
+
+    NSObject *object = self;
+    if (NSObjectSelectorProxyIsObjectSupported(object)) {
+        ((void (*)(id, SEL, NSObject *, NSString *, NSKeyValueObservingOptions, void *))_imp)(self, _cmd, observer, keyPath, options, context);
         Class aClass = object_getClass(object);
         BOOL isKVO = ((BOOL (*)(id, SEL))objc_msgSend)(object, sel_registerName("_isKVOA"));
         if (isKVO == NO) {
@@ -147,6 +156,8 @@ static void NSObjectSelectorProxyAddObserverForKeyPathOptionsContext(__unsafe_un
             }
         }
     }
+
+    NSObjectSelectorProxyLockUnlock();
 }
 
 static NSMapTable *NSObjectSelectorProxySelectorImplementationMapTableOfObject(__unsafe_unretained id object) {
@@ -169,85 +180,96 @@ static void NSObjectSelectorProxySetAssociatedImplementationWithObjectAndSelecto
 }
 
 static IMP NSObjectSelectorProxySelectorProxyImplementation(__unsafe_unretained id object, SEL selector) {
-    @synchronized (@"PDLSelectorProxy") {
-        Class aClass = objc_getAssociatedObject(object, &NSObjectSelectorProxyClassKey);
-        Class superclass = class_getSuperclass(aClass);
-        IMP imp = method_getImplementation(class_getInstanceMethod(superclass, selector));
-        return imp;
-    }
+    NSObjectSelectorProxyLockLock();
+    Class aClass = objc_getAssociatedObject(object, &NSObjectSelectorProxyClassKey);
+    Class superclass = class_getSuperclass(aClass);
+    IMP imp = method_getImplementation(class_getInstanceMethod(superclass, selector));
+    NSObjectSelectorProxyLockUnlock();
+    return imp;
 }
 
 static BOOL NSObjectSelectorProxySetSelectorProxy(__unsafe_unretained id object, SEL selector, IMP implemetation, NSNumber *isStructRetNumber) {
-    @synchronized (@"PDLSelectorProxy") {
-        if (NSObjectSelectorProxyIsObjectSupported(object) == NO) {
-            return NO;
-        }
+    NSObjectSelectorProxyLockLock();
 
-        Class aClass = object_getClass(object);
-        Method method = class_getInstanceMethod(aClass, selector);
-        const char *typeEncoding = method_getTypeEncoding(method);
-        BOOL isStret = NO;
+    if (NSObjectSelectorProxyIsObjectSupported(object) == NO) {
+        NSObjectSelectorProxyLockUnlock();
+        return NO;
+    }
+
+    Class aClass = object_getClass(object);
+    Method method = class_getInstanceMethod(aClass, selector);
+    const char *typeEncoding = method_getTypeEncoding(method);
+    BOOL isStret = NO;
 
 #if !__arm64__
-        if (isStructRetNumber) {
-            isStret = isStructRetNumber.boolValue;
-        } else {
-            @try {
-                NSMethodSignature *methodSignature = [NSMethodSignature signatureWithObjCTypes:typeEncoding];
-                NSNumber *isHiddenStructRetNumber = [methodSignature valueForKey:@"isHiddenStructRet"];
-                assert(isHiddenStructRetNumber);
-                isStret = isHiddenStructRetNumber.boolValue;
-            } @catch (NSException *exception) {
-                return NO;
-            } @finally {
-                ;
-            }
+    if (isStructRetNumber) {
+        isStret = isStructRetNumber.boolValue;
+    } else {
+        @try {
+            NSMethodSignature *methodSignature = [NSMethodSignature signatureWithObjCTypes:typeEncoding];
+            NSNumber *isHiddenStructRetNumber = [methodSignature valueForKey:@"isHiddenStructRet"];
+            assert(isHiddenStructRetNumber);
+            isStret = isHiddenStructRetNumber.boolValue;
+        } @catch (NSException *exception) {
+            NSObjectSelectorProxyLockUnlock();
+            return NO;
+        } @finally {
+            ;
         }
+    }
 #endif
 
-        BOOL shouldChangeClass = NO;
-        // check if subclassed
-        Class selectorProxyClass = objc_getAssociatedObject(object, &NSObjectSelectorProxyClassKey);
-        if (selectorProxyClass == nil) {
-            selectorProxyClass = NSObjectSelectorProxySubclass(aClass);
-            objc_setAssociatedObject(object, &NSObjectSelectorProxyClassKey, selectorProxyClass, OBJC_ASSOCIATION_ASSIGN);
-            shouldChangeClass = YES;
-        }
-
-        // change imp to global entry
-        extern void NSObjectSelectorProxyEntry(void);
-        extern void NSObjectSelectorProxyEntry_stret(void);
-        IMP entry = isStret ? NSObjectSelectorProxyEntry_stret : NSObjectSelectorProxyEntry;
-        class_replaceMethod(selectorProxyClass, selector, entry, typeEncoding);
-
-        // map custom implementation to selector for object
-        NSObjectSelectorProxySetAssociatedImplementationWithObjectAndSelector(object, selector, implemetation);
-
-        // set class when all is ready in order not to crash while other thread is calling the method
-        if (shouldChangeClass) {
-            object_setClass(object, selectorProxyClass);
-        }
-        return YES;
+    BOOL shouldChangeClass = NO;
+    // check if subclassed
+    Class selectorProxyClass = objc_getAssociatedObject(object, &NSObjectSelectorProxyClassKey);
+    if (selectorProxyClass == nil) {
+        selectorProxyClass = NSObjectSelectorProxySubclass(aClass);
+        objc_setAssociatedObject(object, &NSObjectSelectorProxyClassKey, selectorProxyClass, OBJC_ASSOCIATION_ASSIGN);
+        shouldChangeClass = YES;
     }
+
+    // change imp to global entry
+    extern void NSObjectSelectorProxyEntry(void);
+    extern void NSObjectSelectorProxyEntry_stret(void);
+    IMP entry = isStret ? NSObjectSelectorProxyEntry_stret : NSObjectSelectorProxyEntry;
+    class_replaceMethod(selectorProxyClass, selector, entry, typeEncoding);
+
+    // map custom implementation to selector for object
+    NSObjectSelectorProxySetAssociatedImplementationWithObjectAndSelector(object, selector, implemetation);
+
+    // set class when all is ready in order not to crash while other thread is calling the method
+    if (shouldChangeClass) {
+        object_setClass(object, selectorProxyClass);
+    }
+    NSObjectSelectorProxyLockUnlock();
+    return YES;
 }
 
 IMP NSObjectSelectorProxyForwarding(__unsafe_unretained id self, SEL _cmd) {
-    @synchronized (@"PDLSelectorProxy") {
-        IMP imp = NSObjectSelectorProxyAssociatedImplementationWithObjectAndSelector(self, _cmd);
-        if (imp == nil) {
-            imp = NSObjectSelectorProxySelectorProxyImplementation(self, _cmd);
-        }
-        return imp;
+    NSObjectSelectorProxyLockLock();
+    IMP imp = NSObjectSelectorProxyAssociatedImplementationWithObjectAndSelector(self, _cmd);
+    if (imp == nil) {
+        imp = NSObjectSelectorProxySelectorProxyImplementation(self, _cmd);
     }
+    NSObjectSelectorProxyLockUnlock();
+    return imp;
 }
 
 + (void)load {
+    if (![self pdl_kvoObjectEnabled]) {
+        return;
+    }
+
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         BOOL ret = [[NSObject class] pdl_interceptSelector:@selector(addObserver:forKeyPath:options:context:) withInterceptorImplementation:(IMP)NSObjectSelectorProxyAddObserverForKeyPathOptionsContext];
         (void)ret;
         NSAssert(ret, @"addObserver:forKeyPath:options:context: not hooked");
     });
+}
+
++ (BOOL)pdl_kvoObjectEnabled {
+    return NO;
 }
 
 - (BOOL)pdl_setSelectorProxyForSelector:(SEL)selector withImplementation:(IMP)implemetation {
