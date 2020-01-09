@@ -286,4 +286,18 @@ IMP pdl_lldb_hooked_function_new_entry(IMP custom_function) {
     return lldb_entrys[index];
 }
 
+#else
+
+bool pdl_lldb_hook(IMP hooked_function, IMP custom_function) {
+    return false;
+}
+
+char *pdl_lldb_command(void) {
+    return NULL;
+}
+
+IMP pdl_lldb_hooked_function_new_entry(IMP custom_function) {
+    return NULL;
+}
+
 #endif
