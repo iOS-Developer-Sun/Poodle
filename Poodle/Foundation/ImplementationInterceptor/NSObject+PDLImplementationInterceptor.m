@@ -35,7 +35,7 @@ struct NSObjectImplementationInterceptorBlock {
 
 @implementation NSObject (PDLImplementationInterceptor)
 
-static BOOL interceptSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent) {
+BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data) {
     Method method = class_getInstanceMethod(aClass, selector);
     IMP implementation = method_getImplementation(method);
     if (implementation == NULL) {
@@ -52,7 +52,7 @@ static BOOL interceptSelector(Class aClass, SEL selector, IMP interceptorImpleme
         implementation = NULL;
     }
 
-    struct PDLImplementationInterceptorData implementationInterceptorData = {selector, (char *)typeEncoding, implementation, aClass};
+    struct PDLImplementationInterceptorData implementationInterceptorData = {selector, (char *)typeEncoding, implementation, aClass, data};
     BOOL isStret = NO;
 
 #if !__arm64__
@@ -112,14 +112,14 @@ static BOOL interceptSelector(Class aClass, SEL selector, IMP interceptorImpleme
 }
 
 + (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation {
-    return interceptSelector(self, selector, interceptorImplementation, nil, NO);
+    return pdl_interceptSelector(self, selector, interceptorImplementation, nil, NO, NULL);
 }
 
-+ (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet addIfNotExistent:(BOOL)addIfNotExistent {
-    return interceptSelector(self, selector, interceptorImplementation, @(isStructRet), addIfNotExistent);
++ (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet addIfNotExistent:(BOOL)addIfNotExistent data:(void *)data {
+    return pdl_interceptSelector(self, selector, interceptorImplementation, @(isStructRet), addIfNotExistent, data);
 }
 
-static NSUInteger interceptClusterSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber) {
+NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, void *data) {
     NSMutableSet *classes = [NSMutableSet set];
     unsigned int outCount = 0;
     Class *classList = objc_copyClassList(&outCount);
@@ -143,11 +143,11 @@ static NSUInteger interceptClusterSelector(Class aClass, SEL selector, IMP inter
 
     NSUInteger ret = 0;
     for (Class subclass in classes) {
-        if (interceptSelector(subclass, selector, interceptorImplementation, isStructRetNumber, NO)) {
+        if (pdl_interceptSelector(subclass, selector, interceptorImplementation, isStructRetNumber, NO, data)) {
             ret++;
         }
     }
-    if (interceptSelector(aClass, selector, interceptorImplementation, isStructRetNumber, NO)) {
+    if (pdl_interceptSelector(aClass, selector, interceptorImplementation, isStructRetNumber, NO, data)) {
         ret++;
     }
 
@@ -155,11 +155,11 @@ static NSUInteger interceptClusterSelector(Class aClass, SEL selector, IMP inter
 }
 
 + (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation {
-    return interceptClusterSelector(self, selector, interceptorImplementation, nil);
+    return pdl_interceptClusterSelector(self, selector, interceptorImplementation, nil, NULL);
 }
 
-+ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet {
-    return interceptClusterSelector(self, selector, interceptorImplementation, @(isStructRet));
++ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet data:(void *)data {
+    return pdl_interceptClusterSelector(self, selector, interceptorImplementation, @(isStructRet), data);
 }
 
 @end
