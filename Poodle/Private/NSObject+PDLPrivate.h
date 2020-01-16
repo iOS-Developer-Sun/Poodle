@@ -20,6 +20,8 @@
 @property (readonly) NSString *_rawBriefDescription;
 #endif
 
+@property (readonly) BOOL _isDeallocating;
+
 extern id objc_retain(__unsafe_unretained id object);
 extern void objc_release(__unsafe_unretained id object);
 extern id objc_autorelease(__unsafe_unretained id object);
