@@ -10,9 +10,10 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-@implementation NSObject (PDLDebug)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
 
-@dynamic objectRetainCount;
+@implementation NSObject (PDLDebug)
 
 - (NSString *)propertiesDescription {
     NSMutableDictionary *propertiesDescriptionDictionary = [NSMutableDictionary dictionary];
@@ -267,3 +268,5 @@ NSArray *protocol_methods(Protocol *protocol) {
 }
 
 @end
+
+#pragma clang diagnostic pop

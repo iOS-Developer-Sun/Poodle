@@ -21,4 +21,6 @@
 @dynamic _rawBriefDescription;
 #endif
 
+@dynamic _isDeallocating;
+
 @end

@@ -11,7 +11,6 @@
 @interface NSObject (PDLDebug)
 
 @property (readonly) NSString *propertiesDescription;
-@property (readonly) NSUInteger objectRetainCount;
 
 @property (class, readonly) NSArray *object_subclasses;
 @property (class, readonly) NSArray *object_ivars;
@@ -21,6 +20,11 @@
 @property (class, readonly) NSArray *object_properties;
 
 @property (class, readonly) Class metaClass;
+
+- (instancetype)objectRetain;
+- (oneway void)objectRelease;
+- (instancetype)objectAutorelease;
+- (NSUInteger)objectRetainCount;
 
 extern NSArray *object_subclasses(Class aClass);
 extern NSArray *object_ivars(Class aClass);
@@ -34,6 +38,9 @@ extern NSArray *protocol_adoptedProtocols(Protocol *protocol);
 extern NSArray *protocol_properties(Protocol *protocol);
 extern NSArray *protocol_methods(Protocol *protocol);
 
-extern NSUInteger objc_retainCount(id object);
+extern id objectRetain(id object);
+extern void objectRelease(id object);
+extern id objectAutorelease(id object);
+extern NSUInteger objectRetainCount(id object);
 
 @end
