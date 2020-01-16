@@ -26,6 +26,8 @@
 - (instancetype)objectAutorelease;
 - (NSUInteger)objectRetainCount;
 
+- (instancetype)objectAutoreleaseRetained;
+
 extern NSArray *object_subclasses(Class aClass);
 extern NSArray *object_ivars(Class aClass);
 extern NSArray *object_classMethods(Class aClass);
@@ -42,5 +44,7 @@ extern id objectRetain(id object);
 extern void objectRelease(id object);
 extern id objectAutorelease(id object);
 extern NSUInteger objectRetainCount(id object);
+
+extern id objectAutoreleaseRetained(id object);
 
 @end

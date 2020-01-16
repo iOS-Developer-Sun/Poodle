@@ -30,6 +30,10 @@
     return [self retainCount];
 }
 
+- (instancetype)objectAutoreleaseRetained {
+    return [[self retain] autorelease];
+}
+
 id objectRetain(id object) {
     return [object retain];
 }
@@ -44,6 +48,10 @@ id objectAutorelease(id object) {
 
 NSUInteger objectRetainCount(id object) {
     return [object retainCount];
+}
+
+id objectAutoreleaseRetained(id object) {
+    return [[object retain] autorelease];
 }
 
 @end
