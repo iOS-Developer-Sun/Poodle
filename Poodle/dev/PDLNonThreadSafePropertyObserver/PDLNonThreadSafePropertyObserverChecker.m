@@ -8,6 +8,14 @@
 
 #import "PDLNonThreadSafePropertyObserverChecker.h"
 
+@interface PDLNonThreadSafePropertyObserverChecker () {
+    NSMutableSet *_getters;
+    NSMutableSet *_setters;
+    NSMutableArray *_gettersAndsetters;
+}
+
+@end
+
 @implementation PDLNonThreadSafePropertyObserverChecker
 
 - (instancetype)initWithObserverProperty:(PDLNonThreadSafePropertyObserverProperty *)property {
@@ -17,6 +25,7 @@
 
         _getters = [NSMutableSet set];
         _setters = [NSMutableSet set];
+        _gettersAndsetters = [NSMutableArray array];
 
         [self setupCustom];
     }
@@ -43,6 +52,9 @@
         } else {
             [_getters addObject:actionString];
         }
+        if (![_gettersAndsetters.lastObject isEqual:actionString]) {
+            [_gettersAndsetters addObject:actionString];
+        }
     }
 
     if ([self.custom respondsToSelector:@selector(recordAction:)]) {
@@ -50,11 +62,15 @@
     }
 }
 
-- (BOOL)isThreadSafe {
+- (BOOL)check {
     if ([self.custom respondsToSelector:@selector(isThreadSafe)]) {
         return [self.custom isThreadSafe];
+    } else {
+        return [self isThreadSafe];
     }
+}
 
+- (BOOL)isThreadSafe {
     if (_setters.count > 1) {
         return NO;
     }
@@ -68,6 +84,18 @@
         }
     }
     return YES;
+}
+
+- (NSSet *)getters {
+    return _getters.copy;
+}
+
+- (NSSet *)setters {
+    return _setters.copy;
+}
+
+- (NSArray *)gettersAndsetters {
+    return _gettersAndsetters.copy;
 }
 
 @end
