@@ -13,6 +13,14 @@
 #import <mach/mach.h>
 #import <objc/runtime.h>
 
+@interface PDLNonThreadSafePropertyObserverChecker (PDLNonThreadSafePropertyObserverProperty)
+
+- (instancetype)initWithObserverProperty:(PDLNonThreadSafePropertyObserverProperty *)property;
+- (void)recordAction:(PDLNonThreadSafePropertyObserverAction *)action;
+- (BOOL)check;
+
+@end
+
 @interface PDLNonThreadSafePropertyObserverProperty () {
     __weak PDLNonThreadSafePropertyObserverObject *_observer;
     NSMutableArray <PDLNonThreadSafePropertyObserverAction *> *_actions;
@@ -105,7 +113,7 @@
     @synchronized (self) {
         [_actions addObject:action];
         [_checker recordAction:action];
-        if (![_checker isThreadSafe]) {
+        if (![_checker check]) {
             void(^reporter)(PDLNonThreadSafePropertyObserverProperty *property) = [PDLNonThreadSafePropertyObserver reporter];
             if (reporter) {
                 reporter(self);

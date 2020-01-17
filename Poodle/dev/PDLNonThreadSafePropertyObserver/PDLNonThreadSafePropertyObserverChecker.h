@@ -26,18 +26,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (weak, readonly) PDLNonThreadSafePropertyObserverProperty *property;
 
-@property (strong, readonly) NSMutableSet *getters;
-@property (strong, readonly) NSMutableSet *setters;
+@property (readonly) NSSet *getters;
+@property (readonly) NSSet *setters;
+@property (readonly) NSArray *gettersAndsetters;
 
-- (instancetype)initWithObserverProperty:(PDLNonThreadSafePropertyObserverProperty *)property; // call setupCustom
-- (void)recordAction:(PDLNonThreadSafePropertyObserverAction *)action; // call custom recordAction if needed
-- (BOOL)isThreadSafe; // return custom isThreadSafe if needed
+- (BOOL)isThreadSafe; // will not be called if 'custom' implements 'isThreadSafe'
 
 #pragma mark - custom
 
 @property (nonatomic, strong) id <PDLNonThreadSafePropertyObserverCustomChecker> custom;
 
-- (void)setupCustom; // do nothing, overwrite it using category to set 'custom'
+- (void)setupCustom; // do nothing, overwrite it using category to set 'custom' when initializing
 
 @end
 
