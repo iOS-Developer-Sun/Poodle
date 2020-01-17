@@ -121,7 +121,7 @@ static void (^_reporter)(PDLNonThreadSafePropertyObserverProperty *property);
         }
 
         SEL getter = NSSelectorFromString(getterString);
-        SEL setter = NSSelectorFromString(setterString);;
+        SEL setter = NSSelectorFromString(setterString);
         assert(getter && setter);
 
         BOOL ret = pdl_interceptSelector(aClass, getter, (IMP)&propertyGetter, nil, NO, (void *)name);

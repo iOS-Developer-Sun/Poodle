@@ -10,7 +10,7 @@
 
 @interface NSObject (PDLWeakifyUnsafeUnretainedProperty)
 
-+ (BOOL)pdl_weakifyProperty:(NSString *)propertyName;
-+ (BOOL)pdl_weakifyProperty:(NSString *)propertyName needsSync:(BOOL)needsSync;
+//+ (BOOL)pdl_weakifyProperty:(NSString *)propertyName;
+//+ (BOOL)pdl_weakifyProperty:(NSString *)propertyName needsSync:(BOOL)needsSync;
 
 @end
