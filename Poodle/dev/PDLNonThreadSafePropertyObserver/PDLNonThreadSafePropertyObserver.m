@@ -49,6 +49,10 @@ static id observeNonThreadSafePropertiesAllocWithZone(__unsafe_unretained id sel
 
 #pragma mark - public methods
 
++ (id)observerObjectForObject:(id)object {
+    return [PDLNonThreadSafePropertyObserverObject observerObjectForObject:object];
+}
+
 static BOOL _queueEnabled = NO;
 
 + (BOOL)queueCheckerEnabled {

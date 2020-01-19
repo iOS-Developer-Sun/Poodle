@@ -129,7 +129,9 @@
 }
 
 - (NSString *)description {
-    return [NSString stringWithFormat:@"%@\n%@", self.identifier, self.actions];
+    NSString *description = [super description];
+    PDLNonThreadSafePropertyObserverObject *observer = _observer;
+    return [NSString stringWithFormat:@"%@, observer: %p\n%@\n%@", description, observer, self.identifier, self.actions];
 }
 
 @end
