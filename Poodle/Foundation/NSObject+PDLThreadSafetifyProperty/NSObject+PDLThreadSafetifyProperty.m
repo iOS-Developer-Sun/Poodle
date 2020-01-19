@@ -8,25 +8,44 @@
 
 #import "NSObject+PDLExtension.h"
 #import <objc/runtime.h>
+#import <pthread.h>
 #import "NSObject+PDLImplementationInterceptor.h"
 #import "NSObject+PDLPrivate.h"
 
 @implementation NSObject (PDLThreadSafetifyProperty)
 
-static id threadSafePropertyLock(__unsafe_unretained id self) {
-    return self;
+static pthread_mutex_t _PDLThreadSafetifyPropertyLock = PTHREAD_MUTEX_INITIALIZER;
+static id threadSafePropertyLock(__unsafe_unretained id self, Class aClass, const char *name) {
+    if ([self _isDeallocating]) {
+        return nil;
+    }
+
+    NSString *identifier = [NSString stringWithFormat:@"%@.%@", NSStringFromClass(aClass), @(name)];
+    pthread_mutex_lock(&_PDLThreadSafetifyPropertyLock);
+    NSMutableDictionary *locks = objc_getAssociatedObject(self, &_PDLThreadSafetifyPropertyLock);
+    if (locks == nil) {
+        locks = [NSMutableDictionary dictionary];
+        objc_setAssociatedObject(self, &_PDLThreadSafetifyPropertyLock, locks, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    id lock = locks[identifier];
+    if (lock == nil) {
+        lock = [[NSObject alloc] init];
+        locks[identifier] = lock;
+    }
+    pthread_mutex_unlock(&_PDLThreadSafetifyPropertyLock);
+    return lock;
 }
 
 static id threadSafePropertyGetter(__unsafe_unretained id self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
-    @synchronized (threadSafePropertyLock(self)) {
+    @synchronized (threadSafePropertyLock(self, _class, _data)) {
         return ((typeof(&threadSafePropertyGetter))_imp)(self, _cmd);
     }
 }
 
 static void threadSafePropertySetter(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id property) {
     PDLImplementationInterceptorRecover(_cmd);
-    @synchronized (threadSafePropertyLock(self)) {
+    @synchronized (threadSafePropertyLock(self, _class, _data)) {
         ((typeof(&threadSafePropertySetter))_imp)(self, _cmd, property);
     }
 }
@@ -43,6 +62,7 @@ static void threadSafePropertySetter(__unsafe_unretained id self, SEL _cmd, __un
     }
 
     const char *attributes = property_getAttributes(property);
+    const char *name = property_getName(property);
     NSArray *attributeList = [@(attributes) componentsSeparatedByString:@","];
 
     NSString *getterString = propertyName;
@@ -60,9 +80,9 @@ static void threadSafePropertySetter(__unsafe_unretained id self, SEL _cmd, __un
     SEL setter = NSSelectorFromString(setterString);
     assert(getter && setter);
 
-    BOOL ret = [aClass pdl_interceptSelector:getter withInterceptorImplementation:(IMP)&threadSafePropertyGetter];
+    BOOL ret = pdl_interceptSelector(aClass, getter, (IMP)&threadSafePropertyGetter, nil, NO, (void *)name);
     assert(ret);
-    ret &= [aClass pdl_interceptSelector:setter withInterceptorImplementation:(IMP)&threadSafePropertySetter];
+    ret &= pdl_interceptSelector(aClass, setter, (IMP)&threadSafePropertySetter, nil, NO, (void *)name);
     assert(ret);
 
     return ret;

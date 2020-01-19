@@ -91,9 +91,12 @@ static void *PDLNonThreadSafePropertyObserverObjectObjectKey = NULL;
     objc_setAssociatedObject(object, &PDLNonThreadSafePropertyObserverObjectObjectKey, observer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
++ (BOOL)isDeallocating:(id)object {
+    return [object _isDeallocating];
+}
+
 + (instancetype)observerObjectForObject:(id)object {
-    BOOL isDeallocating = [object _isDeallocating];
-    if (isDeallocating) {
+    if ([self isDeallocating:object]) {
         return nil;
     }
 
