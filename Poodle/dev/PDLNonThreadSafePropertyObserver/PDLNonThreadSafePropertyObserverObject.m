@@ -28,10 +28,6 @@
 
 @implementation PDLNonThreadSafePropertyObserverInitilizing
 
-- (void)dealloc {
-    ;
-}
-
 @end
 
 @interface PDLNonThreadSafePropertyObserverObject ()
@@ -54,6 +50,11 @@
         _initializing = initializing;
     }
     return self;
+}
+
+- (NSString *)description {
+    NSString *description = [super description];
+    return [NSString stringWithFormat:@"%@, object: %p, isInitializing: %@\n%@", description, self.object, @(self.isInitializing), self.properties];
 }
 
 #pragma mark - initializing tag
@@ -91,12 +92,9 @@ static void *PDLNonThreadSafePropertyObserverObjectObjectKey = NULL;
     objc_setAssociatedObject(object, &PDLNonThreadSafePropertyObserverObjectObjectKey, observer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
-+ (BOOL)isDeallocating:(id)object {
-    return [object _isDeallocating];
-}
-
 + (instancetype)observerObjectForObject:(id)object {
-    if ([self isDeallocating:object]) {
+    BOOL isDeallocating = [object _isDeallocating];
+    if (isDeallocating) {
         return nil;
     }
 

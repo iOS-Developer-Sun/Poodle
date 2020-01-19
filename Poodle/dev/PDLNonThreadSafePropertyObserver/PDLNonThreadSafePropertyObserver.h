@@ -17,6 +17,8 @@ typedef _Nullable PDLNonThreadSafePropertyObserver_PropertyFilter(^_Nullable PDL
 
 @interface PDLNonThreadSafePropertyObserver : NSObject
 
++ (id)observerObjectForObject:(id)object;
+
 + (BOOL)queueCheckerEnabled; // default NO
 + (void)registerQueueCheckerEnabled:(BOOL)queueEnabled;
 
