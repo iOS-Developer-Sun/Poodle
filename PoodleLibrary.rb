@@ -14,7 +14,7 @@ def PoodleLibraryCommonConfigurate(s)
 #    s.static_framework = true
 end
 
-def PoodleLibrarySpec(name, is_library)
+def PoodleLibrarySpec(name, path: nil, is_library: false, default_subspec: nil)
     pod_name = name
     Pod::Spec.new do |s|
         s.name = pod_name
@@ -25,12 +25,19 @@ def PoodleLibrarySpec(name, is_library)
         header_files = '**/*.{h,hpp}'
         librariy_files = '**/*.{a}'
 
-        base = 'Poodle/'
+        if path == nil
+            path = name
+        end
 
         if is_library
             source_files = header_files
-            base = 'PoodleLibrary/'
         end
+
+        if default_subspec
+            s.default_subspec = default_subspec
+        end
+
+        base = path + '/'
 
         platform_osx = :osx, "10.10"
         platform_ios = :ios, "9.0"
@@ -572,7 +579,7 @@ def PoodleLibrarySpec(name, is_library)
     end
 end
 
-def PoodleLibraryDynamicSpec(name, is_library)
+def PoodleLibraryDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, default_subspec: nil)
     pod_name = name
     Pod::Spec.new do |s|
         s.name = pod_name
@@ -583,15 +590,23 @@ def PoodleLibraryDynamicSpec(name, is_library)
         header_files = '**/*.{h,hpp}'
         librariy_files = '**/*.{a}'
 
-        base = 'Poodle/'
-
-        base_pod_name = 'Poodle'
+        if path == nil
+            path = name
+        end
 
         if is_library
             source_files = header_files
-            base = 'PoodleLibrary/'
-            base_pod_name = 'PoodleLibrary'
         end
+
+        if base_pod_name == nil
+            base_pod_name = name
+        end
+
+        if default_subspec
+            s.default_subspec = default_subspec
+        end
+
+        base = path + '/'
 
         platform_osx = :osx, "10.10"
         platform_ios = :ios, "9.0"
