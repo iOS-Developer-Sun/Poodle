@@ -6,7 +6,7 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import "NSObject+PDLExtension.h"
+#import "NSObject+PDLThreadSafetifyProperty.h"
 #import <objc/runtime.h>
 #import <pthread.h>
 #import "NSObject+PDLImplementationInterceptor.h"
