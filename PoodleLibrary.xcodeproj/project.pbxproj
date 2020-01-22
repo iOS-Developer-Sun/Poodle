@@ -1438,7 +1438,7 @@
 		B8E56EFB23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLTrasitionAnimation.h"; sourceTree = "<group>"; };
 		B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLTrasitionAnimation.m"; sourceTree = "<group>"; };
 		B8E56EFD23D700EA008D2DA1 /* PoodleLibrary */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PoodleLibrary; sourceTree = "<group>"; };
-		B8E56FB723D721D2008D2DA1 /* PoodleDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = file; path = PoodleDynamic.podspec; sourceTree = SOURCE_ROOT; };
+		B8E56FB723D721D2008D2DA1 /* PoodleDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = PoodleDynamic.podspec; sourceTree = SOURCE_ROOT; };
 		B8E56FB823D721D2008D2DA1 /* PoodleLibraryDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = PoodleLibraryDynamic.podspec; sourceTree = SOURCE_ROOT; };
 		B8FC6A9822EEEB3D005B91DE /* libCAAnimation+PDLExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCAAnimation+PDLExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FC6AB322EEF43A005B91DE /* libCADisplayLink+PDLExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCADisplayLink+PDLExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3842,7 +3842,7 @@
 		B88DB4BF22EAF14B003D20F6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1020;
+				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = Poodle;
 				TargetAttributes = {
 					B88DB4C622EAF14B003D20F6 = {
@@ -6033,11 +6033,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					armv7s,
-					arm64e,
-				);
 				"ARCHS[sdk=iphoneos*]" = (
 					"$(ARCHS_STANDARD)",
 					armv7s,
@@ -6104,11 +6099,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = (
-					"$(ARCHS_STANDARD)",
-					armv7s,
-					arm64e,
-				);
 				"ARCHS[sdk=iphoneos*]" = (
 					"$(ARCHS_STANDARD)",
 					armv7s,
