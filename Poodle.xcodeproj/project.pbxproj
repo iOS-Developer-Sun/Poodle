@@ -85,7 +85,7 @@
 		B85D4601240E859000CBF758 /* UINavigationController+PDLLongPressPop.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EE023D7001A008D2DA1 /* UINavigationController+PDLLongPressPop.m */; };
 		B85D4602240E859000CBF758 /* UIScreen+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EF623D7001A008D2DA1 /* UIScreen+PDLExtension.m */; };
 		B85D4603240E859000CBF758 /* UIViewController+PDLNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DFC23D70016008D2DA1 /* UIViewController+PDLNavigationBar.m */; };
-		B85D4604240E859000CBF758 /* UIViewController+PDLTrasitionAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.m */; };
+		B85D4604240E859000CBF758 /* UIViewController+PDLTransitionAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.m */; };
 		B85D4605240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-arm.s in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E2A23D70017008D2DA1 /* NSObject+PDLImplementationInterceptor-arm.s */; };
 		B85D4606240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E2923D70017008D2DA1 /* NSObject+PDLImplementationInterceptor-arm64.s */; };
 		B85D4607240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-i386.s in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E2823D70017008D2DA1 /* NSObject+PDLImplementationInterceptor-i386.s */; };
@@ -297,8 +297,8 @@
 		B8E56FB023D70588008D2DA1 /* UIScreen+PDLExtension.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56EF523D7001A008D2DA1 /* UIScreen+PDLExtension.h */; };
 		B8E56FB123D7058E008D2DA1 /* UIViewController+PDLNavigationBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DFC23D70016008D2DA1 /* UIViewController+PDLNavigationBar.m */; };
 		B8E56FB223D70591008D2DA1 /* UIViewController+PDLNavigationBar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56DFD23D70016008D2DA1 /* UIViewController+PDLNavigationBar.h */; };
-		B8E56FB323D70597008D2DA1 /* UIViewController+PDLTrasitionAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.m */; };
-		B8E56FB423D7059C008D2DA1 /* UIViewController+PDLTrasitionAnimation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56EFB23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.h */; };
+		B8E56FB323D70597008D2DA1 /* UIViewController+PDLTransitionAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.m */; };
+		B8E56FB423D7059C008D2DA1 /* UIViewController+PDLTransitionAnimation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56EFB23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1248,7 +1248,7 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				B8E56FB423D7059C008D2DA1 /* UIViewController+PDLTrasitionAnimation.h in CopyFiles */,
+				B8E56FB423D7059C008D2DA1 /* UIViewController+PDLTransitionAnimation.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1495,8 +1495,6 @@
 		B8E56EAC23D70019008D2DA1 /* CAMediaTimingFunction+PDLExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CAMediaTimingFunction+PDLExtension.h"; sourceTree = "<group>"; };
 		B8E56EAE23D70019008D2DA1 /* NSDictionary+PDLSafeOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+PDLSafeOperation.m"; sourceTree = "<group>"; };
 		B8E56EAF23D70019008D2DA1 /* NSArray+PDLSafeOperation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+PDLSafeOperation.m"; sourceTree = "<group>"; };
-		B8E56EB023D70019008D2DA1 /* NSArray+PDLSafeOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+PDLSafeOperation.h"; sourceTree = "<group>"; };
-		B8E56EB123D70019008D2DA1 /* NSDictionary+PDLSafeOperation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+PDLSafeOperation.h"; sourceTree = "<group>"; };
 		B8E56EB323D70019008D2DA1 /* pdl_dynamic.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_dynamic.h; sourceTree = "<group>"; };
 		B8E56EB523D7001A008D2DA1 /* PDLDirectoryViewControllerResources.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = PDLDirectoryViewControllerResources.c; sourceTree = "<group>"; };
 		B8E56EB623D7001A008D2DA1 /* PDLDatabaseViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLDatabaseViewController.h; sourceTree = "<group>"; };
@@ -1557,8 +1555,8 @@
 		B8E56EF623D7001A008D2DA1 /* UIScreen+PDLExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIScreen+PDLExtension.m"; sourceTree = "<group>"; };
 		B8E56EF823D7001A008D2DA1 /* NSJSONSerialization+PDLExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSJSONSerialization+PDLExtension.h"; sourceTree = "<group>"; };
 		B8E56EF923D7001A008D2DA1 /* NSJSONSerialization+PDLExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSJSONSerialization+PDLExtension.m"; sourceTree = "<group>"; };
-		B8E56EFB23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLTrasitionAnimation.h"; sourceTree = "<group>"; };
-		B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLTrasitionAnimation.m"; sourceTree = "<group>"; };
+		B8E56EFB23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLTransitionAnimation.h"; sourceTree = "<group>"; };
+		B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLTransitionAnimation.m"; sourceTree = "<group>"; };
 		B8E56FB723D721D2008D2DA1 /* PoodleDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = PoodleDynamic.podspec; sourceTree = SOURCE_ROOT; };
 		B8E56FB823D721D2008D2DA1 /* PoodleLibraryDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = PoodleLibraryDynamic.podspec; sourceTree = SOURCE_ROOT; };
 		B8FC6A9822EEEB3D005B91DE /* libCAAnimation+PDLExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCAAnimation+PDLExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2642,9 +2640,7 @@
 		B8E56EAD23D70019008D2DA1 /* PDLSafeOperation */ = {
 			isa = PBXGroup;
 			children = (
-				B8E56EB023D70019008D2DA1 /* NSArray+PDLSafeOperation.h */,
 				B8E56EAF23D70019008D2DA1 /* NSArray+PDLSafeOperation.m */,
-				B8E56EB123D70019008D2DA1 /* NSDictionary+PDLSafeOperation.h */,
 				B8E56EAE23D70019008D2DA1 /* NSDictionary+PDLSafeOperation.m */,
 			);
 			path = PDLSafeOperation;
@@ -2789,13 +2785,13 @@
 			path = "NSJSONSerialization+PDLExtension";
 			sourceTree = "<group>";
 		};
-		B8E56EFA23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation */ = {
+		B8E56EFA23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation */ = {
 			isa = PBXGroup;
 			children = (
-				B8E56EFB23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.h */,
-				B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.m */,
+				B8E56EFB23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.h */,
+				B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.m */,
 			);
-			path = "UIViewController+PDLTrasitionAnimation";
+			path = "UIViewController+PDLTransitionAnimation";
 			sourceTree = "<group>";
 		};
 		B8FC6AFB22EF01C9005B91DE /* Poodle */ = {
@@ -2857,7 +2853,7 @@
 				B8E56EDE23D7001A008D2DA1 /* UINavigationController+PDLLongPressPop */,
 				B8E56EF423D7001A008D2DA1 /* UIScreen+PDLExtension */,
 				B8E56DFB23D70016008D2DA1 /* UIViewController+PDLNavigationBar */,
-				B8E56EFA23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation */,
+				B8E56EFA23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation */,
 			);
 			path = Poodle;
 			sourceTree = "<group>";
@@ -3907,9 +3903,9 @@
 			productReference = B8FC6D4A22EF0A9A005B91DE /* libUIViewController+PDLNavigationBar.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		B8FC6D4B22EF0A9A005B91DE /* UIViewController+PDLTrasitionAnimation */ = {
+		B8FC6D4B22EF0A9A005B91DE /* UIViewController+PDLTransitionAnimation */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B8FC6D5022EF0A9A005B91DE /* Build configuration list for PBXNativeTarget "UIViewController+PDLTrasitionAnimation" */;
+			buildConfigurationList = B8FC6D5022EF0A9A005B91DE /* Build configuration list for PBXNativeTarget "UIViewController+PDLTransitionAnimation" */;
 			buildPhases = (
 				B8FC6D4C22EF0A9A005B91DE /* Sources */,
 				B8FC6D4D22EF0A9A005B91DE /* Frameworks */,
@@ -3920,7 +3916,7 @@
 			);
 			dependencies = (
 			);
-			name = "UIViewController+PDLTrasitionAnimation";
+			name = "UIViewController+PDLTransitionAnimation";
 			productName = "CAAnimation+PDLExtension";
 			productReference = B8FC6D5322EF0A9A005B91DE /* libUIViewController+PDLTrasitionAnimation.a */;
 			productType = "com.apple.product-type.library.static";
@@ -4089,7 +4085,7 @@
 				B802AC8A22F3372C00BF028E /* UINavigationController+PDLLongPressPop */,
 				B8FC6D3922EF0A99005B91DE /* UIScreen+PDLExtension */,
 				B8FC6D4222EF0A9A005B91DE /* UIViewController+PDLNavigationBar */,
-				B8FC6D4B22EF0A9A005B91DE /* UIViewController+PDLTrasitionAnimation */,
+				B8FC6D4B22EF0A9A005B91DE /* UIViewController+PDLTransitionAnimation */,
 			);
 		};
 /* End PBXProject section */
@@ -5272,7 +5268,7 @@
 				B85D4601240E859000CBF758 /* UINavigationController+PDLLongPressPop.m in Sources */,
 				B85D4602240E859000CBF758 /* UIScreen+PDLExtension.m in Sources */,
 				B85D4603240E859000CBF758 /* UIViewController+PDLNavigationBar.m in Sources */,
-				B85D4604240E859000CBF758 /* UIViewController+PDLTrasitionAnimation.m in Sources */,
+				B85D4604240E859000CBF758 /* UIViewController+PDLTransitionAnimation.m in Sources */,
 				B85D45AD240E84DA00CBF758 /* ViewController.m in Sources */,
 				B85D45A7240E84DA00CBF758 /* AppDelegate.m in Sources */,
 				B85D45B8240E84DC00CBF758 /* main.m in Sources */,
@@ -5688,7 +5684,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E56FB323D70597008D2DA1 /* UIViewController+PDLTrasitionAnimation.m in Sources */,
+				B8E56FB323D70597008D2DA1 /* UIViewController+PDLTransitionAnimation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5990,7 +5986,7 @@
 		};
 		B8FC6D8122EF0BC7005B91DE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B8FC6D4B22EF0A9A005B91DE /* UIViewController+PDLTrasitionAnimation */;
+			target = B8FC6D4B22EF0A9A005B91DE /* UIViewController+PDLTransitionAnimation */;
 			targetProxy = B8FC6D8022EF0BC7005B91DE /* PBXContainerItemProxy */;
 		};
 		B8FC6D8322EF0BC7005B91DE /* PBXTargetDependency */ = {
@@ -8006,7 +8002,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B8FC6D5022EF0A9A005B91DE /* Build configuration list for PBXNativeTarget "UIViewController+PDLTrasitionAnimation" */ = {
+		B8FC6D5022EF0A9A005B91DE /* Build configuration list for PBXNativeTarget "UIViewController+PDLTransitionAnimation" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B8FC6D5122EF0A9A005B91DE /* Debug */,

@@ -94,9 +94,8 @@
     NSString *sql = [NSString stringWithFormat:@"%@ into %@ (%@) values (%@)", (replace ? @"replace" : @"insert"), table, keysString, valuesString];
 
     __block BOOL result;
-    __block NSError *error = nil;
     [self inDatabase:^(FMDatabase *db) {
-        result = [db executeUpdate:sql values:values error:&error];
+        result = [db executeUpdate:sql values:values error:NULL];
     }];
 
     return result;

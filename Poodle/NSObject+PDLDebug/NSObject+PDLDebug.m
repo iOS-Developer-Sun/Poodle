@@ -64,31 +64,6 @@
     return metaClass;
 }
 
-+ (void)swizzleSelector:(SEL)originalSelector withSelector:(SEL)swizzledSelector {
-    [self swizzleSelector:originalSelector withClass:self selector:swizzledSelector];
-}
-
-+ (void)swizzleSelector:(SEL)originalSelector withClass:(Class)swizzledClass selector:(SEL)swizzledSelector {
-    Class aClass = self;
-    Method originalMethod = class_getInstanceMethod(aClass, originalSelector);
-    Method swizzledMethod = class_getInstanceMethod(swizzledClass, swizzledSelector);
-    BOOL didAddMethod = class_addMethod(aClass, originalSelector, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod));
-    if (didAddMethod) {
-        class_replaceMethod(aClass, swizzledSelector, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod));
-    } else {
-        method_exchangeImplementations(originalMethod, swizzledMethod);
-    }
-}
-
-+ (IMP)setProxyClass:(Class)proxyClass forSelector:(SEL)selector {
-    return [self setProxyClass:proxyClass proxySelector:selector forSelector:selector];
-}
-
-+ (IMP)setProxyClass:(Class)proxyClass proxySelector:(SEL)proxySelector forSelector:(SEL)originalSelector {
-    Method proxyMethod = class_getInstanceMethod(proxyClass, proxySelector);
-    return class_replaceMethod(self, originalSelector, method_getImplementation(proxyMethod), method_getTypeEncoding(proxyMethod));
-}
-
 NSArray *object_subclasses(Class aClass) {
     NSMutableArray *subclasses = [NSMutableArray array];
     unsigned int outCount = 0;
@@ -255,16 +230,6 @@ NSArray *protocol_methods(Protocol *protocol) {
         free(methodList);
     }
     return methods.copy;
-}
-
-+ (ptrdiff_t)ivarOffsetForName:(char *)name {
-    Ivar ivar = class_getInstanceVariable(self, name);
-    if (ivar == NULL) {
-        return -1;
-    }
-
-    ptrdiff_t offset = ivar_getOffset(ivar);
-    return offset;
 }
 
 @end

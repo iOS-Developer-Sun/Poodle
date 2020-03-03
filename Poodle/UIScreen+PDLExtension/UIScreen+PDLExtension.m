@@ -1,5 +1,5 @@
 //
-//  UIScreen+PDLExtension.h
+//  UIScreen+PDLExtension.m
 //  Poodle
 //
 //  Created by Poodle on 4/13/16.

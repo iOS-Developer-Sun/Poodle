@@ -1,5 +1,5 @@
 //
-//  UIViewController+NavigationBar.m
+//  UIViewController+PDLNavigationBar.m
 //  Poodle
 //
 //  Created by Poodle on 04/02/2017.

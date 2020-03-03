@@ -6,9 +6,6 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#ifndef pdl_mach_object_h
-#define pdl_mach_object_h
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -220,5 +217,3 @@ extern bool pdl_get_fat_object_with_header(const struct fat_header *header, stru
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* pdl_mach_object_h */

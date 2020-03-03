@@ -6,9 +6,6 @@
 //  
 //
 
-#ifndef pdl_mach_o_symbols_h
-#define pdl_mach_o_symbols_h
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -78,5 +75,3 @@ extern void pdl_free_mach_o_symbol_list(struct pdl_mach_o_symbol *symbol_list);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* mach_object_h */

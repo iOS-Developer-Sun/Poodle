@@ -569,11 +569,11 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'UIKit'
         end
 
-        s.subspec 'UIViewController+PDLTrasitionAnimation' do |ss|
+        s.subspec 'UIViewController+PDLTransitionAnimation' do |ss|
             ss.platform = platform_ios
             ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'UIViewController+PDLTrasitionAnimation/' + source_files
-            ss.vendored_library = base + 'UIViewController+PDLTrasitionAnimation/' + librariy_files
+            ss.source_files = base + 'UIViewController+PDLTransitionAnimation/' + source_files
+            ss.vendored_library = base + 'UIViewController+PDLTransitionAnimation/' + librariy_files
             ss.frameworks = 'UIKit'
         end
     end

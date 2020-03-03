@@ -11,7 +11,7 @@
 @interface PDLNonThreadSafePropertyObserverChecker () {
     NSMutableSet *_getters;
     NSMutableSet *_setters;
-    NSMutableArray *_gettersAndsetters;
+    NSMutableArray *_gettersAndSetters;
 }
 
 @end
@@ -25,7 +25,7 @@
 
         _getters = [NSMutableSet set];
         _setters = [NSMutableSet set];
-        _gettersAndsetters = [NSMutableArray array];
+        _gettersAndSetters = [NSMutableArray array];
 
         [self setupCustom];
     }
@@ -52,8 +52,8 @@
         } else {
             [_getters addObject:actionString];
         }
-        if (![_gettersAndsetters.lastObject isEqual:actionString]) {
-            [_gettersAndsetters addObject:actionString];
+        if (![_gettersAndSetters.lastObject isEqual:actionString]) {
+            [_gettersAndSetters addObject:actionString];
         }
     }
 
@@ -94,8 +94,8 @@
     return _setters.copy;
 }
 
-- (NSArray *)gettersAndsetters {
-    return _gettersAndsetters.copy;
+- (NSArray *)gettersAndSetters {
+    return _gettersAndSetters.copy;
 }
 
 @end

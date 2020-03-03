@@ -53,7 +53,7 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
 @property (nonatomic, copy) UIColor *separatorColor; // lowest priority
 @property (nonatomic, copy) UIColor *innerSeparatorColor; // low priority
 @property (nonatomic, copy) UIColor *horizontalSeparatorColor; // high priority
-@property (nonatomic, copy) UIColor *veritcalSeparatorColor; // high priority
+@property (nonatomic, copy) UIColor *verticalSeparatorColor; // high priority
 @property (nonatomic, copy) UIColor *outerSeparatorColor; // highest priority
 
 - (void)reloadData;

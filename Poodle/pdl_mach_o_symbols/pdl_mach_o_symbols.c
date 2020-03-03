@@ -23,12 +23,13 @@ static bool matches_string(struct pdl_mach_o_symbol *symbol, void *filter_data) 
 
 static struct pdl_mach_o_symbol *_get_mach_o_symbol(struct pdl_mach_o_symbol *pointer, struct mach_header *header, intptr_t vmaddr_slide, const char *name, uint32_t index, void *filter_data, bool(*filter)(struct pdl_mach_o_symbol *symbol, void *filter_data)) {
     struct pdl_mach_object mach_object;
-    bool ret = pdl_get_mach_object_with_header(header, vmaddr_slide, name, index, &mach_object);
-    if (!ret) {
+    bool result = pdl_get_mach_object_with_header(header, vmaddr_slide, name, index, &mach_object);
+    if (!result) {
         return pointer;
     }
 
     struct pdl_mach_o_symbol *current = pointer;
+    struct pdl_mach_o_symbol *ret = pointer;
 
     uint32_t symtab_count = mach_object.symtab_count;
     const struct nlist *symtab_list = mach_object.symtab_list;
@@ -86,11 +87,11 @@ static struct pdl_mach_o_symbol *_get_mach_o_symbol(struct pdl_mach_o_symbol *po
             current = node;
         } else {
             current = node;
-            pointer = current;
+            ret = current;
         }
     }
 
-    return pointer;
+    return ret;
 }
 
 struct pdl_mach_o_symbol *get_mach_o_symbol(struct mach_header *header, void *filter_data, bool(*filter)(struct pdl_mach_o_symbol *symbol, void *filter_data)) {

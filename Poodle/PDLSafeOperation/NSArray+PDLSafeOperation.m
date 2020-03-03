@@ -1,46 +1,19 @@
 //
-//  NSArray+SafeOperation.m
+//  NSArray+PDLSafeOperation.m
 //  Poodle
 //
 //  Created by Poodle on 07/04/2017.
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import "NSArray+PDLSafeOperation.h"
+#import <Foundation/Foundation.h>
 #import "NSObject+PDLImplementationInterceptor.h"
 
 #if __has_feature(objc_arc)
 #error This file must be compiled with flag "-fno-objc-arc"
 #endif
 
-@implementation NSArray (SafeOperation)
-
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        {
-            id metaClass = object_getClass([NSArray class]);
-            BOOL ret = [metaClass pdl_interceptSelector:@selector(arrayWithObjects:count:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_arrayWithObjects_count_Imp];
-            (void)ret;
-            NSAssert(ret, @"arrayWithObjects:count: not protected");
-        }
-        {
-            NSUInteger ret = [NSArray pdl_interceptClusterSelector:@selector(objectAtIndex:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_objectAtIndex_Imps];
-            (void)ret;
-            NSAssert(ret > 0, @"objectAtIndex: not protected");
-        }
-        {
-            NSUInteger ret = [NSArray pdl_interceptClusterSelector:@selector(objectAtIndexedSubscript:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_objectAtIndex_Imps];
-            (void)ret;
-            NSAssert(ret > 0, @"objectAtIndexedSubscript: not pretected");
-        }
-        {
-            NSUInteger ret = [NSMutableArray pdl_interceptClusterSelector:@selector(setObject:atIndexedSubscript:) withInterceptorImplementation:(IMP)&NSMutableArray_SafeOperation_setObject_atIndexedSubscript_Imp];
-            (void)ret;
-            NSAssert(ret > 0, @"setObject:atIndexedSubscript: not pretected");
-        }
-    });
-}
+@implementation NSArray (PDLSafeOperation)
 
 static id NSArray_SafeOperation_arrayWithObjects_count_Imp(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id *objects, NSUInteger count) {
     PDLImplementationInterceptorRecover(_cmd);
@@ -93,6 +66,33 @@ static void NSMutableArray_SafeOperation_setObject_atIndexedSubscript_Imp(__unsa
     }
 
     ((void(*)(id, SEL, id, NSUInteger))_imp)(self, _cmd, obj, idx);
+}
+
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        {
+            id metaClass = object_getClass([NSArray class]);
+            BOOL ret = [metaClass pdl_interceptSelector:@selector(arrayWithObjects:count:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_arrayWithObjects_count_Imp];
+            (void)ret;
+            NSAssert(ret, @"arrayWithObjects:count: not protected");
+        }
+        {
+            NSUInteger ret = [NSArray pdl_interceptClusterSelector:@selector(objectAtIndex:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_objectAtIndex_Imps];
+            (void)ret;
+            NSAssert(ret > 0, @"objectAtIndex: not protected");
+        }
+        {
+            NSUInteger ret = [NSArray pdl_interceptClusterSelector:@selector(objectAtIndexedSubscript:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_objectAtIndex_Imps];
+            (void)ret;
+            NSAssert(ret > 0, @"objectAtIndexedSubscript: not pretected");
+        }
+        {
+            NSUInteger ret = [NSMutableArray pdl_interceptClusterSelector:@selector(setObject:atIndexedSubscript:) withInterceptorImplementation:(IMP)&NSMutableArray_SafeOperation_setObject_atIndexedSubscript_Imp];
+            (void)ret;
+            NSAssert(ret > 0, @"setObject:atIndexedSubscript: not pretected");
+        }
+    });
 }
 
 @end
