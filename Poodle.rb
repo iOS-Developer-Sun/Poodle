@@ -1,4 +1,4 @@
-def PoodleLibraryCommonConfigurate(s)
+def PoodleCommonConfigurate(s)
     s.version = "0.0.1"
     s.summary = "Lots of fun."
     s.description = <<-DESC
@@ -14,12 +14,12 @@ def PoodleLibraryCommonConfigurate(s)
 #    s.static_framework = true
 end
 
-def PoodleLibrarySpec(name, path: nil, is_library: false, default_subspec: nil)
+def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
     pod_name = name
     Pod::Spec.new do |s|
         s.name = pod_name
 
-        PoodleLibraryCommonConfigurate(s)
+        PoodleCommonConfigurate(s)
 
         source_files = '**/*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'
         header_files = '**/*.{h,hpp}'
@@ -579,12 +579,12 @@ def PoodleLibrarySpec(name, path: nil, is_library: false, default_subspec: nil)
     end
 end
 
-def PoodleLibraryDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, default_subspec: nil)
+def PoodleDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, default_subspec: nil)
     pod_name = name
     Pod::Spec.new do |s|
         s.name = pod_name
 
-        PoodleLibraryCommonConfigurate(s)
+        PoodleCommonConfigurate(s)
 
         source_files = '**/*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'
         header_files = '**/*.{h,hpp}'

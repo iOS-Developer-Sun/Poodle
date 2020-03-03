@@ -17,7 +17,7 @@
                BlueprintIdentifier = "B88DB4C622EAF14B003D20F6"
                BuildableName = "libPoodleLibrary.a"
                BlueprintName = "PoodleLibrary"
-               ReferencedContainer = "container:PoodleLibrary.xcodeproj">
+               ReferencedContainer = "container:Poodle.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -46,7 +46,7 @@
             BlueprintIdentifier = "B88DB4C622EAF14B003D20F6"
             BuildableName = "libPoodleLibrary.a"
             BlueprintName = "PoodleLibrary"
-            ReferencedContainer = "container:PoodleLibrary.xcodeproj">
+            ReferencedContainer = "container:Poodle.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </LaunchAction>
@@ -62,7 +62,7 @@
             BlueprintIdentifier = "B88DB4C622EAF14B003D20F6"
             BuildableName = "libPoodleLibrary.a"
             BlueprintName = "PoodleLibrary"
-            ReferencedContainer = "container:PoodleLibrary.xcodeproj">
+            ReferencedContainer = "container:Poodle.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

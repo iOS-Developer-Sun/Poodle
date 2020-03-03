@@ -1,4 +1,4 @@
 $LOAD_PATH << '.'
-require 'PoodleLibrary.rb'
+require 'Poodle.rb'
 
-PoodleLibraryDynamicSpec('PoodleLibraryDynamic', path: 'PoodleLibrary', is_library: true, base_pod_name: 'PoodleLibrary')
+PoodleDynamicSpec('PoodleLibraryDynamic', path: 'PoodleLibrary', is_library: true, base_pod_name: 'PoodleLibrary')

@@ -1,4 +1,4 @@
 $LOAD_PATH << '.'
-require 'PoodleLibrary.rb'
+require 'Poodle.rb'
 
-PoodleLibrarySpec('Poodle')
+PoodleSpec('Poodle')
