@@ -1197,6 +1197,7 @@
 		B80FCBB523A9D3B60028844B /* libpdl_mach_o_const_symbols.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_mach_o_const_symbols.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B80FCBC623A9D48F0028844B /* libpdl_mach_o_symbol_pointer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_mach_o_symbol_pointer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B82334AF23BC982900B1B15B /* libNSObject+PDLSelectorProxy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLSelectorProxy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B85D459E240E7CF100CBF758 /* PoodleLibrary */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PoodleLibrary; sourceTree = "<group>"; };
 		B85ECB6E22F27B3B0063BB7C /* libPDLScreenDebugger.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLScreenDebugger.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B85ECB8422F289CB0063BB7C /* libPDLFormView.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLFormView.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B85ECBF922F5783D0063BB7C /* libPDLAddressQueryViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLAddressQueryViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1206,8 +1207,7 @@
 		B86A6BAD23BB55E500715650 /* libPDLViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8724BB823AB9EDF003A4D2A /* libpdl_lldb_hook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_lldb_hook.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B879143D2352385F00FC63C1 /* PoodleLibrary.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = PoodleLibrary.podspec; sourceTree = SOURCE_ROOT; };
-		B879143E2352386E00FC63C1 /* PoodleLibrary.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = PoodleLibrary.rb; sourceTree = SOURCE_ROOT; };
-		B879143F2352386E00FC63C1 /* PoodleLibrary.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = PoodleLibrary.sh; sourceTree = SOURCE_ROOT; };
+		B879143E2352386E00FC63C1 /* Poodle.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = Poodle.rb; sourceTree = SOURCE_ROOT; };
 		B87914402352386E00FC63C1 /* PoodleLibraryMerge.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = PoodleLibraryMerge.sh; sourceTree = SOURCE_ROOT; };
 		B88DB4C722EAF14B003D20F6 /* libPoodleLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPoodleLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AD194923D15CD7005A7363 /* libPDLNonThreadSafePropertyObserver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLNonThreadSafePropertyObserver.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1437,7 +1437,6 @@
 		B8E56EF923D7001A008D2DA1 /* NSJSONSerialization+PDLExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSJSONSerialization+PDLExtension.m"; sourceTree = "<group>"; };
 		B8E56EFB23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLTrasitionAnimation.h"; sourceTree = "<group>"; };
 		B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLTrasitionAnimation.m"; sourceTree = "<group>"; };
-		B8E56EFD23D700EA008D2DA1 /* PoodleLibrary */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PoodleLibrary; sourceTree = "<group>"; };
 		B8E56FB723D721D2008D2DA1 /* PoodleDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = PoodleDynamic.podspec; sourceTree = SOURCE_ROOT; };
 		B8E56FB823D721D2008D2DA1 /* PoodleLibraryDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = PoodleLibraryDynamic.podspec; sourceTree = SOURCE_ROOT; };
 		B8FC6A9822EEEB3D005B91DE /* libCAAnimation+PDLExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCAAnimation+PDLExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1907,8 +1906,7 @@
 		B879143B235237F500FC63C1 /* Shells */ = {
 			isa = PBXGroup;
 			children = (
-				B879143E2352386E00FC63C1 /* PoodleLibrary.rb */,
-				B879143F2352386E00FC63C1 /* PoodleLibrary.sh */,
+				B879143E2352386E00FC63C1 /* Poodle.rb */,
 				B87914402352386E00FC63C1 /* PoodleLibraryMerge.sh */,
 			);
 			name = Shells;
@@ -1917,7 +1915,7 @@
 		B88DB4BE22EAF14B003D20F6 = {
 			isa = PBXGroup;
 			children = (
-				B88DB4C922EAF14B003D20F6 /* PoodleLibrary */,
+				B88DB4C922EAF14B003D20F6 /* Poodle */,
 				B88DB4C822EAF14B003D20F6 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -1988,15 +1986,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		B88DB4C922EAF14B003D20F6 /* PoodleLibrary */ = {
+		B88DB4C922EAF14B003D20F6 /* Poodle */ = {
 			isa = PBXGroup;
 			children = (
 				B8FC6AFB22EF01C9005B91DE /* Poodle */,
-				B8E56EFD23D700EA008D2DA1 /* PoodleLibrary */,
+				B85D459E240E7CF100CBF758 /* PoodleLibrary */,
 				B879143A235233EE00FC63C1 /* PoodlePodSpecs */,
 				B879143B235237F500FC63C1 /* Shells */,
 			);
-			path = PoodleLibrary;
+			name = Poodle;
 			sourceTree = "<group>";
 		};
 		B8E56DE023D70016008D2DA1 /* NSObject+PDLSelectorProxy */ = {
@@ -2714,8 +2712,7 @@
 				B8E56DFB23D70016008D2DA1 /* UIViewController+PDLNavigationBar */,
 				B8E56EFA23D7001B008D2DA1 /* UIViewController+PDLTrasitionAnimation */,
 			);
-			name = Poodle;
-			path = ../Poodle;
+			path = Poodle;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -3853,7 +3850,7 @@
 					};
 				};
 			};
-			buildConfigurationList = B88DB4C222EAF14B003D20F6 /* Build configuration list for PBXProject "PoodleLibrary" */;
+			buildConfigurationList = B88DB4C222EAF14B003D20F6 /* Build configuration list for PBXProject "Poodle" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -7280,7 +7277,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B88DB4C222EAF14B003D20F6 /* Build configuration list for PBXProject "PoodleLibrary" */ = {
+		B88DB4C222EAF14B003D20F6 /* Build configuration list for PBXProject "Poodle" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B88DB4CE22EAF14B003D20F6 /* Debug */,
