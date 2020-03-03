@@ -619,16 +619,16 @@ def PoodleDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, de
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
-            ss.source_files = dynamic + 'pdl_dynamic/' + source_files
-            ss.vendored_library = dynamic + 'pdl_dynamic/' + librariy_files
+            ss.source_files = base + 'pdl_dynamic/' + source_files
+            ss.vendored_library = base + 'pdl_dynamic/' + librariy_files
         end
 
         s.subspec 'pdl_objc_message' do |ss|
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
-            ss.source_files = dynamic + 'pdl_objc_message/' + source_files
-            ss.vendored_library = dynamic + 'pdl_objc_message/' + librariy_files
+            ss.source_files = base + 'pdl_objc_message/' + source_files
+            ss.vendored_library = base + 'pdl_objc_message/' + librariy_files
             ss.frameworks = 'Foundation'
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency base_pod_name + '/pdl_asm'
@@ -639,8 +639,8 @@ def PoodleDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, de
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
-            ss.source_files = dynamic + 'pdl_os_unfair_lock_tracer/' + source_files
-            ss.vendored_library = dynamic + 'pdl_os_unfair_lock_tracer/' + librariy_files
+            ss.source_files = base + 'pdl_os_unfair_lock_tracer/' + source_files
+            ss.vendored_library = base + 'pdl_os_unfair_lock_tracer/' + librariy_files
             ss.frameworks = 'Foundation'
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency base_pod_name + '/pdl_utils'
@@ -650,8 +650,8 @@ def PoodleDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, de
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
-            ss.source_files = dynamic + 'pdl_pthread_lock_tracer/' + source_files
-            ss.vendored_library = dynamic + 'pdl_pthread_lock_tracer/' + librariy_files
+            ss.source_files = base + 'pdl_pthread_lock_tracer/' + source_files
+            ss.vendored_library = base + 'pdl_pthread_lock_tracer/' + librariy_files
             ss.frameworks = 'Foundation'
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency base_pod_name + '/pdl_utils'
