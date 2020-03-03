@@ -45,7 +45,7 @@ static UIImage *PDLDirectoryViewControllerImageWithColorAndSize(UIColor *color, 
     return image;
 }
 
-static UIImage *PDLDirectoryViewControllerCheckboxImage() {
+static UIImage *PDLDirectoryViewControllerCheckboxImage(void) {
     static __weak UIImage *_checkboxImage = nil;
     UIImage *image = _checkboxImage;
     if (image == nil) {
@@ -57,7 +57,7 @@ static UIImage *PDLDirectoryViewControllerCheckboxImage() {
     return image;
 }
 
-static UIImage *PDLDirectoryViewControllerCheckboxHighlightedImage() {
+static UIImage *PDLDirectoryViewControllerCheckboxHighlightedImage(void) {
     static __weak UIImage *_checkboxHighlightedImage = nil;
     UIImage *image = _checkboxHighlightedImage;
     if (image == nil) {

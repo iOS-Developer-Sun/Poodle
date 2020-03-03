@@ -10,6 +10,6 @@
 
 @interface UIScreen (PDLExtension)
 
-@property (readonly) CGSize pdl_portraitSize;
+@property (nonatomic, readonly) CGSize pdl_portraitSize;
 
 @end

@@ -34,9 +34,13 @@
 @property (nonatomic, weak) UIView *slidersBoard;
 @property (nonatomic, weak) UIView *indicatorView;
 
+@property (nonatomic, copy, readonly) NSArray *precastColors;
+
 @end
 
 @implementation PDLColorPropertyDebugger
+
+@synthesize precastColors = _precastColors;
 
 - (void)setValue:(id)value {
     [super setValue:value];
@@ -134,9 +138,8 @@
 }
 
 - (NSArray *)precastColors {
-    static NSArray *precastColors = nil;
-    if (precastColors == nil) {
-        precastColors = @[
+    if (!_precastColors) {
+        _precastColors = @[
                           [NSNull null],
                           [UIColor clearColor],
                           [UIColor blackColor],
@@ -155,7 +158,7 @@
                           [UIColor brownColor],
                           ];
     }
-    return precastColors;
+    return _precastColors;
 }
 
 - (UISlider *)createSlider {

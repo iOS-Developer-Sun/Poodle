@@ -28,7 +28,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSSet *getters;
 @property (readonly) NSSet *setters;
-@property (readonly) NSArray *gettersAndsetters;
+@property (readonly) NSArray *gettersAndSetters;
 
 - (BOOL)isThreadSafe; // will not be called if 'custom' implements 'isThreadSafe'
 

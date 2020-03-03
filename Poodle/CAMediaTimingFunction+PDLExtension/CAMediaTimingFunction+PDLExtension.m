@@ -1,5 +1,5 @@
 //
-//  CAMediaTimingFunction+Extension.m
+//  CAMediaTimingFunction+PDLExtension.m
 //  Poodle
 //
 //  Created by Poodle on 2019/2/20.
@@ -21,6 +21,18 @@
 }
 #endif
 
+static SEL pdl_solveForInputSelector(void) {
+    static SEL sel = NULL;
+    if (sel == NULL) {
+        char sel_str[] = {'_', 's', 'o', 'l', 'v', 'e', 'F', 'o', 'r', 'I', 'n', 'p', 'u', 't', ':', '\0'};
+        sel = sel_registerName(sel_str);
+#ifdef DEBUG
+        assert(sel_isEqual(sel, sel_registerName("_solveForInput:")));
+#endif
+    }
+    return sel;
+}
+
 - (NSArray *)pdl_controlPoints {
     NSMutableArray *controlPoints = [NSMutableArray array];
     for (NSInteger i = 0; i < 4; i++) {
@@ -33,12 +45,7 @@
 }
 
 - (float)pdl_solve:(float)input {
-    static SEL sel = NULL;
-    if (sel == NULL) {
-        char sel_str[] = {'_', 's', 'o', 'l', 'v', 'e', 'F', 'o', 'r', 'I', 'n', 'p', 'u', 't', ':', '\0'};
-        sel = sel_registerName(sel_str);
-        NSAssert(sel_isEqual(sel, sel_registerName("_solveForInput:")), @"wrong selector initialized");
-    }
+    SEL sel = pdl_solveForInputSelector();
     float result = ((float(*)(id, SEL, float))objc_msgSend)(self, sel, input);
     return result;
 }

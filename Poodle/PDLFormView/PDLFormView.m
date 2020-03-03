@@ -445,17 +445,17 @@
 
     UIColor *leftSeparatorLineColor = nil;
     if (isLeft) {
-        leftSeparatorLineColor = (self.outerSeparatorColor ?: self.veritcalSeparatorColor) ?: self.separatorColor;
+        leftSeparatorLineColor = (self.outerSeparatorColor ?: self.verticalSeparatorColor) ?: self.separatorColor;
     } else {
-        leftSeparatorLineColor = (self.veritcalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
+        leftSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
     cell.leftSeparatorLine.backgroundColor = leftSeparatorLineColor;
 
     UIColor *rightSeparatorLineColor = nil;
     if (isRight) {
-        rightSeparatorLineColor = (self.outerSeparatorColor ?: self.veritcalSeparatorColor) ?: self.separatorColor;
+        rightSeparatorLineColor = (self.outerSeparatorColor ?: self.verticalSeparatorColor) ?: self.separatorColor;
     } else {
-        rightSeparatorLineColor = (self.veritcalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
+        rightSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
     cell.rightSeparatorLine.backgroundColor = rightSeparatorLineColor;
 
@@ -504,17 +504,17 @@
 
     UIColor *leftSeparatorLineColor = nil;
     if (isLeft) {
-        leftSeparatorLineColor = (self.outerSeparatorColor ?: self.veritcalSeparatorColor) ?: self.separatorColor;
+        leftSeparatorLineColor = (self.outerSeparatorColor ?: self.verticalSeparatorColor) ?: self.separatorColor;
     } else {
-        leftSeparatorLineColor = (self.veritcalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
+        leftSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
     cell.leftSeparatorLine.backgroundColor = leftSeparatorLineColor;
 
     UIColor *rightSeparatorLineColor = nil;
     if (isRight) {
-        rightSeparatorLineColor = (self.outerSeparatorColor ?: self.veritcalSeparatorColor) ?: self.separatorColor;
+        rightSeparatorLineColor = (self.outerSeparatorColor ?: self.verticalSeparatorColor) ?: self.separatorColor;
     } else {
-        rightSeparatorLineColor = (self.veritcalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
+        rightSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
     cell.rightSeparatorLine.backgroundColor = rightSeparatorLineColor;
 
@@ -737,7 +737,7 @@
     NSMutableArray *views = self.cacheViews[reuseIdentifier];
     if (views == nil) {
         views = [NSMutableArray array];
-        [self.cacheViews setObject:views forKey:reuseIdentifier];
+        self.cacheViews[reuseIdentifier] = views;
     }
     [views addObject:view];
 }
@@ -969,11 +969,11 @@
     [self setNeedsRefreshVisible];
 }
 
-- (void)setVeritcalSeparatorColor:(UIColor *)veritcalSeparatorColor {
-    if (_veritcalSeparatorColor == veritcalSeparatorColor) {
+- (void)setVerticalSeparatorColor:(UIColor *)verticalSeparatorColor {
+    if (_verticalSeparatorColor == verticalSeparatorColor) {
         return;
     }
-    _veritcalSeparatorColor = veritcalSeparatorColor;
+    _verticalSeparatorColor = verticalSeparatorColor;
     [self setNeedsRefreshVisible];
 }
 

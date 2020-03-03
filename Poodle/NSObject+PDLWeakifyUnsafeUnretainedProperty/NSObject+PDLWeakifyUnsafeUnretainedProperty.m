@@ -16,7 +16,7 @@ static id NSObjectWeakifyPropertyLockObject(void) {
     static id object = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        object = [NSObject new];
+        object = [[NSObject alloc] init];
     });
     return object;
 }

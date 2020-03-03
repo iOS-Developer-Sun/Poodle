@@ -1,5 +1,5 @@
 //
-//  pdl_mach_o_const_symbols.h
+//  pdl_mach_o_symbol_pointer.h
 //  Poodle
 //
 //  Created by Poodle on 14-6-27.

@@ -37,18 +37,3 @@
 @property (nonatomic, weak) id object;
 
 @end
-
-
-
-
-@interface PropertyRecord : NSObject
-
-@property (nonatomic, weak) id object;
-@property (nonatomic, copy) NSString *keyPath;
-@property (nonatomic, strong) id fromValue;
-@property (nonatomic, strong) id toValue;
-
-- (void)undo;
-- (void)redo;
-
-@end

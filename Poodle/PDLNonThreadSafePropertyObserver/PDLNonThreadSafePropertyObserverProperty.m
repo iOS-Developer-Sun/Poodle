@@ -44,6 +44,11 @@
     return self;
 }
 
++ (unsigned long)nextQueueNumber {
+    static unsigned long _queueIdentifier = 0;
+    return ++_queueIdentifier;
+}
+
 - (NSString *)queueIdentifier:(dispatch_queue_t)queue {
     if (!queue) {
         return nil;
@@ -52,9 +57,8 @@
     static void *PDLNonThreadSafePropertyObserverObjectQueueIdentifierKey = NULL;
     NSString *queueIdentifier = objc_getAssociatedObject(queue, &PDLNonThreadSafePropertyObserverObjectQueueIdentifierKey);
     if (queueIdentifier == nil) {
-        static unsigned long _queueIdentifier = 0;
-        _queueIdentifier++;
-        queueIdentifier = [NSString stringWithFormat:@"%@q%@", ([self isQueueSerial:queue] ? @"s" : @"c"), @(_queueIdentifier)];
+        unsigned long nextQueueNumber = [self.class nextQueueNumber];
+        queueIdentifier = [NSString stringWithFormat:@"%@q%@", ([self isQueueSerial:queue] ? @"s" : @"c"), @(nextQueueNumber)];
         objc_setAssociatedObject(queue, &PDLNonThreadSafePropertyObserverObjectQueueIdentifierKey, queueIdentifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return queueIdentifier;

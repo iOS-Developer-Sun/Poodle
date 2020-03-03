@@ -20,20 +20,20 @@
 
 @end
 
-@interface PDLNonThreadSafePropertyObserverInitilizing : NSObject
+@interface PDLNonThreadSafePropertyObserverInitializing : NSObject
 
 @property (nonatomic, assign) mach_port_t thread;
 
 @end
 
-@implementation PDLNonThreadSafePropertyObserverInitilizing
+@implementation PDLNonThreadSafePropertyObserverInitializing
 
 @end
 
 @interface PDLNonThreadSafePropertyObserverObject ()
 
 @property (weak, readonly) id object;
-@property (weak, readonly) PDLNonThreadSafePropertyObserverInitilizing *initializing;
+@property (weak, readonly) PDLNonThreadSafePropertyObserverInitializing *initializing;
 @property (strong, readonly) NSMutableDictionary *properties;
 
 @end
@@ -45,7 +45,7 @@
     if (self) {
         _object = object;
         _properties = [NSMutableDictionary dictionary];
-        PDLNonThreadSafePropertyObserverInitilizing *initializing = [[[PDLNonThreadSafePropertyObserverInitilizing alloc] init] objectAutoreleaseRetained];
+        PDLNonThreadSafePropertyObserverInitializing *initializing = [[[PDLNonThreadSafePropertyObserverInitializing alloc] init] objectAutoreleaseRetained];
         initializing.thread = mach_thread_self();
         _initializing = initializing;
     }
