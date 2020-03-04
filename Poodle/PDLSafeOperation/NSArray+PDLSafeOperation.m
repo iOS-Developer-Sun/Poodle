@@ -15,7 +15,7 @@
 
 @implementation NSArray (PDLSafeOperation)
 
-static id NSArray_SafeOperation_arrayWithObjects_count_Imp(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id *objects, NSUInteger count) {
+static id pdl_arrayWithObjectsCount(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id *objects, NSUInteger count) {
     PDLImplementationInterceptorRecover(_cmd);
 
     __unsafe_unretained id *validObjects = (__unsafe_unretained id *)malloc(sizeof(id) * count);
@@ -31,7 +31,7 @@ static id NSArray_SafeOperation_arrayWithObjects_count_Imp(__unsafe_unretained i
         validCount++;
     }
 
-    id array = ((id(*)(id, SEL, __unsafe_unretained id *, NSUInteger))_imp)(self, _cmd, validObjects, validCount);
+    id array = ((typeof(&pdl_arrayWithObjectsCount))_imp)(self, _cmd, validObjects, validCount);
     for (NSUInteger i = 0; i < validCount; i++) {
         validObjects[i] = nil;
     }
@@ -40,7 +40,7 @@ static id NSArray_SafeOperation_arrayWithObjects_count_Imp(__unsafe_unretained i
     return array;
 }
 
-static id NSArray_SafeOperation_objectAtIndex_Imps(__unsafe_unretained NSArray *self, SEL _cmd, NSUInteger idx) {
+static id pdl_objectAtIndex(__unsafe_unretained NSArray *self, SEL _cmd, NSUInteger idx) {
     PDLImplementationInterceptorRecover(_cmd);
 
     if (idx >= self.count) {
@@ -48,24 +48,24 @@ static id NSArray_SafeOperation_objectAtIndex_Imps(__unsafe_unretained NSArray *
         return nil;
     }
 
-    __unsafe_unretained id ret = ((id(*)(__unsafe_unretained id, SEL, NSUInteger))_imp)(self, _cmd, idx);
+    __unsafe_unretained id ret = ((typeof(&pdl_objectAtIndex))_imp)(self, _cmd, idx);
     return ret;
 }
 
-static void NSMutableArray_SafeOperation_setObject_atIndexedSubscript_Imp(__unsafe_unretained NSMutableArray *self, SEL _cmd, __unsafe_unretained id obj, NSUInteger idx) {
+static void pdl_setObjectAtIndex(__unsafe_unretained NSMutableArray *self, SEL _cmd, __unsafe_unretained id obj, NSUInteger idx) {
     PDLImplementationInterceptorRecover(_cmd);
 
     if (idx > self.count) {
-        NSAssert(NO, @"array set object at indexed subscript out of range!");
+        NSAssert(NO, @"array set object at index out of range!");
         return;
     }
 
     if (obj == nil) {
-        NSAssert(NO, @"array set nil object at indexed subscript!");
+        NSAssert(NO, @"array set nil object at index!");
         return;
     }
 
-    ((void(*)(id, SEL, id, NSUInteger))_imp)(self, _cmd, obj, idx);
+    ((typeof(&pdl_setObjectAtIndex))_imp)(self, _cmd, obj, idx);
 }
 
 + (void)load {
@@ -73,24 +73,24 @@ static void NSMutableArray_SafeOperation_setObject_atIndexedSubscript_Imp(__unsa
     dispatch_once(&onceToken, ^{
         {
             id metaClass = object_getClass([NSArray class]);
-            BOOL ret = [metaClass pdl_interceptSelector:@selector(arrayWithObjects:count:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_arrayWithObjects_count_Imp];
-            (void)ret;
-            NSAssert(ret, @"arrayWithObjects:count: not protected");
+            __unused BOOL ret = [metaClass pdl_interceptSelector:@selector(arrayWithObjects:count:) withInterceptorImplementation:(IMP)&pdl_arrayWithObjectsCount];
+            NSAssert(ret, @"arrayWithObjects:count:");
         }
         {
-            NSUInteger ret = [NSArray pdl_interceptClusterSelector:@selector(objectAtIndex:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_objectAtIndex_Imps];
-            (void)ret;
-            NSAssert(ret > 0, @"objectAtIndex: not protected");
+            __unused NSUInteger ret = [NSArray pdl_interceptClusterSelector:@selector(objectAtIndex:) withInterceptorImplementation:(IMP)&pdl_objectAtIndex];
+            NSAssert(ret > 0, @"objectAtIndex:");
         }
         {
-            NSUInteger ret = [NSArray pdl_interceptClusterSelector:@selector(objectAtIndexedSubscript:) withInterceptorImplementation:(IMP)&NSArray_SafeOperation_objectAtIndex_Imps];
-            (void)ret;
-            NSAssert(ret > 0, @"objectAtIndexedSubscript: not pretected");
+            __unused NSUInteger ret = [NSArray pdl_interceptClusterSelector:@selector(objectAtIndexedSubscript:) withInterceptorImplementation:(IMP)&pdl_objectAtIndex];
+            NSAssert(ret > 0, @"objectAtIndexedSubscript:");
         }
         {
-            NSUInteger ret = [NSMutableArray pdl_interceptClusterSelector:@selector(setObject:atIndexedSubscript:) withInterceptorImplementation:(IMP)&NSMutableArray_SafeOperation_setObject_atIndexedSubscript_Imp];
-            (void)ret;
-            NSAssert(ret > 0, @"setObject:atIndexedSubscript: not pretected");
+            __unused NSUInteger ret = [NSMutableArray pdl_interceptClusterSelector:@selector(setObject:atIndex:) withInterceptorImplementation:(IMP)&pdl_setObjectAtIndex];
+            NSAssert(ret > 0, @"setObject:atIndex:");
+        }
+        {
+            __unused NSUInteger ret = [NSMutableArray pdl_interceptClusterSelector:@selector(setObject:atIndexedSubscript:) withInterceptorImplementation:(IMP)&pdl_setObjectAtIndex];
+            NSAssert(ret > 0, @"setObject:atIndexedSubscript:");
         }
     });
 }

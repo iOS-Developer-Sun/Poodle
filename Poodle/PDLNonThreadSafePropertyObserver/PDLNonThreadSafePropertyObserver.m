@@ -36,7 +36,7 @@ static id observeNonThreadSafePropertiesAllocWithZone(__unsafe_unretained id sel
     PDLImplementationInterceptorRecover(_cmd);
     id object = nil;
     if (_imp) {
-        object = ((id (*)(id, SEL, struct _NSZone *))_imp)(self, _cmd, zone);
+        object = ((id (*)(__unsafe_unretained id, SEL, struct _NSZone *))_imp)(self, _cmd, zone);
     } else {
         struct objc_super su = {self, class_getSuperclass(_class)};
         object = ((id (*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);

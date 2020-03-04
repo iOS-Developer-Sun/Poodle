@@ -15,7 +15,7 @@
 
 @implementation NSDictionary (PDLSafeOperation)
 
-static id NSDictionary_SafeOperation_dictionaryWithObjects_forKeys_count_Imp(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id *objects, __unsafe_unretained id *keys, NSUInteger count) {
+static id pdl_dictionaryWithObjectsForKeysCount(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id *objects, __unsafe_unretained id *keys, NSUInteger count) {
     PDLImplementationInterceptorRecover(_cmd);
 
     __unsafe_unretained id *validKeys = (__unsafe_unretained id *)malloc(sizeof(id) * count);
@@ -34,7 +34,7 @@ static id NSDictionary_SafeOperation_dictionaryWithObjects_forKeys_count_Imp(__u
         validCount++;
     }
 
-    __unsafe_unretained id dictionary = ((NSDictionary *(*)(__unsafe_unretained id, SEL, __unsafe_unretained id *, __unsafe_unretained id *, NSUInteger))_imp)(self, _cmd, validObjects, validKeys, validCount);
+    __unsafe_unretained id dictionary = ((typeof(&pdl_dictionaryWithObjectsForKeysCount))_imp)(self, _cmd, validObjects, validKeys, validCount);
     for (NSUInteger i = 0; i < validCount; i++) {
         validKeys[i] = nil;
         validObjects[i] = nil;
@@ -45,7 +45,7 @@ static id NSDictionary_SafeOperation_dictionaryWithObjects_forKeys_count_Imp(__u
     return dictionary;
 }
 
-static void NSMutableDictionary_SafeOperation_setObject_forKey_Imps(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id obj, __unsafe_unretained id <NSCopying> key) {
+static void pdl_setObjectForKey(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id obj, __unsafe_unretained id <NSCopying> key) {
     PDLImplementationInterceptorRecover(_cmd);
 
     if (key == nil) {
@@ -53,7 +53,7 @@ static void NSMutableDictionary_SafeOperation_setObject_forKey_Imps(__unsafe_unr
         return;
     }
 
-    ((void (*)(__unsafe_unretained id, SEL, __unsafe_unretained id, __unsafe_unretained id <NSCopying>))_imp)(self, _cmd, obj, key);
+    ((typeof(&pdl_setObjectForKey))_imp)(self, _cmd, obj, key);
 }
 
 + (void)load {
@@ -61,19 +61,16 @@ static void NSMutableDictionary_SafeOperation_setObject_forKey_Imps(__unsafe_unr
     dispatch_once(&onceToken, ^{
         {
             id metaClass = object_getClass([NSDictionary class]);
-            BOOL ret = [metaClass pdl_interceptSelector:@selector(dictionaryWithObjects:forKeys:count:) withInterceptorImplementation:(IMP)&NSDictionary_SafeOperation_dictionaryWithObjects_forKeys_count_Imp];
-            (void)ret;
+            __unused BOOL ret = [metaClass pdl_interceptSelector:@selector(dictionaryWithObjects:forKeys:count:) withInterceptorImplementation:(IMP)&pdl_dictionaryWithObjectsForKeysCount];
             NSAssert(ret, @"dictionaryWithObjects:forKeys:count:");
         }
         {
-            NSUInteger ret = [NSMutableDictionary pdl_interceptClusterSelector:@selector(setObject:forKey:) withInterceptorImplementation:(IMP)&NSMutableDictionary_SafeOperation_setObject_forKey_Imps];
-            (void)ret;
-            NSAssert(ret > 0, @"setObject:forKeyedSubscript: not pretected");
+            __unused NSUInteger ret = [NSMutableDictionary pdl_interceptClusterSelector:@selector(setObject:forKey:) withInterceptorImplementation:(IMP)&pdl_setObjectForKey];
+            NSAssert(ret > 0, @"setObject:forKey:");
         }
         {
-            NSUInteger ret = [NSMutableDictionary pdl_interceptClusterSelector:@selector(setObject:forKeyedSubscript:) withInterceptorImplementation:(IMP)&NSMutableDictionary_SafeOperation_setObject_forKey_Imps];
-            (void)ret;
-            NSAssert(ret > 0, @"setObject:forKeyedSubscript: not pretected");
+            __unused NSUInteger ret = [NSMutableDictionary pdl_interceptClusterSelector:@selector(setObject:forKeyedSubscript:) withInterceptorImplementation:(IMP)&pdl_setObjectForKey];
+            NSAssert(ret > 0, @"setObject:forKeyedSubscript:");
         }
     });
 }
