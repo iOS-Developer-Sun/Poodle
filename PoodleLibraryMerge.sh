@@ -19,7 +19,8 @@ pdl_iphoneos_library="${pdl_iphoneos_build}"/lib"${TARGETNAME}".a
 pdl_iphonesimulator_library="${pdl_iphonesimulator_build}"/lib"${TARGETNAME}".a
 pdl_universal_library=lib"${TARGETNAME}".a
 
-cp "${pdl_iphoneos_build}/${TARGETNAME}"/*.h .
+cp "${pdl_iphoneos_build}/${TARGETNAME}"/*.h . 2>/dev/null
+
 if [ -f "${pdl_iphoneos_library}" ] && [ -f "${pdl_iphonesimulator_library}" ] ; then
     lipo -create "${pdl_iphoneos_library}" "${pdl_iphonesimulator_library}" -output "${pdl_universal_library}"
     libtool -static -D "${pdl_universal_library}" -o "${pdl_universal_library}" 2> /dev/null
