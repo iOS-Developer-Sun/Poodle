@@ -10,16 +10,11 @@
 #import <objc/runtime.h>
 #import <pthread.h>
 #import "NSObject+PDLImplementationInterceptor.h"
-#import "NSObject+PDLPrivate.h"
 
 @implementation NSObject (PDLThreadSafetifyProperty)
 
 static pthread_mutex_t _PDLThreadSafetifyPropertyLock = PTHREAD_MUTEX_INITIALIZER;
 static id threadSafePropertyLock(__unsafe_unretained id self, Class aClass, const char *name) {
-    if ([self _isDeallocating]) {
-        return nil;
-    }
-
     NSString *identifier = [NSString stringWithFormat:@"%@.%@", NSStringFromClass(aClass), @(name)];
     pthread_mutex_lock(&_PDLThreadSafetifyPropertyLock);
     NSMutableDictionary *locks = objc_getAssociatedObject(self, &_PDLThreadSafetifyPropertyLock);
@@ -78,12 +73,12 @@ static void threadSafePropertySetter(__unsafe_unretained id self, SEL _cmd, __un
 
     SEL getter = NSSelectorFromString(getterString);
     SEL setter = NSSelectorFromString(setterString);
-    assert(getter && setter);
+    if (!getter || !setter) {
+        return NO;
+    }
 
     BOOL ret = pdl_interceptSelector(aClass, getter, (IMP)&threadSafePropertyGetter, nil, NO, (void *)name);
-    assert(ret);
     ret &= pdl_interceptSelector(aClass, setter, (IMP)&threadSafePropertySetter, nil, NO, (void *)name);
-    assert(ret);
 
     return ret;
 }
