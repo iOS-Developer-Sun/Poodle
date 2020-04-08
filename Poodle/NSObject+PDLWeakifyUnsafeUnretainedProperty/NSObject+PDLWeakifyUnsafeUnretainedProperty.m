@@ -7,8 +7,8 @@
 //
 
 #import "NSObject+PDLWeakifyUnsafeUnretainedProperty.h"
-#import <objc/runtime.h>
-#import <objc/message.h>
+#import "NSObject+PDLImplementationInterceptor.h"
+#import <pthread.h>
 
 @interface PDLWeakifyUnsafeUnretainedPropertyCxxDestructor : NSObject
 
@@ -45,24 +45,57 @@
 
 @implementation NSObject (PDLWeakifyUnsafeUnretainedProperty)
 
-static void *PDLWeakifyUnsafeUnretainedPropertyCxxDestructorKey = NULL;
-static void PDLWeakifyUnsafeUnretainedPropertyAddCxxDestructor(__unsafe_unretained id self, ptrdiff_t offset) {
-    PDLWeakifyUnsafeUnretainedPropertyCxxDestructor *cxxDestructor =  objc_getAssociatedObject(self, &PDLWeakifyUnsafeUnretainedPropertyCxxDestructorKey);
-    @synchronized ([PDLWeakifyUnsafeUnretainedPropertyCxxDestructor class]) {
+static pthread_mutex_t _lock = PTHREAD_MUTEX_INITIALIZER;
+static id pdl_weakPropertyLock(__unsafe_unretained id self, Class aClass, ptrdiff_t offset) {
+    NSString *identifier = [NSString stringWithFormat:@"%@.%@", NSStringFromClass(aClass), @(offset)];
+    pthread_mutex_lock(&_lock);
+    NSMutableDictionary *locks = objc_getAssociatedObject(self, &pdl_weakPropertyLock);
+    if (locks == nil) {
+        locks = [NSMutableDictionary dictionary];
+        objc_setAssociatedObject(self, &pdl_weakPropertyLock, locks, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
+    id lock = locks[identifier];
+    if (lock == nil) {
+        lock = [[NSObject alloc] init];
+        locks[identifier] = lock;
+    }
+    pthread_mutex_unlock(&_lock);
+    return lock;
+}
+
+static void pdl_addCxxDestructor(__unsafe_unretained id self, Class aClass, ptrdiff_t offset) {
+    PDLWeakifyUnsafeUnretainedPropertyCxxDestructor *cxxDestructor =  objc_getAssociatedObject(self, &pdl_addCxxDestructor);
+    @synchronized (pdl_weakPropertyLock(self, aClass, offset)) {
         if (cxxDestructor == nil) {
             cxxDestructor = [[PDLWeakifyUnsafeUnretainedPropertyCxxDestructor alloc] init];
             cxxDestructor.object = self;
             [cxxDestructor registerOffset:offset];
-            objc_setAssociatedObject(self, &PDLWeakifyUnsafeUnretainedPropertyCxxDestructorKey, cxxDestructor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+            objc_setAssociatedObject(self, &pdl_addCxxDestructor, cxxDestructor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         }
     }
 }
 
-static BOOL PDLWeakifyUnsafeUnretainedProperty(Class aClass, NSString *propertyName) {
+static id pdl_weakPropertyGetter(__unsafe_unretained id self, SEL _cmd) {
+    PDLImplementationInterceptorRecover(_cmd);
+    ptrdiff_t offset = (ptrdiff_t)_data;
+    id __autoreleasing *location = (id __autoreleasing *)(void *)(((char *)(__bridge void *)self) + offset);
+    return objc_loadWeak(location);
+}
+
+static void pdl_weakPropertySetter(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id property) {
+    PDLImplementationInterceptorRecover(_cmd);
+    ptrdiff_t offset = (ptrdiff_t)_data;
+    id __autoreleasing *location = (id __autoreleasing *)(void *)(((char *)(__bridge void *)self) + offset);
+    objc_storeWeak(location, property);
+    pdl_addCxxDestructor(self, _class, offset);
+}
+
++ (BOOL)pdl_weakifyUnsafeUnretainedProperty:(NSString *)propertyName {
     if (propertyName.length == 0) {
         return NO;
     }
 
+    Class aClass = self;
     objc_property_t property = class_getProperty(aClass, propertyName.UTF8String);
     if (!property) {
         return NO;
@@ -71,9 +104,13 @@ static BOOL PDLWeakifyUnsafeUnretainedProperty(Class aClass, NSString *propertyN
     const char *attributes = property_getAttributes(property);
     NSArray *attributeList = [@(attributes) componentsSeparatedByString:@","];
 
+    NSString *getterString = propertyName;
     NSString *setterString = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
     NSString *ivarString = nil;
     for (NSString *attributeString in attributeList) {
+        if ([attributeString hasPrefix:@"G"]) {
+            getterString = [attributeString substringFromIndex:1];
+        }
         if ([attributeString hasPrefix:@"S"]) {
             setterString = [attributeString substringFromIndex:1];
         }
@@ -86,8 +123,13 @@ static BOOL PDLWeakifyUnsafeUnretainedProperty(Class aClass, NSString *propertyN
         return NO;
     }
 
-    SEL selector = NSSelectorFromString(setterString);
-    if (!selector) {
+    SEL getter = NSSelectorFromString(getterString);
+    if (!getter) {
+        return NO;
+    }
+
+    SEL setter = NSSelectorFromString(setterString);
+    if (!setter) {
         return NO;
     }
 
@@ -96,30 +138,12 @@ static BOOL PDLWeakifyUnsafeUnretainedProperty(Class aClass, NSString *propertyN
         return NO;
     }
 
-    Method method = class_getInstanceMethod(aClass, selector);
-    if (method == NULL) {
-        return NO;
-    }
-
-    IMP originalImplementation = method_getImplementation(method);
-    const char *typeEncoding = method_getTypeEncoding(method);
     ptrdiff_t offset = ivar_getOffset(ivar);
-    id block = ^(__unsafe_unretained id self, __unsafe_unretained id property) {
-        id __autoreleasing *location = (id __autoreleasing *)(void *)(((char *)(__bridge void *)self) + offset);
-        ((void (*)(id, SEL, id))originalImplementation)(self, selector, property);
-        objc_storeWeak(location, property);
-        PDLWeakifyUnsafeUnretainedPropertyAddCxxDestructor(self, offset);
-    };
 
-    IMP blockImplementation = imp_implementationWithBlock(block);
-    IMP replacedImplementation = class_replaceMethod(aClass, selector, blockImplementation, typeEncoding);
-    assert(replacedImplementation == originalImplementation);
+    BOOL ret = pdl_interceptSelector(aClass, getter, (IMP)&pdl_weakPropertyGetter, nil, NO, (void *)offset);
+    ret &= pdl_interceptSelector(aClass, setter, (IMP)&pdl_weakPropertySetter, nil, NO, (void *)offset);
 
-    return YES;
-}
-
-+ (BOOL)pdl_weakifyUnsafeUnretainedProperty:(NSString *)propertyName {
-    return PDLWeakifyUnsafeUnretainedProperty(self, propertyName);
+    return ret;
 }
 
 @end
