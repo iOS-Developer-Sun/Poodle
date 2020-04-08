@@ -186,6 +186,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.source_files = base + 'NSObject+PDLWeakifyUnsafeUnretainedProperty/' + source_files
             ss.vendored_library = base + 'NSObject+PDLWeakifyUnsafeUnretainedProperty/' + librariy_files
             ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
 
         s.subspec 'NSThread+PDLExtension' do |ss|

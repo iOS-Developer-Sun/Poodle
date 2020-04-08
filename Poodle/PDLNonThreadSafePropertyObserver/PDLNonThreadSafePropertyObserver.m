@@ -19,20 +19,20 @@ static void propertyLog(__unsafe_unretained id self, Class aClass, void *data, B
     [observer recordClass:aClass propertyName:propertyName isSetter:isSetter];
 }
 
-static id propertyGetter(__unsafe_unretained id self, SEL _cmd) {
+static id pdl_nonThreadSafePropertyGetter(__unsafe_unretained id self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
     propertyLog(self, _class, _data, NO);
-    id object = ((typeof(&propertyGetter))_imp)(self, _cmd);
+    id object = ((typeof(&pdl_nonThreadSafePropertyGetter))_imp)(self, _cmd);
     return object;
 }
 
-static void propertySetter(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id property) {
+static void pdl_nonThreadSafePropertySetter(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id property) {
     PDLImplementationInterceptorRecover(_cmd);
     propertyLog(self, _class, _data, YES);
-    ((typeof(&propertySetter))_imp)(self, _cmd, property);
+    ((typeof(&pdl_nonThreadSafePropertySetter))_imp)(self, _cmd, property);
 }
 
-static id observeNonThreadSafePropertiesAllocWithZone(__unsafe_unretained id self, SEL _cmd, struct _NSZone *zone) {
+static id pdl_observeNonThreadSafePropertiesAllocWithZone(__unsafe_unretained id self, SEL _cmd, struct _NSZone *zone) {
     PDLImplementationInterceptorRecover(_cmd);
     id object = nil;
     if (_imp) {
@@ -128,9 +128,9 @@ static void (^_reporter)(PDLNonThreadSafePropertyObserverProperty *property);
         SEL setter = NSSelectorFromString(setterString);
         assert(getter && setter);
 
-        BOOL ret = pdl_interceptSelector(aClass, getter, (IMP)&propertyGetter, nil, NO, (void *)name);
+        BOOL ret = pdl_interceptSelector(aClass, getter, (IMP)&pdl_nonThreadSafePropertyGetter, nil, NO, (void *)name);
         if (ret) {
-            ret = pdl_interceptSelector(aClass, setter, (IMP)&propertySetter, nil, NO, (void *)name);
+            ret = pdl_interceptSelector(aClass, setter, (IMP)&pdl_nonThreadSafePropertySetter, nil, NO, (void *)name);
             if (!ret) {
                 NSLog(@"%@.%@ does not exist", aClass, setterString);
             } else {
@@ -143,7 +143,7 @@ static void (^_reporter)(PDLNonThreadSafePropertyObserverProperty *property);
     free(propertyList);
 
     if (classObserved) {
-        pdl_interceptSelector(object_getClass(aClass), @selector(allocWithZone:), (IMP)&observeNonThreadSafePropertiesAllocWithZone, nil, YES, NULL);
+        pdl_interceptSelector(object_getClass(aClass), @selector(allocWithZone:), (IMP)&pdl_observeNonThreadSafePropertiesAllocWithZone, nil, YES, NULL);
     }
 }
 
