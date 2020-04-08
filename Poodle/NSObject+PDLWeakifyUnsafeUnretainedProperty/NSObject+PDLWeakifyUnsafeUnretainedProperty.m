@@ -10,26 +10,92 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-@implementation NSObject (PDLWeakifyUnsafeUnretainedProperty)
+@interface PDLWeakifyUnsafeUnretainedPropertyCxxDestructor : NSObject
 
-static id NSObjectWeakifyPropertyLockObject(void) {
-    static id object = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        object = [[NSObject alloc] init];
-    });
-    return object;
+@property (nonatomic, unsafe_unretained) id object;
+@property (nonatomic, strong) NSMutableSet *offsets;
+
+- (void)registerOffset:(ptrdiff_t)offset;
+
+@end
+
+@implementation PDLWeakifyUnsafeUnretainedPropertyCxxDestructor
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        _offsets = [NSMutableSet set];
+    }
+    return self;
 }
 
-static BOOL NSObjectWeakifyProperty(Class aClass, NSString *propertyName, BOOL needsSync) {
-    NSString *ivarName = [@"_" stringByAppendingString:propertyName];
-    Ivar ivar = class_getInstanceVariable(aClass, ivarName.UTF8String);
+- (void)registerOffset:(ptrdiff_t)offset {
+    [_offsets addObject:@(offset)];
+}
+
+- (void)dealloc {
+    for (NSNumber *offsetNumber in _offsets) {
+        ptrdiff_t offset = offsetNumber.integerValue;
+        id __autoreleasing *location = (id __autoreleasing *)(void *)(((char *)(__bridge void *)_object) + offset);
+        objc_storeWeak(location, nil);
+    }
+}
+
+@end
+
+@implementation NSObject (PDLWeakifyUnsafeUnretainedProperty)
+
+static void *PDLWeakifyUnsafeUnretainedPropertyCxxDestructorKey = NULL;
+static void PDLWeakifyUnsafeUnretainedPropertyAddCxxDestructor(__unsafe_unretained id self, ptrdiff_t offset) {
+    PDLWeakifyUnsafeUnretainedPropertyCxxDestructor *cxxDestructor =  objc_getAssociatedObject(self, &PDLWeakifyUnsafeUnretainedPropertyCxxDestructorKey);
+    @synchronized ([PDLWeakifyUnsafeUnretainedPropertyCxxDestructor class]) {
+        if (cxxDestructor == nil) {
+            cxxDestructor = [[PDLWeakifyUnsafeUnretainedPropertyCxxDestructor alloc] init];
+            cxxDestructor.object = self;
+            [cxxDestructor registerOffset:offset];
+            objc_setAssociatedObject(self, &PDLWeakifyUnsafeUnretainedPropertyCxxDestructorKey, cxxDestructor, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+        }
+    }
+}
+
+static BOOL PDLWeakifyUnsafeUnretainedProperty(Class aClass, NSString *propertyName) {
+    if (propertyName.length == 0) {
+        return NO;
+    }
+
+    objc_property_t property = class_getProperty(aClass, propertyName.UTF8String);
+    if (!property) {
+        return NO;
+    }
+
+    const char *attributes = property_getAttributes(property);
+    NSArray *attributeList = [@(attributes) componentsSeparatedByString:@","];
+
+    NSString *setterString = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
+    NSString *ivarString = nil;
+    for (NSString *attributeString in attributeList) {
+        if ([attributeString hasPrefix:@"S"]) {
+            setterString = [attributeString substringFromIndex:1];
+        }
+        if ([attributeString hasPrefix:@"V"]) {
+            ivarString = [attributeString substringFromIndex:1];
+        }
+    }
+
+    if (!ivarString) {
+        return NO;
+    }
+
+    SEL selector = NSSelectorFromString(setterString);
+    if (!selector) {
+        return NO;
+    }
+
+    Ivar ivar = class_getInstanceVariable(aClass, ivarString.UTF8String);
     if (ivar == NULL) {
         return NO;
     }
 
-    NSString *setterName = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
-    SEL selector = NSSelectorFromString(setterName);
     Method method = class_getInstanceMethod(aClass, selector);
     if (method == NULL) {
         return NO;
@@ -40,15 +106,9 @@ static BOOL NSObjectWeakifyProperty(Class aClass, NSString *propertyName, BOOL n
     ptrdiff_t offset = ivar_getOffset(ivar);
     id block = ^(__unsafe_unretained id self, __unsafe_unretained id property) {
         id __autoreleasing *location = (id __autoreleasing *)(void *)(((char *)(__bridge void *)self) + offset);
-        if (needsSync) {
-            @synchronized (NSObjectWeakifyPropertyLockObject()) {
-                ((void (*)(id, SEL, id))originalImplementation)(self, selector, property);
-                objc_storeWeak(location, property);
-            }
-        } else {
-            ((void (*)(id, SEL, id))originalImplementation)(self, selector, property);
-            objc_storeWeak(location, property);
-        }
+        ((void (*)(id, SEL, id))originalImplementation)(self, selector, property);
+        objc_storeWeak(location, property);
+        PDLWeakifyUnsafeUnretainedPropertyAddCxxDestructor(self, offset);
     };
 
     IMP blockImplementation = imp_implementationWithBlock(block);
@@ -58,12 +118,8 @@ static BOOL NSObjectWeakifyProperty(Class aClass, NSString *propertyName, BOOL n
     return YES;
 }
 
-+ (BOOL)pdl_weakifyProperty:(NSString *)propertyName {
-    return [self pdl_weakifyProperty:propertyName needsSync:NO];
-}
-
-+ (BOOL)pdl_weakifyProperty:(NSString *)propertyName needsSync:(BOOL)needsSync {
-    return NSObjectWeakifyProperty(self, propertyName, needsSync);
++ (BOOL)pdl_weakifyUnsafeUnretainedProperty:(NSString *)propertyName {
+    return PDLWeakifyUnsafeUnretainedProperty(self, propertyName);
 }
 
 @end
