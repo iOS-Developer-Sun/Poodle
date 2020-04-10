@@ -8,6 +8,7 @@
 
 #include "pdl_objc_message.h"
 #include "pdl_dynamic.h"
+#include <objc/message.h>
 
 static void(*_pdl_objc_msgSend_before_action)(__unsafe_unretained id self, SEL _cmd) = NULL;
 static void(*_pdl_objc_msgSendSuper_before_action)(struct objc_super *super, SEL _cmd) = NULL;
