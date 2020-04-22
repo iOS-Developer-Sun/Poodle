@@ -31,7 +31,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
 
 @interface PDLViewControllerListViewControllerRootItem : NSObject
 
-@property (nonatomic, weak) UIWindow *window;
+@property (nonatomic, copy) NSString *title;
 @property (nonatomic, copy) NSArray <PDLViewControllerListViewControllerViewControllerItem *> *items;
 
 @end
@@ -53,7 +53,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    self.title = @"MemoryList";
+    self.title = @"ViewController List";
 
     UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
     tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -61,6 +61,18 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
     tableView.delegate = self;
     [self.view addSubview:tableView];
     self.tableView = tableView;
+
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 44)];
+    [refreshControl addTarget:self action:@selector(reloadData) forControlEvents:UIControlEventValueChanged];
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 10) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+        tableView.refreshControl = refreshControl;
+#pragma clang diagnostic pop
+    } else {
+        // Fallback on earlier versions
+    }
 
     [self loadData];
 }
@@ -81,7 +93,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
             [allViewControllers removeObject:eachViewController];
         }];
         PDLViewControllerListViewControllerRootItem *item = [[PDLViewControllerListViewControllerRootItem alloc] init];
-        item.window = window;
+        item.title = [NSString stringWithFormat:@"%@ %p, level:%@", window.class, window, @(window.windowLevel)];
         item.items = items;
         [data addObject:item];
     }
@@ -99,7 +111,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
             [allViewControllers removeObject:eachViewController];
         }];
         PDLViewControllerListViewControllerRootItem *item = [[PDLViewControllerListViewControllerRootItem alloc] init];
-        item.window = nil;
+        item.title = nil;
         item.items = items;
         [data addObject:item];
     }
@@ -116,7 +128,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
             [items addObject:item];
         }
         PDLViewControllerListViewControllerRootItem *item = [[PDLViewControllerListViewControllerRootItem alloc] init];
-        item.window = nil;
+        item.title = @"!";
         item.items = items;
         [data addObject:item];
     }
@@ -127,12 +139,27 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
         count += item.items.count;
     }
     if (viewControllersLoaded.count == 0) {
-        self.title = [NSString stringWithFormat:@"MemoryList(%@)", @(count)];
+        self.title = [NSString stringWithFormat:@"ViewController List (%@)", @(count)];
     } else {
-        self.title = [NSString stringWithFormat:@"MemoryList(%@/%@)", @(count), @(viewControllersLoaded.count)];
+        self.title = [NSString stringWithFormat:@"ViewController List (%@/%@)", @(count), @(viewControllersLoaded.count)];
     }
 
     self.data = data;
+}
+
+- (void)reloadData {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 10) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+        [self.tableView.refreshControl endRefreshing];
+#pragma clang diagnostic pop
+    } else {
+        // Fallback on earlier versions
+    }
+
+    [self loadData];
+    [self.tableView reloadData];
 }
 
 - (NSArray *)itemsForViewController:(UIViewController *)rootViewController indentationLevel:(NSInteger)indentationLevel action:(void(^)(UIViewController *viewController))action {
@@ -238,7 +265,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
     PDLViewControllerListViewControllerViewControllerItem *item = self.data[indexPath.section].items[indexPath.row];
     UIViewController *viewController = item.viewController;
     NSString *relationshipString = [self stringOfRelationship:item.relationship];
-    cell.textLabel.text = [NSString stringWithFormat:@"%@ %p[%@]", viewController.class, viewController, relationshipString];
+    cell.textLabel.text = [NSString stringWithFormat:@"%@ %p [%@]", viewController.class, viewController, relationshipString];
     return cell;
 }
 
@@ -248,12 +275,17 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
 }
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    CGFloat height = 50;
+    CGFloat height = 44;
     return height;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section {
-    return 40;
+    CGFloat height = 0;
+    NSString *title = self.data[section].title;
+    if (title.length > 0) {
+        height = 44;
+    }
+    return height;
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
@@ -263,18 +295,14 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
         header = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:reusedIdentifier];
         UILabel *label = [[UILabel alloc] initWithFrame:header.contentView.bounds];
         label.textColor = [UIColor blackColor];
-        label.font = [UIFont systemFontOfSize:12];
+        label.font = [UIFont boldSystemFontOfSize:12];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [header.contentView addSubview:label];
         label.tag = 1;
     }
     UILabel *label = [header.contentView viewWithTag:1];
-    UIWindow *window = self.data[section].window;
-    NSString *text = nil;
-    if (window) {
-        text = [NSString stringWithFormat:@"%@ %p, level:%@", window.class, window, @(window.windowLevel)];
-    }
-    label.text = text;
+    NSString *title = self.data[section].title;
+    label.text = title;
     return header;
 }
 
