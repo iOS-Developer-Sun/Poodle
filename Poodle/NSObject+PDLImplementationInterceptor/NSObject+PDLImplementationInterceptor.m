@@ -120,7 +120,7 @@ BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementa
 }
 
 NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data) {
-    NSMutableSet *classes = [NSMutableSet set];
+    CFMutableSetRef classes = CFSetCreateMutable(NULL, 0, NULL);
     unsigned int outCount = 0;
     Class *classList = objc_copyClassList(&outCount);
     for (unsigned int i = 0; i < outCount; i++) {
@@ -131,7 +131,7 @@ NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP intercep
             Class superClass = class_getSuperclass(eachClass);
             while (superClass) {
                 if (superClass == aClass) {
-                    [classes addObject:eachClass];
+                    CFSetAddValue(classes, (__bridge const void *)(eachClass));
                     break;
                 } else {
                     superClass = class_getSuperclass(superClass);
@@ -142,7 +142,12 @@ NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP intercep
     free(classList);
 
     NSUInteger ret = 0;
-    for (Class subclass in classes) {
+    CFIndex count = CFSetGetCount(classes);
+    const void *subclasses[count];
+    CFSetGetValues(classes, subclasses);
+
+    for (CFIndex i = 0; i < count; i++) {
+        Class subclass = (__bridge Class)(subclasses[i]);
         if (pdl_interceptSelector(subclass, selector, interceptorImplementation, isStructRetNumber, NO, data)) {
             ret++;
         }
@@ -150,6 +155,8 @@ NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP intercep
     if (pdl_interceptSelector(aClass, selector, interceptorImplementation, isStructRetNumber, addIfNotExistent, data)) {
         ret++;
     }
+
+    CFRelease(classes);
 
     return ret;
 }

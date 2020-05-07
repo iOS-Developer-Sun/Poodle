@@ -32,7 +32,7 @@
 
 @interface PDLNonThreadSafePropertyObserverObject ()
 
-@property (weak, readonly) id object;
+@property (unsafe_unretained, readonly) id object;
 @property (weak, readonly) PDLNonThreadSafePropertyObserverInitializing *initializing;
 @property (strong, readonly) NSMutableDictionary *properties;
 
