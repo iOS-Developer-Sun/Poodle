@@ -8,9 +8,6 @@
 
 #include "pdl_malloc.h"
 #include <malloc/malloc.h>
-#include <stdio.h>
-#include <pthread.h>
-#include <Foundation/Foundation.h>
 
 struct pdl_malloc_recorder_context {
     void *address;
