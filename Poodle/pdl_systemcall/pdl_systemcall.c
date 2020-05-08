@@ -60,3 +60,13 @@ ATTRIBUTE_VISIBILITY_HIDDEN
 int pdl_systemcall_exit(int status) {
     return pdl_systemcall(SYS_exit, status);
 }
+
+ATTRIBUTE_VISIBILITY_HIDDEN
+pid_t pdl_systemcall_getpid(void) {
+    return pdl_systemcall(SYS_getpid);
+}
+
+ATTRIBUTE_VISIBILITY_HIDDEN
+int pdl_systemcall_sysctl(int *a1, u_int a2, void *a3, size_t *a4, void *a5, size_t a6) {
+    return pdl_systemcall(SYS_sysctl, a1, a2, a3, a4, a5, a6);
+}
