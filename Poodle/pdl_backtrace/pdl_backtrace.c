@@ -56,7 +56,7 @@ typedef struct pdl_backtrace {
 
 #ifdef __arm64__
 __attribute__((naked))
-static void pdl_fake(__unused void **frames, __unused pthread_mutex_t *lock) {
+static void pdl_backtrace_fake(__unused void **frames, __unused pthread_mutex_t *lock) {
     __asm__ volatile ("sub sp, sp, #0x40\n" // new space
                       "stp x19, x20, [sp, #0x10]\n"
                       "stp x21, x22, [sp, #0x20]\n"
@@ -77,12 +77,12 @@ static void pdl_fake(__unused void **frames, __unused pthread_mutex_t *lock) {
                       "ret");
 }
 #else
-static void pdl_fake(void **frames, pthread_mutex_t *lock) {
+static void pdl_backtrace_fake(void **frames, pthread_mutex_t *lock) {
     pthread_mutex_lock(lock);
 }
 #endif
 
-static void *thread_main(void *backtrace) {
+static void *pdl_backtrace_thread_main(void *backtrace) {
     pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
     pthread_setname_np(bt->thread_name);
     pthread_mutex_t *lock = &(bt->lock);
@@ -99,7 +99,7 @@ static void *thread_main(void *backtrace) {
     }
 
     pthread_mutex_lock(lock);
-    pdl_fake(frames, lock);
+    pdl_backtrace_fake(frames, lock);
     pthread_mutex_unlock(lock);
     bt->free_ptr(frames);
 
@@ -154,7 +154,7 @@ void pdl_backtrace_thread_show(pdl_backtrace_t backtrace) {
     }
 
     pthread_t thread = 0;
-    int ret = pthread_create(&thread, NULL, &thread_main, bt);
+    int ret = pthread_create(&thread, NULL, &pdl_backtrace_thread_main, bt);
     if (ret == 0) {
         bt->thread = thread;
     }
