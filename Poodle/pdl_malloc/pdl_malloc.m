@@ -78,35 +78,6 @@ bool pdl_malloc_check(void *address, size_t *size, void **header) {
 
 #if 0
 
-#pragma mark -
-static int pdl_frame_stack(void *link_register, void *frame_pointer, void **frames, int count) {
-#ifdef __arm64__
-    int ret = 0;
-    void *lr = (void *)link_register;
-    void **fp = (void **)frame_pointer;
-    while (true) {
-        if (ret > count) {
-            break;
-        }
-        if (frames) {
-            frames[ret] = lr;
-        }
-        ret++;
-        if (!fp) {
-            break;
-        }
-        if (!lr) {
-            break;
-        }
-        lr = *(fp + 1);
-        fp = *fp;
-    }
-    return ret;
-#else
-    return 0;
-#endif
-}
-
 static NSString *_pdl_file_path_string = nil;
 static const char *_pdl_file_path = NULL;
 static FILE *_pdl_file = NULL;
