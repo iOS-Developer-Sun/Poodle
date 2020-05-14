@@ -25,19 +25,20 @@ static NSMutableDictionary *_systemImages = nil;
 static BOOL _loaded = NO;
 
 static void imageAdded(const struct mach_header *header, intptr_t vmaddr_slide) {
-    PDLSystemImage *systemImage = [[PDLSystemImage alloc] init];
-    struct pdl_mach_object *mach_object = systemImage.machObject;
     Dl_info info;
     BOOL ret = dladdr(header, &info);
     if (!ret) {
         return;
     }
+
     const char *name = info.dli_fname;
-    ret = pdl_get_mach_object_with_header(header, vmaddr_slide, name, mach_object);
+    struct pdl_mach_object mach_object = {0};
+    ret = pdl_get_mach_object_with_header(header, vmaddr_slide, name, &mach_object);
     if (!ret) {
         return;
     }
 
+    PDLSystemImage *systemImage = [[PDLSystemImage alloc] initWithMachObject:&mach_object];
     @synchronized (_systemImages) {
         _systemImages[@((unsigned long)header)] = systemImage;
     }
@@ -70,10 +71,30 @@ static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide
     }
 }
 
-- (instancetype)init {
+- (instancetype)initWithMachObject:(struct pdl_mach_object *)machObject {
     self = [super init];
     if (self) {
         _machObject = &_mach_object;
+        memcpy(_machObject, machObject, sizeof(*_machObject));
+
+        _path = @(machObject->name);
+        _slide = machObject->vmaddr_slide;
+        _address = (uintptr_t)machObject->header;
+
+        _cpuType = machObject->header->cputype;
+        _cpuSubtype = machObject->header->cpusubtype;
+
+        _vmsize = machObject->vmsize;
+        _vmAddress = (uintptr_t)machObject->vmaddr;
+
+
+        if (machObject->uuid_command) {
+            _uuid = machObject->uuid_command->uuid;
+        }
+        if (machObject->id_dylib_dylib_command) {
+            _currentVersion = machObject->id_dylib_dylib_command->dylib.current_version;
+        }
+
     }
     return self;
 }
@@ -131,58 +152,14 @@ static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide
     return systemImagesSortedByAddress;
 }
 
-- (cpu_type_t)cpuType {
-    cpu_type_t cpuType = self.machObject->header->cputype;
-    return cpuType;
-}
-
-- (cpu_subtype_t)cpuSubtype {
-    cpu_subtype_t cpuSubtype = self.machObject->header->cpusubtype;
-    return cpuSubtype;
-}
-
-- (const uint8_t *)uuid {
-    const uint8_t *uuid = NULL;
-    if (self.machObject->uuid_command) {
-        uuid = self.machObject->uuid_command->uuid;
-    }
-    return uuid;
-}
-
-- (uint64_t)currentVersion {
-    uint64_t currentVersion = 0;
-    if (self.machObject->id_dylib_dylib_command) {
-        currentVersion = self.machObject->id_dylib_dylib_command->dylib.current_version;
-    }
-    return currentVersion;
-}
-
-- (uint64_t)vmsize {
-    return self.machObject->vmsize;
-}
-
 - (NSString *)name {
     NSString *name = self.path.lastPathComponent;
     return name;
 }
 
-- (NSString *)path {
-    NSString *path = @(self.machObject->name);
-    return path;
-}
-
-- (uintptr_t)address {
-    uintptr_t address = (uintptr_t)self.machObject->header;
-    return address;
-}
-
 - (uintptr_t)endAddress {
     uintptr_t endAddress = self.address + (uintptr_t)self.vmsize - 1;
     return endAddress;
-}
-
-- (uintptr_t)vmAddress {
-    return (uintptr_t)self.machObject->vmaddr;
 }
 
 - (uint64_t)majorVersion {
@@ -347,7 +324,7 @@ static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide
 }
 
 - (NSString *)description {
-    NSString *description = [NSString stringWithFormat:@"<%@: %p, %@(%@), version %@.%@.%@, uuid %@, cpu %@-%@, address %p-%p, vmsize %@, vmAddressSlide %p>", NSStringFromClass(self.class), self, self.name, self.path, @(self.majorVersion), @(self.minorVersion), @(self.revisionVersion), self.uuidString, self.cpuTypeString, self.cpuSubtypeString, (void *)self.address, (void *)self.endAddress, @(self.vmsize), (void *)self.machObject->vmaddr_slide];
+    NSString *description = [NSString stringWithFormat:@"<%@: %p, %@(%@), version %@.%@.%@, uuid %@, cpu %@-%@, address %p-%p, vmsize %@, vmAddressSlide %p>", NSStringFromClass(self.class), self, self.name, self.path, @(self.majorVersion), @(self.minorVersion), @(self.revisionVersion), self.uuidString, self.cpuTypeString, self.cpuSubtypeString, (void *)self.address, (void *)self.endAddress, @(self.vmsize), (void *)self.slide];
     return description;
 }
 
@@ -358,16 +335,18 @@ static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide
 
 - (BOOL)dump:(NSString *)path {
     NSMutableData *data = [[NSMutableData alloc] init];
-    BOOL is64 = self.machObject->is64;
-    uint64_t slide = self.machObject->vmaddr_slide;
-    uint32_t segmentCount = self.machObject->segments_count;
+    struct pdl_mach_object *machObject = self.machObject;
+
+    BOOL is64 = machObject->is64;
+    uint64_t slide = self.slide;
+    uint32_t segmentCount = machObject->segments_count;
     for (uint32_t i = 0; i < segmentCount; i++) {
         BOOL isLastOne = i == segmentCount - 1;
         if (!is64) {
-            const struct segment_command *segment = self.machObject->segments[i];
+            const struct segment_command *segment = machObject->segments[i];
             [data appendBytes:(void *)(slide + segment->vmaddr) length:isLastOne ? segment->filesize : segment->vmsize];
         } else {
-            const struct segment_command_64 *segment = ((struct pdl_mach_object_64 *)self.machObject)->segments[i];
+            const struct segment_command_64 *segment = ((struct pdl_mach_object_64 *)machObject)->segments[i];
             [data appendBytes:(void *)(slide + segment->vmaddr) length:(NSUInteger)(isLastOne ? segment->filesize : segment->vmsize)];
         }
     }

@@ -9,17 +9,15 @@
 #import <Foundation/Foundation.h>
 #include <mach-o/loader.h>
 #include <mach/machine.h>
-#include "pdl_mach_object.h"
 
 @interface PDLSystemImage : NSObject
-
-@property (readonly) struct pdl_mach_object *machObject;
 
 @property (class, readonly) NSUInteger count;
 @property (class, readonly) NSString *imagesDidAddNotificationName;
 @property (class, readonly) NSString *imagesDidRemoveNotificationName;
 
 @property (readonly) NSString *name;
+@property (readonly) intptr_t slide;
 @property (readonly) NSString *path;
 @property (readonly) uint64_t vmsize;
 @property (readonly) uintptr_t address;
@@ -28,6 +26,7 @@
 @property (readonly) cpu_type_t cpuType;
 @property (readonly) cpu_subtype_t cpuSubtype;
 @property (readonly) const uint8_t *uuid;
+@property (readonly) uint64_t currentVersion;
 @property (readonly) uint64_t majorVersion;
 @property (readonly) uint64_t minorVersion;
 @property (readonly) uint64_t revisionVersion;
