@@ -13,9 +13,7 @@
 
 #define PDL_BACKTRACE_FRAMES_MAX_COUNT 128
 
-#pragma mark -
 int pdl_backtrace_stack(void *link_register, void *frame_pointer, void **frames, int count) {
-#ifdef __arm64__
     int ret = 0;
     void *lr = (void *)link_register;
     void **fp = (void **)frame_pointer;
@@ -42,9 +40,6 @@ int pdl_backtrace_stack(void *link_register, void *frame_pointer, void **frames,
         }
     }
     return ret;
-#else
-    return 0;
-#endif
 }
 
 #define MAXTHREADNAMESIZE 64
@@ -70,30 +65,6 @@ void pdl_backtrace_wait(pdl_backtrace *bt) {
     pthread_mutex_unlock(lock);
 }
 
-#ifdef __arm64__
-__attribute__((naked))
-static void pdl_backtrace_fake(__unused pdl_backtrace *bt, __unused void **frames) {
-    __asm__ volatile (
-                      "sub sp, sp, #0x20\n" // new space
-                      "stp x19, x20, [sp, #0x10]\n" // backup caller registers
-                      "mov x19, fp\n" // store fp
-                      "mov fp, x1\n" // fake frames
-
-                      "bl _pdl_backtrace_wait\n" // wait pdl_backtrace_wait(bt);
-
-                      "mov fp, x19\n" // recover frames
-
-                      "ldp x19, x20, [sp, #0x10]\n" // restore caller registers
-                      "add sp, sp, #0x20\n" // delete space
-                      "ret"
-                      );
-}
-#else
-static void pdl_backtrace_fake(pdl_backtrace *bt, __unused void **frames) {
-    pdl_backtrace_wait(bt);
-}
-#endif
-
 static void *pdl_backtrace_thread_main(void *backtrace) {
     pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
     pthread_setname_np(bt->thread_name);
@@ -109,6 +80,7 @@ static void *pdl_backtrace_thread_main(void *backtrace) {
         frames[lr_index] = bt->frames[i];
     }
 
+    extern void pdl_backtrace_fake(pdl_backtrace *bt, void **frames);
     pdl_backtrace_fake(bt, frames);
     bt->free_ptr(frames);
 
@@ -146,16 +118,16 @@ void pdl_backtrace_record(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
     void *lr = __builtin_return_address(0);
     void *fp = __builtin_frame_address(0);
-    void **frame = NULL;
+    void **frames = NULL;
     int count_recorded = 0;
     int count = pdl_backtrace_stack(lr, fp, NULL, PDL_BACKTRACE_FRAMES_MAX_COUNT);
     if (count > 0) {
-        frame = bt->malloc_ptr(sizeof(void *) * count);
-        count_recorded = pdl_backtrace_stack(lr, fp, frame, PDL_BACKTRACE_FRAMES_MAX_COUNT);
+        frames = bt->malloc_ptr(sizeof(void *) * count);
+        count_recorded = pdl_backtrace_stack(lr, fp, frames, PDL_BACKTRACE_FRAMES_MAX_COUNT);
         assert(count == count_recorded);
     }
     bt->free_ptr(bt->frames);
-    bt->frames = frame;
+    bt->frames = frames;
     bt->frames_count = count_recorded;
 }
 

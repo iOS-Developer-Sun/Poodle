@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-extern void pdl_die(int);
+extern void pdl_die(unsigned long);
 
 #ifdef __cplusplus
 }
