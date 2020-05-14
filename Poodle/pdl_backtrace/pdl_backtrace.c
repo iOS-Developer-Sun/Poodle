@@ -56,6 +56,9 @@ typedef struct pdl_backtrace {
 } pdl_backtrace;
 
 void pdl_backtrace_wait(pdl_backtrace *bt) {
+    void *buffer[128];
+    extern void backtrace(void **, int);
+    backtrace(buffer, 128);
     pthread_mutex_t *wait_lock = &(bt->wait_lock);
     pthread_mutex_unlock(wait_lock);
 
