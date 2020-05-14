@@ -16,6 +16,8 @@
 @property (readonly) struct pdl_mach_object *machObject;
 
 @property (class, readonly) NSUInteger count;
+@property (class, readonly) NSString *imagesDidAddNotificationName;
+@property (class, readonly) NSString *imagesDidRemoveNotificationName;
 
 @property (readonly) NSString *name;
 @property (readonly) NSString *path;
@@ -34,11 +36,9 @@
 @property (readonly) NSString *cpuTypeString;
 @property (readonly) NSString *crashLogString;
 
-+ (instancetype)systemImageAtIndex:(NSUInteger)index;
-+ (instancetype)systemImageWithPath:(NSString *)path;
 + (instancetype)systemImageWithHeader:(struct mach_header *)header;
++ (instancetype)systemImageWithPath:(NSString *)path;
 + (NSArray *)systemImages;
-+ (NSArray *)systemImagesSortedByAddress;
 
 - (BOOL)dump:(NSString *)path;
 

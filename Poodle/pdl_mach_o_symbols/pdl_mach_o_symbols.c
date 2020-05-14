@@ -23,7 +23,7 @@ static bool matches_string(struct pdl_mach_o_symbol *symbol, void *filter_data) 
 
 static struct pdl_mach_o_symbol *_get_mach_o_symbol(struct pdl_mach_o_symbol *pointer, struct mach_header *header, intptr_t vmaddr_slide, const char *name, uint32_t index, void *filter_data, bool(*filter)(struct pdl_mach_o_symbol *symbol, void *filter_data)) {
     struct pdl_mach_object mach_object;
-    bool result = pdl_get_mach_object_with_header(header, vmaddr_slide, name, index, &mach_object);
+    bool result = pdl_get_mach_object_with_header(header, vmaddr_slide, name, &mach_object);
     if (!result) {
         return pointer;
     }

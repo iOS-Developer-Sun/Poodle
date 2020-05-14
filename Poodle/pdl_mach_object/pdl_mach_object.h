@@ -23,7 +23,6 @@ struct pdl_mach_object {
     bool swaps;
     intptr_t vmaddr_slide;
     const char *name;
-    uint32_t index;
 
     uint32_t segments_count;
     const struct segment_command *segments[8];
@@ -105,7 +104,6 @@ struct pdl_mach_object_64 {
     bool swaps;
     intptr_t vmaddr_slide;
     const char *name;
-    uint32_t index;
 
     uint32_t segments_count;
     const struct segment_command_64 *segments[8];
@@ -210,7 +208,7 @@ struct pdl_fat_object_64 {
 _Static_assert(sizeof(struct pdl_fat_object) == sizeof(struct pdl_fat_object_64),
                    "Incorrect struct pdl_fat_object size");
 
-extern bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t vmaddr_slide, const char *name, uint32_t index, struct pdl_mach_object *mach_object);
+extern bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t vmaddr_slide, const char *name, struct pdl_mach_object *mach_object);
 
 extern bool pdl_get_fat_object_with_header(const struct fat_header *header, struct pdl_fat_object *fat_object);
 
