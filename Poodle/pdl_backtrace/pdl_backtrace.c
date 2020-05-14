@@ -56,9 +56,10 @@ typedef struct pdl_backtrace {
 } pdl_backtrace;
 
 void pdl_backtrace_wait(pdl_backtrace *bt) {
-    void *buffer[128];
-    extern void backtrace(void **, int);
-    backtrace(buffer, 128);
+    void *buffer[16];
+    extern int backtrace(void **, int);
+    __unused int b = backtrace(buffer, 16);
+
     pthread_mutex_t *wait_lock = &(bt->wait_lock);
     pthread_mutex_unlock(wait_lock);
 
@@ -71,7 +72,7 @@ void pdl_backtrace_wait(pdl_backtrace *bt) {
 static void *pdl_backtrace_thread_main(void *backtrace) {
     pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
     pthread_setname_np(bt->thread_name);
-    void **frames = bt->malloc_ptr(sizeof(void *) * PDL_BACKTRACE_FRAMES_MAX_COUNT * 2);
+    void *frames[bt->frames_count * 2];
     for (int i = 0; i < bt->frames_count; i++) {
         int fp_index = i * 2;
         int lr_index = i * 2 + 1;
@@ -85,7 +86,6 @@ static void *pdl_backtrace_thread_main(void *backtrace) {
 
     extern void pdl_backtrace_fake(pdl_backtrace *bt, void **frames);
     pdl_backtrace_fake(bt, frames);
-    bt->free_ptr(frames);
 
     return NULL;
 }
