@@ -8,6 +8,7 @@
 
 #import "PDLSystemImage.h"
 #import <mach-o/dyld.h>
+#import <dlfcn.h>
 #import "pdl_mach_object.h"
 
 @interface PDLSystemImage () {
@@ -20,6 +21,55 @@
 
 @implementation PDLSystemImage
 
+static NSMutableDictionary *_systemImages = nil;
+static BOOL _loaded = NO;
+
+static void imageAdded(const struct mach_header *header, intptr_t vmaddr_slide) {
+    PDLSystemImage *systemImage = [[PDLSystemImage alloc] init];
+    struct pdl_mach_object *mach_object = systemImage.machObject;
+    Dl_info info;
+    BOOL ret = dladdr(header, &info);
+    if (!ret) {
+        return;
+    }
+    const char *name = info.dli_fname;
+    ret = pdl_get_mach_object_with_header(header, vmaddr_slide, name, mach_object);
+    if (!ret) {
+        return;
+    }
+
+    @synchronized (_systemImages) {
+        _systemImages[@((unsigned long)header)] = systemImage;
+    }
+    if (_loaded) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:PDLSystemImage.imagesDidAddNotificationName object:systemImage];
+    }
+}
+
+static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide) {
+    PDLSystemImage *systemImage = nil;
+    @synchronized (_systemImages) {
+        id key = @((unsigned long)header);
+        systemImage = _systemImages[key];
+        _systemImages[key] = nil;
+    }
+    if (_loaded) {
+        [[NSNotificationCenter defaultCenter] postNotificationName:PDLSystemImage.imagesDidRemoveNotificationName object:systemImage];
+    }
+}
+
++ (void)initialize {
+    if (self == [PDLSystemImage self]) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            _systemImages = [NSMutableDictionary dictionary];
+            _dyld_register_func_for_add_image(&imageAdded);
+            _dyld_register_func_for_remove_image(&imageRemoved);
+            _loaded = YES;
+        });
+    }
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -29,8 +79,25 @@
 }
 
 + (NSUInteger)count {
-    NSUInteger count = (uint32_t)_dyld_image_count();
-    return count;
+    @synchronized (_systemImages) {
+        NSUInteger count = _systemImages.count;
+        return count;
+    }
+}
+
++ (NSString *)imagesDidAddNotificationName {
+    return @"PDLSystemImageImagesDidAddNotification";
+}
+
++ (NSString *)imagesDidRemoveNotificationName {
+    return @"PDLSystemImageImagesDidRemoveNotification";
+}
+
++ (instancetype)systemImageWithHeader:(struct mach_header *)header {
+    @synchronized (_systemImages) {
+        PDLSystemImage *systemImage = _systemImages[@((unsigned long)header)];
+        return systemImage;
+    }
 }
 
 + (instancetype)systemImageWithPath:(NSString *)path {
@@ -38,57 +105,26 @@
         return nil;
     }
 
-    NSInteger count = self.count;
-    for (NSInteger i = 0; i < count; i++) {
-        const char *name = _dyld_get_image_name((uint32_t)i);
-        if ([path isEqualToString:@(name)]) {
-            PDLSystemImage *systemImage = [self systemImageAtIndex:i];
-            return systemImage;
+    PDLSystemImage *ret = nil;
+    NSArray *systemImages = nil;
+    @synchronized (_systemImages) {
+        systemImages = _systemImages.allValues;
+    }
+    for (PDLSystemImage *systemImage in systemImages) {
+        if ([systemImage.path isEqualToString:path]) {
+            ret = systemImage;
+            break;
         }
     }
-    return nil;
-}
 
-+ (instancetype)systemImageWithHeader:(struct mach_header *)header {
-    uint32_t count = _dyld_image_count();
-    for (uint32_t i = 0; i < count; i++) {
-        if (header == _dyld_get_image_header(i)) {
-            PDLSystemImage *systemImage = [self systemImageAtIndex:i];
-            return systemImage;
-        }
-    }
-    return nil;
-}
-
-+ (instancetype)systemImageAtIndex:(NSUInteger)index {
-    PDLSystemImage *systemImage = [[self alloc] init];
-    struct pdl_mach_object *mach_object = systemImage.machObject;
-    uint32_t image_index = (uint32_t)index;
-    const struct mach_header *header = _dyld_get_image_header(image_index);
-    intptr_t vmaddr_slide = _dyld_get_image_vmaddr_slide(image_index);
-    const char *name = _dyld_get_image_name(image_index);
-    BOOL ret = pdl_get_mach_object_with_header(header, vmaddr_slide, name, image_index, mach_object);
-    if (ret == NO) {
-        return nil;
-    }
-    return systemImage;
+    return ret;
 }
 
 + (NSArray *)systemImages {
-    NSMutableArray *systemImages = [NSMutableArray array];
-    NSUInteger count = self.count;
-    for (NSInteger i = 0; i < count; i++) {
-        PDLSystemImage *systemImage = [self systemImageAtIndex:i];
-        if (systemImage == nil) {
-            continue;
-        }
-        [systemImages addObject:systemImage];
+    NSArray *systemImages = nil;
+    @synchronized (_systemImages) {
+        systemImages = _systemImages.allValues;
     }
-    return systemImages.copy;
-}
-
-+ (NSArray *)systemImagesSortedByAddress {
-    NSArray *systemImages = [self systemImages];
     NSArray *systemImagesSortedByAddress = [systemImages sortedArrayUsingComparator:^NSComparisonResult(PDLSystemImage *systemImage1, PDLSystemImage *systemImage2) {
         return [@(systemImage1.address) compare:@(systemImage2.address)];
     }];

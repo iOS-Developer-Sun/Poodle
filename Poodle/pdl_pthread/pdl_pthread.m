@@ -363,7 +363,7 @@ __attribute__ ((constructor)) static void pdl_pthread_check_version(void) {
     const char *name = "libsystem_pthread.dylib";
     struct mach_header *header = pdl_mach_o_image(name);
     struct pdl_mach_object mach_object;
-    bool ret = pdl_get_mach_object_with_header(header, -1, name, -1, &mach_object);
+    bool ret = pdl_get_mach_object_with_header(header, -1, name, &mach_object);
     if (ret) {
         uint32_t version = 0;
         if (mach_object.id_dylib_dylib_command) {

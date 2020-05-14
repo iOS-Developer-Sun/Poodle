@@ -8,7 +8,7 @@
 
 #include "pdl_mach_object.h"
 
-bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t vmaddr_slide, const char *name, uint32_t index, struct pdl_mach_object *mach_object) {
+bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t vmaddr_slide, const char *name, struct pdl_mach_object *mach_object) {
     if (header == NULL) {
         return false;
     }
@@ -43,7 +43,6 @@ bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t 
     mach_object->swaps = swaps;
     mach_object->vmaddr_slide = vmaddr_slide;
     mach_object->name = name;
-    mach_object->index = index;
     mach_object->header = header;
 
     for (uint32_t i = 0; i < header->ncmds; i++) {
