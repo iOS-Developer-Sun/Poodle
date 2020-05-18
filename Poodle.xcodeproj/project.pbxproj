@@ -305,6 +305,14 @@
 		B8E56FB223D70591008D2DA1 /* UIViewController+PDLNavigationBar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56DFD23D70016008D2DA1 /* UIViewController+PDLNavigationBar.h */; };
 		B8E56FB323D70597008D2DA1 /* UIViewController+PDLTransitionAnimation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.m */; };
 		B8E56FB423D7059C008D2DA1 /* UIViewController+PDLTransitionAnimation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56EFB23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.h */; };
+		B8F12BA424727F4300B78306 /* pdl_backtrace-x86_64.s in Sources */ = {isa = PBXBuildFile; fileRef = B8F12BA024727F4200B78306 /* pdl_backtrace-x86_64.s */; };
+		B8F12BA524727F4300B78306 /* pdl_backtrace-i386.s in Sources */ = {isa = PBXBuildFile; fileRef = B8F12BA124727F4200B78306 /* pdl_backtrace-i386.s */; };
+		B8F12BA624727F4300B78306 /* pdl_backtrace-arm.s in Sources */ = {isa = PBXBuildFile; fileRef = B8F12BA224727F4200B78306 /* pdl_backtrace-arm.s */; };
+		B8F12BA724727F4300B78306 /* pdl_backtrace-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = B8F12BA324727F4200B78306 /* pdl_backtrace-arm64.s */; };
+		B8F12BA824727F6000B78306 /* pdl_backtrace-arm.s in Sources */ = {isa = PBXBuildFile; fileRef = B8F12BA224727F4200B78306 /* pdl_backtrace-arm.s */; };
+		B8F12BA924727F6000B78306 /* pdl_backtrace-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = B8F12BA324727F4200B78306 /* pdl_backtrace-arm64.s */; };
+		B8F12BAA24727F6000B78306 /* pdl_backtrace-i386.s in Sources */ = {isa = PBXBuildFile; fileRef = B8F12BA124727F4200B78306 /* pdl_backtrace-i386.s */; };
+		B8F12BAB24727F6000B78306 /* pdl_backtrace-x86_64.s in Sources */ = {isa = PBXBuildFile; fileRef = B8F12BA024727F4200B78306 /* pdl_backtrace-x86_64.s */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1605,6 +1613,10 @@
 		B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLTransitionAnimation.m"; sourceTree = "<group>"; };
 		B8E56FB723D721D2008D2DA1 /* PoodleDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = PoodleDynamic.podspec; sourceTree = SOURCE_ROOT; };
 		B8E56FB823D721D2008D2DA1 /* PoodleLibraryDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = PoodleLibraryDynamic.podspec; sourceTree = SOURCE_ROOT; };
+		B8F12BA024727F4200B78306 /* pdl_backtrace-x86_64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "pdl_backtrace-x86_64.s"; sourceTree = "<group>"; };
+		B8F12BA124727F4200B78306 /* pdl_backtrace-i386.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "pdl_backtrace-i386.s"; sourceTree = "<group>"; };
+		B8F12BA224727F4200B78306 /* pdl_backtrace-arm.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "pdl_backtrace-arm.s"; sourceTree = "<group>"; };
+		B8F12BA324727F4200B78306 /* pdl_backtrace-arm64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "pdl_backtrace-arm64.s"; sourceTree = "<group>"; };
 		B8FC6A9822EEEB3D005B91DE /* libCAAnimation+PDLExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCAAnimation+PDLExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FC6AB322EEF43A005B91DE /* libCADisplayLink+PDLExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCADisplayLink+PDLExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FC6AC022EEF4F8005B91DE /* libCAMediaTimingFunction+PDLExtension.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libCAMediaTimingFunction+PDLExtension.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2082,6 +2094,10 @@
 		B8584227246B961400AC3717 /* pdl_backtrace */ = {
 			isa = PBXGroup;
 			children = (
+				B8F12BA224727F4200B78306 /* pdl_backtrace-arm.s */,
+				B8F12BA324727F4200B78306 /* pdl_backtrace-arm64.s */,
+				B8F12BA124727F4200B78306 /* pdl_backtrace-i386.s */,
+				B8F12BA024727F4200B78306 /* pdl_backtrace-x86_64.s */,
 				B858422B246B963E00AC3717 /* pdl_backtrace.c */,
 				B8584229246B961400AC3717 /* pdl_backtrace.h */,
 			);
@@ -5319,6 +5335,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8F12BA824727F6000B78306 /* pdl_backtrace-arm.s in Sources */,
+				B8F12BA924727F6000B78306 /* pdl_backtrace-arm64.s in Sources */,
+				B8F12BAA24727F6000B78306 /* pdl_backtrace-i386.s in Sources */,
+				B8F12BAB24727F6000B78306 /* pdl_backtrace-x86_64.s in Sources */,
 				B85842AF246B96AE00AC3717 /* pdl_backtrace.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5329,6 +5349,7 @@
 			files = (
 				B85D461B240E861A00CBF758 /* pdl_lldb_hook.c in Sources */,
 				B85D461C240E861A00CBF758 /* pdl_mach_o_symbols.c in Sources */,
+				B8F12BA424727F4300B78306 /* pdl_backtrace-x86_64.s in Sources */,
 				B85D461D240E861A00CBF758 /* pdl_mach_object.c in Sources */,
 				B85D461E240E861A00CBF758 /* pdl_os_unfair_lock_tracer.c in Sources */,
 				B85D461F240E861A00CBF758 /* pdl_pthread_lock_tracer.c in Sources */,
@@ -5342,6 +5363,7 @@
 				B85D461A240E85B000CBF758 /* dsc_iterator.cpp in Sources */,
 				B85D4605240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-arm.s in Sources */,
 				B85D4606240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-arm64.s in Sources */,
+				B8F12BA624727F4300B78306 /* pdl_backtrace-arm.s in Sources */,
 				B85D4607240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-i386.s in Sources */,
 				B85D4608240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-x86_64.s in Sources */,
 				B85D4609240E85A600CBF758 /* NSObject+PDLSelectorProxy-arm.s in Sources */,
@@ -5358,6 +5380,7 @@
 				B85D4614240E85A600CBF758 /* pdl_objc_message-x86_64.s in Sources */,
 				B85D4615240E85A600CBF758 /* pdl_systemcall-arm.s in Sources */,
 				B85D4616240E85A600CBF758 /* pdl_systemcall-arm64.s in Sources */,
+				B8F12BA724727F4300B78306 /* pdl_backtrace-arm64.s in Sources */,
 				B85D4617240E85A600CBF758 /* pdl_systemcall-i386.s in Sources */,
 				B85D4618240E85A600CBF758 /* pdl_systemcall-x86_64.s in Sources */,
 				B85D45BC240E859000CBF758 /* CAAnimation+PDLExtension.m in Sources */,
@@ -5424,6 +5447,7 @@
 				B85D45F7240E859000CBF758 /* PDLScreenDebugger.m in Sources */,
 				B85D45F8240E859000CBF758 /* PDLScreenDebuggerWindow.m in Sources */,
 				B85D45F9240E859000CBF758 /* PDLViewDebuggerWindow.m in Sources */,
+				B8F12BA524727F4300B78306 /* pdl_backtrace-i386.s in Sources */,
 				B85D45FA240E859000CBF758 /* PDLBoolPropertyDebugger.m in Sources */,
 				B85D45FB240E859000CBF758 /* PDLColorPropertyDebugger.m in Sources */,
 				B85D45FC240E859000CBF758 /* PDLFloatPropertyDebugger.m in Sources */,
