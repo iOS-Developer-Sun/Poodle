@@ -72,12 +72,21 @@ void pdl_backtrace_wait(pdl_backtrace *bt) {
 static void *pdl_backtrace_thread_main(void *backtrace) {
     pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
     pthread_setname_np(bt->thread_name);
-    void *frames[bt->frames_count * 2];
+#ifdef __i386__
+    int alignment = 4;
+    __attribute__((aligned(4)))
+    void *aligned_frames[bt->frames_count * alignment + 2];
+    void **frames = aligned_frames + 2;
+#else
+    int alignment = 2;
+    void *aligned_frames[bt->frames_count * alignment];
+    void **frames = aligned_frames;
+#endif
     for (int i = 0; i < bt->frames_count; i++) {
-        int fp_index = i * 2;
-        int lr_index = i * 2 + 1;
+        int fp_index = i * alignment;
+        int lr_index = i * alignment + 1;
         if (i != bt->frames_count - 1) {
-            frames[fp_index] = &frames[fp_index + 2];
+            frames[fp_index] = &frames[fp_index + alignment];
         } else {
             frames[fp_index] = NULL;
         }
