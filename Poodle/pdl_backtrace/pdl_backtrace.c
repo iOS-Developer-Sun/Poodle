@@ -10,6 +10,7 @@
 #import <pthread/pthread.h>
 #import <assert.h>
 #import <string.h>
+#import <stdio.h>
 
 #define PDL_BACKTRACE_FRAMES_MAX_COUNT 128
 
@@ -185,4 +186,11 @@ void pdl_backtrace_destroy(pdl_backtrace_t backtrace) {
     bt->free_ptr(bt->frames);
     bt->frames = NULL;
     bt->free_ptr(bt);
+}
+
+void pdl_backtrace_print(pdl_backtrace_t backtrace) {
+    pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
+    for (int i = 0; i < bt->frames_count; i++) {
+        printf("%p\n", bt->frames[i]);
+    }
 }
