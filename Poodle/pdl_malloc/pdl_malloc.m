@@ -8,6 +8,7 @@
 
 #include "pdl_malloc.h"
 #include <malloc/malloc.h>
+#include "pdl_malloc_zone.h"
 
 struct pdl_malloc_recorder_context {
     void *address;
@@ -15,24 +16,17 @@ struct pdl_malloc_recorder_context {
     void *header;
 };
 
-static void recorder(task_t task, void *context, unsigned type, vm_range_t *ranges, unsigned rangeCount) {
-    struct pdl_malloc_recorder_context *recorder_context = context;
-    for (unsigned int i = 0; i < rangeCount; i++) {
-        vm_range_t range = ranges[i];
-        vm_address_t address = range.address;
-        vm_size_t size = range.size;
+static void recorder(void *data, vm_range_t range, unsigned int type, unsigned int count, unsigned int index, bool *stops) {
+    struct pdl_malloc_recorder_context *recorder_context = data;
+    vm_address_t address = range.address;
+    vm_size_t size = range.size;
 
-        vm_address_t addr = (vm_address_t)recorder_context->address;
-        if ((addr >= address) && (addr < address + size)) {
-            recorder_context->header = (void *)address;
-            recorder_context->size = size;
-        }
+    vm_address_t addr = (vm_address_t)recorder_context->address;
+    if ((addr >= address) && (addr < address + size)) {
+        recorder_context->header = (void *)address;
+        recorder_context->size = size;
+        *stops = true;
     }
-}
-
-static kern_return_t reader(__unused task_t remote_task, vm_address_t remote_address, __unused vm_size_t size, void **local_memory) {
-    *local_memory = (void *)remote_address;
-    return KERN_SUCCESS;
 }
 
 bool pdl_malloc_check(void *address, size_t *size, void **header) {
@@ -55,14 +49,12 @@ bool pdl_malloc_check(void *address, size_t *size, void **header) {
             }
         }
 
-        if (zone->introspect && zone->introspect->enumerator) {
-            struct pdl_malloc_recorder_context context = {address, 0, NULL};
-            zone->introspect->enumerator(TASK_NULL, &context, MALLOC_PTR_IN_USE_RANGE_TYPE, (vm_address_t)zone, reader, recorder);
-            if (context.size > 0) {
-                malloc_size = context.size;
-                malloc_header = context.header;
-                break;
-            }
+        struct pdl_malloc_recorder_context context = {address, 0, NULL};
+        pdl_malloc_zone_enumerate(zone, &context, &recorder);
+        if (context.size > 0) {
+            malloc_size = context.size;
+            malloc_header = context.header;
+            break;
         }
     }
 
@@ -75,20 +67,3 @@ bool pdl_malloc_check(void *address, size_t *size, void **header) {
 
     return true;
 }
-
-#if 0
-
-#import <Foundation/Foundation.h>
-#import <sys/mman.h>
-
-//__attribute__((constructor))
-bool pdl_malloc_enable(void) {
-    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"m.log"];
-    _pdl_file_path_string = path;
-    _pdl_file_path = path.UTF8String;
-    _pdl_file = fopen(_pdl_file_path, "a+");
-
-    return true;
-}
-
-#endif

@@ -10,3 +10,5 @@
 
 extern malloc_zone_t *pdl_malloc_zone(void);
 extern void pdl_malloc_trace(void);
+extern void pdl_malloc_zone_enumerate(malloc_zone_t *zone, void *data, void(*function)(void *data, vm_range_t range, unsigned int type, unsigned int count, unsigned int index, bool *stops));
+
