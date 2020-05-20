@@ -1351,6 +1351,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B801D4402475029D000C85B1 /* utstack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utstack.h; sourceTree = "<group>"; };
 		B802AC9222F3372C00BF028E /* libUINavigationController+PDLLongPressPop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUINavigationController+PDLLongPressPop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B802ACC422F33A3400BF028E /* libPDLImageListViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLImageListViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B802ACD322F33A6A00BF028E /* libPDLFileSystemViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLFileSystemViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2799,6 +2800,7 @@
 				B8E56ED023D7001A008D2DA1 /* uthash.h */,
 				B8E56ECD23D7001A008D2DA1 /* utlist.h */,
 				B8E56ECF23D7001A008D2DA1 /* utringbuffer.h */,
+				B801D4402475029D000C85B1 /* utstack.h */,
 				B8E56ED123D7001A008D2DA1 /* utstring.h */,
 			);
 			path = uthash;
