@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B80AF8D524769E78009B9AF8 /* pdl_malloc_zone.c in Sources */ = {isa = PBXBuildFile; fileRef = B80AF8D224769E78009B9AF8 /* pdl_malloc_zone.c */; };
+		B80AF8D624769E78009B9AF8 /* pdl_malloc_zone.c in Sources */ = {isa = PBXBuildFile; fileRef = B80AF8D224769E78009B9AF8 /* pdl_malloc_zone.c */; };
+		B80AF8D724769E78009B9AF8 /* pdl_malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B80AF8D424769E78009B9AF8 /* pdl_malloc.c */; };
+		B80AF8D824769E78009B9AF8 /* pdl_malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B80AF8D424769E78009B9AF8 /* pdl_malloc.c */; };
 		B858422C246B963E00AC3717 /* pdl_backtrace.c in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.c */; };
 		B85842AF246B96AE00AC3717 /* pdl_backtrace.c in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.c */; };
 		B85842B0246B96B400AC3717 /* pdl_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8584229246B961400AC3717 /* pdl_backtrace.h */; };
@@ -37,7 +41,6 @@
 		B85D45CE240E859000CBF758 /* pdl_mach.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E7C23D70018008D2DA1 /* pdl_mach.m */; };
 		B85D45CF240E859000CBF758 /* pdl_mach_o_const_symbols.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EE223D7001A008D2DA1 /* pdl_mach_o_const_symbols.m */; };
 		B85D45D0240E859000CBF758 /* pdl_mach_o_symbol_pointer.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E5F23D70017008D2DA1 /* pdl_mach_o_symbol_pointer.m */; };
-		B85D45D1240E859000CBF758 /* pdl_malloc.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E3023D70017008D2DA1 /* pdl_malloc.m */; };
 		B85D45D2240E859000CBF758 /* pdl_objc_message.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E5623D70017008D2DA1 /* pdl_objc_message.m */; };
 		B85D45D3240E859000CBF758 /* pdl_os.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E4A23D70017008D2DA1 /* pdl_os.m */; };
 		B85D45D4240E859000CBF758 /* pdl_pthread.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E2123D70017008D2DA1 /* pdl_pthread.m */; };
@@ -194,7 +197,6 @@
 		B8E56F4023D702CE008D2DA1 /* dsc_iterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EE623D7001A008D2DA1 /* dsc_iterator.cpp */; };
 		B8E56F4123D702E2008D2DA1 /* pdl_mach_object.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E3E23D70017008D2DA1 /* pdl_mach_object.c */; };
 		B8E56F4223D702E7008D2DA1 /* pdl_mach_object.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E3D23D70017008D2DA1 /* pdl_mach_object.h */; };
-		B8E56F4323D702ED008D2DA1 /* pdl_malloc.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E3023D70017008D2DA1 /* pdl_malloc.m */; };
 		B8E56F4423D702F0008D2DA1 /* pdl_malloc.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E3123D70017008D2DA1 /* pdl_malloc.h */; };
 		B8E56F4523D702F8008D2DA1 /* pdl_objc_message-arm.s in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E5523D70017008D2DA1 /* pdl_objc_message-arm.s */; };
 		B8E56F4623D702F8008D2DA1 /* pdl_objc_message-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E5323D70017008D2DA1 /* pdl_objc_message-arm64.s */; };
@@ -1355,6 +1357,9 @@
 		B802AC9222F3372C00BF028E /* libUINavigationController+PDLLongPressPop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUINavigationController+PDLLongPressPop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B802ACC422F33A3400BF028E /* libPDLImageListViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLImageListViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B802ACD322F33A6A00BF028E /* libPDLFileSystemViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLFileSystemViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B80AF8D224769E78009B9AF8 /* pdl_malloc_zone.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_malloc_zone.c; sourceTree = "<group>"; };
+		B80AF8D324769E78009B9AF8 /* pdl_malloc_zone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_malloc_zone.h; sourceTree = "<group>"; };
+		B80AF8D424769E78009B9AF8 /* pdl_malloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_malloc.c; sourceTree = "<group>"; };
 		B80FCBB523A9D3B60028844B /* libpdl_mach_o_const_symbols.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_mach_o_const_symbols.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B80FCBC623A9D48F0028844B /* libpdl_mach_o_symbol_pointer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_mach_o_symbol_pointer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B82334AF23BC982900B1B15B /* libNSObject+PDLSelectorProxy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLSelectorProxy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -1456,7 +1461,6 @@
 		B8E56E2B23D70017008D2DA1 /* NSObject+PDLImplementationInterceptor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+PDLImplementationInterceptor.h"; sourceTree = "<group>"; };
 		B8E56E2D23D70017008D2DA1 /* NSThread+PDLExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSThread+PDLExtension.m"; sourceTree = "<group>"; };
 		B8E56E2E23D70017008D2DA1 /* NSThread+PDLExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSThread+PDLExtension.h"; sourceTree = "<group>"; };
-		B8E56E3023D70017008D2DA1 /* pdl_malloc.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = pdl_malloc.m; sourceTree = "<group>"; };
 		B8E56E3123D70017008D2DA1 /* pdl_malloc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_malloc.h; sourceTree = "<group>"; };
 		B8E56E3323D70017008D2DA1 /* pdl_asm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_asm.h; sourceTree = "<group>"; };
 		B8E56E3423D70017008D2DA1 /* pdl_asm-universal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "pdl_asm-universal.h"; sourceTree = "<group>"; };
@@ -2406,8 +2410,10 @@
 		B8E56E2F23D70017008D2DA1 /* pdl_malloc */ = {
 			isa = PBXGroup;
 			children = (
+				B80AF8D224769E78009B9AF8 /* pdl_malloc_zone.c */,
+				B80AF8D324769E78009B9AF8 /* pdl_malloc_zone.h */,
+				B80AF8D424769E78009B9AF8 /* pdl_malloc.c */,
 				B8E56E3123D70017008D2DA1 /* pdl_malloc.h */,
-				B8E56E3023D70017008D2DA1 /* pdl_malloc.m */,
 			);
 			path = pdl_malloc;
 			sourceTree = "<group>";
@@ -5407,7 +5413,6 @@
 				B85D45CE240E859000CBF758 /* pdl_mach.m in Sources */,
 				B85D45CF240E859000CBF758 /* pdl_mach_o_const_symbols.m in Sources */,
 				B85D45D0240E859000CBF758 /* pdl_mach_o_symbol_pointer.m in Sources */,
-				B85D45D1240E859000CBF758 /* pdl_malloc.m in Sources */,
 				B85D45D2240E859000CBF758 /* pdl_objc_message.m in Sources */,
 				B85D45D3240E859000CBF758 /* pdl_os.m in Sources */,
 				B85D45D4240E859000CBF758 /* pdl_pthread.m in Sources */,
@@ -5430,6 +5435,7 @@
 				B85D45E5240E859000CBF758 /* PDLImageListViewController.m in Sources */,
 				B85D45E6240E859000CBF758 /* PDLProtocolListViewController.m in Sources */,
 				B85D45E7240E859000CBF758 /* PDLProtocolViewController.m in Sources */,
+				B80AF8D724769E78009B9AF8 /* pdl_malloc.c in Sources */,
 				B85D45E8240E859000CBF758 /* PDLKeyboardNotificationObserver.m in Sources */,
 				B85D45E9240E859000CBF758 /* PDLMemoryQueryViewController.m in Sources */,
 				B85D45EA240E859000CBF758 /* PDLNonThreadSafePropertyObserver.m in Sources */,
@@ -5446,6 +5452,7 @@
 				B85D45F5240E859000CBF758 /* PDLLayerDebuggerWindow.m in Sources */,
 				B85D45F6240E859000CBF758 /* PDLPropertyDebuggerView.m in Sources */,
 				B899F9EF245065DA00EFBB39 /* PDLViewControllerListViewController.m in Sources */,
+				B80AF8D524769E78009B9AF8 /* pdl_malloc_zone.c in Sources */,
 				B85D45F7240E859000CBF758 /* PDLScreenDebugger.m in Sources */,
 				B85D45F8240E859000CBF758 /* PDLScreenDebuggerWindow.m in Sources */,
 				B85D45F9240E859000CBF758 /* PDLViewDebuggerWindow.m in Sources */,
@@ -5792,7 +5799,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E56F4323D702ED008D2DA1 /* pdl_malloc.m in Sources */,
+				B80AF8D824769E78009B9AF8 /* pdl_malloc.c in Sources */,
+				B80AF8D624769E78009B9AF8 /* pdl_malloc_zone.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
