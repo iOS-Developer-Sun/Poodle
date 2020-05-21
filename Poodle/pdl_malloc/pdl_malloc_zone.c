@@ -16,6 +16,8 @@
 #import "pdl_backtrace.h"
 #import "pdl_dictionary.h"
 
+static pdl_malloc_trace_policy _policy = pdl_malloc_trace_policy_live_allocations;
+
 #pragma mark - debug
 
 pthread_key_t pdl_malloc_debug_key = 0;
@@ -182,8 +184,9 @@ static void pdl_malloc_map_unlock() {
 
 static void *pdl_malloc_map_get(void *key) {
     pdl_malloc_map_lock();
+    pdl_dictionary_t map = pdl_malloc_map();
     void *value = NULL;
-    void **object = pdl_dictionary_objectForKey(pdl_malloc_map(), key);
+    void **object = pdl_dictionary_objectForKey(map, key);
     if (object) {
         value = *object;
     }
@@ -193,7 +196,8 @@ static void *pdl_malloc_map_get(void *key) {
 
 static void pdl_malloc_map_set(void *key, void *value) {
     pdl_malloc_map_lock();
-    pdl_dictionary_setObjectForKey(pdl_malloc_map(), value, key);
+    pdl_dictionary_t map = pdl_malloc_map();
+    pdl_dictionary_setObjectForKey(map, value, key);
     pdl_malloc_map_unlock();
 }
 
@@ -205,7 +209,7 @@ typedef struct pdl_malloc_info {
     unsigned long magic;
     unsigned long size;
     pdl_backtrace_t bt;
-    bool free;
+    bool live;
 } pdl_malloc_info, *pdl_malloc_info_t;
 
 static void pdl_malloc_init(void *ptr, size_t size, bool records) {
@@ -222,10 +226,10 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
             return;
         }
 
-        if (info->free == false) {
+        if (info->live) {
             pdl_backtrace_thread_show(info->bt, true);
             pdl_malloc_error("error %p\n", ptr);
-            pdl_malloc_assert(info->free);
+            pdl_malloc_assert(info->live == false);
         }
         pdl_backtrace_destroy(info->bt);
     } else {
@@ -242,7 +246,7 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
     if (records) {
         pdl_backtrace_record(info->bt);
     }
-    info->free = false;
+    info->live = true;
     pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_init", ptr, size, false);
 }
 
@@ -255,17 +259,28 @@ static void pdl_malloc_destroy(void *ptr, size_t rsize, size_t size) {
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->bt);
-        if (info->free) {
+        if (info->live == false) {
             pdl_backtrace_thread_show(info->bt, true);
             pdl_malloc_error("error %p\n", ptr);
             pdl_malloc_assert(0);
         }
-        info->free = true;
+        info->live = false;
         pdl_malloc_assert(info->size <= rsize);
         if (size == 0) {
             memset(ptr, 0x55, rsize);
         }
         pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_destroy", ptr, rsize, size, true);
+        switch (_policy) {
+            case pdl_malloc_trace_policy_live_allocations:
+                pdl_backtrace_destroy(info->bt);
+                pdl_malloc_zone_free(info);
+                pdl_malloc_map_set(ptr, NULL);
+                pdl_malloc_assert(pdl_malloc_map_get(ptr) == NULL);
+                break;
+
+            default:
+                break;
+        }
     } else {
         pdl_malloc_error("error %p\n", ptr);
         pdl_malloc_assert(0);
@@ -362,12 +377,30 @@ static void *pdl_dz_realloc(malloc_zone_t *zone, void *ptr, size_t size) {
 
 static unsigned int (*pdl_dz_batch_malloc_og)(malloc_zone_t *zone, size_t size, void **results, unsigned num_requested) = NULL;
 static unsigned int pdl_dz_batch_malloc(malloc_zone_t *zone, size_t size, void **results, unsigned num_requested) {
-    return pdl_dz_batch_malloc_og(zone, size, results, num_requested);
+    PDL_MALLOC_DEBUG_BEGIN;
+    unsigned int ret = pdl_dz_batch_malloc_og(zone, size, results, num_requested);
+    for (unsigned int i = 0; i < ret; i++) {
+        void *ptr = results[i];
+        pdl_malloc_init(ptr, size, true);
+    }
+    PDL_MALLOC_DEBUG_END;
+    return ret;
 }
 
-static void (*pdl_dz_batch_free_og)(malloc_zone_t *zone, void **to_be_freed, unsigned num_to_be_freed) = NULL;
-static void pdl_dz_batch_free(malloc_zone_t *zone, void **to_be_freed, unsigned num_to_be_freed) {
+static void (*pdl_dz_batch_free_og)(malloc_zone_t *zone, void **to_be_freed, unsigned int num_to_be_freed) = NULL;
+static void pdl_dz_batch_free(malloc_zone_t *zone, void **to_be_freed, unsigned int num_to_be_freed) {
+    PDL_MALLOC_DEBUG_BEGIN;
+    for (unsigned int i = 0; i < num_to_be_freed; i++) {
+        void *ptr = to_be_freed[i];
+        size_t size = malloc_size(ptr);
+        if (ptr && size == 0) {
+            pdl_malloc_track(ptr);
+            pdl_malloc_assert(0);
+        }
+        pdl_malloc_destroy(ptr, size, 0);
+    }
     pdl_dz_batch_free_og(zone, to_be_freed, num_to_be_freed);
+    PDL_MALLOC_DEBUG_END;
 }
 
 static void *(*(pdl_dz_memalign_og))(malloc_zone_t *zone, size_t alignment, size_t size) = NULL;
@@ -407,7 +440,7 @@ extern void (*__syscall_logger)(uint32_t type, uintptr_t arg1, uintptr_t arg2, u
 extern void (*malloc_logger)(uint32_t type, uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t result, uint32_t num_hot_frames_to_skip);
 
 static void pdl_syscall_logger(uint32_t type, malloc_zone_t *zone, void *ptr, size_t size, void *result, uint32_t num_hot_frames_to_skip) {
-//        pdl_malloc_log("%s %p %p %p %p %p %d\n", "pdl_syscall_logger", type, zone, ptr, size, result, num_hot_frames_to_skip);
+//    pdl_malloc_log("%s %p %p %p %p %p %d\n", "pdl_syscall_logger", type, zone, ptr, size, result, num_hot_frames_to_skip);
 }
 
 static void pdl_malloc_logger(uint32_t type, malloc_zone_t *zone, void *ptr, size_t size, void *result, uint32_t num_hot_frames_to_skip) {
@@ -425,7 +458,7 @@ static bool pdl_malloc_zone_initialized = false;
 extern malloc_zone_t **malloc_zones;
 extern int32_t malloc_num_zones;
 
-bool pdl_malloc_enable_trace(void) {
+extern bool pdl_malloc_enable_trace(pdl_malloc_trace_policy policy) {
     if (pdl_malloc_zone_initialized) {
         return true;
     }
@@ -436,6 +469,17 @@ bool pdl_malloc_enable_trace(void) {
     if (result) {
         return false;
     }
+
+    switch (policy) {
+        case pdl_malloc_trace_policy_live_allocations:
+            break;
+
+        default:
+            return false;
+            break;
+    }
+
+    _policy = policy;
 
     pthread_key_create(&pdl_malloc_debug_key, NULL);
 
@@ -517,7 +561,7 @@ void pdl_malloc_check_pointer(void *pointer) {
     pdl_malloc_info_t info = pdl_malloc_map_get(pointer);
     if (info) {
         if (info->magic == PDL_MALLOC_INFO_MAGIC && info->bt) {
-            if (info->free) {
+            if (info->live == false) {
                 pdl_backtrace_thread_show(info->bt, true);
             }
         }

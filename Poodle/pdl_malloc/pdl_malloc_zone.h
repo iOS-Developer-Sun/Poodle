@@ -9,6 +9,10 @@
 #include <malloc/malloc.h>
 #include <stdbool.h>
 
+typedef enum pdl_malloc_trace_policy {
+    pdl_malloc_trace_policy_live_allocations,
+}pdl_malloc_trace_policy;
+
 extern malloc_zone_t *pdl_malloc_zone(void);
 extern void *pdl_malloc_zone_malloc(size_t size);
 extern void *pdl_malloc_zone_realloc(void *ptr, size_t size);
@@ -19,4 +23,4 @@ extern void pdl_malloc_zone_enumerate(malloc_zone_t *zone, void *data, void(*fun
 
 extern bool pdl_malloc_assert_enabled(void);
 extern void pdl_malloc_assert_set_enabled(bool enabled);
-extern bool pdl_malloc_enable_trace(void);
+extern bool pdl_malloc_enable_trace(pdl_malloc_trace_policy policy);

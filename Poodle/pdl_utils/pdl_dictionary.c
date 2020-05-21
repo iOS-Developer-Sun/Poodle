@@ -22,12 +22,20 @@ pdl_dictionary_t pdl_dictionary_create_with_malloc_pointers(void *(*malloc_ptr)(
 }
 
 void **pdl_dictionary_objectForKey(pdl_dictionary_t dictionary, void *key) {
+    if (!key) {
+        return NULL;
+    }
+
     pdl_hashMap *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
     void **object = pdl_hashMapGetValue(map, key);
     return object;
 }
 
 void pdl_dictionary_removeObjectForKey(pdl_dictionary_t dictionary, void *key) {
+    if (!key) {
+        return;
+    }
+
     pdl_hashMap *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
     pdl_hashMapDelete(map, key);
 }
@@ -38,8 +46,16 @@ void pdl_dictionary_removeAllObjects(pdl_dictionary_t dictionary) {
 }
 
 void pdl_dictionary_setObjectForKey(pdl_dictionary_t dictionary, void *object, void *key) {
+    if (!key) {
+        return;
+    }
+
     pdl_hashMap *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
-    pdl_hashMapSetValue(map, key, object);
+    if (object) {
+        pdl_hashMapSetValue(map, key, object);
+    } else {
+        pdl_hashMapDelete(map, key);
+    }
 }
 
 pdl_dictionary_t pdl_dictionary_copy(pdl_dictionary_t dictionary) {
