@@ -182,15 +182,20 @@ static void pdl_malloc_map_unlock() {
 
 #pragma clang diagnostic pop
 
-static void *pdl_malloc_map_get(void *key) {
-    pdl_malloc_map_lock();
+static void *pdl_malloc_map_get(void *key, bool lock) {
+    if (lock) {
+        pdl_malloc_map_lock();
+    }
+
     pdl_dictionary_t map = pdl_malloc_map();
     void *value = NULL;
     void **object = pdl_dictionary_objectForKey(map, key);
     if (object) {
         value = *object;
     }
-    pdl_malloc_map_unlock();
+    if (lock) {
+        pdl_malloc_map_unlock();
+    }
     return value;
 }
 
@@ -208,7 +213,7 @@ static void pdl_malloc_map_set(void *key, void *value) {
 typedef struct pdl_malloc_info {
     unsigned long magic;
     unsigned long size;
-    pdl_backtrace_t bt;
+    struct pdl_backtrace *bt;
     bool live;
 } pdl_malloc_info, *pdl_malloc_info_t;
 
@@ -217,7 +222,7 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
         return;
     }
 
-    pdl_malloc_info_t info = pdl_malloc_map_get(ptr);
+    pdl_malloc_info_t info = pdl_malloc_map_get(ptr, true);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->bt);
@@ -228,7 +233,7 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
 
         if (info->live) {
             pdl_backtrace_thread_show(info->bt, true);
-            pdl_malloc_error("error %p\n", ptr);
+            pdl_malloc_error("error init %p is live\n", ptr);
             pdl_malloc_assert(info->live == false);
         }
         pdl_backtrace_destroy(info->bt);
@@ -255,17 +260,16 @@ static void pdl_malloc_destroy(void *ptr, size_t rsize, size_t size) {
         return;
     }
 
-    pdl_malloc_info_t info = (pdl_malloc_info_t)pdl_malloc_map_get(ptr);
+    pdl_malloc_info_t info = (pdl_malloc_info_t)pdl_malloc_map_get(ptr, true);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->bt);
         if (info->live == false) {
             pdl_backtrace_thread_show(info->bt, true);
-            pdl_malloc_error("error %p\n", ptr);
+            pdl_malloc_error("error destroy %p is not live\n", ptr);
             pdl_malloc_assert(0);
         }
         info->live = false;
-        pdl_malloc_assert(info->size <= rsize);
         if (size == 0) {
             memset(ptr, 0x55, rsize);
         }
@@ -275,20 +279,20 @@ static void pdl_malloc_destroy(void *ptr, size_t rsize, size_t size) {
                 pdl_backtrace_destroy(info->bt);
                 pdl_malloc_zone_free(info);
                 pdl_malloc_map_set(ptr, NULL);
-                pdl_malloc_assert(pdl_malloc_map_get(ptr) == NULL);
+                pdl_malloc_assert(pdl_malloc_map_get(ptr, true) == NULL);
                 break;
 
             default:
                 break;
         }
     } else {
-        pdl_malloc_error("error %p\n", ptr);
+        pdl_malloc_error("error destroy %p no info\n", ptr);
         pdl_malloc_assert(0);
     }
 }
 
 static void pdl_malloc_track(void *ptr) {
-    pdl_malloc_info_t info = pdl_malloc_map_get(ptr);
+    pdl_malloc_info_t info = pdl_malloc_map_get(ptr, true);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->bt);
@@ -558,7 +562,7 @@ void pdl_malloc_check_pointer(void *pointer) {
         return;
     }
 
-    pdl_malloc_info_t info = pdl_malloc_map_get(pointer);
+    pdl_malloc_info_t info = pdl_malloc_map_get(pointer, true);
     if (info) {
         if (info->magic == PDL_MALLOC_INFO_MAGIC && info->bt) {
             if (info->live == false) {
@@ -566,4 +570,52 @@ void pdl_malloc_check_pointer(void *pointer) {
             }
         }
     }
+}
+
+void pdl_malloc_zone_show_backtrace(void *pointer) {
+    if (!pointer) {
+        return;
+    }
+
+    if (!pdl_malloc_zone_initialized) {
+        return;
+    }
+
+    malloc_zone_t *zone = malloc_zone_from_ptr(pointer);
+    if (!zone) {
+        return;
+    }
+
+    pdl_malloc_map_lock();
+    pdl_malloc_info_t info = pdl_malloc_map_get(pointer, false);
+    if (info) {
+        if (info->magic == PDL_MALLOC_INFO_MAGIC && info->bt) {
+            pdl_backtrace_thread_show(info->bt, true);
+        }
+    }
+    pdl_malloc_map_unlock();
+}
+
+void pdl_malloc_zone_hide_backtrace(void *pointer) {
+    if (!pointer) {
+        return;
+    }
+
+    if (!pdl_malloc_zone_initialized) {
+        return;
+    }
+
+    malloc_zone_t *zone = malloc_zone_from_ptr(pointer);
+    if (!zone) {
+        return;
+    }
+
+    pdl_malloc_map_lock();
+    pdl_malloc_info_t info = pdl_malloc_map_get(pointer, false);
+    if (info) {
+        if (info->magic == PDL_MALLOC_INFO_MAGIC && info->bt) {
+            pdl_backtrace_thread_hide(info->bt);
+        }
+    }
+    pdl_malloc_map_unlock();
 }

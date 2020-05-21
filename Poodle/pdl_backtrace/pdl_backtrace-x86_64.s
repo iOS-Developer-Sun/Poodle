@@ -17,7 +17,7 @@ _pdl_backtrace_fake:
 pushq   %rbp                // store fp
 movq    %rsi, %rbp          // fake frames
 callq   _pdl_backtrace_wait // wait pdl_backtrace_wait(bt);
-popq    %rbp                // recover frames
+popq    %rbp                // recover fp
 retq
 
 #endif

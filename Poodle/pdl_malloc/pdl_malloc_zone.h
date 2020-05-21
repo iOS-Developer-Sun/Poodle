@@ -24,3 +24,6 @@ extern void pdl_malloc_zone_enumerate(malloc_zone_t *zone, void *data, void(*fun
 extern bool pdl_malloc_assert_enabled(void);
 extern void pdl_malloc_assert_set_enabled(bool enabled);
 extern bool pdl_malloc_enable_trace(pdl_malloc_trace_policy policy);
+
+extern void pdl_malloc_zone_show_backtrace(void *pointer);
+extern void pdl_malloc_zone_hide_backtrace(void *pointer);
