@@ -11,6 +11,7 @@
 		B80AF8D624769E78009B9AF8 /* pdl_malloc_zone.c in Sources */ = {isa = PBXBuildFile; fileRef = B80AF8D224769E78009B9AF8 /* pdl_malloc_zone.c */; };
 		B80AF8D724769E78009B9AF8 /* pdl_malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B80AF8D424769E78009B9AF8 /* pdl_malloc.c */; };
 		B80AF8D824769E78009B9AF8 /* pdl_malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B80AF8D424769E78009B9AF8 /* pdl_malloc.c */; };
+		B80AF8D92476A2FD009B9AF8 /* pdl_malloc_zone.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B80AF8D324769E78009B9AF8 /* pdl_malloc_zone.h */; };
 		B858422C246B963E00AC3717 /* pdl_backtrace.c in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.c */; };
 		B85842AF246B96AE00AC3717 /* pdl_backtrace.c in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.c */; };
 		B85842B0246B96B400AC3717 /* pdl_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8584229246B961400AC3717 /* pdl_backtrace.h */; };
@@ -1188,6 +1189,7 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				B80AF8D92476A2FD009B9AF8 /* pdl_malloc_zone.h in CopyFiles */,
 				B8E56F4423D702F0008D2DA1 /* pdl_malloc.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
