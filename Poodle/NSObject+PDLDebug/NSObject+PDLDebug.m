@@ -177,7 +177,6 @@ NSArray *protocol_adoptedProtocols(Protocol *protocol) {
     return adoptedProtocols;
 }
 
-
 NSArray *protocol_properties(Protocol *protocol) {
     NSMutableArray *properties = [NSMutableArray array];
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 10) {
