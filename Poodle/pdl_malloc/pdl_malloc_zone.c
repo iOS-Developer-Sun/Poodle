@@ -1,5 +1,5 @@
 //
-//  pdl_malloc_zone.m
+//  pdl_malloc_zone.c
 //  Poodle
 //
 //  Created by Poodle on 2020/5/15.
@@ -7,8 +7,11 @@
 //
 
 #import "pdl_malloc_zone.h"
-#import "pdl_backtrace.h"
 #import <pthread/pthread.h>
+#import <stdio.h>
+#import <assert.h>
+#import <string.h>
+#import "pdl_backtrace.h"
 #import "pdl_dictionary.h"
 
 #pragma mark - debug
@@ -37,15 +40,6 @@ extern int backtrace(void **array, int size);
 extern char **backtrace_symbols(void *const *array, int size);
 extern void backtrace_symbols_fd(void *const *array, int size, int fd);
 
-static FILE *_pdl_file = NULL;
-static void pdl_malloc_file_log(const char *format, ...) {
-    va_list args;
-    va_start(args, format);
-    vfprintf(_pdl_file, format, args);
-    va_end(args);
-    fflush(_pdl_file);
-}
-
 #if 0
 __attribute__((naked))
 static void pdl_malloc_log(const char *format, ...) {
@@ -57,27 +51,42 @@ static void pdl_malloc_log(const char *format, ...) {
 }
 #else
 static void pdl_malloc_log(const char *format, ...) {
-#if 0
-    va_list args;
-    va_start(args, format);
-    vfprintf(_pdl_file, format, args);
-    va_end(args);
-    fflush(_pdl_file);
-#endif
+    ;
 }
 #endif
+
+#define pdl_malloc_error malloc_printf
+
+#ifdef DEBUG
+#define PDL_MALLOC_ASSERT_ENABLED_DEFAULT true
+#else
+#define PDL_MALLOC_ASSERT_ENABLED_DEFAULT false
+#endif
+
+static bool _pdl_malloc_assert_enabled = PDL_MALLOC_ASSERT_ENABLED_DEFAULT;
+bool pdl_malloc_assert_enabled(void) {
+    return _pdl_malloc_assert_enabled;
+}
+
+void pdl_malloc_assert_set_enabled(bool enabled) {
+    _pdl_malloc_assert_enabled = enabled;
+}
+
+static void pdl_malloc_assert(bool e) {
+    if (_pdl_malloc_assert_enabled) {
+        assert(e);
+    }
+}
 
 #pragma mark - pdl_zone
 
 malloc_zone_t *pdl_malloc_zone(void) {
     static malloc_zone_t *_pdl_zone = NULL;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if (!_pdl_zone) {
         malloc_zone_t *zone = malloc_create_zone(0, 0);
         malloc_set_zone_name(zone, "pdl_zone");
-//        malloc_zone_register(zone);
         _pdl_zone = zone;
-    });
+    }
     return _pdl_zone;
 }
 
@@ -129,10 +138,9 @@ void pdl_malloc_zone_enumerate(malloc_zone_t *zone, void *data, void(*function)(
 
 static pdl_dictionary_t pdl_malloc_map(void) {
     static pdl_dictionary_t _dictionary = NULL;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
+    if (!_dictionary) {
         _dictionary = pdl_dictionary_create_with_malloc_pointers(&pdl_malloc_zone_malloc, &pdl_malloc_zone_free);
-    });
+    }
     return _dictionary;
 }
 
@@ -178,8 +186,8 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
 
     pdl_malloc_info_t info = pdl_malloc_map_get(ptr);
     if (info) {
-        assert(info->magic == PDL_MALLOC_INFO_MAGIC);
-        assert(info->bt);
+        pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
+        pdl_malloc_assert(info->bt);
 
         if (!records) {
             return;
@@ -187,8 +195,8 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
 
         if (info->free == false) {
             pdl_backtrace_thread_show(info->bt, true);
-            pdl_malloc_log("error %p\n", ptr);
-            assert(info->free);
+            pdl_malloc_error("error %p\n", ptr);
+            pdl_malloc_assert(info->free);
         }
         pdl_backtrace_destroy(info->bt);
     } else {
@@ -216,27 +224,28 @@ static void pdl_malloc_destroy(void *ptr, size_t size) {
 
     pdl_malloc_info_t info = (pdl_malloc_info_t)pdl_malloc_map_get(ptr);
     if (info) {
-        assert(info->magic == PDL_MALLOC_INFO_MAGIC);
-        assert(info->bt);
+        pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
+        pdl_malloc_assert(info->bt);
         if (info->free) {
             pdl_backtrace_thread_show(info->bt, true);
-            assert(info->free == false);
+            pdl_malloc_error("error %p\n", ptr);
+            pdl_malloc_assert(0);
         }
         info->free = true;
+        pdl_malloc_assert(info->size <= size);
 //        memset(ptr, 0x55, info->size);
         pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_destroy", ptr, size, true);
     } else {
-        pdl_malloc_log("warning %n\n", ptr);
-        pdl_malloc_log("%s %p %d !\n", "pdl_malloc_destroy", ptr, size);
-        assert(0);
+        pdl_malloc_error("error %p\n", ptr);
+        pdl_malloc_assert(0);
     }
 }
 
 static void pdl_malloc_track(void *ptr) {
     pdl_malloc_info_t info = pdl_malloc_map_get(ptr);
     if (info) {
-        assert(info->magic == PDL_MALLOC_INFO_MAGIC);
-        assert(info->bt);
+        pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
+        pdl_malloc_assert(info->bt);
         pdl_backtrace_thread_show(info->bt, true);
     }
 }
@@ -247,21 +256,16 @@ static void pdl_dz_init_existent(void *data, vm_range_t range, unsigned int type
     PDL_MALLOC_DEBUG_BEGIN;
     void *ptr = (void *)(uintptr_t)range.address;
     size_t size = range.size;
-//    pdl_malloc_log("%s %p %d %d %d %d\n", "pdl_dz_init_existent", ptr, size, type, count, index);
     pdl_malloc_init(ptr, size, false);
     malloc_zone_t *zone = malloc_zone_from_ptr(ptr);
-    if (zone) {
-        assert(zone == malloc_default_zone());
-    }
+    pdl_malloc_assert(zone == malloc_default_zone());
     PDL_MALLOC_DEBUG_END;
 }
 
 static void pdl_malloc_zone_existent(void *data, vm_range_t range, unsigned int type, unsigned int count, unsigned int index, bool *stops) {
     void *ptr = (void *)(uintptr_t)range.address;
     size_t size = range.size;
-//    pdl_malloc_log("%s %p %d %d %d %d\n", "pdl_malloc_zone_existent", ptr, size, type, count, index);
     if (malloc_zone_from_ptr(ptr) != data) {
-//        pdl_malloc_log("warning %p\n", ptr);
         if (malloc_zone_from_ptr(ptr) == malloc_default_zone()) {
             pdl_malloc_init(ptr, size, false);
         }
@@ -273,7 +277,6 @@ static void *pdl_dz_malloc(malloc_zone_t *zone, size_t size) {
     PDL_MALLOC_DEBUG_BEGIN;
     void *ptr = pdl_dz_malloc_og(zone, size);
     pdl_malloc_init(ptr, size, true);
-//    pdl_malloc_log("%s %p %d\n", "pdl_dz_malloc", ptr, size);
     PDL_MALLOC_DEBUG_END;
     return ptr;
 }
@@ -283,7 +286,6 @@ static void *pdl_dz_calloc(malloc_zone_t *zone, size_t num_items, size_t size) {
     PDL_MALLOC_DEBUG_BEGIN;
     void *ptr = pdl_dz_calloc_og(zone, num_items, size);
     pdl_malloc_init(ptr, num_items * size, true);
-//    pdl_malloc_log("%s %p %d %d\n", "pdl_dz_calloc", ptr, num_items, size);
     PDL_MALLOC_DEBUG_END;
     return ptr;
 }
@@ -293,7 +295,6 @@ static void *pdl_dz_valloc(malloc_zone_t *zone, size_t size) {
     PDL_MALLOC_DEBUG_BEGIN;
     void *ptr = pdl_dz_valloc_og(zone, size);
     pdl_malloc_init(ptr, size, true);
-//    pdl_malloc_log("%s %p %d\n", "pdl_dz_valloc", ptr, size);
     PDL_MALLOC_DEBUG_END;
     return ptr;
 }
@@ -304,11 +305,10 @@ static void pdl_dz_free(malloc_zone_t *zone, void *ptr) {
     size_t size = malloc_size(ptr);
     if (ptr && size == 0) {
         pdl_malloc_track(ptr);
-        assert(0);
+        pdl_malloc_assert(0);
     }
 
     pdl_malloc_destroy(ptr, size);
-//    pdl_malloc_log("%s %p\n", "pdl_dz_free", ptr);
     pdl_dz_free_og(zone, ptr);
     PDL_MALLOC_DEBUG_END;
 }
@@ -319,13 +319,12 @@ static void *pdl_dz_realloc(malloc_zone_t *zone, void *ptr, size_t size) {
     size_t _size = malloc_size(ptr);
     if (ptr && _size == 0) {
         pdl_malloc_track(ptr);
-        assert(0);
+        pdl_malloc_assert(0);
     }
 
     pdl_malloc_destroy(ptr, _size);
     void *p = pdl_dz_realloc_og(zone, ptr, size);
     pdl_malloc_init(p, size, true);
-//    pdl_malloc_log("%s %p %d %p\n", "pdl_dz_realloc", ptr, size, p);
     PDL_MALLOC_DEBUG_END;
     return p;
 }
@@ -345,7 +344,6 @@ static void *pdl_dz_memalign(malloc_zone_t *zone, size_t alignment, size_t size)
     PDL_MALLOC_DEBUG_BEGIN;
     void *ptr = pdl_dz_memalign_og(zone, alignment, size);
     pdl_malloc_init(ptr, size, true);
-//    pdl_malloc_log("%s %p %d\n", "pdl_dz_memalign", ptr, size);
     PDL_MALLOC_DEBUG_END;
     return ptr;
 }
@@ -356,11 +354,10 @@ static void pdl_dz_free_definite_size(malloc_zone_t *zone, void *ptr, size_t siz
     size_t _size = malloc_size(ptr);
     if (ptr && _size == 0) {
         pdl_malloc_track(ptr);
-        assert(0);
+        pdl_malloc_assert(0);
     }
 
-    pdl_malloc_destroy(ptr, size);
-//    pdl_malloc_log("%s %p %d\n", "pdl_dz_free_definite_size", ptr, size);
+    pdl_malloc_destroy(ptr, _size);
     pdl_dz_free_definite_size_og(zone, ptr, size);
     PDL_MALLOC_DEBUG_END;
 }
@@ -378,8 +375,8 @@ extern void (*__syscall_logger)(uint32_t type, uintptr_t arg1, uintptr_t arg2, u
 
 extern void (*malloc_logger)(uint32_t type, uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t result, uint32_t num_hot_frames_to_skip);
 
-static void pdl_syscall_logger(uint32_t type, uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t result, uint32_t num_hot_frames_to_skip) {
-//    pdl_malloc_log("%s %d %p %p %p %p %d\n", "pdl_syscall_logger", type, arg1, arg2, arg3, result, num_hot_frames_to_skip);
+static void pdl_syscall_logger(uint32_t type, malloc_zone_t *zone, void *ptr, size_t size, void *result, uint32_t num_hot_frames_to_skip) {
+//        pdl_malloc_log("%s %p %p %p %p %p %d\n", "pdl_syscall_logger", type, zone, ptr, size, result, num_hot_frames_to_skip);
 }
 
 static void pdl_malloc_logger(uint32_t type, malloc_zone_t *zone, void *ptr, size_t size, void *result, uint32_t num_hot_frames_to_skip) {
@@ -397,24 +394,17 @@ static void pdl_malloc_logger(uint32_t type, malloc_zone_t *zone, void *ptr, siz
 
 static bool pdl_malloc_zone_initialized = false;
 
-__attribute__((constructor))
 bool pdl_malloc_trace(void) {
+    if (pdl_malloc_zone_initialized) {
+        return true;
+    }
+
     vm_address_t *zones = NULL;
     unsigned int zoneCount = 0;
     kern_return_t result = malloc_get_all_zones(TASK_NULL, NULL, &zones, &zoneCount);
     if (result) {
         return false;
     }
-
-//    malloc_zone_t _zone = {0};
-//    malloc_zone_register(&_zone);
-//    malloc_zone_t *default_zone = malloc_default_zone();
-//    malloc_zone_unregister(default_zone);
-//    malloc_zone_register(default_zone);
-
-//    NSString *path = [NSTemporaryDirectory() stringByAppendingPathComponent:@"m.log"];
-//    _pdl_file = fopen(path.UTF8String, "a+");
-//    _pdl_file = freopen(path.UTF8String, "a+", stdout);
 
     pthread_key_create(&pdl_malloc_debug_key, NULL);
 
