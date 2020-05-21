@@ -425,7 +425,7 @@ static bool pdl_malloc_zone_initialized = false;
 extern malloc_zone_t **malloc_zones;
 extern int32_t malloc_num_zones;
 
-bool pdl_malloc_trace(void) {
+bool pdl_malloc_enable_trace(void) {
     if (pdl_malloc_zone_initialized) {
         return true;
     }
@@ -494,6 +494,8 @@ bool pdl_malloc_trace(void) {
     pdl_malloc_assert(sysret == 0);
 
     pdl_malloc_zone_initialized = true;
+
+    pdl_malloc_check_pointer(NULL);
 
     return true;
 }
