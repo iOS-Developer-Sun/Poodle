@@ -79,12 +79,6 @@ typedef unsigned int uint32_t;
 typedef unsigned char uint8_t;
 #endif
 
-#ifndef uthash_malloc
-#define uthash_malloc(sz) malloc(sz)      /* malloc fcn                      */
-#endif
-#ifndef uthash_free
-#define uthash_free(ptr,sz) free(ptr)     /* free fcn                        */
-#endif
 #ifndef uthash_bzero
 #define uthash_bzero(a,n) memset(a,'\0',n)
 #endif
@@ -189,7 +183,7 @@ do {                                                                            
 #define HASH_BLOOM_MAKE(tbl,oomed)                                               \
 do {                                                                             \
   (tbl)->bloom_nbits = HASH_BLOOM;                                               \
-  (tbl)->bloom_bv = (uint8_t*)uthash_malloc(HASH_BLOOM_BYTELEN);                 \
+  (tbl)->bloom_bv = (uint8_t*)((tbl)->malloc)(HASH_BLOOM_BYTELEN);                 \
   if (!(tbl)->bloom_bv) {                                                        \
     HASH_RECORD_OOM(oomed);                                                      \
   } else {                                                                       \
@@ -200,7 +194,7 @@ do {                                                                            
 
 #define HASH_BLOOM_FREE(tbl)                                                     \
 do {                                                                             \
-  uthash_free((tbl)->bloom_bv, HASH_BLOOM_BYTELEN);                              \
+  (tbl)->free((tbl)->bloom_bv, HASH_BLOOM_BYTELEN);                              \
 } while (0)
 
 #define HASH_BLOOM_BITSET(bv,idx) (bv[(idx)/8U] |= (1U << ((idx)%8U)))
@@ -222,30 +216,32 @@ do {                                                                            
 
 #define HASH_MAKE_TABLE(hh,head,oomed)                                           \
 do {                                                                             \
-  (head)->hh.tbl = (UT_hash_table*)uthash_malloc(sizeof(UT_hash_table));         \
+  (head)->hh.tbl = (UT_hash_table*)(head)->hh.malloc(sizeof(UT_hash_table));         \
   if (!(head)->hh.tbl) {                                                         \
     HASH_RECORD_OOM(oomed);                                                      \
   } else {                                                                       \
+    (head)->hh.tbl->malloc = (head)->hh.malloc;                                     \
+    (head)->hh.tbl->free = (head)->hh.free;                                     \
     uthash_bzero((head)->hh.tbl, sizeof(UT_hash_table));                         \
     (head)->hh.tbl->tail = &((head)->hh);                                        \
     (head)->hh.tbl->num_buckets = HASH_INITIAL_NUM_BUCKETS;                      \
     (head)->hh.tbl->log2_num_buckets = HASH_INITIAL_NUM_BUCKETS_LOG2;            \
     (head)->hh.tbl->hho = (char*)(&(head)->hh) - (char*)(head);                  \
-    (head)->hh.tbl->buckets = (UT_hash_bucket*)uthash_malloc(                    \
+    (head)->hh.tbl->buckets = (UT_hash_bucket*)(head)->hh.malloc(                    \
         HASH_INITIAL_NUM_BUCKETS * sizeof(struct UT_hash_bucket));               \
     (head)->hh.tbl->signature = HASH_SIGNATURE;                                  \
     if (!(head)->hh.tbl->buckets) {                                              \
       HASH_RECORD_OOM(oomed);                                                    \
-      uthash_free((head)->hh.tbl, sizeof(UT_hash_table));                        \
+      (head)->hh.free((head)->hh.tbl, sizeof(UT_hash_table));                        \
     } else {                                                                     \
       uthash_bzero((head)->hh.tbl->buckets,                                      \
           HASH_INITIAL_NUM_BUCKETS * sizeof(struct UT_hash_bucket));             \
       HASH_BLOOM_MAKE((head)->hh.tbl, oomed);                                    \
       IF_HASH_NONFATAL_OOM(                                                      \
         if (oomed) {                                                             \
-          uthash_free((head)->hh.tbl->buckets,                                   \
+          (head)->hh.free((head)->hh.tbl->buckets,                                   \
               HASH_INITIAL_NUM_BUCKETS*sizeof(struct UT_hash_bucket));           \
-          uthash_free((head)->hh.tbl, sizeof(UT_hash_table));                    \
+          (head)->free((head)->hh.tbl, sizeof(UT_hash_table));                    \
         }                                                                        \
       )                                                                          \
     }                                                                            \
@@ -463,9 +459,9 @@ do {                                                                            
   struct UT_hash_handle *_hd_hh_del = (delptrhh);                                \
   if ((_hd_hh_del->prev == NULL) && (_hd_hh_del->next == NULL)) {                \
     HASH_BLOOM_FREE((head)->hh.tbl);                                             \
-    uthash_free((head)->hh.tbl->buckets,                                         \
+    (head)->hh.free((head)->hh.tbl->buckets,                                         \
                 (head)->hh.tbl->num_buckets * sizeof(struct UT_hash_bucket));    \
-    uthash_free((head)->hh.tbl, sizeof(UT_hash_table));                          \
+    (head)->hh.free((head)->hh.tbl, sizeof(UT_hash_table));                          \
     (head) = NULL;                                                               \
   } else {                                                                       \
     unsigned _hd_bkt;                                                            \
@@ -849,7 +845,7 @@ do {                                                                            
   unsigned _he_bkt_i;                                                            \
   struct UT_hash_handle *_he_thh, *_he_hh_nxt;                                   \
   UT_hash_bucket *_he_new_buckets, *_he_newbkt;                                  \
-  _he_new_buckets = (UT_hash_bucket*)uthash_malloc(                              \
+  _he_new_buckets = (UT_hash_bucket*)(tbl)->malloc(                              \
            2UL * (tbl)->num_buckets * sizeof(struct UT_hash_bucket));            \
   if (!_he_new_buckets) {                                                        \
     HASH_RECORD_OOM(oomed);                                                      \
@@ -881,7 +877,7 @@ do {                                                                            
         _he_thh = _he_hh_nxt;                                                    \
       }                                                                          \
     }                                                                            \
-    uthash_free((tbl)->buckets, (tbl)->num_buckets * sizeof(struct UT_hash_bucket)); \
+    (tbl)->free((tbl)->buckets, (tbl)->num_buckets * sizeof(struct UT_hash_bucket)); \
     (tbl)->num_buckets *= 2U;                                                    \
     (tbl)->log2_num_buckets++;                                                   \
     (tbl)->buckets = _he_new_buckets;                                            \
@@ -1051,9 +1047,9 @@ do {                                                                            
 do {                                                                             \
   if ((head) != NULL) {                                                          \
     HASH_BLOOM_FREE((head)->hh.tbl);                                             \
-    uthash_free((head)->hh.tbl->buckets,                                         \
+    (head)->hh.free((head)->hh.tbl->buckets,                                         \
                 (head)->hh.tbl->num_buckets*sizeof(struct UT_hash_bucket));      \
-    uthash_free((head)->hh.tbl, sizeof(UT_hash_table));                          \
+    (head)->hh.free((head)->hh.tbl, sizeof(UT_hash_table));                          \
     (head) = NULL;                                                               \
   }                                                                              \
 } while (0)
@@ -1134,6 +1130,8 @@ typedef struct UT_hash_table {
    uint8_t bloom_nbits;
 #endif
 
+   void *(*malloc)(size_t);
+   void (*free)(void *, size_t);
 } UT_hash_table;
 
 typedef struct UT_hash_handle {
@@ -1145,6 +1143,9 @@ typedef struct UT_hash_handle {
    void *key;                        /* ptr to enclosing struct's key  */
    unsigned keylen;                  /* enclosing struct's key len     */
    unsigned hashv;                   /* result of hash-fcn(key)        */
+
+   void *(*malloc)(size_t);
+   void (*free)(void *, size_t);
 } UT_hash_handle;
 
 #endif /* UTHASH_H */

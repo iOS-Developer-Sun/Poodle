@@ -80,16 +80,16 @@ malloc_zone_t *pdl_malloc_zone(void) {
     return _pdl_zone;
 }
 
-static void *pdl_malloc_zone_malloc(size_t size) {
+void *pdl_malloc_zone_malloc(size_t size) {
     void *ptr = malloc_zone_malloc(pdl_malloc_zone(), size);
     return ptr;
 }
 
-static void *pdl_malloc_zone_realloc(void *ptr, size_t size) {
+void *pdl_malloc_zone_realloc(void *ptr, size_t size) {
     return malloc_zone_realloc(pdl_malloc_zone(), ptr, size);
 }
 
-static void pdl_malloc_zone_free(void *ptr) {
+void pdl_malloc_zone_free(void *ptr) {
     malloc_zone_free(pdl_malloc_zone(), ptr);
 }
 

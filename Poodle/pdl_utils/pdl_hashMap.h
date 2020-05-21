@@ -22,6 +22,8 @@ typedef struct pdl_structHashItem {
 
 typedef struct structHashMap {
     pdl_hashItem *map;
+    void *(*malloc)(size_t);
+    void (*free)(void *);
 } pdl_hashMap;
 
 extern void pdl_hashMapDelete(pdl_hashMap *map, void *key);
