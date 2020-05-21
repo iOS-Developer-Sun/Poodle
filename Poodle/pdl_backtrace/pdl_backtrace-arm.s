@@ -21,7 +21,7 @@ mov     r7, r1              // fake frames
 
 bl      _pdl_backtrace_wait // wait pdl_backtrace_wait(bt);
 
-mov     r7, r4              // recover frames
+mov     r7, r4              // recover fp
 
 pop     {r4, r7, pc}        // restore caller registers and delete space
 

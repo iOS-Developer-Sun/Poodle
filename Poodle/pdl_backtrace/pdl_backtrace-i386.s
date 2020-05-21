@@ -17,12 +17,12 @@ _pdl_backtrace_fake:
 pushl   %ebp                // store fp
 movl    0xc(%esp), %ebp     // fake frames
 pushl   %ebp                // align %esp = %esp - (16 - ((argc & 3) << 2))
-pushl   0xc(%esp)           // push bt
+pushl   0xc(%esp)           // push arg bt
 movl    %eax, (%esp)
 calll   _pdl_backtrace_wait // wait pdl_backtrace_wait(bt);
-popl    %ebp
-popl    %ebp                // restore bt
-popl    %ebp                // recover frames
+popl    %ebp                // pop
+popl    %ebp                // pop
+popl    %ebp                // recover fp
 retl
 
 #endif
