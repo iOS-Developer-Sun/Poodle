@@ -18,7 +18,9 @@ void pdl_hashMapDeleteAll(pdl_hashMap *map) {
 }
 
 void pdl_hashMapSetValue(pdl_hashMap *map, void *key, void *value) {
-    pdl_hashItem *item = malloc(sizeof(pdl_hashItem));
+    pdl_hashItem *item = map->malloc(sizeof(pdl_hashItem));
+    item->hh.malloc = map->malloc;
+    item->hh.free = (typeof(item->hh.free))map->free;
     item->key = key;
     item->value = value;
     HASH_ADD_PTR(map->map, key, item);
@@ -53,7 +55,7 @@ void pdl_hashMapGetAllKeys(pdl_hashMap *map, void ***keys, unsigned int *count) 
     if (keys == NULL) {
         return;
     }
-    *keys = malloc(sizeof(void *) * (HASH_COUNT(map->map)));
+    *keys = map->malloc(sizeof(void *) * (HASH_COUNT(map->map)));
     unsigned int i = 0;
     pdl_hashItem *current, *tmp;
     HASH_ITER(hh, map->map, current, tmp) {
