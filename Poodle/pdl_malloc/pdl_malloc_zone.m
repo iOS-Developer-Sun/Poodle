@@ -45,7 +45,7 @@ static void pdl_malloc_file_log(const char *format, ...) {
     fflush(_pdl_file);
 }
 
-#if 1
+#if 0
 __attribute__((naked))
 static void pdl_malloc_log(const char *format, ...) {
 #if defined(__arm__) || defined(__arm64__)
@@ -199,6 +199,9 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
 
     info->size = size;
     info->bt = pdl_backtrace_create_with_malloc_pointers(&pdl_malloc_zone_malloc, &pdl_malloc_zone_free);
+    char name[32];
+    snprintf(name, sizeof(name), "malloc_%p", ptr);
+    pdl_backtrace_set_name(info->bt, name);
     if (records) {
         pdl_backtrace_record(info->bt);
     }
@@ -224,8 +227,9 @@ static void pdl_malloc_destroy(void *ptr, size_t size) {
 //        memset(ptr, 0x55, info->size);
         pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_destroy", ptr, size, true);
     } else {
-        pdl_malloc_log("warning %p\n", ptr);
+        pdl_malloc_log("warning %n\n", ptr);
         pdl_malloc_log("%s %p %d !\n", "pdl_malloc_destroy", ptr, size);
+        assert(0);
     }
 }
 
@@ -245,7 +249,7 @@ static void pdl_dz_init_existent(void *data, vm_range_t range, unsigned int type
     PDL_MALLOC_DEBUG_BEGIN;
     void *ptr = (void *)(uintptr_t)range.address;
     size_t size = range.size;
-    pdl_malloc_log("%s %p %d %d %d %d\n", "pdl_dz_init_existent", ptr, size, type, count, index);
+//    pdl_malloc_log("%s %p %d %d %d %d\n", "pdl_dz_init_existent", ptr, size, type, count, index);
     pdl_malloc_init(ptr, size, false);
     assert(malloc_zone_from_ptr(ptr) == malloc_default_zone());
     PDL_MALLOC_DEBUG_END;
@@ -254,9 +258,9 @@ static void pdl_dz_init_existent(void *data, vm_range_t range, unsigned int type
 static void pdl_malloc_zone_existent(void *data, vm_range_t range, unsigned int type, unsigned int count, unsigned int index, bool *stops) {
     void *ptr = (void *)(uintptr_t)range.address;
     size_t size = range.size;
-    pdl_malloc_log("%s %p %d %d %d %d\n", "pdl_malloc_zone_existent", ptr, size, type, count, index);
+//    pdl_malloc_log("%s %p %d %d %d %d\n", "pdl_malloc_zone_existent", ptr, size, type, count, index);
     if (malloc_zone_from_ptr(ptr) != data) {
-        pdl_malloc_log("warning %p\n", ptr);
+//        pdl_malloc_log("warning %p\n", ptr);
         if (malloc_zone_from_ptr(ptr) == malloc_default_zone()) {
             pdl_malloc_init(ptr, size, false);
         }
@@ -268,7 +272,7 @@ static void *pdl_dz_malloc(malloc_zone_t *zone, size_t size) {
     PDL_MALLOC_DEBUG_BEGIN;
     void *ptr = pdl_dz_malloc_og(zone, size);
     pdl_malloc_init(ptr, size, true);
-    pdl_malloc_log("%s %p %d\n", "malloc", ptr, size);
+//    pdl_malloc_log("%s %p %d\n", "pdl_dz_malloc", ptr, size);
     PDL_MALLOC_DEBUG_END;
     return ptr;
 }
@@ -278,7 +282,7 @@ static void *pdl_dz_calloc(malloc_zone_t *zone, size_t num_items, size_t size) {
     PDL_MALLOC_DEBUG_BEGIN;
     void *ptr = pdl_dz_calloc_og(zone, num_items, size);
     pdl_malloc_init(ptr, num_items * size, true);
-    pdl_malloc_log("%s %p %d %d\n", "calloc", ptr, num_items, size);
+//    pdl_malloc_log("%s %p %d %d\n", "pdl_dz_calloc", ptr, num_items, size);
     PDL_MALLOC_DEBUG_END;
     return ptr;
 }
@@ -288,7 +292,7 @@ static void *pdl_dz_valloc(malloc_zone_t *zone, size_t size) {
     PDL_MALLOC_DEBUG_BEGIN;
     void *ptr = pdl_dz_valloc_og(zone, size);
     pdl_malloc_init(ptr, size, true);
-    pdl_malloc_log("%s %p %d\n", "valloc", ptr, size);
+//    pdl_malloc_log("%s %p %d\n", "pdl_dz_valloc", ptr, size);
     PDL_MALLOC_DEBUG_END;
     return ptr;
 }
@@ -303,7 +307,7 @@ static void pdl_dz_free(malloc_zone_t *zone, void *ptr) {
     }
 
     pdl_malloc_destroy(ptr, size);
-    pdl_malloc_log("%s %p\n", "free", ptr);
+//    pdl_malloc_log("%s %p\n", "pdl_dz_free", ptr);
     pdl_dz_free_og(zone, ptr);
     PDL_MALLOC_DEBUG_END;
 }
@@ -320,7 +324,7 @@ static void *pdl_dz_realloc(malloc_zone_t *zone, void *ptr, size_t size) {
     pdl_malloc_destroy(ptr, _size);
     void *p = pdl_dz_realloc_og(zone, ptr, size);
     pdl_malloc_init(p, size, true);
-    pdl_malloc_log("%s %p %d %p\n", "realloc", ptr, size, p);
+//    pdl_malloc_log("%s %p %d %p\n", "pdl_dz_realloc", ptr, size, p);
     PDL_MALLOC_DEBUG_END;
     return p;
 }
@@ -340,7 +344,7 @@ static void *pdl_dz_memalign(malloc_zone_t *zone, size_t alignment, size_t size)
     PDL_MALLOC_DEBUG_BEGIN;
     void *ptr = pdl_dz_memalign_og(zone, alignment, size);
     pdl_malloc_init(ptr, size, true);
-    pdl_malloc_log("%s %p %d\n", "memalign", ptr, size);
+//    pdl_malloc_log("%s %p %d\n", "pdl_dz_memalign", ptr, size);
     PDL_MALLOC_DEBUG_END;
     return ptr;
 }
@@ -355,7 +359,7 @@ static void pdl_dz_free_definite_size(malloc_zone_t *zone, void *ptr, size_t siz
     }
 
     pdl_malloc_destroy(ptr, size);
-    pdl_malloc_log("%s %p %d\n", "free_definite_size", ptr, size);
+//    pdl_malloc_log("%s %p %d\n", "pdl_dz_free_definite_size", ptr, size);
     pdl_dz_free_definite_size_og(zone, ptr, size);
     PDL_MALLOC_DEBUG_END;
 }
@@ -363,7 +367,7 @@ static void pdl_dz_free_definite_size(malloc_zone_t *zone, void *ptr, size_t siz
 static boolean_t (*pdl_dz_claimed_address_og)(malloc_zone_t *zone, void *ptr) = NULL;
 static boolean_t pdl_dz_claimed_address(malloc_zone_t *zone, void *ptr) {
     boolean_t ret = pdl_dz_claimed_address_og(zone, ptr);
-    pdl_malloc_log("%s %p %d\n", "claimed_address", ptr);
+    pdl_malloc_log("%s %p %d\n", "pdl_dz_claimed_address", ptr);
     return ret;
 }
 
@@ -377,17 +381,30 @@ static void pdl_syscall_logger(uint32_t type, uintptr_t arg1, uintptr_t arg2, ui
 //    pdl_malloc_log("%s %d %p %p %p %p %d\n", "pdl_syscall_logger", type, arg1, arg2, arg3, result, num_hot_frames_to_skip);
 }
 
-static void pdl_malloc_logger(uint32_t type, uintptr_t arg1, uintptr_t arg2, uintptr_t arg3, uintptr_t result, uint32_t num_hot_frames_to_skip) {
+static void pdl_malloc_logger(uint32_t type, malloc_zone_t *zone, void *ptr, size_t size, void *result, uint32_t num_hot_frames_to_skip) {
     if (PDL_MALLOC_DEBUG_IS_DEBUGGING) {
         return;
     }
-    pdl_malloc_log("%s %d %p %p %p %p %d\n", "pdl_malloc_logger", type, arg1, arg2, arg3, result, num_hot_frames_to_skip);
+    if (zone == malloc_default_zone()) {
+        return;
+    }
+
+    pdl_malloc_log("%s %p %p %p %p %p %d\n", "pdl_malloc_logger", type, zone, ptr, size, result, num_hot_frames_to_skip);
 }
 
 #pragma mark - init
 
+static bool pdl_malloc_zone_initialized = false;
+
 __attribute__((constructor))
-void pdl_malloc_trace(void) {
+bool pdl_malloc_trace(void) {
+    vm_address_t *zones = NULL;
+    unsigned int zoneCount = 0;
+    kern_return_t result = malloc_get_all_zones(TASK_NULL, NULL, &zones, &zoneCount);
+    if (result) {
+        return false;
+    }
+
 //    malloc_zone_t _zone = {0};
 //    malloc_zone_register(&_zone);
 //    malloc_zone_t *default_zone = malloc_default_zone();
@@ -402,8 +419,8 @@ void pdl_malloc_trace(void) {
 
     pdl_malloc_map();
 
-    __syscall_logger = &pdl_syscall_logger;
-    malloc_logger = &pdl_malloc_logger;
+    __syscall_logger = (typeof(__syscall_logger))&pdl_syscall_logger;
+    malloc_logger = (typeof(malloc_logger))&pdl_malloc_logger;
 
     malloc_zone_t *dz = malloc_default_zone();
 
@@ -411,9 +428,6 @@ void pdl_malloc_trace(void) {
     pdl_malloc_zone_enumerate(dz, NULL, &pdl_dz_init_existent);
     pdl_malloc_log("pdl_malloc_zone_enumerate end\n");
 
-    vm_address_t *zones = NULL;
-    unsigned int zoneCount = 0;
-    kern_return_t result = malloc_get_all_zones(TASK_NULL, NULL, &zones, &zoneCount);
     for (unsigned int i = 0; i < zoneCount; i++) {
         malloc_zone_t *zone = (malloc_zone_t *)zones[i];
         if (zone == dz) {
@@ -448,78 +462,32 @@ void pdl_malloc_trace(void) {
 
     pdl_dz_claimed_address_og = dz->claimed_address;
     dz->claimed_address = &pdl_dz_claimed_address;
+
+    pdl_malloc_zone_initialized = true;
+    return true;
 }
 
-#if 0
+void pdl_malloc_check_pointer(void *pointer) {
+    if (!pointer) {
+        return;
+    }
 
-void __usercall UseJeMallocMethod(unsigned __int8 *a1@<X8>)
-{
-    unsigned int v1; // off
-    __int128 v2; // q1
-    malloc_zone_t *v3; // x0
-    unsigned int count; // [xsp+4h] [xbp-1Ch]
-    vm_address_t *addresses; // [xsp+8h] [xbp-18h]
+    if (!pdl_malloc_zone_initialized) {
+        return;
+    }
 
-    v1 = __ldar(a1);
-    if ( !((unsigned __int8)a1 & 1) )
-    {
-        pthread_mutex_lock((pthread_mutex_t *)&replaceSystemMallocLock);
-        if ( !(sMallocWasReplaced & 1) )
-        {
-            __stlr(0, (unsigned __int8 *)&sMallocWasReplaced);
-            unk_1001C8F48 = 0u;
-            unk_1001C8F58 = 0u;
-            unk_1001C8F28 = 0u;
-            unk_1001C8F38 = 0u;
-            UseJeMallocMethod(void)::sanitizer_zone_introspection = `anonymous namespace'::mi_enumerator;
-            unk_1001C8EF0 = `anonymous namespace'::mi_good_size;
-            unk_1001C8EF8 = `anonymous namespace'::mi_check;
-            unk_1001C8F00 = `anonymous namespace'::mi_print;
-            qword_1001C8F08 = (__int64)`anonymous namespace'::mi_log;
-            *(_QWORD *)&v2 = `anonymous namespace'::mi_force_lock;
-            *((_QWORD *)&v2 + 1) = `anonymous namespace'::mi_force_unlock;
-            *(_OWORD *)algn_1001C8F10 = v2;
-            qword_1001C8F20 = (__int64)`anonymous namespace'::mi_statistics;
-            *(_OWORD *)&qword_1001C8FC8 = 0u;
-            internal_sanitizer_zone = 0u;
-            dword_1001C8FD0 = 6;
-            unk_1001C8FA8 = `anonymous namespace'::mz_destroy;
-            unk_1001C8FB0 = "NiuTcMalloc";
-            unk_1001C8F78 = `anonymous namespace'::mz_size;
-            unk_1001C8F80 = `anonymous namespace'::mz_malloc;
-            unk_1001C8F88 = `anonymous namespace'::mz_calloc;
-            unk_1001C8F90 = `anonymous namespace'::mz_valloc;
-            unk_1001C8F98 = `anonymous namespace'::mz_free;
-            unk_1001C8FA0 = `anonymous namespace'::mz_realloc;
-            unk_1001C8FB8 = niu_default_zone_batch_malloc;
-            unk_1001C8FC0 = niu_default_zone_batch_free;
-            xmmword_1001C8FE8 = 0u;
-            unk_1001C8FD8 = `anonymous namespace'::mz_memalign;
-            unk_1001C8FE0 = niu_zone_free_definite_size;
-            qword_1001C8FC8 = (__int64)&UseJeMallocMethod(void)::sanitizer_zone_introspection;
-            if ( &_malloc_default_purgeable_zone )
-                malloc_default_purgeable_zone();
-            malloc_zone_register((malloc_zone_t *)&internal_sanitizer_zone);
-            addresses = 0LL;
-            count = 0;
-            if ( malloc_get_all_zones(0, 0LL, &addresses, &count) )
-            {
-                count = 0;
+    malloc_zone_t *zone = malloc_zone_from_ptr(pointer);
+    if (zone) {
+        return;
+    }
+
+    CFMutableDictionaryRef map = pdl_malloc_map();
+    pdl_malloc_info_t info = (pdl_malloc_info_t)CFDictionaryGetValue(map, pointer);
+    if (info) {
+        if (info->magic == PDL_MALLOC_INFO_MAGIC && info->bt) {
+            if (info->free) {
+                pdl_backtrace_thread_show(info->bt, true);
             }
-            else if ( count )
-            {
-                v3 = (malloc_zone_t *)*addresses;
-                goto LABEL_10;
-            }
-            v3 = malloc_default_zone();
-        LABEL_10:
-            default_zone = (__int64)v3;
-            malloc_zone_unregister(v3);
-            malloc_zone_register((malloc_zone_t *)default_zone);
-            pthread_mutex_unlock((pthread_mutex_t *)&replaceSystemMallocLock);
-            return;
         }
     }
 }
-
-#endif
