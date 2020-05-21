@@ -9,6 +9,7 @@
 #import "pdl_malloc_zone.h"
 #import "pdl_backtrace.h"
 #import <pthread/pthread.h>
+#import "pdl_dictionary.h"
 
 #pragma mark - debug
 
@@ -126,37 +127,37 @@ void pdl_malloc_zone_enumerate(malloc_zone_t *zone, void *data, void(*function)(
 
 #pragma mark - storage
 
-void *pdlAllocatorAllocateCallBack(CFIndex allocSize, CFOptionFlags hint, void *info) {
-    return pdl_malloc_zone_malloc(allocSize);
-}
-
-void *pdlAllocatorReallocateCallBack(void *ptr, CFIndex newsize, CFOptionFlags hint, void *info) {
-    return pdl_malloc_zone_realloc(ptr, newsize);
-}
-
-void pdlCFAllocatorDeallocateCallBack(void *ptr, void *info) {
-    pdl_malloc_zone_free(ptr);
-}
-
-static CFMutableDictionaryRef pdl_malloc_map(void) {
-    static CFMutableDictionaryRef _dictionary = NULL;
+static pdl_dictionary_t pdl_malloc_map(void) {
+    static pdl_dictionary_t _dictionary = NULL;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        CFAllocatorContext context = {
-            0, // version
-            NULL, // info
-            NULL, // retain
-            NULL, // release
-            NULL, // copyDescription
-            &pdlAllocatorAllocateCallBack, // allocate
-            &pdlAllocatorReallocateCallBack, // reallocate
-            *pdlCFAllocatorDeallocateCallBack, // deallocate
-            NULL, // preferredSize
-        };
-        CFAllocatorRef allocator = CFAllocatorCreate(CFAllocatorGetDefault(), &context);
-        _dictionary = CFDictionaryCreateMutable(allocator, 0, NULL, NULL);
+        _dictionary = pdl_dictionary_create_with_malloc_pointers(&pdl_malloc_zone_malloc, &pdl_malloc_zone_free);
     });
     return _dictionary;
+}
+
+static pthread_mutex_t * pdl_malloc_map_lock(void) {
+    static pthread_mutex_t _lock = PTHREAD_MUTEX_INITIALIZER;
+    return &_lock;
+}
+
+static void *pdl_malloc_map_get(void *key) {
+    pthread_mutex_t *lock = pdl_malloc_map_lock();
+    pthread_mutex_lock(lock);
+    void *value = NULL;
+    void **object = pdl_dictionary_objectForKey(pdl_malloc_map(), key);
+    if (object) {
+        value = *object;
+    }
+    pthread_mutex_unlock(lock);
+    return value;
+}
+
+static void pdl_malloc_map_set(void *key, void *value) {
+    pthread_mutex_t *lock = pdl_malloc_map_lock();
+    pthread_mutex_lock(lock);
+    pdl_dictionary_setObjectForKey(pdl_malloc_map(), value, key);
+    pthread_mutex_unlock(lock);
 }
 
 #pragma mark - trace
@@ -175,8 +176,7 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
         return;
     }
 
-    CFMutableDictionaryRef map = pdl_malloc_map();
-    pdl_malloc_info_t info = (pdl_malloc_info_t)CFDictionaryGetValue(map, ptr);
+    pdl_malloc_info_t info = pdl_malloc_map_get(ptr);
     if (info) {
         assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         assert(info->bt);
@@ -194,7 +194,7 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
     } else {
         info = pdl_malloc_zone_malloc(sizeof(pdl_malloc_info));
         info->magic = PDL_MALLOC_INFO_MAGIC;
-        CFDictionarySetValue(map, ptr, info);
+        pdl_malloc_map_set(ptr, info);
     }
 
     info->size = size;
@@ -214,8 +214,7 @@ static void pdl_malloc_destroy(void *ptr, size_t size) {
         return;
     }
 
-    CFMutableDictionaryRef map = pdl_malloc_map();
-    pdl_malloc_info_t info = (pdl_malloc_info_t)CFDictionaryGetValue(map, ptr);
+    pdl_malloc_info_t info = (pdl_malloc_info_t)pdl_malloc_map_get(ptr);
     if (info) {
         assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         assert(info->bt);
@@ -234,8 +233,7 @@ static void pdl_malloc_destroy(void *ptr, size_t size) {
 }
 
 static void pdl_malloc_track(void *ptr) {
-    CFMutableDictionaryRef map = pdl_malloc_map();
-    pdl_malloc_info_t info = (pdl_malloc_info_t)CFDictionaryGetValue(map, ptr);
+    pdl_malloc_info_t info = pdl_malloc_map_get(ptr);
     if (info) {
         assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         assert(info->bt);
@@ -251,7 +249,10 @@ static void pdl_dz_init_existent(void *data, vm_range_t range, unsigned int type
     size_t size = range.size;
 //    pdl_malloc_log("%s %p %d %d %d %d\n", "pdl_dz_init_existent", ptr, size, type, count, index);
     pdl_malloc_init(ptr, size, false);
-    assert(malloc_zone_from_ptr(ptr) == malloc_default_zone());
+    malloc_zone_t *zone = malloc_zone_from_ptr(ptr);
+    if (zone) {
+        assert(zone == malloc_default_zone());
+    }
     PDL_MALLOC_DEBUG_END;
 }
 
@@ -481,8 +482,7 @@ void pdl_malloc_check_pointer(void *pointer) {
         return;
     }
 
-    CFMutableDictionaryRef map = pdl_malloc_map();
-    pdl_malloc_info_t info = (pdl_malloc_info_t)CFDictionaryGetValue(map, pointer);
+    pdl_malloc_info_t info = pdl_malloc_map_get(pointer);
     if (info) {
         if (info->magic == PDL_MALLOC_INFO_MAGIC && info->bt) {
             if (info->free) {

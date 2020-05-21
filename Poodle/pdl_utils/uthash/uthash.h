@@ -220,9 +220,9 @@ do {                                                                            
   if (!(head)->hh.tbl) {                                                         \
     HASH_RECORD_OOM(oomed);                                                      \
   } else {                                                                       \
-    (head)->hh.tbl->malloc = (head)->hh.malloc;                                     \
-    (head)->hh.tbl->free = (head)->hh.free;                                     \
     uthash_bzero((head)->hh.tbl, sizeof(UT_hash_table));                         \
+    (head)->hh.tbl->malloc = (head)->hh.malloc;                                  \
+    (head)->hh.tbl->free = (head)->hh.free;                                      \
     (head)->hh.tbl->tail = &((head)->hh);                                        \
     (head)->hh.tbl->num_buckets = HASH_INITIAL_NUM_BUCKETS;                      \
     (head)->hh.tbl->log2_num_buckets = HASH_INITIAL_NUM_BUCKETS_LOG2;            \
