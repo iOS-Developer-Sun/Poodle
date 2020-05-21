@@ -23,6 +23,7 @@ extern void pdl_backtrace_thread_show(pdl_backtrace_t backtrace, bool wait);
 extern bool pdl_backtrace_thread_is_shown(pdl_backtrace_t backtrace);
 extern void pdl_backtrace_thread_hide(pdl_backtrace_t backtrace);
 extern void pdl_backtrace_destroy(pdl_backtrace_t backtrace);
+extern void pdl_backtrace_print(pdl_backtrace_t backtrace);
 
 #ifdef __cplusplus
 }

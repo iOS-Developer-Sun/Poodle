@@ -7,6 +7,7 @@
 //
 
 #include "pdl_array.h"
+#include <malloc/malloc.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,8 +16,10 @@ extern "C" {
 typedef void *pdl_dictionary_t;
 
 extern pdl_dictionary_t pdl_dictionary_create(void);
+extern pdl_dictionary_t pdl_dictionary_create_with_malloc_pointers(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *));
 extern void **pdl_dictionary_objectForKey(pdl_dictionary_t dictionary, void *key);
 extern void pdl_dictionary_removeObjectForKey(pdl_dictionary_t dictionary, void *key);
+extern void pdl_dictionary_removeAllObjects(pdl_dictionary_t dictionary);
 extern void pdl_dictionary_setObjectForKey(pdl_dictionary_t dictionary, void *object, void *key);
 extern pdl_dictionary_t pdl_dictionary_copy(pdl_dictionary_t dictionary);
 extern pdl_array_t pdl_dictionary_allKeys(pdl_dictionary_t dictionary);
