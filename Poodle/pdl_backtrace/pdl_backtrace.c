@@ -71,7 +71,7 @@ void pdl_backtrace_wait(pdl_backtrace *bt) {
 }
 
 static void *pdl_backtrace_thread_main(void *backtrace) {
-    pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     pthread_setname_np(bt->thread_name);
 #ifdef __i386__
     int alignment = 4;
@@ -122,13 +122,18 @@ pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_ptr)(si
     return bt;
 }
 
+const char *pdl_backtrace_get_name(pdl_backtrace_t backtrace) {
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    return bt->thread_name;
+}
+
 void pdl_backtrace_set_name(pdl_backtrace_t backtrace, const char *name) {
-    pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     strlcpy(bt->thread_name, name ?: "", sizeof(bt->thread_name));
 }
 
 void pdl_backtrace_record(pdl_backtrace_t backtrace) {
-    pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     void *lr = __builtin_return_address(0);
     void *fp = __builtin_frame_address(0);
     void **frames = NULL;
@@ -145,7 +150,7 @@ void pdl_backtrace_record(pdl_backtrace_t backtrace) {
 }
 
 void pdl_backtrace_thread_show(pdl_backtrace_t backtrace, bool wait) {
-    pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (bt->thread) {
         return;
     }
@@ -165,12 +170,12 @@ void pdl_backtrace_thread_show(pdl_backtrace_t backtrace, bool wait) {
 }
 
 bool pdl_backtrace_thread_is_shown(pdl_backtrace_t backtrace) {
-    pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     return (bt->thread != NULL);
 }
 
 void pdl_backtrace_thread_hide(pdl_backtrace_t backtrace) {
-    pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (bt->thread == NULL) {
         return;
     }
@@ -181,7 +186,7 @@ void pdl_backtrace_thread_hide(pdl_backtrace_t backtrace) {
 }
 
 void pdl_backtrace_destroy(pdl_backtrace_t backtrace) {
-    pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     pdl_backtrace_thread_hide(bt);
     bt->free_ptr(bt->frames);
     bt->frames = NULL;
@@ -189,7 +194,7 @@ void pdl_backtrace_destroy(pdl_backtrace_t backtrace) {
 }
 
 void pdl_backtrace_print(pdl_backtrace_t backtrace) {
-    pdl_backtrace *bt = (pdl_backtrace_t)backtrace;
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     for (int i = 0; i < bt->frames_count; i++) {
         printf("%p\n", bt->frames[i]);
     }
