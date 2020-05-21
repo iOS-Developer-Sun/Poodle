@@ -11,6 +11,8 @@
 #import <stdio.h>
 #import <assert.h>
 #import <string.h>
+#import <os/lock.h>
+#import <sys/mman.h>
 #import "pdl_backtrace.h"
 #import "pdl_dictionary.h"
 
@@ -18,6 +20,7 @@
 
 pthread_key_t pdl_malloc_debug_key = 0;
 
+#if 0
 #define PDL_MALLOC_DEBUG_BEGIN \
 {\
     void *value = pthread_getspecific(pdl_malloc_debug_key);\
@@ -35,6 +38,14 @@ pthread_key_t pdl_malloc_debug_key = 0;
 void *value = pthread_getspecific(pdl_malloc_debug_key);\
 value;\
 })
+
+#else
+
+#define PDL_MALLOC_DEBUG_BEGIN
+#define PDL_MALLOC_DEBUG_END
+#define PDL_MALLOC_DEBUG_IS_DEBUGGING false
+
+#endif
 
 extern int backtrace(void **array, int size);
 extern char **backtrace_symbols(void *const *array, int size);
@@ -144,28 +155,46 @@ static pdl_dictionary_t pdl_malloc_map(void) {
     return _dictionary;
 }
 
-static pthread_mutex_t * pdl_malloc_map_lock(void) {
-    static pthread_mutex_t _lock = PTHREAD_MUTEX_INITIALIZER;
-    return &_lock;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+
+static pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
+static os_unfair_lock _unfair_lock = OS_UNFAIR_LOCK_INIT;
+
+static void pdl_malloc_map_lock() {
+    if (&os_unfair_lock_lock) {
+        os_unfair_lock_lock(&_unfair_lock);
+    } else {
+        pthread_mutex_lock(&_mutex);
+    }
 }
 
+static void pdl_malloc_map_unlock() {
+    if (&os_unfair_lock_unlock) {
+        os_unfair_lock_unlock(&_unfair_lock);
+    } else {
+        pthread_mutex_unlock(&_mutex);
+    }
+}
+
+#pragma clang diagnostic pop
+
 static void *pdl_malloc_map_get(void *key) {
-    pthread_mutex_t *lock = pdl_malloc_map_lock();
-    pthread_mutex_lock(lock);
+    pdl_malloc_map_lock();
     void *value = NULL;
     void **object = pdl_dictionary_objectForKey(pdl_malloc_map(), key);
     if (object) {
         value = *object;
     }
-    pthread_mutex_unlock(lock);
+    pdl_malloc_map_unlock();
     return value;
 }
 
 static void pdl_malloc_map_set(void *key, void *value) {
-    pthread_mutex_t *lock = pdl_malloc_map_lock();
-    pthread_mutex_lock(lock);
+    pdl_malloc_map_lock();
     pdl_dictionary_setObjectForKey(pdl_malloc_map(), value, key);
-    pthread_mutex_unlock(lock);
+    pdl_malloc_map_unlock();
 }
 
 #pragma mark - trace
@@ -217,7 +246,7 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
     pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_init", ptr, size, false);
 }
 
-static void pdl_malloc_destroy(void *ptr, size_t size) {
+static void pdl_malloc_destroy(void *ptr, size_t rsize, size_t size) {
     if (!ptr) {
         return;
     }
@@ -232,9 +261,11 @@ static void pdl_malloc_destroy(void *ptr, size_t size) {
             pdl_malloc_assert(0);
         }
         info->free = true;
-        pdl_malloc_assert(info->size <= size);
-//        memset(ptr, 0x55, info->size);
-        pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_destroy", ptr, size, true);
+        pdl_malloc_assert(info->size <= rsize);
+        if (size == 0) {
+            memset(ptr, 0x55, rsize);
+        }
+        pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_destroy", ptr, rsize, size, true);
     } else {
         pdl_malloc_error("error %p\n", ptr);
         pdl_malloc_assert(0);
@@ -308,7 +339,7 @@ static void pdl_dz_free(malloc_zone_t *zone, void *ptr) {
         pdl_malloc_assert(0);
     }
 
-    pdl_malloc_destroy(ptr, size);
+    pdl_malloc_destroy(ptr, size, 0);
     pdl_dz_free_og(zone, ptr);
     PDL_MALLOC_DEBUG_END;
 }
@@ -322,7 +353,7 @@ static void *pdl_dz_realloc(malloc_zone_t *zone, void *ptr, size_t size) {
         pdl_malloc_assert(0);
     }
 
-    pdl_malloc_destroy(ptr, _size);
+    pdl_malloc_destroy(ptr, _size, size);
     void *p = pdl_dz_realloc_og(zone, ptr, size);
     pdl_malloc_init(p, size, true);
     PDL_MALLOC_DEBUG_END;
@@ -357,7 +388,7 @@ static void pdl_dz_free_definite_size(malloc_zone_t *zone, void *ptr, size_t siz
         pdl_malloc_assert(0);
     }
 
-    pdl_malloc_destroy(ptr, _size);
+    pdl_malloc_destroy(ptr, _size, 0);
     pdl_dz_free_definite_size_og(zone, ptr, size);
     PDL_MALLOC_DEBUG_END;
 }
@@ -380,9 +411,6 @@ static void pdl_syscall_logger(uint32_t type, malloc_zone_t *zone, void *ptr, si
 }
 
 static void pdl_malloc_logger(uint32_t type, malloc_zone_t *zone, void *ptr, size_t size, void *result, uint32_t num_hot_frames_to_skip) {
-    if (PDL_MALLOC_DEBUG_IS_DEBUGGING) {
-        return;
-    }
     if (zone == malloc_default_zone()) {
         return;
     }
@@ -393,6 +421,9 @@ static void pdl_malloc_logger(uint32_t type, malloc_zone_t *zone, void *ptr, siz
 #pragma mark - init
 
 static bool pdl_malloc_zone_initialized = false;
+
+extern malloc_zone_t **malloc_zones;
+extern int32_t malloc_num_zones;
 
 bool pdl_malloc_trace(void) {
     if (pdl_malloc_zone_initialized) {
@@ -410,9 +441,11 @@ bool pdl_malloc_trace(void) {
 
     pdl_malloc_map();
 
+#ifdef DEBUG
     __syscall_logger = (typeof(__syscall_logger))&pdl_syscall_logger;
     malloc_logger = (typeof(malloc_logger))&pdl_malloc_logger;
-
+#endif
+    
     malloc_zone_t *dz = malloc_default_zone();
 
     pdl_malloc_log("pdl_malloc_zone_enumerate begin\n");
@@ -429,6 +462,9 @@ bool pdl_malloc_trace(void) {
         }
         pdl_malloc_zone_enumerate(zone, zone, &pdl_malloc_zone_existent);
     }
+
+    int sysret = mprotect(dz, sizeof(malloc_zone_t), PROT_READ | PROT_WRITE);
+    pdl_malloc_assert(sysret == 0);
 
     pdl_dz_malloc_og = dz->malloc;
     dz->malloc = &pdl_dz_malloc;
@@ -454,7 +490,11 @@ bool pdl_malloc_trace(void) {
     pdl_dz_claimed_address_og = dz->claimed_address;
     dz->claimed_address = &pdl_dz_claimed_address;
 
+    sysret = mprotect(dz, sizeof(malloc_zone_t), PROT_READ);
+    pdl_malloc_assert(sysret == 0);
+
     pdl_malloc_zone_initialized = true;
+
     return true;
 }
 
