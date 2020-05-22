@@ -8,6 +8,7 @@
 
 #import "pdl_backtrace.h"
 #import <pthread/pthread.h>
+#import <malloc/malloc.h>
 #import <assert.h>
 #import <string.h>
 #import <stdio.h>
@@ -101,11 +102,15 @@ pdl_backtrace_t pdl_backtrace_create(void) {
 }
 
 pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *)) {
-    size_t size = sizeof(pdl_backtrace);
     void *(*m_ptr)(size_t) = malloc_ptr ?: &malloc;
     void(*f_ptr)(void *) = free_ptr ?: &free;
 
+    size_t size = sizeof(pdl_backtrace);
     pdl_backtrace *bt = m_ptr(size);
+    if (!bt) {
+        return NULL;
+    }
+
     memset(bt, 0, size);
     bt->malloc_ptr = m_ptr;
     bt->free_ptr = f_ptr;
@@ -192,6 +197,6 @@ void pdl_backtrace_destroy(pdl_backtrace_t backtrace) {
 void pdl_backtrace_print(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     for (int i = 0; i < bt->frames_count; i++) {
-        printf("%p\n", bt->frames[i]);
+        malloc_printf("%p\n", bt->frames[i]);
     }
 }
