@@ -11,6 +11,7 @@
 
 typedef enum pdl_malloc_trace_policy {
     pdl_malloc_trace_policy_live_allocations,
+    pdl_malloc_trace_policy_allocation_and_free,
     pdl_malloc_trace_policy_custom_zone,
 }pdl_malloc_trace_policy;
 
