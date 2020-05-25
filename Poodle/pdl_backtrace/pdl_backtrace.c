@@ -125,16 +125,26 @@ pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_ptr)(si
 
 const char *pdl_backtrace_get_name(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return NULL;
+    }
     return bt->thread_name;
 }
 
 void pdl_backtrace_set_name(pdl_backtrace_t backtrace, const char *name) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return;
+    }
     strlcpy(bt->thread_name, name ?: "", sizeof(bt->thread_name));
 }
 
 void pdl_backtrace_record(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return;
+    }
+
     void *lr = __builtin_return_address(0);
     void *fp = __builtin_frame_address(0);
     void **frames = NULL;
@@ -152,6 +162,10 @@ void pdl_backtrace_record(pdl_backtrace_t backtrace) {
 
 void pdl_backtrace_thread_show(pdl_backtrace_t backtrace, bool wait) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return;
+    }
+
     if (bt->thread) {
         return;
     }
@@ -172,11 +186,19 @@ void pdl_backtrace_thread_show(pdl_backtrace_t backtrace, bool wait) {
 
 bool pdl_backtrace_thread_is_shown(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return false;
+    }
+
     return (bt->thread != NULL);
 }
 
 void pdl_backtrace_thread_hide(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return;
+    }
+
     if (bt->thread == NULL) {
         return;
     }
@@ -188,6 +210,10 @@ void pdl_backtrace_thread_hide(pdl_backtrace_t backtrace) {
 
 void pdl_backtrace_destroy(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return;
+    }
+
     pdl_backtrace_thread_hide(bt);
     bt->free_ptr(bt->frames);
     bt->frames = NULL;
@@ -196,6 +222,10 @@ void pdl_backtrace_destroy(pdl_backtrace_t backtrace) {
 
 void pdl_backtrace_print(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return;
+    }
+
     for (int i = 0; i < bt->frames_count; i++) {
         malloc_printf("%p\n", bt->frames[i]);
     }

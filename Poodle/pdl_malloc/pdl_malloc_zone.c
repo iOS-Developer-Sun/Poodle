@@ -238,6 +238,7 @@ typedef struct pdl_malloc_info {
     void *ptr;
     unsigned long size;
     struct pdl_backtrace *bt;
+    struct pdl_backtrace *fbt;
     bool live;
 } pdl_malloc_info, *pdl_malloc_info_t;
 
@@ -262,15 +263,19 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
 
         if (info->live) {
             pdl_backtrace_thread_show(info->bt, true);
+            pdl_backtrace_thread_show(info->fbt, true);
             pdl_malloc_error("pdl_malloc_error init %p is live\n", ptr);
             pdl_malloc_assert(info->live == false);
         }
         pdl_backtrace_destroy(info->bt);
         info->bt = NULL;
+        pdl_backtrace_destroy(info->fbt);
+        info->fbt = NULL;
     } else {
         info = pdl_malloc_private_zone_malloc(sizeof(pdl_malloc_info));
         info->magic = PDL_MALLOC_INFO_MAGIC;
         info->ptr = ptr;
+        info->fbt = NULL;
         pdl_malloc_map_set(ptr, info);
     }
 
@@ -302,6 +307,7 @@ static void pdl_malloc_destroy(void *ptr, size_t rsize, size_t size) {
         pdl_malloc_assert(info->bt);
         if (info->live == false) {
             pdl_backtrace_thread_show(info->bt, true);
+            pdl_backtrace_thread_show(info->fbt, true);
             pdl_malloc_error("pdl_malloc_error destroy %p is not live\n", ptr);
             pdl_malloc_assert(0);
         }
@@ -317,6 +323,14 @@ static void pdl_malloc_destroy(void *ptr, size_t rsize, size_t size) {
                 pdl_malloc_private_zone_free(info);
                 pdl_malloc_map_set(ptr, NULL);
                 pdl_malloc_assert(pdl_malloc_map_get(ptr, true) == NULL);
+                break;
+            case pdl_malloc_trace_policy_allocation_and_free:
+                pdl_backtrace_destroy(info->fbt);
+                info->fbt = pdl_backtrace_create_with_malloc_pointers(&pdl_malloc_private_zone_malloc, &pdl_malloc_private_zone_free);
+                char name[32];
+                snprintf(name, sizeof(name), "free_%p", ptr);
+                pdl_backtrace_set_name(info->fbt, name);
+                pdl_backtrace_record(info->fbt);
                 break;
 
             default:
@@ -335,6 +349,7 @@ static void pdl_malloc_backtrace(void *ptr) {
         pdl_malloc_assert(info->ptr == ptr);
         pdl_malloc_assert(info->bt);
         pdl_backtrace_thread_show(info->bt, true);
+        pdl_backtrace_thread_show(info->fbt, true);
     }
 }
 
@@ -578,7 +593,8 @@ bool pdl_malloc_enable_trace(pdl_malloc_trace_policy policy) {
 #endif
 
     switch (policy) {
-        case pdl_malloc_trace_policy_live_allocations: {
+        case pdl_malloc_trace_policy_live_allocations:
+        case pdl_malloc_trace_policy_allocation_and_free: {
             _zone = malloc_default_zone();
 
             pdl_malloc_log("pdl_malloc_zone_enumerate begin\n");
@@ -623,6 +639,7 @@ void pdl_malloc_disable_trace(void) {
         pdl_malloc_assert(info->ptr == key);
         pdl_malloc_assert(info->bt);
         pdl_backtrace_destroy(info->bt);
+        pdl_backtrace_destroy(info->fbt);
         pdl_malloc_private_zone_free(info);
     }
     pdl_dictionary_removeAllObjects(map);
@@ -653,6 +670,7 @@ void pdl_malloc_check_pointer(void *pointer) {
         if (info->bt) {
             if (info->live == false) {
                 pdl_backtrace_thread_show(info->bt, true);
+                pdl_backtrace_thread_show(info->fbt, true);
             }
         }
     }
@@ -680,6 +698,9 @@ void pdl_malloc_zone_show_backtrace(void *pointer) {
         if (info->bt) {
             pdl_backtrace_thread_show(info->bt, true);
         }
+        if (info->fbt) {
+            pdl_backtrace_thread_show(info->fbt, true);
+        }
     }
     pdl_malloc_map_unlock();
 }
@@ -705,6 +726,9 @@ void pdl_malloc_zone_hide_backtrace(void *pointer) {
         pdl_malloc_assert(info->ptr == pointer);
         if (info->bt) {
             pdl_backtrace_thread_hide(info->bt);
+        }
+        if (info->fbt) {
+            pdl_backtrace_thread_hide(info->fbt);
         }
     }
     pdl_malloc_map_unlock();
