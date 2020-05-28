@@ -11,5 +11,7 @@
 @interface NSObject (PDLWeakifyUnsafeUnretainedProperty)
 
 + (BOOL)pdl_weakifyUnsafeUnretainedProperty:(NSString *)propertyName;
++ (BOOL)pdl_weakifyUnsafeUnretainedProperty:(NSString *)propertyName ivarName:(NSString *)ivarName;
++ (BOOL)pdl_weakifyUnsafeUnretainedProperty:(NSString *)propertyName ivarName:(NSString *)ivarName ivarClass:(Class)ivarClass;
 
 @end

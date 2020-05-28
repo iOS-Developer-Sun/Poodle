@@ -91,6 +91,14 @@ static void pdl_weakPropertySetter(__unsafe_unretained id self, SEL _cmd, __unsa
 }
 
 + (BOOL)pdl_weakifyUnsafeUnretainedProperty:(NSString *)propertyName {
+    return [self pdl_weakifyUnsafeUnretainedProperty:propertyName ivarName:nil ivarClass:nil];
+}
+
++ (BOOL)pdl_weakifyUnsafeUnretainedProperty:(NSString *)propertyName ivarName:(NSString *)ivarName {
+    return [self pdl_weakifyUnsafeUnretainedProperty:propertyName ivarName:ivarName ivarClass:nil];
+}
+
++ (BOOL)pdl_weakifyUnsafeUnretainedProperty:(NSString *)propertyName ivarName:(NSString *)ivarName ivarClass:(Class)ivarClass {
     if (propertyName.length == 0) {
         return NO;
     }
@@ -106,7 +114,7 @@ static void pdl_weakPropertySetter(__unsafe_unretained id self, SEL _cmd, __unsa
 
     NSString *getterString = propertyName;
     NSString *setterString = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
-    NSString *ivarString = nil;
+    NSString *ivarString = ivarName;
     for (NSString *attributeString in attributeList) {
         if ([attributeString hasPrefix:@"G"]) {
             getterString = [attributeString substringFromIndex:1];
@@ -114,7 +122,7 @@ static void pdl_weakPropertySetter(__unsafe_unretained id self, SEL _cmd, __unsa
         if ([attributeString hasPrefix:@"S"]) {
             setterString = [attributeString substringFromIndex:1];
         }
-        if ([attributeString hasPrefix:@"V"]) {
+        if ([attributeString hasPrefix:@"V"] && ivarName == NULL) {
             ivarString = [attributeString substringFromIndex:1];
         }
     }
@@ -133,7 +141,7 @@ static void pdl_weakPropertySetter(__unsafe_unretained id self, SEL _cmd, __unsa
         return NO;
     }
 
-    Ivar ivar = class_getInstanceVariable(aClass, ivarString.UTF8String);
+    Ivar ivar = class_getInstanceVariable(ivarClass ?: aClass, ivarString.UTF8String);
     if (ivar == NULL) {
         return NO;
     }
