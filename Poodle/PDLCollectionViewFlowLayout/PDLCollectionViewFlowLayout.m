@@ -261,10 +261,8 @@ static NSString *const PDLCollectionViewFlowLayoutDecorationViewOfKind = @"PDLCo
         }
 
         if (nextAttribute == nil || nextAttribute.frame.origin.y >= currentMax) {
-            BOOL options = 0;
             CGFloat offset = lowMargin;
             if (isAlignmentLateralMax(alignment)) {
-                options = NSEnumerationReverse;
                 offset = highMargin;
             }
 
