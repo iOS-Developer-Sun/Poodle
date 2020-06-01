@@ -160,6 +160,24 @@ void pdl_backtrace_record(pdl_backtrace_t backtrace) {
     bt->frames_count = count_recorded;
 }
 
+void **pdl_backtrace_get_frames(pdl_backtrace_t backtrace) {
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return NULL;
+    }
+
+    return bt->frames;
+}
+
+int pdl_backtrace_get_frames_count(pdl_backtrace_t backtrace) {
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return 0;
+    }
+
+    return bt->frames_count;
+}
+
 void pdl_backtrace_thread_show(pdl_backtrace_t backtrace, bool wait) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (!bt) {
