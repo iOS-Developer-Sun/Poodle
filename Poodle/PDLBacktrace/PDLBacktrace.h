@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (atomic, copy) NSString *name;
 @property (readonly) BOOL isShown;
-@property (readonly) NSArray *frames;
+@property (readonly) NSArray <NSNumber *>*frames;
 
 - (void)record;
 - (void)show;

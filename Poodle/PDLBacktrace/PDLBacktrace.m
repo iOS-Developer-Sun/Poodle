@@ -54,17 +54,17 @@
     return pdl_backtrace_thread_is_shown(self.backtrace);
 }
 
-- (NSArray *)frames {
+- (NSArray<NSNumber *> *)frames {
     void **frames = pdl_backtrace_get_frames(self.backtrace);
     if (frames == NULL) {
         return NULL;
     }
 
-    NSMutableArray *ret = [NSMutableArray array];
+    NSMutableArray <NSNumber *>*ret = [NSMutableArray array];
     int count = pdl_backtrace_get_frames_count(self.backtrace);
     for (int i = 0; i < count; i++) {
         void *frame = frames[i];
-        [ret addObject:@(frame)];
+        [ret addObject:@((uintptr_t)frame)];
     }
     return ret.copy;
 }
