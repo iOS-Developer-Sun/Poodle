@@ -1,5 +1,5 @@
 //
-//  pdl_backtrace-arm.s
+//  pdl_thread-arm.s
 //  Poodle
 //
 //  Created by Poodle on 2020/5/12.
@@ -22,7 +22,7 @@ mov     r4, r7              // store fp
 mov     r7, r0              // fake frames
 
 mov     r0, r2              // set arg
-blr     r1                  // start(arg)
+blx     r1                 // start(arg)
 
 mov     r7, r4              // recover fp
 

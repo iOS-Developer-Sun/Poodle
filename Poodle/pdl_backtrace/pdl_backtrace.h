@@ -8,13 +8,11 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
-#include <pthread.h>
+#import <pthread/pthread.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-extern void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg);
 
 typedef void *pdl_backtrace_t;
 
