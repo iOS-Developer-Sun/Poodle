@@ -7,69 +7,13 @@
 //
 
 #import "pdl_backtrace.h"
-#import <pthread/pthread.h>
 #import <malloc/malloc.h>
 #import <assert.h>
 #import <string.h>
 #import <stdio.h>
-
-void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg) {
-#ifdef __i386__
-    int alignment = 4;
-    __attribute__((aligned(4)))
-    void *aligned_frames[frames_count * alignment + 2];
-    void **stack_frames = aligned_frames + 2;
-#else
-    int alignment = 2;
-    void *aligned_frames[frames_count * alignment];
-    void **stack_frames = aligned_frames;
-#endif
-    for (int i = 0; i < frames_count; i++) {
-        int fp_index = i * alignment;
-        int lr_index = i * alignment + 1;
-        if (i != frames_count - 1) {
-            stack_frames[fp_index] = &stack_frames[fp_index + alignment];
-        } else {
-            stack_frames[fp_index] = NULL;
-        }
-        stack_frames[lr_index] = frames[i];
-    }
-
-    extern void *pdl_thread_fake(void **frames, void *(*start)(void *), void *arg);
-    void *ret = pdl_thread_fake(stack_frames, start, arg);
-    return ret;
-}
+#import "pdl_thread.h"
 
 #define PDL_BACKTRACE_FRAMES_MAX_COUNT 128
-
-int pdl_backtrace_stack(void *link_register, void *frame_pointer, void **frames, int count) {
-    int ret = 0;
-    void *lr = (void *)link_register;
-    void **fp = (void **)frame_pointer;
-    while (true) {
-        if (ret > count) {
-            break;
-        }
-        if (frames) {
-            frames[ret] = lr;
-        }
-        ret++;
-        if (!fp) {
-            break;
-        }
-        if (!lr) {
-            break;
-        }
-        fp = *fp;
-
-        if (fp) {
-            lr = *(fp + 1);
-        } else {
-            lr = NULL;
-        }
-    }
-    return ret;
-}
 
 #define MAXTHREADNAMESIZE 64
 
@@ -84,7 +28,7 @@ typedef struct pdl_backtrace {
     char thread_name[MAXTHREADNAMESIZE];
 } pdl_backtrace;
 
-static void *pdl_backtrace_wait(pdl_backtrace_t *backtrace) {
+static void *pdl_backtrace_wait(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     pthread_mutex_t *wait_lock = &(bt->wait_lock);
     pthread_mutex_unlock(wait_lock);
@@ -102,7 +46,8 @@ static void *pdl_backtrace_execute(pdl_backtrace *bt, void *(*start)(void *), vo
     return ret;
 }
 
-static void *pdl_backtrace_thread_main(pdl_backtrace *bt) {
+static void *pdl_backtrace_thread_main(pdl_backtrace_t backtrace) {
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     pthread_setname_np(bt->thread_name);
     void *ret = pdl_backtrace_execute(bt, &pdl_backtrace_wait, bt);
     return ret;
@@ -162,10 +107,10 @@ void pdl_backtrace_record(pdl_backtrace_t backtrace) {
     void *fp = __builtin_frame_address(0);
     void **frames = NULL;
     int count_recorded = 0;
-    int count = pdl_backtrace_stack(lr, fp, NULL, PDL_BACKTRACE_FRAMES_MAX_COUNT);
+    int count = pdl_thread_frames(lr, fp, NULL, PDL_BACKTRACE_FRAMES_MAX_COUNT);
     if (count > 0) {
         frames = bt->malloc_ptr(sizeof(void *) * count);
-        count_recorded = pdl_backtrace_stack(lr, fp, frames, PDL_BACKTRACE_FRAMES_MAX_COUNT);
+        count_recorded = pdl_thread_frames(lr, fp, frames, PDL_BACKTRACE_FRAMES_MAX_COUNT);
         assert(count == count_recorded);
     }
     bt->free_ptr(bt->frames);

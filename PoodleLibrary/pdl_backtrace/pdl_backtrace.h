@@ -8,6 +8,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
+#import <pthread/pthread.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -23,9 +24,12 @@ extern void pdl_backtrace_record(pdl_backtrace_t backtrace);
 extern void **pdl_backtrace_get_frames(pdl_backtrace_t backtrace);
 extern int pdl_backtrace_get_frames_count(pdl_backtrace_t backtrace);
 extern void pdl_backtrace_thread_show(pdl_backtrace_t backtrace, bool wait);
+extern void pdl_backtrace_thread_show_with_start(pdl_backtrace_t backtrace, bool wait, int (*thread_create)(pthread_t *, const pthread_attr_t *, void *(* )(void *), void *));
 extern bool pdl_backtrace_thread_is_shown(pdl_backtrace_t backtrace);
 extern void pdl_backtrace_thread_hide(pdl_backtrace_t backtrace);
 extern void pdl_backtrace_destroy(pdl_backtrace_t backtrace);
+
+extern void *pdl_backtrace_thread_execute(pdl_backtrace_t backtrace, void *(*start)(void *), void *arg);
 
 extern void pdl_backtrace_print(pdl_backtrace_t backtrace);
 
