@@ -8,19 +8,22 @@
 
 #ifdef __arm64__
 
+// void *pdl_thread_fake(void **frames, void *(*start)(void *), void *arg);
+
 .text
 .align 4
-.private_extern _pdl_backtrace_fake
+.private_extern _pdl_thread_fake
 
-_pdl_backtrace_fake:
+_pdl_thread_fake:
 
 sub     sp, sp, #0x20           // new space
 stp     x19, x20, [sp, #0x10]   // backup caller registers
 mov     x19, fp                 // store fp
 mov     x20, lr                 // store lr
-mov     fp, x1                  // fake frames
+mov     fp, x0                  // fake frames
 
-bl      _pdl_backtrace_wait     // wait pdl_backtrace_wait(bt);
+mov     x0, x2                  // set arg
+blr     x1                      // start(arg)
 
 mov     fp, x19                 // recover fp
 mov     lr, x20                 // recover lr
