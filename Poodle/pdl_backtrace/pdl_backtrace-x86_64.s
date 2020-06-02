@@ -8,15 +8,18 @@
 
 #ifdef __x86_64__
 
+// void *pdl_thread_fake(void **frames, void *(*start)(void *), void *arg);
+
 .text
 .align 4
-.private_extern _pdl_backtrace_fake
+.private_extern _pdl_thread_fake
 
-_pdl_backtrace_fake:
+_pdl_thread_fake:
 
 pushq   %rbp                // store fp
-movq    %rsi, %rbp          // fake frames
-callq   _pdl_backtrace_wait // wait pdl_backtrace_wait(bt);
+movq    %rdi, %rbp          // fake frames
+movq    %rdx, %rdi          // set arg
+callq   *%rsi               // start(arg)
 popq    %rbp                // recover fp
 retq
 
