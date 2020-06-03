@@ -20,17 +20,14 @@
 
 @implementation PDLDispatchBlockBacktrace
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        ;
-    }
-    return self;
+static void *pdl_dispatch_backtrace_invoke(void *arg) {
+    PDLDispatchBlockBacktrace *self = (__bridge PDLDispatchBlockBacktrace *)(arg);
+    self.block();
+    return NULL;
 }
 
 - (void)run {
-    self.block();
-
+    pdl_backtrace_thread_execute(_backtrace, pdl_dispatch_backtrace_invoke, (__bridge void *)(self));
     pdl_backtrace_destroy(_backtrace);
     _backtrace = NULL;
 }
@@ -46,7 +43,34 @@ void pdl_dispatch_backtrace_async(dispatch_queue_t queue, dispatch_block_t block
     pdl_backtrace_t backtrace = pdl_backtrace_create();
     pdl_backtrace_record(backtrace);
     blockBacktrace.backtrace = backtrace;
-    dispatch_async_original(queue, ^{
+    typeof(dispatch_async_original) dispatch_async_ptr = dispatch_async_original ?: &dispatch_async;
+    dispatch_async_ptr(queue, ^{
+        [blockBacktrace run];
+    });
+}
+
+void pdl_dispatch_backtrace_async_f(dispatch_queue_t queue, void *context, dispatch_function_t work, void (*dispatch_async_original)(dispatch_queue_t queue, dispatch_block_t block)) {
+    PDLDispatchBlockBacktrace *blockBacktrace = [[PDLDispatchBlockBacktrace alloc] init];
+    blockBacktrace.block = ^{
+        work(context);
+    };
+    pdl_backtrace_t backtrace = pdl_backtrace_create();
+    pdl_backtrace_record(backtrace);
+    blockBacktrace.backtrace = backtrace;
+    typeof(dispatch_async_original) dispatch_async_ptr = dispatch_async_original ?: &dispatch_async;
+    dispatch_async_ptr(queue, ^{
+        [blockBacktrace run];
+    });
+}
+
+void pdl_dispatch_backtrace_after(dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block, void (*dispatch_after_original)(dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block)) {
+    PDLDispatchBlockBacktrace *blockBacktrace = [[PDLDispatchBlockBacktrace alloc] init];
+    blockBacktrace.block = block;
+    pdl_backtrace_t backtrace = pdl_backtrace_create();
+    pdl_backtrace_record(backtrace);
+    blockBacktrace.backtrace = backtrace;
+    typeof(dispatch_after_original) dispatch_after_ptr = dispatch_after_original ?: &dispatch_after;
+    dispatch_after_ptr(when, queue, ^{
         [blockBacktrace run];
     });
 }
