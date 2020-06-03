@@ -8,7 +8,7 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
-#import <pthread/pthread.h>
+#include <pthread.h>
 
 #ifdef __cplusplus
 extern "C" {

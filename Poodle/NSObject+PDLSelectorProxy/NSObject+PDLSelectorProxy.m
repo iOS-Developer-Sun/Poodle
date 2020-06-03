@@ -11,7 +11,7 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import <dlfcn.h>
-#import <pthread/pthread.h>
+#import <pthread.h>
 
 static void *NSObjectSelectorProxyKVOClassKey;
 static void *NSObjectSelectorProxyClassKey;
