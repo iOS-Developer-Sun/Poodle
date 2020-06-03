@@ -21,7 +21,7 @@ int    $0x80
 movl   (%esp), %edx
 pushl  %ecx
 jae    LReturn
-calll  L1
+call  L1
 L1:
 popl   %edx
 jmp    tramp_cerror

@@ -19,7 +19,7 @@ _pdl_thread_fake:
 pushq   %rbp                // store fp
 movq    %rdi, %rbp          // fake frames
 movq    %rdx, %rdi          // set arg
-callq   *%rsi               // start(arg)
+call    *%rsi               // start(arg)
 popq    %rbp                // recover fp
 retq
 
