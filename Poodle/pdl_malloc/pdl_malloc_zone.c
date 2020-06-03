@@ -7,7 +7,7 @@
 //
 
 #import "pdl_malloc_zone.h"
-#import <pthread/pthread.h>
+#import <pthread.h>
 #import <stdio.h>
 #import <assert.h>
 #import <string.h>

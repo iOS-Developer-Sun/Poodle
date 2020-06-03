@@ -6,7 +6,7 @@
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
-#import <pthread.h>
+#include <pthread.h>
 
 #ifdef __cplusplus
 extern "C" {
