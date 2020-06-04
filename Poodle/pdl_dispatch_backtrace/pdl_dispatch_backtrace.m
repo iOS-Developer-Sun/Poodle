@@ -11,7 +11,7 @@
 #import <objc/runtime.h>
 #import "pdl_backtrace.h"
 
-#define PDL_DISPATCH_BACKTRACE_FRAME_HIDDEN_COUNT 6
+#define PDL_DISPATCH_BACKTRACE_FRAME_HIDDEN_COUNT 5
 
 @interface PDLDispatchBlockBacktrace : NSObject
 
