@@ -9,24 +9,40 @@
 #import "pdl_thread.h"
 
 static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
+    int hc = hidden_count;
+    int total_frames_count = frames_count;
+    bool hides_without_self = hc > 0;
+    if (hides_without_self) {
+        total_frames_count++;
+    } else {
+        hc = -hc;
+    }
+
 #ifdef __i386__
     int alignment = 4;
     __attribute__((aligned(4)))
-    void *aligned_frames[frames_count * alignment + 2];
+    void *aligned_frames[total_frames_count * alignment + 2];
     void **stack_frames = aligned_frames + 2;
 #else
     int alignment = 2;
-    void *aligned_frames[frames_count * alignment];
+    void *aligned_frames[total_frames_count * alignment];
     void **stack_frames = aligned_frames;
 #endif
-    void *lr = pdl_builtin_return_address(0);
-    void *fp = pdl_builtin_frame_address(0);
+
+    void *self_lr = pdl_builtin_return_address(0);
+    void *self_fp = pdl_builtin_frame_address(0);
+    void *lr = self_lr;
+    void *fp = self_fp;
     int current_count = pdl_thread_frames(lr, fp, NULL, __INT_MAX__) - 1;
-    if (current_count < hidden_count) {
+    if (current_count < hc) {
         lr = NULL;
     } else {
-        fp = pdl_builtin_frame_address(hidden_count);
-        lr = pdl_builtin_return_address(hidden_count);
+        int from = hc;
+        if (hides_without_self) {
+            from++;
+        }
+        fp = pdl_builtin_frame_address(from);
+        lr = pdl_builtin_return_address(from);
     }
 
     for (int i = 0; i < frames_count; i++) {
@@ -36,8 +52,15 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
             stack_frames[fp_index] = &stack_frames[fp_index + alignment];
             stack_frames[lr_index] = frames[i];
         } else {
-            stack_frames[fp_index] = fp;
-            stack_frames[lr_index] = lr;
+            if (hides_without_self) {
+                stack_frames[fp_index] = &stack_frames[fp_index + alignment];
+                stack_frames[lr_index] = self_lr;
+                stack_frames[fp_index + alignment] = fp;
+                stack_frames[lr_index + alignment] = lr;
+            } else {
+                stack_frames[fp_index] = fp;
+                stack_frames[lr_index] = lr;
+            }
         }
     }
 
