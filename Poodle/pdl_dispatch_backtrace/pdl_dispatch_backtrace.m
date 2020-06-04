@@ -38,11 +38,11 @@ static void *pdl_dispatch_backtrace_invoke(void *arg) {
     _backtrace = NULL;
 }
 
-void pdl_dispatch_backtrace_async(dispatch_queue_t queue, dispatch_block_t block, void (*dispatch_async_original)(dispatch_queue_t queue, dispatch_block_t block)) {
+void pdl_dispatch_backtrace_async(dispatch_queue_t queue, dispatch_block_t block, void (*dispatch_async_original)(dispatch_queue_t queue, dispatch_block_t block), unsigned int hidden_count) {
     PDLDispatchBlockBacktrace *blockBacktrace = [[PDLDispatchBlockBacktrace alloc] init];
     blockBacktrace.block = block;
     pdl_backtrace_t backtrace = pdl_backtrace_create();
-    pdl_backtrace_record(backtrace);
+    pdl_backtrace_record_with_hidden_frames(backtrace, hidden_count);
     blockBacktrace.backtrace = backtrace;
     typeof(dispatch_async_original) dispatch_async_ptr = dispatch_async_original ?: &dispatch_async;
     dispatch_async_ptr(queue, ^{
@@ -50,13 +50,13 @@ void pdl_dispatch_backtrace_async(dispatch_queue_t queue, dispatch_block_t block
     });
 }
 
-void pdl_dispatch_backtrace_async_f(dispatch_queue_t queue, void *context, dispatch_function_t work, void (*dispatch_async_original)(dispatch_queue_t queue, dispatch_block_t block)) {
+void pdl_dispatch_backtrace_async_f(dispatch_queue_t queue, void *context, dispatch_function_t work, void (*dispatch_async_original)(dispatch_queue_t queue, dispatch_block_t block), unsigned int hidden_count) {
     PDLDispatchBlockBacktrace *blockBacktrace = [[PDLDispatchBlockBacktrace alloc] init];
     blockBacktrace.block = ^{
         work(context);
     };
     pdl_backtrace_t backtrace = pdl_backtrace_create();
-    pdl_backtrace_record(backtrace);
+    pdl_backtrace_record_with_hidden_frames(backtrace, hidden_count);
     blockBacktrace.backtrace = backtrace;
     typeof(dispatch_async_original) dispatch_async_ptr = dispatch_async_original ?: &dispatch_async;
     dispatch_async_ptr(queue, ^{
@@ -64,11 +64,11 @@ void pdl_dispatch_backtrace_async_f(dispatch_queue_t queue, void *context, dispa
     });
 }
 
-void pdl_dispatch_backtrace_after(dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block, void (*dispatch_after_original)(dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block)) {
+void pdl_dispatch_backtrace_after(dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block, void (*dispatch_after_original)(dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block), unsigned int hidden_count) {
     PDLDispatchBlockBacktrace *blockBacktrace = [[PDLDispatchBlockBacktrace alloc] init];
     blockBacktrace.block = block;
     pdl_backtrace_t backtrace = pdl_backtrace_create();
-    pdl_backtrace_record(backtrace);
+    pdl_backtrace_record_with_hidden_frames(backtrace, hidden_count);
     blockBacktrace.backtrace = backtrace;
     typeof(dispatch_after_original) dispatch_after_ptr = dispatch_after_original ?: &dispatch_after;
     dispatch_after_ptr(when, queue, ^{

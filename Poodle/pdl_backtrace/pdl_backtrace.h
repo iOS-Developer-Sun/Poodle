@@ -21,6 +21,7 @@ extern pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_
 extern const char *pdl_backtrace_get_name(pdl_backtrace_t backtrace);
 extern void pdl_backtrace_set_name(pdl_backtrace_t backtrace, const char *name);
 extern void pdl_backtrace_record(pdl_backtrace_t backtrace);
+extern void pdl_backtrace_record_with_hidden_frames(pdl_backtrace_t backtrace, unsigned int hidden_count);
 extern void **pdl_backtrace_get_frames(pdl_backtrace_t backtrace);
 extern int pdl_backtrace_get_frames_count(pdl_backtrace_t backtrace);
 extern void pdl_backtrace_thread_show(pdl_backtrace_t backtrace, bool wait);

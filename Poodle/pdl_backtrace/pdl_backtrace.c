@@ -98,13 +98,22 @@ void pdl_backtrace_set_name(pdl_backtrace_t backtrace, const char *name) {
 }
 
 void pdl_backtrace_record(pdl_backtrace_t backtrace) {
+#ifdef DEBUG
+    pdl_backtrace_record_with_hidden_frames(backtrace, 1);
+#else
+    pdl_backtrace_record_with_hidden_frames(backtrace, 0);
+#endif
+}
+
+void pdl_backtrace_record_with_hidden_frames(pdl_backtrace_t backtrace, unsigned int hidden_count) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (!bt) {
         return;
     }
 
-    void *lr = __builtin_return_address(0);
-    void *fp = __builtin_frame_address(0);
+    void *lr = pdl_builtin_return_address(hidden_count + 1);
+    void *fp = pdl_builtin_frame_address(hidden_count);
+
     void **frames = NULL;
     int count_recorded = 0;
     int count = pdl_thread_frames(lr, fp, NULL, PDL_BACKTRACE_FRAMES_MAX_COUNT);
