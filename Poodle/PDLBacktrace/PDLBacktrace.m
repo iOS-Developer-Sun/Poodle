@@ -50,6 +50,10 @@
     pdl_backtrace_record(self.backtrace);
 }
 
+- (void)record:(NSUInteger)hiddenCount {
+    pdl_backtrace_record_with_hidden_frames(self.backtrace, hiddenCount);
+}
+
 - (BOOL)isShown {
     return pdl_backtrace_thread_is_shown(self.backtrace);
 }
