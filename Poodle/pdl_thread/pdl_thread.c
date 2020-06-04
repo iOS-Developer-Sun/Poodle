@@ -7,9 +7,14 @@
 //
 
 #import "pdl_thread.h"
-#import <stdbool.h>
 
-void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg) {
+__attribute__((noinline))
+static void *pdl_thread_process_pointer(void) {
+    __volatile void *pc = __builtin_return_address(0);
+    return (void *)pc;
+}
+
+static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)(void *), void *arg, bool hides_real) {
 #ifdef __i386__
     int alignment = 4;
     __attribute__((aligned(4)))
@@ -20,19 +25,32 @@ void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *)
     void *aligned_frames[frames_count * alignment];
     void **stack_frames = aligned_frames;
 #endif
+    void *lr = pdl_thread_process_pointer();
+    void *fp = __builtin_frame_address(0);
     for (int i = 0; i < frames_count; i++) {
         int fp_index = i * alignment;
         int lr_index = i * alignment + 1;
         if (i != frames_count - 1) {
             stack_frames[fp_index] = &stack_frames[fp_index + alignment];
+            stack_frames[lr_index] = frames[i];
         } else {
-            stack_frames[fp_index] = NULL;
+            stack_frames[fp_index] = fp;
+            if (hides_real) {
+                stack_frames[lr_index] = NULL;
+            } else {
+                stack_frames[lr_index] = lr;
+            }
         }
-        stack_frames[lr_index] = frames[i];
     }
 
     extern void *pdl_thread_fake(void **frames, void *(*start)(void *), void *arg);
     void *ret = pdl_thread_fake(stack_frames, start, arg);
+    return ret;
+}
+
+void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, bool hides_real) {
+    void *ret = pdl_thread_fake_end(frames, frames_count, start, arg, hides_real);
+    __asm__ volatile ("nop");
     return ret;
 }
 
