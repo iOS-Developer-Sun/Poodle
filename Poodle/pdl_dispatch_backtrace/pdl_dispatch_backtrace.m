@@ -26,7 +26,7 @@ static void *pdl_dispatch_backtrace_invoke(void *arg) {
 }
 
 - (void)run {
-    pdl_backtrace_thread_execute(_backtrace, pdl_dispatch_backtrace_invoke, (__bridge void *)(self), false);
+    pdl_backtrace_thread_execute(_backtrace, pdl_dispatch_backtrace_invoke, (__bridge void *)(self), 0);
     pdl_backtrace_destroy(_backtrace);
     _backtrace = NULL;
 }

@@ -17,7 +17,7 @@ typedef struct pdl_pthread_info {
 
 static void *pdl_pthread_start(void *arg) {
     pdl_pthread_info *info = (typeof(info))arg;
-    void *ret = pdl_backtrace_thread_execute(info->backtrace, info->start, info->arg, false);
+    void *ret = pdl_backtrace_thread_execute(info->backtrace, info->start, info->arg, 0);
     pdl_backtrace_destroy(info->backtrace);
     free(info);
     return ret;

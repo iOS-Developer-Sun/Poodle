@@ -14,7 +14,7 @@ static void *pdl_thread_process_pointer(void) {
     return (void *)pc;
 }
 
-static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)(void *), void *arg, bool hides_real) {
+static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)(void *), void *arg, int hides) {
 #ifdef __i386__
     int alignment = 4;
     __attribute__((aligned(4)))
@@ -27,6 +27,11 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
 #endif
     void *lr = pdl_thread_process_pointer();
     void *fp = __builtin_frame_address(0);
+    int current_count = pdl_thread_frames(lr, fp, NULL, __INT_MAX__);
+    if (current_count < hides) {
+        lr = NULL;
+    }
+
     for (int i = 0; i < frames_count; i++) {
         int fp_index = i * alignment;
         int lr_index = i * alignment + 1;
@@ -35,11 +40,7 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
             stack_frames[lr_index] = frames[i];
         } else {
             stack_frames[fp_index] = fp;
-            if (hides_real) {
-                stack_frames[lr_index] = NULL;
-            } else {
-                stack_frames[lr_index] = lr;
-            }
+            stack_frames[lr_index] = lr;
         }
     }
 
@@ -48,8 +49,8 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
     return ret;
 }
 
-void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, bool hides_real) {
-    void *ret = pdl_thread_fake_end(frames, frames_count, start, arg, hides_real);
+void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, int hides) {
+    void *ret = pdl_thread_fake_end(frames, frames_count, start, arg, hides);
     __asm__ volatile ("nop");
     return ret;
 }
