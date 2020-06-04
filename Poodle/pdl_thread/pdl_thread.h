@@ -13,7 +13,7 @@
 extern "C" {
 #endif
 
-extern void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, bool hides_real);
+extern void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, int hides);
 
 extern int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, int count);
 
