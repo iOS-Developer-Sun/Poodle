@@ -8,13 +8,7 @@
 
 #import "pdl_thread.h"
 
-__attribute__((noinline))
-static void *pdl_thread_process_pointer(void) {
-    __volatile void *pc = __builtin_return_address(0);
-    return (void *)pc;
-}
-
-static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)(void *), void *arg, int hides) {
+static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
 #ifdef __i386__
     int alignment = 4;
     __attribute__((aligned(4)))
@@ -25,11 +19,14 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
     void *aligned_frames[frames_count * alignment];
     void **stack_frames = aligned_frames;
 #endif
-    void *lr = pdl_thread_process_pointer();
-    void *fp = __builtin_frame_address(0);
-    int current_count = pdl_thread_frames(lr, fp, NULL, __INT_MAX__);
-    if (current_count < hides) {
+    void *lr = pdl_builtin_return_address(0);
+    void *fp = pdl_builtin_frame_address(0);
+    int current_count = pdl_thread_frames(lr, fp, NULL, __INT_MAX__) - 1;
+    if (current_count < hidden_count) {
         lr = NULL;
+    } else {
+        fp = pdl_builtin_frame_address(hidden_count);
+        lr = pdl_builtin_return_address(hidden_count);
     }
 
     for (int i = 0; i < frames_count; i++) {
@@ -49,8 +46,8 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
     return ret;
 }
 
-void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, int hides) {
-    void *ret = pdl_thread_fake_end(frames, frames_count, start, arg, hides);
+void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
+    void *ret = pdl_thread_fake_end(frames, frames_count, start, arg, hidden_count);
     __asm__ volatile ("nop");
     return ret;
 }
@@ -82,4 +79,30 @@ int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, i
         }
     }
     return ret;
+}
+
+void *pdl_builtin_frame_address(int frame) {
+    void *fp = __builtin_frame_address(1);
+    int count = frame;
+    while (count > 0) {
+        fp = *(void **)fp;
+        count--;
+        if (fp == NULL) {
+            break;
+        }
+    }
+    return fp;
+}
+
+void *pdl_builtin_return_address(int frame) {
+    void *lr = NULL;
+    if (frame == 0) {
+        lr = __builtin_return_address(0);
+    } else {
+        void **fp = pdl_builtin_frame_address(frame);
+        if (fp) {
+            lr = fp[1];
+        }
+    }
+    return lr;
 }

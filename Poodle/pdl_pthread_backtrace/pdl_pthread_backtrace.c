@@ -9,6 +9,8 @@
 #import "pdl_pthread_backtrace.h"
 #import "pdl_backtrace.h"
 
+#define PDL_PTHREAD_BACKTRACE_FRAME_HIDDEN_COUNT 4
+
 typedef struct pdl_pthread_info {
     void *(*start)(void *);
     void *arg;
@@ -17,7 +19,7 @@ typedef struct pdl_pthread_info {
 
 static void *pdl_pthread_start(void *arg) {
     pdl_pthread_info *info = (typeof(info))arg;
-    void *ret = pdl_backtrace_thread_execute(info->backtrace, info->start, info->arg, 0);
+    void *ret = pdl_backtrace_thread_execute(info->backtrace, info->start, info->arg, PDL_PTHREAD_BACKTRACE_FRAME_HIDDEN_COUNT);
     pdl_backtrace_destroy(info->backtrace);
     free(info);
     return ret;

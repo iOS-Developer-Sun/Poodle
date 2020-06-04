@@ -41,8 +41,8 @@ static void *pdl_backtrace_wait(pdl_backtrace_t backtrace) {
     return backtrace;
 }
 
-static void *pdl_backtrace_execute(pdl_backtrace *bt, void *(*start)(void *), void *arg, int hides) {
-    void *ret = pdl_thread_execute(bt->frames, bt->frames_count, start, arg, hides);
+static void *pdl_backtrace_execute(pdl_backtrace *bt, void *(*start)(void *), void *arg, int hidden_count) {
+    void *ret = pdl_thread_execute(bt->frames, bt->frames_count, start, arg, hidden_count);
     return ret;
 }
 
@@ -200,13 +200,13 @@ void pdl_backtrace_destroy(pdl_backtrace_t backtrace) {
     bt->free_ptr(bt);
 }
 
-void *pdl_backtrace_thread_execute(pdl_backtrace_t backtrace, void *(*start)(void *), void *arg, int hides) {
+void *pdl_backtrace_thread_execute(pdl_backtrace_t backtrace, void *(*start)(void *), void *arg, int hidden_count) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (!bt) {
         return NULL;
     }
 
-    void *ret = pdl_backtrace_execute(bt, start, arg, hides);
+    void *ret = pdl_backtrace_execute(bt, start, arg, hidden_count);
     return ret;
 }
 
