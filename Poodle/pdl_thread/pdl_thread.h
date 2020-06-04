@@ -7,12 +7,13 @@
 //
 
 #include <pthread.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg);
+extern void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, bool hides_real);
 
 extern int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, int count);
 

@@ -22,12 +22,11 @@
 
 static void *pdl_dispatch_backtrace_invoke(void *arg) {
     PDLDispatchBlockBacktrace *self = (__bridge PDLDispatchBlockBacktrace *)(arg);
-    self.block();
-    return NULL;
+    return ((void *(^)(void))self.block)();
 }
 
 - (void)run {
-    pdl_backtrace_thread_execute(_backtrace, pdl_dispatch_backtrace_invoke, (__bridge void *)(self));
+    pdl_backtrace_thread_execute(_backtrace, pdl_dispatch_backtrace_invoke, (__bridge void *)(self), false);
     pdl_backtrace_destroy(_backtrace);
     _backtrace = NULL;
 }
