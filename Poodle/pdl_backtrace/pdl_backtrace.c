@@ -104,10 +104,10 @@ void pdl_backtrace_record(pdl_backtrace_t backtrace, unsigned int hidden_count) 
         valid_hidden_count++;
     }
 #endif
-    pdl_backtrace_record_with_filters(backtrace, valid_hidden_count, NULL, NULL);
+    pdl_backtrace_record_with_filter(backtrace, valid_hidden_count, NULL);
 }
 
-void pdl_backtrace_record_with_filters(pdl_backtrace_t backtrace, unsigned int hidden_count, bool(*begin_filter)(void *link_register), bool(*end_filter)(void *link_register)) {
+void pdl_backtrace_record_with_filter(pdl_backtrace_t backtrace, unsigned int hidden_count, pdl_thread_frame_filter *filter) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (!bt) {
         return;
@@ -122,10 +122,10 @@ void pdl_backtrace_record_with_filters(pdl_backtrace_t backtrace, unsigned int h
 
     void **frames = NULL;
     int count_recorded = 0;
-    int count = pdl_thread_frames_with_filters(lr, fp, NULL, PDL_BACKTRACE_FRAMES_MAX_COUNT, begin_filter, end_filter);
+    int count = pdl_thread_frames_with_filter(lr, fp, NULL, PDL_BACKTRACE_FRAMES_MAX_COUNT, filter);
     if (count > 0) {
         frames = bt->malloc_ptr(sizeof(void *) * count);
-        count_recorded = pdl_thread_frames_with_filters(lr, fp, frames, PDL_BACKTRACE_FRAMES_MAX_COUNT, begin_filter, end_filter);
+        count_recorded = pdl_thread_frames_with_filter(lr, fp, frames, PDL_BACKTRACE_FRAMES_MAX_COUNT, filter);
         assert(count == count_recorded);
     }
     bt->free_ptr(bt->frames);

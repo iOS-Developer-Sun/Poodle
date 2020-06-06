@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <pthread.h>
+#include "pdl_thread.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -21,7 +22,7 @@ extern pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_
 extern const char *pdl_backtrace_get_name(pdl_backtrace_t backtrace);
 extern void pdl_backtrace_set_name(pdl_backtrace_t backtrace, const char *name);
 extern void pdl_backtrace_record(pdl_backtrace_t backtrace, unsigned int hidden_count);
-extern void pdl_backtrace_record_with_filters(pdl_backtrace_t backtrace, unsigned int hidden_count, bool(*begin_filter)(void *link_register), bool(*end_filter)(void *link_register));
+extern void pdl_backtrace_record_with_filter(pdl_backtrace_t backtrace, unsigned int hidden_count, pdl_thread_frame_filter *filter);
 extern bool pdl_backtrace_fake_begin_filter(void *link_register);
 extern bool pdl_backtrace_fake_end_filter(void *link_register);
 extern void **pdl_backtrace_get_frames(pdl_backtrace_t backtrace);
