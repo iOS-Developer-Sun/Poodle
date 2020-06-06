@@ -6,7 +6,8 @@
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
-#import "pdl_thread.h"
+#include "pdl_thread.h"
+#include "pdl_thread_define.h"
 
 static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
     int hc = hidden_count;
@@ -71,7 +72,6 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
 
 void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
     void *ret = pdl_thread_fake_end(frames, frames_count, start, arg, hidden_count);
-    __asm__ volatile ("nop");
     return ret;
 }
 
@@ -104,6 +104,7 @@ int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, i
     return ret;
 }
 
+__attribute__((noinline))
 void *pdl_builtin_frame_address(int frame) {
     void *fp = __builtin_frame_address(1);
     int count = frame;
@@ -117,6 +118,7 @@ void *pdl_builtin_frame_address(int frame) {
     return fp;
 }
 
+__attribute__((noinline))
 void *pdl_builtin_return_address(int frame) {
     void *lr = NULL;
     if (frame == 0) {

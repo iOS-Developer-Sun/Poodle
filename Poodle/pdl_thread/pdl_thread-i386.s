@@ -6,6 +6,8 @@
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
+#include "pdl_thread_define.h"
+
 #ifdef __i386__
 
 // void *pdl_thread_fake(void **frames, void *(*start)(void *), void *arg);

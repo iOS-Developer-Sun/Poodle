@@ -1468,6 +1468,7 @@
 		B83CAA74248B4830009C784A /* pdl_security.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_security.h; sourceTree = "<group>"; };
 		B83CAA77248B487E009C784A /* pdl_security.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_security.c; sourceTree = "<group>"; };
 		B83CAA81248B49B4009C784A /* libpdl_security.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_security.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B83CAA8B248BA622009C784A /* pdl_thread_define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_thread_define.h; sourceTree = "<group>"; };
 		B8584229246B961400AC3717 /* pdl_backtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_backtrace.h; sourceTree = "<group>"; };
 		B858422B246B963E00AC3717 /* pdl_backtrace.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_backtrace.c; sourceTree = "<group>"; };
 		B85842AE246B968D00AC3717 /* libpdl_backtrace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_backtrace.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2314,6 +2315,7 @@
 		B879531A2486856000798005 /* pdl_thread */ = {
 			isa = PBXGroup;
 			children = (
+				B83CAA8B248BA622009C784A /* pdl_thread_define.h */,
 				B879532D248688D700798005 /* pdl_thread-arm.s */,
 				B8795330248688D800798005 /* pdl_thread-arm64.s */,
 				B879532E248688D700798005 /* pdl_thread-i386.s */,
