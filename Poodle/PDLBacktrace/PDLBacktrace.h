@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) NSArray <NSNumber *>*frames;
 
 - (void)record;
-- (void)record:(NSUInteger)hiddenCount;
+- (void)record:(unsigned int)hiddenCount;
 - (void)show;
 - (void)showWithoutWaiting;
 - (void)hide;

@@ -97,34 +97,48 @@ void pdl_backtrace_set_name(pdl_backtrace_t backtrace, const char *name) {
     strlcpy(bt->thread_name, name ?: "", sizeof(bt->thread_name));
 }
 
-void pdl_backtrace_record(pdl_backtrace_t backtrace) {
+void pdl_backtrace_record(pdl_backtrace_t backtrace, unsigned int hidden_count) {
+    unsigned int valid_hidden_count = hidden_count;
 #ifdef DEBUG
-    pdl_backtrace_record_with_hidden_frames(backtrace, 1);
-#else
-    pdl_backtrace_record_with_hidden_frames(backtrace, 0);
+    if (valid_hidden_count != __UINT32_MAX__) {
+        valid_hidden_count++;
+    }
 #endif
+    pdl_backtrace_record_with_filters(backtrace, valid_hidden_count, NULL, NULL);
 }
 
-void pdl_backtrace_record_with_hidden_frames(pdl_backtrace_t backtrace, unsigned int hidden_count) {
+void pdl_backtrace_record_with_filters(pdl_backtrace_t backtrace, unsigned int hidden_count, bool(*begin_filter)(void *link_register), bool(*end_filter)(void *link_register)) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (!bt) {
         return;
     }
 
-    void *lr = pdl_builtin_return_address(hidden_count + 1);
-    void *fp = pdl_builtin_frame_address(hidden_count);
+    void *lr = NULL;
+    void *fp = NULL;
+    if (hidden_count != __UINT32_MAX__) {
+        lr = pdl_builtin_return_address(hidden_count + 1);
+        fp = pdl_builtin_frame_address(hidden_count);
+    }
 
     void **frames = NULL;
     int count_recorded = 0;
-    int count = pdl_thread_frames(lr, fp, NULL, PDL_BACKTRACE_FRAMES_MAX_COUNT);
+    int count = pdl_thread_frames_with_filters(lr, fp, NULL, PDL_BACKTRACE_FRAMES_MAX_COUNT, begin_filter, end_filter);
     if (count > 0) {
         frames = bt->malloc_ptr(sizeof(void *) * count);
-        count_recorded = pdl_thread_frames(lr, fp, frames, PDL_BACKTRACE_FRAMES_MAX_COUNT);
+        count_recorded = pdl_thread_frames_with_filters(lr, fp, frames, PDL_BACKTRACE_FRAMES_MAX_COUNT, begin_filter, end_filter);
         assert(count == count_recorded);
     }
     bt->free_ptr(bt->frames);
     bt->frames = frames;
     bt->frames_count = count_recorded;
+}
+
+bool pdl_backtrace_fake_begin_filter(void *link_register) {
+    return pdl_thread_fake_begin_filter(link_register);
+}
+
+bool pdl_backtrace_fake_end_filter(void *link_register) {
+    return pdl_thread_fake_end_filter(link_register);
 }
 
 void **pdl_backtrace_get_frames(pdl_backtrace_t backtrace) {

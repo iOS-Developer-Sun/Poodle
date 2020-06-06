@@ -294,7 +294,7 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
     snprintf(name, sizeof(name), "malloc_%p", ptr);
     pdl_backtrace_set_name(info->bt, name);
     if (records) {
-        pdl_backtrace_record_with_hidden_frames(info->bt, _pdl_malloc_record_hidden_count);
+        pdl_backtrace_record(info->bt, _pdl_malloc_record_hidden_count);
     }
     info->live = true;
     pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_init", ptr, size, false);
@@ -339,7 +339,7 @@ static void pdl_malloc_destroy(void *ptr, size_t rsize, size_t size) {
                 char name[32];
                 snprintf(name, sizeof(name), "free_%p", ptr);
                 pdl_backtrace_set_name(info->fbt, name);
-                pdl_backtrace_record_with_hidden_frames(info->fbt, _pdl_malloc_record_hidden_count);
+                pdl_backtrace_record(info->fbt, _pdl_malloc_record_hidden_count);
                 break;
 
             default:

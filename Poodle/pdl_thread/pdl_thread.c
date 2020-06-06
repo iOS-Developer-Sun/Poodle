@@ -9,6 +9,8 @@
 #include "pdl_thread.h"
 #include "pdl_thread_define.h"
 
+extern void *pdl_thread_fake(void **frames, void *(*start)(void *), void *arg);
+
 static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
     int hc = hidden_count;
     int total_frames_count = frames_count;
@@ -65,7 +67,6 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
         }
     }
 
-    extern void *pdl_thread_fake(void **frames, void *(*start)(void *), void *arg);
     void *ret = pdl_thread_fake(stack_frames, start, arg);
     return ret;
 }
@@ -76,17 +77,44 @@ void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *)
 }
 
 int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, int count) {
+    return pdl_thread_frames_with_filters(link_register, frame_pointer, frames, count, NULL, NULL);
+}
+
+int pdl_thread_frames_with_filters(void *link_register, void *frame_pointer, void **frames, int count, bool(*begin_filter)(void *link_register), bool(*end_filter)(void *link_register)) {
     int ret = 0;
     void *lr = (void *)link_register;
     void **fp = (void **)frame_pointer;
+    int is_filtering = 0;
     while (true) {
         if (ret > count) {
             break;
         }
+
+        if (begin_filter) {
+            bool available = begin_filter(lr);
+            if (!available) {
+                is_filtering++;
+                goto L_next;
+            }
+        }
+
+        if (end_filter) {
+            bool available = end_filter(lr);
+            if (!available) {
+                is_filtering--;
+                goto L_next;
+            }
+        }
+
+        if (is_filtering > 0) {
+            goto L_next;
+        }
+
         if (frames) {
             frames[ret] = lr;
         }
         ret++;
+L_next:
         if (!fp) {
             break;
         }
@@ -102,6 +130,16 @@ int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, i
         }
     }
     return ret;
+}
+
+bool pdl_thread_fake_begin_filter(void *link_register) {
+    bool available = (link_register < (void *)&pdl_thread_fake) || (link_register > (void *)&pdl_thread_fake + 100);
+    return available;
+}
+
+bool pdl_thread_fake_end_filter(void *link_register) {
+    bool available = (link_register < (void *)&pdl_thread_fake_end) || (link_register > (void *)&pdl_thread_fake_end + 100);
+    return available;
 }
 
 __attribute__((noinline))
