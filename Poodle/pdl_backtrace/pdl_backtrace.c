@@ -53,6 +53,35 @@ static void *pdl_backtrace_thread_main(pdl_backtrace_t backtrace) {
     return ret;
 }
 
+static void pdl_backtrace_filter_init(pdl_thread_frame_filter *filter) {
+    filter->data = (void *)(unsigned long)0;
+}
+
+static bool pdl_backtrace_filter_is_valid(pdl_thread_frame_filter *filter, void *link_register) {
+    unsigned long max_count = (unsigned long)filter->init_data;
+    unsigned long count = (unsigned long)filter->data;
+    bool available = true;
+
+    available = pdl_thread_fake_begin_filter(link_register);
+    if (!available) {
+        count++;
+        filter->data = (void *)count;
+        bool ret = (count < max_count);
+        return ret;
+    }
+
+    available = pdl_thread_fake_end_filter(link_register);
+    if (!available) {
+        bool ret = (count < max_count);
+        count--;
+        filter->data = (void *)count;
+        return ret;
+    }
+
+    bool ret = (count < max_count);
+    return ret;
+}
+
 #pragma mark - public
 
 pdl_backtrace_t pdl_backtrace_create(void) {
@@ -133,12 +162,13 @@ void pdl_backtrace_record_with_filter(pdl_backtrace_t backtrace, unsigned int hi
     bt->frames_count = count_recorded;
 }
 
-bool pdl_backtrace_fake_begin_filter(void *link_register) {
-    return pdl_thread_fake_begin_filter(link_register);
-}
-
-bool pdl_backtrace_fake_end_filter(void *link_register) {
-    return pdl_thread_fake_end_filter(link_register);
+void pdl_backtrace_filter_with_count(pdl_thread_frame_filter *filter, unsigned int count) {
+    if (!filter) {
+        return;
+    }
+    filter->init_data = (void *)(unsigned long)count;
+    filter->init = &pdl_backtrace_filter_init;
+    filter->is_valid = &pdl_backtrace_filter_is_valid;
 }
 
 void **pdl_backtrace_get_frames(pdl_backtrace_t backtrace) {

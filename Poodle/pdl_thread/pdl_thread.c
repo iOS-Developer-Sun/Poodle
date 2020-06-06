@@ -84,6 +84,9 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
     int ret = 0;
     void *lr = (void *)link_register;
     void **fp = (void **)frame_pointer;
+    if (filter && filter->init) {
+        filter->init(filter);
+    }
     while (true) {
         if (ret > count) {
             break;
@@ -91,7 +94,7 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
 
         bool available = true;
         if (filter && filter->is_valid) {
-            available = filter->is_valid(&filter->data, lr);
+            available = filter->is_valid(filter, lr);
         }
 
         if (available) {
@@ -119,12 +122,12 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
 }
 
 bool pdl_thread_fake_begin_filter(void *link_register) {
-    bool available = (link_register < (void *)&pdl_thread_fake) || (link_register > (void *)&pdl_thread_fake + 100);
+    bool available = (link_register < (void *)&pdl_thread_fake) || (link_register > (void *)&pdl_thread_fake + 44);
     return available;
 }
 
 bool pdl_thread_fake_end_filter(void *link_register) {
-    bool available = (link_register < (void *)&pdl_thread_fake_end) || (link_register > (void *)&pdl_thread_fake_end + 100);
+    bool available = (link_register < (void *)&pdl_thread_fake_end) || (link_register > (void *)&pdl_thread_fake_end + 900);
     return available;
 }
 

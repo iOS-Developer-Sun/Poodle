@@ -14,8 +14,10 @@ extern "C" {
 #endif
 
 typedef struct pdl_thread_frame_filter {
+    void (*init)(struct pdl_thread_frame_filter *filter);
+    bool (*is_valid)(struct pdl_thread_frame_filter *filter, void *link_register);
+    void *init_data;
     void *data;
-    bool (*is_valid)(void **data_ptr, void *link_register);
 } pdl_thread_frame_filter;
 
 extern void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count);
