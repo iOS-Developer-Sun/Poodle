@@ -34,13 +34,10 @@ static void *pdl_dispatch_backtrace_invoke(void *arg) {
 
 - (void)run {
     pdl_backtrace_thread_execute(_backtrace, pdl_dispatch_backtrace_invoke, (__bridge void *)(self), PDL_DISPATCH_BACKTRACE_FRAME_HIDDEN_COUNT);
-    pdl_backtrace_destroy(_backtrace);
-    _backtrace = NULL;
 }
 
 - (void)dealloc {
     pdl_backtrace_destroy(_backtrace);
-    _backtrace = NULL;
 }
 
 void pdl_dispatch_backtrace_async(dispatch_queue_t queue, dispatch_block_t block, void (*dispatch_async_original)(dispatch_queue_t queue, dispatch_block_t block), unsigned int hidden_count, unsigned int recursion_count) {
