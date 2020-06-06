@@ -29,7 +29,7 @@ static void *pdl_pthread_start(void *arg) {
     return ret;
 }
 
-int pdl_pthread_backtrace_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg, int (*pthread_create_original)(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg), unsigned int hidden_count) {
+int pdl_pthread_backtrace_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg, int (*pthread_create_original)(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg), unsigned int hidden_count, unsigned int recursion_count) {
     pdl_pthread_info *info = malloc(sizeof(pdl_pthread_info));
     int ret = 0;
     if (!info) {
@@ -38,7 +38,9 @@ int pdl_pthread_backtrace_create(pthread_t *thread, const pthread_attr_t *attr, 
         pdl_backtrace_t backtrace = pdl_backtrace_create();
         info->backtrace = backtrace;
         if (backtrace) {
-            pdl_backtrace_record_with_filter(backtrace, hidden_count, NULL);
+            pdl_thread_frame_filter filter;
+            pdl_backtrace_filter_with_count(&filter, recursion_count);
+            pdl_backtrace_record_with_filter(backtrace, hidden_count, &filter);
         }
         info->start = start_routine;
         info->arg = arg;
