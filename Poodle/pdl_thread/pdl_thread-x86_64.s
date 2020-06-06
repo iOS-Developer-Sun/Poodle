@@ -24,5 +24,6 @@ movq    %rdx, %rdi          // set arg
 call    *%rsi               // start(arg)
 popq    %rbp                // recover fp
 retq
+nop
 
 #endif

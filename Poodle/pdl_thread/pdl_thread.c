@@ -14,6 +14,9 @@ extern void *pdl_thread_fake(void **frames, void *(*start)(void *), void *arg);
 static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
     int hc = hidden_count;
     int total_frames_count = frames_count;
+    if (frames_count == 0) {
+        total_frames_count++;
+    }
     bool hides_without_self = hc > 0;
     if (hides_without_self) {
         total_frames_count++;
@@ -48,26 +51,34 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
         lr = pdl_builtin_return_address(from);
     }
 
-    for (int i = 0; i < frames_count; i++) {
-        int fp_index = i * alignment;
-        int lr_index = i * alignment + 1;
-        if (i != frames_count - 1) {
-            stack_frames[fp_index] = &stack_frames[fp_index + alignment];
-            stack_frames[lr_index] = frames[i];
-        } else {
-            if (hides_without_self) {
+    if (frames_count > 0) {
+        for (int i = 0; i < frames_count; i++) {
+            int fp_index = i * alignment;
+            int lr_index = i * alignment + 1;
+            if (i != frames_count - 1) {
                 stack_frames[fp_index] = &stack_frames[fp_index + alignment];
-                stack_frames[lr_index] = self_lr;
-                stack_frames[fp_index + alignment] = fp;
-                stack_frames[lr_index + alignment] = lr;
+                stack_frames[lr_index] = frames[i];
             } else {
-                stack_frames[fp_index] = fp;
-                stack_frames[lr_index] = lr;
+                if (hides_without_self) {
+                    stack_frames[fp_index] = &stack_frames[fp_index + alignment];
+                    stack_frames[lr_index] = self_lr;
+                    stack_frames[fp_index + alignment] = fp;
+                    stack_frames[lr_index + alignment] = lr;
+                } else {
+                    stack_frames[fp_index] = fp;
+                    stack_frames[lr_index] = lr;
+                }
             }
         }
+    } else {
+        stack_frames[0] = self_fp;
+        stack_frames[1] = self_lr;
     }
 
-    void *ret = pdl_thread_fake(stack_frames, start, arg);
+    void *ret = NULL;
+    if (start) {
+        ret = pdl_thread_fake(stack_frames, start, arg);
+    }
     return ret;
 }
 
@@ -122,12 +133,12 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
 }
 
 bool pdl_thread_fake_begin_filter(void *link_register) {
-    bool available = (link_register < (void *)&pdl_thread_fake) || (link_register > (void *)&pdl_thread_fake + 44);
+    bool available = (link_register < (void *)&pdl_thread_fake) || (link_register > (void *)&pdl_thread_fake + pdl_thread_fake_size);
     return available;
 }
 
 bool pdl_thread_fake_end_filter(void *link_register) {
-    bool available = (link_register < (void *)&pdl_thread_fake_end) || (link_register > (void *)&pdl_thread_fake_end + 900);
+    bool available = (link_register < (void *)&pdl_thread_fake_end) || (link_register > (void *)&pdl_thread_fake_end + pdl_thread_fake_end_size);
     return available;
 }
 
