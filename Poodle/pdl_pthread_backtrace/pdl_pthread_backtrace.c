@@ -9,7 +9,11 @@
 #import "pdl_pthread_backtrace.h"
 #import "pdl_backtrace.h"
 
-#define PDL_PTHREAD_BACKTRACE_FRAME_HIDDEN_COUNT 3
+#ifdef DEBUG
+#define PDL_PTHREAD_BACKTRACE_FRAME_HIDDEN_COUNT 4
+#else
+#define PDL_PTHREAD_BACKTRACE_FRAME_HIDDEN_COUNT 1
+#endif
 
 typedef struct pdl_pthread_info {
     void *(*start)(void *);

@@ -11,7 +11,11 @@
 #import <objc/runtime.h>
 #import "pdl_backtrace.h"
 
+#ifdef DEBUG
 #define PDL_DISPATCH_BACKTRACE_FRAME_HIDDEN_COUNT 5
+#else
+#define PDL_DISPATCH_BACKTRACE_FRAME_HIDDEN_COUNT 1
+#endif
 
 @interface PDLDispatchBlockBacktrace : NSObject
 
@@ -23,8 +27,9 @@
 @implementation PDLDispatchBlockBacktrace
 
 static void *pdl_dispatch_backtrace_invoke(void *arg) {
-    PDLDispatchBlockBacktrace *self = (__bridge PDLDispatchBlockBacktrace *)(arg);
-    return ((void *(^)(void))self.block)();
+    __unsafe_unretained PDLDispatchBlockBacktrace *self = (__bridge PDLDispatchBlockBacktrace *)(arg);
+    __unsafe_unretained dispatch_block_t block = self.block;
+    return ((void *(^)(void))block)();
 }
 
 - (void)run {
