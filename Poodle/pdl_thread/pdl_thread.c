@@ -77,44 +77,30 @@ void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *)
 }
 
 int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, int count) {
-    return pdl_thread_frames_with_filters(link_register, frame_pointer, frames, count, NULL, NULL);
+    return pdl_thread_frames_with_filter(link_register, frame_pointer, frames, count, NULL);
 }
 
-int pdl_thread_frames_with_filters(void *link_register, void *frame_pointer, void **frames, int count, bool(*begin_filter)(void *link_register), bool(*end_filter)(void *link_register)) {
+int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void **frames, int count, pdl_thread_frame_filter *filter) {
     int ret = 0;
     void *lr = (void *)link_register;
     void **fp = (void **)frame_pointer;
-    int is_filtering = 0;
     while (true) {
         if (ret > count) {
             break;
         }
 
-        if (begin_filter) {
-            bool available = begin_filter(lr);
-            if (!available) {
-                is_filtering++;
-                goto L_next;
+        bool available = true;
+        if (filter && filter->is_valid) {
+            available = filter->is_valid(&filter->data, lr);
+        }
+
+        if (available) {
+            if (frames) {
+                frames[ret] = lr;
             }
+            ret++;
         }
 
-        if (end_filter) {
-            bool available = end_filter(lr);
-            if (!available) {
-                is_filtering--;
-                goto L_next;
-            }
-        }
-
-        if (is_filtering > 0) {
-            goto L_next;
-        }
-
-        if (frames) {
-            frames[ret] = lr;
-        }
-        ret++;
-L_next:
         if (!fp) {
             break;
         }

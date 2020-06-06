@@ -47,7 +47,7 @@ void pdl_dispatch_backtrace_async(dispatch_queue_t queue, dispatch_block_t block
     PDLDispatchBlockBacktrace *blockBacktrace = [[PDLDispatchBlockBacktrace alloc] init];
     blockBacktrace.block = block;
     pdl_backtrace_t backtrace = pdl_backtrace_create();
-    pdl_backtrace_record_with_filters(backtrace, hidden_count, &pdl_backtrace_fake_begin_filter, &pdl_backtrace_fake_end_filter);
+    pdl_backtrace_record_with_filter(backtrace, hidden_count, NULL);
     blockBacktrace.backtrace = backtrace;
     typeof(dispatch_async_original) dispatch_async_ptr = dispatch_async_original ?: &dispatch_async;
     dispatch_async_ptr(queue, ^{
@@ -61,7 +61,7 @@ void pdl_dispatch_backtrace_async_f(dispatch_queue_t queue, void *context, dispa
         work(context);
     };
     pdl_backtrace_t backtrace = pdl_backtrace_create();
-    pdl_backtrace_record_with_filters(backtrace, hidden_count, &pdl_backtrace_fake_begin_filter, &pdl_backtrace_fake_end_filter);
+    pdl_backtrace_record_with_filter(backtrace, hidden_count, NULL);
     blockBacktrace.backtrace = backtrace;
     typeof(dispatch_async_original) dispatch_async_ptr = dispatch_async_original ?: &dispatch_async;
     dispatch_async_ptr(queue, ^{
@@ -73,7 +73,7 @@ void pdl_dispatch_backtrace_after(dispatch_time_t when, dispatch_queue_t queue, 
     PDLDispatchBlockBacktrace *blockBacktrace = [[PDLDispatchBlockBacktrace alloc] init];
     blockBacktrace.block = block;
     pdl_backtrace_t backtrace = pdl_backtrace_create();
-    pdl_backtrace_record_with_filters(backtrace, hidden_count, &pdl_backtrace_fake_begin_filter, &pdl_backtrace_fake_end_filter);
+    pdl_backtrace_record_with_filter(backtrace, hidden_count, NULL);
     blockBacktrace.backtrace = backtrace;
     typeof(dispatch_after_original) dispatch_after_ptr = dispatch_after_original ?: &dispatch_after;
     dispatch_after_ptr(when, queue, ^{

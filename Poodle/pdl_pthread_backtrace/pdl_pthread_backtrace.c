@@ -38,7 +38,7 @@ int pdl_pthread_backtrace_create(pthread_t *thread, const pthread_attr_t *attr, 
         pdl_backtrace_t backtrace = pdl_backtrace_create();
         info->backtrace = backtrace;
         if (backtrace) {
-            pdl_backtrace_record_with_filters(backtrace, hidden_count, &pdl_backtrace_fake_begin_filter, &pdl_backtrace_fake_end_filter);
+            pdl_backtrace_record_with_filter(backtrace, hidden_count, NULL);
         }
         info->start = start_routine;
         info->arg = arg;
