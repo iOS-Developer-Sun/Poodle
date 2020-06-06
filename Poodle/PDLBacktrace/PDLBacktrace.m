@@ -47,11 +47,11 @@
 }
 
 - (void)record {
-    pdl_backtrace_record(self.backtrace);
+    pdl_backtrace_record(self.backtrace, 0);
 }
 
-- (void)record:(NSUInteger)hiddenCount {
-    pdl_backtrace_record_with_hidden_frames(self.backtrace, hiddenCount);
+- (void)record:(unsigned int)hiddenCount {
+    pdl_backtrace_record(self.backtrace, hiddenCount);
 }
 
 - (BOOL)isShown {

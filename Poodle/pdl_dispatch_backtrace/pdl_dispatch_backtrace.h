@@ -12,11 +12,11 @@
 extern "C" {
 #endif
 
-void pdl_dispatch_backtrace_async(dispatch_queue_t queue, dispatch_block_t block, void (*dispatch_async_original)(dispatch_queue_t queue, dispatch_block_t block), unsigned int hidden_count);
+extern void pdl_dispatch_backtrace_async(dispatch_queue_t queue, dispatch_block_t block, void (*dispatch_async_original)(dispatch_queue_t queue, dispatch_block_t block), unsigned int hidden_count);
 
-void pdl_dispatch_backtrace_async_f(dispatch_queue_t queue, void *context, dispatch_function_t work, void (*dispatch_async_original)(dispatch_queue_t queue, dispatch_block_t block), unsigned int hidden_count);
+extern void pdl_dispatch_backtrace_async_f(dispatch_queue_t queue, void *context, dispatch_function_t work, void (*dispatch_async_original)(dispatch_queue_t queue, dispatch_block_t block), unsigned int hidden_count);
 
-void pdl_dispatch_backtrace_after(dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block, void (*dispatch_after_original)(dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block), unsigned int hidden_count);
+extern void pdl_dispatch_backtrace_after(dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block, void (*dispatch_after_original)(dispatch_time_t when, dispatch_queue_t queue, dispatch_block_t block), unsigned int hidden_count);
 
 #ifdef __cplusplus
 }
