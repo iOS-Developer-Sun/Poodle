@@ -13,11 +13,18 @@
 extern "C" {
 #endif
 
+typedef struct pdl_thread_frame_filter {
+    void (*init)(struct pdl_thread_frame_filter *filter);
+    bool (*is_valid)(struct pdl_thread_frame_filter *filter, void *link_register);
+    void *init_data;
+    void *data;
+} pdl_thread_frame_filter;
+
 extern void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count);
 
 extern int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, int count);
 
-extern int pdl_thread_frames_with_filters(void *link_register, void *frame_pointer, void **frames, int count, bool(*begin_filter)(void *link_register), bool(*end_filter)(void *link_register));
+extern int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void **frames, int count, pdl_thread_frame_filter *filter);
 
 extern bool pdl_thread_fake_begin_filter(void *link_register);
 extern bool pdl_thread_fake_end_filter(void *link_register);
