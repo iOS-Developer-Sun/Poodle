@@ -1517,6 +1517,7 @@
 		B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_dispatch_backtrace.h; sourceTree = "<group>"; };
 		B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_dispatch_backtrace.m; sourceTree = "<group>"; };
 		B8DEC4CD2487805B00DB3D0E /* libpdl_dispatch_backtrace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_dispatch_backtrace.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8DFB0A1248CBBFB00880B66 /* pdl_thread_funtion_size */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pdl_thread_funtion_size; sourceTree = "<group>"; };
 		B8E56DDF23D6F651008D2DA1 /* Poodle.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = Poodle.podspec; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B8E56DE123D70016008D2DA1 /* NSObject+PDLSelectorProxy-i386.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "NSObject+PDLSelectorProxy-i386.s"; sourceTree = "<group>"; };
 		B8E56DE223D70016008D2DA1 /* NSObject+PDLSelectorProxy-x86_64.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "NSObject+PDLSelectorProxy-x86_64.s"; sourceTree = "<group>"; };
@@ -2316,6 +2317,7 @@
 			isa = PBXGroup;
 			children = (
 				B83CAA8B248BA622009C784A /* pdl_thread_define.h */,
+				B8DFB0A1248CBBFB00880B66 /* pdl_thread_funtion_size */,
 				B879532D248688D700798005 /* pdl_thread-arm.s */,
 				B8795330248688D800798005 /* pdl_thread-arm64.s */,
 				B879532E248688D700798005 /* pdl_thread-i386.s */,
@@ -3507,6 +3509,7 @@
 				B87953222486862E00798005 /* Frameworks */,
 				B87953232486862E00798005 /* CopyFiles */,
 				B87953242486862E00798005 /* ShellScript */,
+				B8DFB0A2248CBD4F00880B66 /* pdl_thread_funtion_size */,
 			);
 			buildRules = (
 			);
@@ -4966,6 +4969,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B8DFB0A2248CBD4F00880B66 /* pdl_thread_funtion_size */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = pdl_thread_funtion_size;
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/Poodle/pdl_thread/pdl_thread_funtion_size/pdl_thread_funtion_size.sh\"\n";
 		};
 		B8FC6AA422EEECD6005B91DE /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6900,6 +6921,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = pdl.PoodleApplication;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -7226,7 +7248,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;

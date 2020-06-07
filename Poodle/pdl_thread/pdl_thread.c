@@ -35,9 +35,9 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
     void **stack_frames = aligned_frames;
 #endif
 
-    void *self_lr = pdl_builtin_return_address(0);
+    void (*self_lr)(void) = pdl_builtin_return_address(0);
     void *self_fp = pdl_builtin_frame_address(0);
-    void *lr = self_lr;
+    void (*lr)(void) = self_lr;
     void *fp = self_fp;
     int current_count = pdl_thread_frames(lr, fp, NULL, __INT_MAX__) - 1;
     if (current_count < hc) {
@@ -71,14 +71,20 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
             }
         }
     } else {
-        stack_frames[0] = self_fp;
-        stack_frames[1] = self_lr;
+        int fp_index = 0;
+        int lr_index = 1;
+        if (hides_without_self) {
+            stack_frames[fp_index] = &stack_frames[fp_index + alignment];
+            stack_frames[lr_index] = self_lr;
+            stack_frames[fp_index + alignment] = fp;
+            stack_frames[lr_index + alignment] = lr;
+        } else {
+            stack_frames[fp_index] = fp;
+            stack_frames[lr_index] = lr;
+        }
     }
 
-    void *ret = NULL;
-    if (start) {
-        ret = pdl_thread_fake(stack_frames, start, arg);
-    }
+    void *ret = pdl_thread_fake(stack_frames, start, arg);
     return ret;
 }
 
