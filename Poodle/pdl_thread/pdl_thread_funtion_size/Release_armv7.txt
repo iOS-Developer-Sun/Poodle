@@ -1,0 +1,97 @@
+Release armv7
+00000004 t ______PDL_THREAD_FAKE_END_____
+00000360 T _pdl_thread_frames
+
+armv7/pdl_thread.o:	file format Mach-O arm
+
+Disassembly of section __TEXT,__text:
+______PDL_THREAD_FAKE_END_____:
+       4:	f0 b5 03 af 	svcge	#243184
+       8:	2d e9 00 0d 	stceq	p9, c14, [r0, #-180]
+       c:	86 b0 47 f8  <unknown>
+      10:	28 3c 8b 46 	strmi	r3, [r11], r8, lsr #24
+      14:	47 f8 2c 2c 	stchs	p8, c15, [r12], #-284
+      18:	00 21 47 f8  <unknown>
+      1c:	30 0c 41 f6  <unknown>
+      20:	58 00 c0 f2  <unknown>
+      24:	00 00 be 68  <unknown>
+      28:	78 44 4f f0  <unknown>
+      2c:	00 0a 00 2e  <unknown>
+      30:	00 68 00 68 	stmdavs	r0, {r11, sp, lr}
+      34:	47 f8 20 0c 	stceq	p8, c15, [r0], #-284
+      38:	58 46 c8 bf 	svclt	#13125208
+      3c:	01 21 bb f1  <unknown>
+      40:	00 0f 08 bf 	svclt	#528128
+      44:	01 20 0c 46 	strmi	r2, [r12], -r1
+      48:	08 44 ad eb 	bl	#-21688288 <_pdl_builtin_return_address+0xfffffffffeb50dfe>
+      4c:	c0 08 c5 46 	strbmi	r0, [r5], r0, asr #17
+      50:	00 20 00 f0  <unknown>
+      54:	0e f9 05 46 	strmi	pc, [r5], -lr, lsl #18
+      58:	00 2e 01 d5 	strle	r2, [r1, #-3584]
+      5c:	b8 68 46 42 	submi	r6, r6, #184, #16
+      60:	00 20 00 f0  <unknown>
+      64:	f9 f8 01 46  <unknown>
+      68:	47 f8 24 0c 	stceq	p8, c15, [r4], #-284
+      6c:	29 46 58 b1 	cmplt	r8, r9, lsr #12
+      70:	51 b1 00 68 	stmdavs	r0, {r0, r4, r6, r8, r12, sp, pc}
+      74:	0a f1 01 0a 	beq	#508968 <_pdl_builtin_return_address+0x7c232>
+      78:	00 28 14 bf 	svclt	#1320960
+      7c:	41 68 00 21  <unknown>
+      80:	ba f1 00 4f 	svcmi	#61882
+      84:	f3 d1 03 e0 	strd	sp, lr, [r3], -r3
+      88:	b2 45 01 da 	ble	#333512 <_pdl_builtin_return_address+0x514e6>
+      8c:	00 20 09 e0 	and	r2, r9, r0
+      90:	06 eb 04 0a 	beq	#1289240 <_pdl_builtin_return_address+0x13aa3e>
+      94:	50 46 00 f0  <unknown>
+      98:	df f8 47 f8  <unknown>
+      9c:	24 0c 50 46 	ldrbmi	r0, [r0], -r4, lsr #24
+      a0:	00 f0 e7 f8  <unknown>
+      a4:	57 f8 28 2c 	stchs	p8, c15, [r8], #-348
+      a8:	bb f1 01 0f 	svceq	#127419
+      ac:	57 f8 2c 1c 	stcne	p8, c15, [r12], #-348
+      b0:	aa 46 d7 f8  <unknown>
+      b4:	08 c0 57 f8  <unknown>
+      b8:	30 ec 2a db 	blle	#11251904 <_pdl_builtin_return_address+0xabaf0e>
+      bc:	ab f1 01 09 	stmdbeq	r1, {r0, r1, r3, r5, r7, r8, r12, sp, lr, pc}
+      c0:	00 26 08 23  <unknown>
+      c4:	08 eb 03 05 	streq	lr, [r3, #-2824]
+      c8:	b1 45 0e d1 	strhle	r4, [lr, -r1]
+      cc:	bc f1 01 0f 	svceq	#127420
+      d0:	13 db 45 f8  <unknown>
+      d4:	08 5c 08 eb 	bl	#2191392 <_pdl_builtin_return_address+0x216e8a>
+      d8:	c6 05 57 f8  <unknown>
+      dc:	24 4c c5 f8  <unknown>
+      e0:	04 a0 48 f8  <unknown>
+      e4:	03 40 e8 60 	rscvs	r4, r8, r3
+      e8:	0e e0 45 f8  <unknown>
+      ec:	08 5c 08 eb 	bl	#2191392 <_pdl_builtin_return_address+0x216ea2>
+      f0:	c6 04 5e f8  <unknown>
+      f4:	26 50 65 60 	rsbvs	r5, r5, r6, lsr #32
+      f8:	06 e0 57 f8  <unknown>
+      fc:	24 4c 45 f8  <unknown>
+     100:	08 4c 08 eb 	bl	#2175008 <_pdl_builtin_return_address+0x212eb6>
+     104:	c6 05 68 60 	rsbvs	r0, r8, r6, asr #11
+     108:	01 36 08 33  <unknown>
+     10c:	b3 45 d9 d1 	ldrhle	r4, [r9, #83]
+     110:	14 e0 bc f1  <unknown>
+     114:	01 0f 0a db 	blle	#2636804 <_pdl_builtin_return_address+0x283aae>
+     118:	43 46 57 f8  <unknown>
+     11c:	24 6c c8 f8  <unknown>
+     120:	04 a0 43 f8  <unknown>
+     124:	08 6f c8 f8  <unknown>
+     128:	00 30 03 23  <unknown>
+     12c:	04 e0 57 f8  <unknown>
+     130:	24 3c c8 f8  <unknown>
+     134:	00 30 01 23  <unknown>
+     138:	48 f8 23 00 	eoreq	pc, r3, r8, asr #16
+     13c:	40 46 ff f7  <unknown>
+     140:	5f ff 57 f8  <unknown>
+     144:	20 1c 41 f2  <unknown>
+     148:	32 72 c0 f2  <unknown>
+     14c:	00 02 7a 44 	ldrbtmi	r0, [r10], #-512
+     150:	12 68 12 68 	ldmdavs	r2, {r1, r4, r11, sp, lr}
+     154:	51 1a 01 bf 	svclt	#72273
+     158:	a7 f1 18 04 	ldreq	pc, [r8], #-423
+     15c:	a5 46 bd e8 	pop	{r0, r2, r5, r7, r9, r10, lr}
+     160:	00 0d f0 bd 	ldcllt	p13, c0, [r0, #0]!
+     164:	ff f7 4c ff  <unknown>

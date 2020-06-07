@@ -152,6 +152,7 @@
 		B8DEC4C424877D1800DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
 		B8DEC4CE2487807900DB3D0E /* pdl_dispatch_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */; };
 		B8DEC4CF2487807E00DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
+		B8DFB0A4248CC1E300880B66 /* pdl_thread_funtion_size.sh in Resources */ = {isa = PBXBuildFile; fileRef = B8DFB0A3248CC1E300880B66 /* pdl_thread_funtion_size.sh */; };
 		B8E56EFE23D70136008D2DA1 /* CAAnimation+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EDA23D7001A008D2DA1 /* CAAnimation+PDLExtension.m */; };
 		B8E56EFF23D7013F008D2DA1 /* CAAnimation+PDLExtension.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56ED923D7001A008D2DA1 /* CAAnimation+PDLExtension.h */; };
 		B8E56F0023D7014D008D2DA1 /* CADisplayLink+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E6923D70018008D2DA1 /* CADisplayLink+PDLExtension.m */; };
@@ -1518,6 +1519,7 @@
 		B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_dispatch_backtrace.m; sourceTree = "<group>"; };
 		B8DEC4CD2487805B00DB3D0E /* libpdl_dispatch_backtrace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_dispatch_backtrace.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8DFB0A1248CBBFB00880B66 /* pdl_thread_funtion_size */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pdl_thread_funtion_size; sourceTree = "<group>"; };
+		B8DFB0A3248CC1E300880B66 /* pdl_thread_funtion_size.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = pdl_thread_funtion_size.sh; sourceTree = "<group>"; };
 		B8E56DDF23D6F651008D2DA1 /* Poodle.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = Poodle.podspec; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B8E56DE123D70016008D2DA1 /* NSObject+PDLSelectorProxy-i386.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "NSObject+PDLSelectorProxy-i386.s"; sourceTree = "<group>"; };
 		B8E56DE223D70016008D2DA1 /* NSObject+PDLSelectorProxy-x86_64.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "NSObject+PDLSelectorProxy-x86_64.s"; sourceTree = "<group>"; };
@@ -2318,6 +2320,7 @@
 			children = (
 				B83CAA8B248BA622009C784A /* pdl_thread_define.h */,
 				B8DFB0A1248CBBFB00880B66 /* pdl_thread_funtion_size */,
+				B8DFB0A3248CC1E300880B66 /* pdl_thread_funtion_size.sh */,
 				B879532D248688D700798005 /* pdl_thread-arm.s */,
 				B8795330248688D800798005 /* pdl_thread-arm64.s */,
 				B879532E248688D700798005 /* pdl_thread-i386.s */,
@@ -4555,6 +4558,7 @@
 			files = (
 				B85D45B5240E84DC00CBF758 /* LaunchScreen.storyboard in Resources */,
 				B85D45B2240E84DC00CBF758 /* Assets.xcassets in Resources */,
+				B8DFB0A4248CC1E300880B66 /* pdl_thread_funtion_size.sh in Resources */,
 				B85D45B0240E84DA00CBF758 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4986,7 +4990,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "sh \"${PROJECT_DIR}/Poodle/pdl_thread/pdl_thread_funtion_size/pdl_thread_funtion_size.sh\"\n";
+			shellScript = "sh \"${PROJECT_DIR}/Poodle/pdl_thread/pdl_thread_funtion_size.sh\"\n";
 		};
 		B8FC6AA422EEECD6005B91DE /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
