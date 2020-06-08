@@ -10,9 +10,14 @@ function pdl_thread () {
     echo ${CONFIGURATION} ${arch} > ${out}
 
     if [ -f $path ]; then
+#        echo `pwd` >> ${out}
+
+#        echo "nm -n -radix=d ${path} | grep -A 1 ${sym}" >> ${out}
         nm -n -radix=d "${path}" | grep -A 1 ${sym} >> ${out}
+#        echo "objdump -u ${path} | grep -A 1 ${sym}" >> ${out}
         objdump -u "${path}" | grep -A 1 ${sym} >> ${out}
-        objdump -df=${sym} -d $path >> ${out}
+#        echo "objdump -d --dis-symname=${sym} $path" >> ${out}
+        objdump -d -m --dis-symname=${sym} $path >> ${out}
     fi
 }
 

@@ -3,129 +3,127 @@ Release x86_64
 0000000000000388 T _pdl_thread_frames
     start:                0xa ______PDL_THREAD_FAKE_END_____
     length:               0x17a
-
-x86_64/pdl_thread.o:	file format Mach-O 64-bit x86-64
-
-Disassembly of section __TEXT,__text:
+x86_64/pdl_thread.o:
+(__TEXT,__text) section
 ______PDL_THREAD_FAKE_END_____:
-       a:	55 	pushq	%rbp
-       b:	48 89 e5 	movq	%rsp, %rbp
-       e:	41 57 	pushq	%r15
-      10:	41 56 	pushq	%r14
-      12:	41 55 	pushq	%r13
-      14:	41 54 	pushq	%r12
-      16:	53 	pushq	%rbx
-      17:	48 83 ec 38 	subq	$56, %rsp
-      1b:	45 89 c5 	movl	%r8d, %r13d
-      1e:	48 89 4d a8 	movq	%rcx, -88(%rbp)
-      22:	48 89 55 b0 	movq	%rdx, -80(%rbp)
-      26:	49 89 fc 	movq	%rdi, %r12
-      29:	44 89 c3 	movl	%r8d, %ebx
-      2c:	f7 db 	negl	%ebx
-      2e:	41 0f 4c d8 	cmovll	%r8d, %ebx
-      32:	48 8b 05 00 00 00 00 	movq	(%rip), %rax
-      39:	48 8b 00 	movq	(%rax), %rax
-      3c:	48 89 45 d0 	movq	%rax, -48(%rbp)
-      40:	85 f6 	testl	%esi, %esi
-      42:	b8 01 00 00 00 	movl	$1, %eax
-      47:	48 89 75 c0 	movq	%rsi, -64(%rbp)
-      4b:	0f 45 c6 	cmovnel	%esi, %eax
-      4e:	31 c9 	xorl	%ecx, %ecx
-      50:	45 85 c0 	testl	%r8d, %r8d
-      53:	0f 9f c1 	setg	%cl
-      56:	89 4d cc 	movl	%ecx, -52(%rbp)
-      59:	01 c8 	addl	%ecx, %eax
-      5b:	01 c0 	addl	%eax, %eax
-      5d:	48 c1 e0 03 	shlq	$3, %rax
-      61:	48 89 e1 	movq	%rsp, %rcx
-      64:	48 29 c1 	subq	%rax, %rcx
-      67:	48 89 4d b8 	movq	%rcx, -72(%rbp)
-      6b:	48 89 cc 	movq	%rcx, %rsp
-      6e:	31 ff 	xorl	%edi, %edi
-      70:	e8 00 00 00 00 	callq	0 <______PDL_THREAD_FAKE_END_____+0x6b>
-      75:	49 89 c6 	movq	%rax, %r14
-      78:	31 ff 	xorl	%edi, %edi
-      7a:	e8 00 00 00 00 	callq	0 <______PDL_THREAD_FAKE_END_____+0x75>
-      7f:	49 89 c7 	movq	%rax, %r15
-      82:	48 c7 c6 ff ff ff ff 	movq	$-1, %rsi
-      89:	4c 89 f2 	movq	%r14, %rdx
-      8c:	48 89 f1 	movq	%rsi, %rcx
-      8f:	48 85 c0 	testq	%rax, %rax
-      92:	74 22 	je	34 <______PDL_THREAD_FAKE_END_____+0xac>
-      94:	48 85 d2 	testq	%rdx, %rdx
-      97:	74 1d 	je	29 <______PDL_THREAD_FAKE_END_____+0xac>
-      99:	48 8b 00 	movq	(%rax), %rax
-      9c:	48 85 c0 	testq	%rax, %rax
-      9f:	74 06 	je	6 <______PDL_THREAD_FAKE_END_____+0x9d>
-      a1:	48 8b 50 08 	movq	8(%rax), %rdx
-      a5:	eb 02 	jmp	2 <______PDL_THREAD_FAKE_END_____+0x9f>
-      a7:	31 d2 	xorl	%edx, %edx
-      a9:	48 8d 71 01 	leaq	1(%rcx), %rsi
-      ad:	48 81 fe ff ff ff 7f 	cmpq	$2147483647, %rsi
-      b4:	72 d6 	jb	-42 <______PDL_THREAD_FAKE_END_____+0x82>
-      b6:	83 c1 02 	addl	$2, %ecx
-      b9:	39 cb 	cmpl	%ecx, %ebx
-      bb:	7d 16 	jge	22 <______PDL_THREAD_FAKE_END_____+0xc9>
-      bd:	03 5d cc 	addl	-52(%rbp), %ebx
-      c0:	89 df 	movl	%ebx, %edi
-      c2:	e8 00 00 00 00 	callq	0 <______PDL_THREAD_FAKE_END_____+0xbd>
-      c7:	49 89 c7 	movq	%rax, %r15
-      ca:	89 df 	movl	%ebx, %edi
-      cc:	e8 00 00 00 00 	callq	0 <______PDL_THREAD_FAKE_END_____+0xc7>
-      d1:	eb 02 	jmp	2 <______PDL_THREAD_FAKE_END_____+0xcb>
-      d3:	31 c0 	xorl	%eax, %eax
-      d5:	48 8b 7d b8 	movq	-72(%rbp), %rdi
-      d9:	48 8b 4d c0 	movq	-64(%rbp), %rcx
-      dd:	85 c9 	testl	%ecx, %ecx
-      df:	7e 4b 	jle	75 <______PDL_THREAD_FAKE_END_____+0x122>
-      e1:	44 8d 41 ff 	leal	-1(%rcx), %r8d
-      e5:	89 ca 	movl	%ecx, %edx
-      e7:	48 8d 77 10 	leaq	16(%rdi), %rsi
-      eb:	31 c9 	xorl	%ecx, %ecx
-      ed:	49 39 c8 	cmpq	%rcx, %r8
-      f0:	75 16 	jne	22 <______PDL_THREAD_FAKE_END_____+0xfe>
-      f2:	45 85 ed 	testl	%r13d, %r13d
-      f5:	7e 1f 	jle	31 <______PDL_THREAD_FAKE_END_____+0x10c>
-      f7:	48 89 76 f0 	movq	%rsi, -16(%rsi)
-      fb:	4c 89 76 f8 	movq	%r14, -8(%rsi)
-      ff:	4c 89 3e 	movq	%r15, (%rsi)
-     102:	48 89 46 08 	movq	%rax, 8(%rsi)
-     106:	eb 16 	jmp	22 <______PDL_THREAD_FAKE_END_____+0x114>
-     108:	48 89 76 f0 	movq	%rsi, -16(%rsi)
-     10c:	49 8b 1c cc 	movq	(%r12,%rcx,8), %rbx
-     110:	48 89 5e f8 	movq	%rbx, -8(%rsi)
-     114:	eb 08 	jmp	8 <______PDL_THREAD_FAKE_END_____+0x114>
-     116:	4c 89 7e f0 	movq	%r15, -16(%rsi)
-     11a:	48 89 46 f8 	movq	%rax, -8(%rsi)
-     11e:	48 ff c1 	incq	%rcx
-     121:	48 83 c6 10 	addq	$16, %rsi
-     125:	48 39 ca 	cmpq	%rcx, %rdx
-     128:	75 c3 	jne	-61 <______PDL_THREAD_FAKE_END_____+0xe3>
-     12a:	eb 27 	jmp	39 <______PDL_THREAD_FAKE_END_____+0x149>
-     12c:	45 85 ed 	testl	%r13d, %r13d
-     12f:	7e 16 	jle	22 <______PDL_THREAD_FAKE_END_____+0x13d>
-     131:	48 8d 4f 10 	leaq	16(%rdi), %rcx
-     135:	48 89 0f 	movq	%rcx, (%rdi)
-     138:	4c 89 77 08 	movq	%r14, 8(%rdi)
-     13c:	4c 89 7f 10 	movq	%r15, 16(%rdi)
-     140:	b9 03 00 00 00 	movl	$3, %ecx
-     145:	eb 08 	jmp	8 <______PDL_THREAD_FAKE_END_____+0x145>
-     147:	4c 89 3f 	movq	%r15, (%rdi)
-     14a:	b9 01 00 00 00 	movl	$1, %ecx
-     14f:	48 89 04 cf 	movq	%rax, (%rdi,%rcx,8)
-     153:	48 8b 75 b0 	movq	-80(%rbp), %rsi
-     157:	48 8b 55 a8 	movq	-88(%rbp), %rdx
-     15b:	e8 00 00 00 00 	callq	0 <______PDL_THREAD_FAKE_END_____+0x156>
-     160:	48 8b 0d 00 00 00 00 	movq	(%rip), %rcx
-     167:	48 8b 09 	movq	(%rcx), %rcx
-     16a:	48 3b 4d d0 	cmpq	-48(%rbp), %rcx
-     16e:	75 0f 	jne	15 <______PDL_THREAD_FAKE_END_____+0x175>
-     170:	48 8d 65 d8 	leaq	-40(%rbp), %rsp
-     174:	5b 	popq	%rbx
-     175:	41 5c 	popq	%r12
-     177:	41 5d 	popq	%r13
-     179:	41 5e 	popq	%r14
-     17b:	41 5f 	popq	%r15
-     17d:	5d 	popq	%rbp
-     17e:	c3 	retq
-     17f:	e8 00 00 00 00 	callq	0 <_pdl_thread_frames>
+       a:	55	pushq	%rbp
+       b:	48 89 e5	movq	%rsp, %rbp
+       e:	41 57	pushq	%r15
+      10:	41 56	pushq	%r14
+      12:	41 55	pushq	%r13
+      14:	41 54	pushq	%r12
+      16:	53	pushq	%rbx
+      17:	48 83 ec 38	subq	$56, %rsp
+      1b:	45 89 c5	movl	%r8d, %r13d
+      1e:	48 89 4d a8	movq	%rcx, -88(%rbp)
+      22:	48 89 55 b0	movq	%rdx, -80(%rbp)
+      26:	49 89 fc	movq	%rdi, %r12
+      29:	48 8b 05 00 00 00 00	movq	___stack_chk_guard(%rip), %rax
+      30:	48 8b 00	movq	_pdl_thread_execute(%rax), %rax
+      33:	48 89 45 d0	movq	%rax, -48(%rbp)
+      37:	85 f6	testl	%esi, %esi
+      39:	b8 01 00 00 00	movl	$1, %eax
+      3e:	48 89 75 c0	movq	%rsi, -64(%rbp)
+      42:	0f 45 c6	cmovnel	%esi, %eax
+      45:	31 c9	xorl	%ecx, %ecx
+      47:	45 85 c0	testl	%r8d, %r8d
+      4a:	0f 9f c1	setg	%cl
+      4d:	89 4d cc	movl	%ecx, -52(%rbp)
+      50:	01 c8	addl	%ecx, %eax
+      52:	44 89 c3	movl	%r8d, %ebx
+      55:	f7 db	negl	%ebx
+      57:	41 0f 4c d8	cmovll	%r8d, %ebx
+      5b:	01 c0	addl	%eax, %eax
+      5d:	48 c1 e0 03	shlq	$3, %rax
+      61:	48 89 e1	movq	%rsp, %rcx
+      64:	48 29 c1	subq	%rax, %rcx
+      67:	48 89 4d b8	movq	%rcx, -72(%rbp)
+      6b:	48 89 cc	movq	%rcx, %rsp
+      6e:	31 ff	xorl	%edi, %edi
+      70:	e8 00 00 00 00	callq	_pdl_builtin_return_address
+      75:	49 89 c6	movq	%rax, %r14
+      78:	31 ff	xorl	%edi, %edi
+      7a:	e8 00 00 00 00	callq	_pdl_builtin_frame_address
+      7f:	49 89 c7	movq	%rax, %r15
+      82:	48 c7 c6 ff ff ff ff	movq	$-1, %rsi
+      89:	4c 89 f2	movq	%r14, %rdx
+      8c:	48 89 f1	movq	%rsi, %rcx
+      8f:	48 85 c0	testq	%rax, %rax
+      92:	74 22	je	0xb6
+      94:	48 85 d2	testq	%rdx, %rdx
+      97:	74 1d	je	0xb6
+      99:	48 8b 00	movq	_pdl_thread_execute(%rax), %rax
+      9c:	48 85 c0	testq	%rax, %rax
+      9f:	74 06	je	0xa7
+      a1:	48 8b 50 08	movq	8(%rax), %rdx
+      a5:	eb 02	jmp	0xa9
+      a7:	31 d2	xorl	%edx, %edx
+      a9:	48 8d 71 01	leaq	1(%rcx), %rsi
+      ad:	48 81 fe ff ff ff 7f	cmpq	$2147483647, %rsi
+      b4:	72 d6	jb	0x8c
+      b6:	83 c1 02	addl	$2, %ecx
+      b9:	39 cb	cmpl	%ecx, %ebx
+      bb:	7d 16	jge	0xd3
+      bd:	03 5d cc	addl	-52(%rbp), %ebx
+      c0:	89 df	movl	%ebx, %edi
+      c2:	e8 00 00 00 00	callq	_pdl_builtin_frame_address
+      c7:	49 89 c7	movq	%rax, %r15
+      ca:	89 df	movl	%ebx, %edi
+      cc:	e8 00 00 00 00	callq	_pdl_builtin_return_address
+      d1:	eb 02	jmp	0xd5
+      d3:	31 c0	xorl	%eax, %eax
+      d5:	48 8b 7d b8	movq	-72(%rbp), %rdi
+      d9:	48 8b 4d c0	movq	-64(%rbp), %rcx
+      dd:	85 c9	testl	%ecx, %ecx
+      df:	7e 4b	jle	0x12c
+      e1:	44 8d 41 ff	leal	-1(%rcx), %r8d
+      e5:	89 ca	movl	%ecx, %edx
+      e7:	48 8d 77 10	leaq	16(%rdi), %rsi
+      eb:	31 c9	xorl	%ecx, %ecx
+      ed:	49 39 c8	cmpq	%rcx, %r8
+      f0:	75 16	jne	0x108
+      f2:	45 85 ed	testl	%r13d, %r13d
+      f5:	7e 1f	jle	0x116
+      f7:	48 89 76 f0	movq	%rsi, -16(%rsi)
+      fb:	4c 89 76 f8	movq	%r14, -8(%rsi)
+      ff:	4c 89 3e	movq	%r15, _pdl_thread_execute(%rsi)
+     102:	48 89 46 08	movq	%rax, 8(%rsi)
+     106:	eb 16	jmp	0x11e
+     108:	48 89 76 f0	movq	%rsi, -16(%rsi)
+     10c:	49 8b 1c cc	movq	_pdl_thread_execute(%r12,%rcx,8), %rbx
+     110:	48 89 5e f8	movq	%rbx, -8(%rsi)
+     114:	eb 08	jmp	0x11e
+     116:	4c 89 7e f0	movq	%r15, -16(%rsi)
+     11a:	48 89 46 f8	movq	%rax, -8(%rsi)
+     11e:	48 ff c1	incq	%rcx
+     121:	48 83 c6 10	addq	$16, %rsi
+     125:	48 39 ca	cmpq	%rcx, %rdx
+     128:	75 c3	jne	0xed
+     12a:	eb 27	jmp	0x153
+     12c:	45 85 ed	testl	%r13d, %r13d
+     12f:	7e 16	jle	0x147
+     131:	48 8d 4f 10	leaq	16(%rdi), %rcx
+     135:	48 89 0f	movq	%rcx, _pdl_thread_execute(%rdi)
+     138:	4c 89 77 08	movq	%r14, 8(%rdi)
+     13c:	4c 89 7f 10	movq	%r15, 16(%rdi)
+     140:	b9 03 00 00 00	movl	$3, %ecx
+     145:	eb 08	jmp	0x14f
+     147:	4c 89 3f	movq	%r15, _pdl_thread_execute(%rdi)
+     14a:	b9 01 00 00 00	movl	$1, %ecx
+     14f:	48 89 04 cf	movq	%rax, _pdl_thread_execute(%rdi,%rcx,8)
+     153:	48 8b 75 b0	movq	-80(%rbp), %rsi
+     157:	48 8b 55 a8	movq	-88(%rbp), %rdx
+     15b:	e8 00 00 00 00	callq	______PDL_THREAD_FAKE_BEGIN_____
+     160:	48 8b 0d 00 00 00 00	movq	___stack_chk_guard(%rip), %rcx
+     167:	48 8b 09	movq	_pdl_thread_execute(%rcx), %rcx
+     16a:	48 3b 4d d0	cmpq	-48(%rbp), %rcx
+     16e:	75 0f	jne	0x17f
+     170:	48 8d 65 d8	leaq	-40(%rbp), %rsp
+     174:	5b	popq	%rbx
+     175:	41 5c	popq	%r12
+     177:	41 5d	popq	%r13
+     179:	41 5e	popq	%r14
+     17b:	41 5f	popq	%r15
+     17d:	5d	popq	%rbp
+     17e:	c3	retq
+     17f:	e8 00 00 00 00	callq	___stack_chk_fail

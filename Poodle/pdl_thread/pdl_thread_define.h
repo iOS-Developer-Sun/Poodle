@@ -24,13 +24,13 @@
 #ifdef DEBUG
 
 #if defined(__i386__)
-#define pdl_thread_fake_end_size 851
+#define pdl_thread_fake_end_size 830
 #elif defined(__x86_64__)
 #define pdl_thread_fake_end_size 942
 #elif defined(__arm__)
-#define pdl_thread_fake_end_size 872
+#define pdl_thread_fake_end_size 864
 #elif defined(__arm64__)
-#define pdl_thread_fake_end_size 1204
+#define pdl_thread_fake_end_size 1200
 #endif
 
 #else
