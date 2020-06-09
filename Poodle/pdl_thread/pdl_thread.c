@@ -101,9 +101,14 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
     int ret = 0;
     void *lr = (void *)link_register;
     void **fp = (void **)frame_pointer;
+
     if (filter && filter->init) {
-        filter->init(filter);
+        bool valid = filter->init(filter);
+        if (!valid) {
+            return 0;
+        }
     }
+
     while (true) {
         if (ret > count) {
             break;
@@ -135,6 +140,14 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
             lr = NULL;
         }
     }
+
+    if (filter && filter->destroy) {
+        bool valid = filter->destroy(filter);
+        if (!valid) {
+            return 0;
+        }
+    }
+
     return ret;
 }
 
