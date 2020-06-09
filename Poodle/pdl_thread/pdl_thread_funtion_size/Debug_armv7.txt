@@ -8,13 +8,13 @@ ______PDL_THREAD_FAKE_END_____:
       34:	02 af	add	r7, sp, #8
       36:	99 b0	sub	sp, #100
       38:	d7 f8 08 90	ldr.w	r9, [r7, #8]
-      3c:	41 f2 ac 1c	movw	r12, :lower16:((4596-68)-4)
-      40:	c0 f2 00 0c	movt	r12, :upper16:((4596-68)-4)
+      3c:	41 f2 4c 2c	movw	r12, :lower16:((4756-68)-4)
+      40:	c0 f2 00 0c	movt	r12, :upper16:((4756-68)-4)
       44:	fc 44	add	r12, pc
       46:	dc f8 00 c0	ldr.w	r12, [r12]
       4a:	dc f8 00 c0	ldr.w	r12, [r12]
-      4e:	41 f2 9a 1e	movw	lr, :lower16:((4596-86)-4)
-      52:	c0 f2 00 0e	movt	lr, :upper16:((4596-86)-4)
+      4e:	41 f2 3a 2e	movw	lr, :lower16:((4756-86)-4)
+      52:	c0 f2 00 0e	movt	lr, :upper16:((4756-86)-4)
       56:	fe 44	add	lr, pc
       58:	de f8 00 e0	ldr.w	lr, [lr]
       5c:	de f8 00 e0	ldr.w	lr, [lr]
@@ -65,10 +65,10 @@ ______PDL_THREAD_FAKE_END_____:
       ec:	47 f8 34 1c	str	r1, [r7, #-52]
       f0:	47 f8 38 0c	str	r0, [r7, #-56]
       f4:	00 20	movs	r0, #0
-      f6:	00 f0 31 fa	bl	_pdl_builtin_return_address
+      f6:	00 f0 5d fa	bl	_pdl_builtin_return_address
       fa:	47 f8 3c 0c	str	r0, [r7, #-60]
       fe:	00 20	movs	r0, #0
-     100:	00 f0 11 fa	bl	_pdl_builtin_frame_address
+     100:	00 f0 3d fa	bl	_pdl_builtin_frame_address
      104:	47 f8 40 0c	str	r0, [r7, #-64]
      108:	57 f8 3c 0c	ldr	r0, [r7, #-60]
      10c:	47 f8 44 0c	str	r0, [r7, #-68]
@@ -98,10 +98,10 @@ ______PDL_THREAD_FAKE_END_____:
      15e:	01 30	adds	r0, #1
      160:	47 f8 50 0c	str	r0, [r7, #-80]
      164:	57 f8 50 0c	ldr	r0, [r7, #-80]
-     168:	00 f0 dd f9	bl	_pdl_builtin_frame_address
+     168:	00 f0 09 fa	bl	_pdl_builtin_frame_address
      16c:	47 f8 48 0c	str	r0, [r7, #-72]
      170:	57 f8 50 0c	ldr	r0, [r7, #-80]
-     174:	00 f0 f2 f9	bl	_pdl_builtin_return_address
+     174:	00 f0 1e fa	bl	_pdl_builtin_return_address
      178:	47 f8 44 0c	str	r0, [r7, #-68]
      17c:	57 f8 14 0c	ldr	r0, [r7, #-20]
      180:	00 28	cmp	r0, #0
@@ -266,8 +266,8 @@ ______PDL_THREAD_FAKE_END_____:
      35c:	57 f8 68 0c	ldr	r0, [r7, #-104]
      360:	57 f8 30 1c	ldr	r1, [r7, #-48]
      364:	8d 46	mov	sp, r1
-     366:	40 f6 82 61	movw	r1, :lower16:((4596-878)-4)
-     36a:	c0 f2 00 01	movt	r1, :upper16:((4596-878)-4)
+     366:	40 f6 22 71	movw	r1, :lower16:((4756-878)-4)
+     36a:	c0 f2 00 01	movt	r1, :upper16:((4756-878)-4)
      36e:	79 44	add	r1, pc
      370:	09 68	ldr	r1, [r1]
      372:	09 68	ldr	r1, [r1]

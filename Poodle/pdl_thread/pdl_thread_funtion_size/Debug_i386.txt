@@ -20,7 +20,7 @@ ______PDL_THREAD_FAKE_END_____:
       88:	8b 7d 0c	movl	12(%ebp), %edi
       8b:	8b 5d 08	movl	8(%ebp), %ebx
       8e:	89 45 a0	movl	%eax, -96(%ebp)
-      91:	8b 80 90 12 00 00	movl	4878-126(%eax), %eax
+      91:	8b 80 47 13 00 00	movl	5061-126(%eax), %eax
       97:	8b 00	movl	_pdl_thread_execute(%eax), %eax
       99:	89 45 f0	movl	%eax, -16(%ebp)
       9c:	8b 45 18	movl	24(%ebp), %eax
@@ -65,14 +65,14 @@ ______PDL_THREAD_FAKE_END_____:
      11c:	83 ec 10	subl	$16, %esp
      11f:	c7 04 24 00 00 00 00	movl	$_pdl_thread_execute, _pdl_thread_execute(%esp)
      126:	89 45 9c	movl	%eax, -100(%ebp)
-     129:	e8 22 05 00 00	calll	_pdl_builtin_return_address
+     129:	e8 92 05 00 00	calll	_pdl_builtin_return_address
      12e:	83 c4 10	addl	$16, %esp
      131:	31 c9	xorl	%ecx, %ecx
      133:	89 45 d0	movl	%eax, -48(%ebp)
      136:	83 ec 10	subl	$16, %esp
      139:	c7 04 24 00 00 00 00	movl	$_pdl_thread_execute, _pdl_thread_execute(%esp)
      140:	89 4d 98	movl	%ecx, -104(%ebp)
-     143:	e8 b8 04 00 00	calll	_pdl_builtin_frame_address
+     143:	e8 28 05 00 00	calll	_pdl_builtin_frame_address
      148:	83 c4 10	addl	$16, %esp
      14b:	31 c9	xorl	%ecx, %ecx
      14d:	89 45 cc	movl	%eax, -52(%ebp)
@@ -107,13 +107,13 @@ ______PDL_THREAD_FAKE_END_____:
      1be:	8b 45 bc	movl	-68(%ebp), %eax
      1c1:	83 ec 10	subl	$16, %esp
      1c4:	89 04 24	movl	%eax, _pdl_thread_execute(%esp)
-     1c7:	e8 34 04 00 00	calll	_pdl_builtin_frame_address
+     1c7:	e8 a4 04 00 00	calll	_pdl_builtin_frame_address
      1cc:	83 c4 10	addl	$16, %esp
      1cf:	89 45 c4	movl	%eax, -60(%ebp)
      1d2:	8b 45 bc	movl	-68(%ebp), %eax
      1d5:	83 ec 10	subl	$16, %esp
      1d8:	89 04 24	movl	%eax, _pdl_thread_execute(%esp)
-     1db:	e8 70 04 00 00	calll	_pdl_builtin_return_address
+     1db:	e8 e0 04 00 00	calll	_pdl_builtin_return_address
      1e0:	83 c4 10	addl	$16, %esp
      1e3:	89 45 c8	movl	%eax, -56(%ebp)
      1e6:	83 7d 0c 00	cmpl	$0, 12(%ebp)
@@ -239,7 +239,7 @@ ______PDL_THREAD_FAKE_END_____:
      37e:	8b 4d dc	movl	-36(%ebp), %ecx
      381:	89 cc	movl	%ecx, %esp
      383:	8b 4d a0	movl	-96(%ebp), %ecx
-     386:	8b 91 90 12 00 00	movl	4878-126(%ecx), %edx
+     386:	8b 91 47 13 00 00	movl	5061-126(%ecx), %edx
      38c:	8b 12	movl	_pdl_thread_execute(%edx), %edx
      38e:	8b 75 f0	movl	-16(%ebp), %esi
      391:	39 f2	cmpl	%esi, %edx
