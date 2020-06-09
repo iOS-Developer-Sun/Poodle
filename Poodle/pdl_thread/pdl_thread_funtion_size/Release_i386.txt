@@ -16,7 +16,7 @@ ______PDL_THREAD_FAKE_END_____:
       17:	58	popl	%eax
       18:	8b 7d 18	movl	24(%ebp), %edi
       1b:	8b 5d 0c	movl	12(%ebp), %ebx
-      1e:	8b 88 67 16 00 00	movl	5758-23(%eax), %ecx
+      1e:	8b 88 cd 16 00 00	movl	5860-23(%eax), %ecx
       24:	31 c0	xorl	%eax, %eax
       26:	40	incl	%eax
       27:	85 db	testl	%ebx, %ebx
@@ -48,13 +48,13 @@ ______PDL_THREAD_FAKE_END_____:
       6a:	83 ec 0c	subl	$12, %esp
       6d:	31 c0	xorl	%eax, %eax
       6f:	50	pushl	%eax
-      70:	e8 37 02 00 00	calll	_pdl_builtin_return_address
+      70:	e8 68 02 00 00	calll	_pdl_builtin_return_address
       75:	83 c4 10	addl	$16, %esp
       78:	89 45 e4	movl	%eax, -28(%ebp)
       7b:	83 ec 0c	subl	$12, %esp
       7e:	31 c0	xorl	%eax, %eax
       80:	50	pushl	%eax
-      81:	e8 0d 02 00 00	calll	_pdl_builtin_frame_address
+      81:	e8 3e 02 00 00	calll	_pdl_builtin_frame_address
       86:	31 d2	xorl	%edx, %edx
       88:	83 c4 10	addl	$16, %esp
       8b:	89 45 e8	movl	%eax, -24(%ebp)
@@ -81,12 +81,12 @@ ______PDL_THREAD_FAKE_END_____:
       be:	89 45 ec	movl	%eax, -20(%ebp)
       c1:	83 ec 0c	subl	$12, %esp
       c4:	50	pushl	%eax
-      c5:	e8 c9 01 00 00	calll	_pdl_builtin_frame_address
+      c5:	e8 fa 01 00 00	calll	_pdl_builtin_frame_address
       ca:	83 c4 10	addl	$16, %esp
       cd:	89 45 e8	movl	%eax, -24(%ebp)
       d0:	83 ec 0c	subl	$12, %esp
       d3:	ff 75 ec	pushl	-20(%ebp)
-      d6:	e8 d1 01 00 00	calll	_pdl_builtin_return_address
+      d6:	e8 02 02 00 00	calll	_pdl_builtin_return_address
       db:	83 c4 10	addl	$16, %esp
       de:	85 db	testl	%ebx, %ebx
       e0:	7e 40	jle	0x122

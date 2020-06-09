@@ -11,6 +11,7 @@
 #import <assert.h>
 #import <string.h>
 #import <stdio.h>
+#import <limits.h>
 #import "pdl_thread.h"
 
 #define PDL_BACKTRACE_FRAMES_MAX_COUNT 128
@@ -53,14 +54,23 @@ static void *pdl_backtrace_thread_main(pdl_backtrace_t backtrace) {
     return ret;
 }
 
-static void pdl_backtrace_filter_init(pdl_thread_frame_filter *filter) {
+static bool pdl_backtrace_filter_init(pdl_thread_frame_filter *filter) {
     filter->data = (void *)(unsigned long)0;
+    return true;
+}
+
+static bool pdl_backtrace_filter_destroy(pdl_thread_frame_filter *filter) {
+    return ((unsigned long)filter->data == 0);
 }
 
 static bool pdl_backtrace_filter_is_valid(pdl_thread_frame_filter *filter, void *link_register) {
     unsigned long max_count = (unsigned long)filter->init_data;
     unsigned long count = (unsigned long)filter->data;
     bool available = true;
+
+    if (count == ULONG_MAX) {
+        return false;
+    }
 
     available = pdl_thread_fake_begin_filter(link_register);
     if (!available) {
@@ -75,6 +85,9 @@ static bool pdl_backtrace_filter_is_valid(pdl_thread_frame_filter *filter, void 
         bool ret = (count < max_count);
         count--;
         filter->data = (void *)count;
+        if (count == ULONG_MAX) {
+            return false;
+        }
         return ret;
     }
 
@@ -129,7 +142,7 @@ void pdl_backtrace_set_name(pdl_backtrace_t backtrace, const char *name) {
 void pdl_backtrace_record(pdl_backtrace_t backtrace, unsigned int hidden_count) {
     unsigned int valid_hidden_count = hidden_count;
 #ifdef DEBUG
-    if (valid_hidden_count != __UINT32_MAX__) {
+    if (valid_hidden_count != UINT_MAX) {
         valid_hidden_count++;
     }
 #endif
@@ -168,6 +181,7 @@ void pdl_backtrace_filter_with_count(pdl_thread_frame_filter *filter, unsigned i
     }
     filter->init_data = (void *)(unsigned long)count;
     filter->init = &pdl_backtrace_filter_init;
+    filter->destroy = &pdl_backtrace_filter_destroy;
     filter->is_valid = &pdl_backtrace_filter_is_valid;
 }
 
