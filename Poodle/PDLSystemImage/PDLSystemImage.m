@@ -329,7 +329,7 @@ static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide
 }
 
 - (NSString *)crashLogString {
-    NSString *crashLogString = [NSString stringWithFormat:@"%p - %p %@ %@ <%@> %@\n", (void *)self.address, (void *)self.endAddress, self.name, self.cpuTypeString, self.uuidString, self.path];
+    NSString *crashLogString = [NSString stringWithFormat:@"%p - %p %@ %@ <%@> %@", (void *)self.address, (void *)self.endAddress, self.name, self.cpuTypeString, self.uuidString, self.path];
     return crashLogString;
 }
 
