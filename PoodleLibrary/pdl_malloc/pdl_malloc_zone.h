@@ -32,6 +32,9 @@ extern void pdl_malloc_assert_set_enabled(bool enabled);
 extern unsigned int pdl_malloc_record_hidden_count(void);
 extern void pdl_malloc_record_set_hidden_count(unsigned int hidden_count);
 
+extern int (*pdl_malloc_pthread_create(void))(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *);
+extern void pdl_malloc_set_pthread_create(int(*pthread_create)(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *));
+
 extern void pdl_malloc_zone_show_backtrace(void *pointer);
 extern void pdl_malloc_zone_hide_backtrace(void *pointer);
 

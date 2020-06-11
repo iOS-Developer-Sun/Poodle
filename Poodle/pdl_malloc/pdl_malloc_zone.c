@@ -104,6 +104,15 @@ void pdl_malloc_record_set_hidden_count(unsigned int hidden_count) {
     _pdl_malloc_record_hidden_count = hidden_count;
 }
 
+static int (*_pdl_malloc_pthread_create)(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *) = &pthread_create;
+int (*pdl_malloc_pthread_create(void))(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *) {
+    return _pdl_malloc_pthread_create;
+}
+
+void pdl_malloc_set_pthread_create(int(*pthread_create)(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *)) {
+    _pdl_malloc_pthread_create = pthread_create;
+}
+
 #pragma mark - private zone
 
 static malloc_zone_t *pdl_malloc_private_zone(void) {
@@ -271,8 +280,8 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
         }
 
         if (info->live) {
-            pdl_backtrace_thread_show(info->bt, true);
-            pdl_backtrace_thread_show(info->fbt, true);
+            pdl_backtrace_thread_show_with_start(info->bt, true, _pdl_malloc_pthread_create);
+            pdl_backtrace_thread_show_with_start(info->fbt, true, _pdl_malloc_pthread_create);
             pdl_malloc_error("pdl_malloc_error init %p is live\n", ptr);
             pdl_malloc_assert(info->live == false);
         }
@@ -315,8 +324,8 @@ static void pdl_malloc_destroy(void *ptr, size_t rsize, size_t size) {
         pdl_malloc_assert(info->ptr == ptr);
         pdl_malloc_assert(info->bt);
         if (info->live == false) {
-            pdl_backtrace_thread_show(info->bt, true);
-            pdl_backtrace_thread_show(info->fbt, true);
+            pdl_backtrace_thread_show_with_start(info->bt, true, _pdl_malloc_pthread_create);
+            pdl_backtrace_thread_show_with_start(info->fbt, true, _pdl_malloc_pthread_create);
             pdl_malloc_error("pdl_malloc_error destroy %p is not live\n", ptr);
             pdl_malloc_assert(0);
         }
@@ -357,8 +366,8 @@ static void pdl_malloc_backtrace(void *ptr) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->ptr == ptr);
         pdl_malloc_assert(info->bt);
-        pdl_backtrace_thread_show(info->bt, true);
-        pdl_backtrace_thread_show(info->fbt, true);
+        pdl_backtrace_thread_show_with_start(info->bt, true, _pdl_malloc_pthread_create);
+        pdl_backtrace_thread_show_with_start(info->fbt, true, _pdl_malloc_pthread_create);
     }
 }
 
@@ -678,8 +687,8 @@ void pdl_malloc_check_pointer(void *pointer) {
         pdl_malloc_assert(info->ptr == pointer);
         if (info->bt) {
             if (info->live == false) {
-                pdl_backtrace_thread_show(info->bt, true);
-                pdl_backtrace_thread_show(info->fbt, true);
+                pdl_backtrace_thread_show_with_start(info->bt, true, _pdl_malloc_pthread_create);
+                pdl_backtrace_thread_show_with_start(info->fbt, true, _pdl_malloc_pthread_create);
             }
         }
     }
@@ -705,10 +714,10 @@ void pdl_malloc_zone_show_backtrace(void *pointer) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->ptr == pointer);
         if (info->bt) {
-            pdl_backtrace_thread_show(info->bt, true);
+            pdl_backtrace_thread_show_with_start(info->bt, true, _pdl_malloc_pthread_create);
         }
         if (info->fbt) {
-            pdl_backtrace_thread_show(info->fbt, true);
+            pdl_backtrace_thread_show_with_start(info->fbt, true, _pdl_malloc_pthread_create);
         }
     }
     pdl_malloc_map_unlock();
