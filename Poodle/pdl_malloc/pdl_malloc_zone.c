@@ -15,6 +15,7 @@
 #import <os/lock.h>
 #import <sys/mman.h>
 #import <sys/fcntl.h>
+#import <sys/time.h>
 #import <mach/mach.h>
 #import "pdl_backtrace.h"
 #import "pdl_dictionary.h"
@@ -142,22 +143,36 @@ static void pdl_malloc_unlock() {
 
 #pragma mark - file log
 
-static int _pdl_malloc_log_file_fd = -1;
 static void *_pdl_malloc_log_file_map = MAP_FAILED;
 static size_t _pdl_malloc_log_file_size = 0;
 static size_t _pdl_malloc_log_file_current = 0;
 
-static void pdl_malloc_log_file_string(char *string) {
-    size_t size = strlen(string);
-    if (_pdl_malloc_log_file_size < _pdl_malloc_log_file_current + size) {
-        write(_pdl_malloc_log_file_fd, _pdl_malloc_log_file_map, _pdl_malloc_log_file_current);
-        _pdl_malloc_log_file_current = 0;
+static void pdl_malloc_log_file_string(char *string, size_t string_size, size_t eof_size) {
+    size_t size = string_size;
+    assert(_pdl_malloc_log_file_size >= _pdl_malloc_log_file_current);
+    size_t current = _pdl_malloc_log_file_current;
+    size_t offset = 0;
+    if (_pdl_malloc_log_file_size < current + size) {
+        size_t left = _pdl_malloc_log_file_size - current;
+        assert(size > left);
+        memcpy(_pdl_malloc_log_file_map + current, string, left);
+        current = 0;
+        size -= left;
+        offset = left;
     }
 
-    memcpy(_pdl_malloc_log_file_map + _pdl_malloc_log_file_current, string, size);
-    _pdl_malloc_log_file_current += size;
+    memcpy(_pdl_malloc_log_file_map + current, string + offset, size);
+    current += size;
+    assert(_pdl_malloc_log_file_size >= size);
+    if (current == eof_size) {
+        current = 0;
+    } else if (current < eof_size) {
+        current = _pdl_malloc_log_file_size - (eof_size - current);
+    } else {
+        current -= eof_size;
+    }
+    _pdl_malloc_log_file_current = current;
 }
-
 
 static void pdl_malloc_log_file(const char *type, void *ptr, size_t size, size_t rsize) {
     if (_pdl_malloc_log_file_map == MAP_FAILED) {
@@ -166,37 +181,47 @@ static void pdl_malloc_log_file(const char *type, void *ptr, size_t size, size_t
 
     pdl_malloc_lock();
 
+    char string[64];
+
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    uint64_t time = tv.tv_sec * 1000 * 1000 + tv.tv_usec;
+    char *eof = "EOF\n";
+    size_t eof_size = strlen(eof);
+    sprintf(string, "%lld %s %p %ld %ld\n%s", time, type, ptr, size, rsize, eof);
+    size_t string_size = strlen(string);
+    pdl_malloc_log_file_string(string, string_size, eof_size);
+
     void *frames[128];
-
-    char *string = (char *)frames;
-    sprintf(string, "%s %p %ld %ld\n", type, ptr, size, rsize);
-    pdl_malloc_log_file_string(string);
-
     int count = backtrace(frames, 128);
     for (int i = 0; i < count; i++) {
-        sprintf(string, "%d: %p\n", count - i, frames[i]);
-        pdl_malloc_log_file_string(string);
+        sprintf(string, "%d: %p\n%s", count - i, frames[i], eof);
+        size_t string_size = strlen(string);
+        pdl_malloc_log_file_string(string, string_size, eof_size);
     }
 
     pdl_malloc_unlock();
 }
 
-bool pdl_malloc_set_log_file_path(const char *file) {
+bool pdl_malloc_set_log_file_path(const char *file, size_t file_size) {
     if (_pdl_malloc_log_file_map != MAP_FAILED) {
         return false;
     }
 
     int fd = open(file, O_CREAT | O_RDWR | O_TRUNC, 00777);
     if (fd >= 0) {
-        size_t size = 128 * 1024 * 1024;
-        void *map = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
+        size_t size = file_size;
+        lseek(fd, size - 1, SEEK_SET);
+        write(fd, "", 1);
+
+        void *map = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
         if (map != MAP_FAILED) {
             _pdl_malloc_log_file_map = map;
-            _pdl_malloc_log_file_size = size;
-            _pdl_malloc_log_file_fd = fd;
-        } else {
-            close(fd);
+            _pdl_malloc_log_file_size = file_size;
+            char *bof = "BOF\n";
+            pdl_malloc_log_file_string(bof, strlen(bof), 0);
         }
+        close(fd);
     }
     return _pdl_malloc_log_file_map != MAP_FAILED;
 }

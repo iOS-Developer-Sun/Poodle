@@ -39,6 +39,6 @@ extern void pdl_malloc_set_pthread_create(int(*pthread_create)(pthread_t *, cons
 extern void pdl_malloc_zone_show_backtrace(void *pointer);
 extern void pdl_malloc_zone_hide_backtrace(void *pointer);
 
-extern bool pdl_malloc_set_log_file_path(const char *file);
+extern bool pdl_malloc_set_log_file_path(const char *file, size_t file_size);
 
 extern bool pdl_malloc_enable_trace(pdl_malloc_trace_policy policy);
