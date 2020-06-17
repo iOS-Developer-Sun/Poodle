@@ -142,14 +142,16 @@ static void pdl_malloc_unlock() {
 
 #pragma mark - file log
 
+static int _pdl_malloc_log_file_fd = -1;
 static void *_pdl_malloc_log_file_map = MAP_FAILED;
 static size_t _pdl_malloc_log_file_size = 0;
 static size_t _pdl_malloc_log_file_current = 0;
 
 static void pdl_malloc_log_file_string(char *string) {
-    size_t size =  strlen(string);
+    size_t size = strlen(string);
     if (_pdl_malloc_log_file_size < _pdl_malloc_log_file_current + size) {
-        return;
+        write(_pdl_malloc_log_file_fd, _pdl_malloc_log_file_map, _pdl_malloc_log_file_current);
+        _pdl_malloc_log_file_current = 0;
     }
 
     memcpy(_pdl_malloc_log_file_map + _pdl_malloc_log_file_current, string, size);
@@ -187,15 +189,14 @@ bool pdl_malloc_set_log_file_path(const char *file) {
     int fd = open(file, O_CREAT | O_RDWR | O_TRUNC, 00777);
     if (fd >= 0) {
         size_t size = 128 * 1024 * 1024;
-        lseek(fd, size - 1, SEEK_SET);
-        write(fd, "", 1);
-
-        void *map = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        void *map = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0);
         if (map != MAP_FAILED) {
             _pdl_malloc_log_file_map = map;
             _pdl_malloc_log_file_size = size;
+            _pdl_malloc_log_file_fd = fd;
+        } else {
+            close(fd);
         }
-        close(fd);
     }
     return _pdl_malloc_log_file_map != MAP_FAILED;
 }
