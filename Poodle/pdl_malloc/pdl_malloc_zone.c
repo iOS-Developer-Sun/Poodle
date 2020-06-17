@@ -179,27 +179,25 @@ static void pdl_malloc_log_file(const char *type, void *ptr, size_t size, size_t
         return;
     }
 
-    pdl_malloc_lock();
-
-    char string[64];
+    char string[64 + 128 * 24];
 
     struct timeval tv;
     gettimeofday(&tv, NULL);
     uint64_t time = tv.tv_sec * 1000 * 1000 + tv.tv_usec;
     char *eof = "EOF\n";
     size_t eof_size = strlen(eof);
-    sprintf(string, "%lld %s %p %ld %ld\n%s", time, type, ptr, size, rsize, eof);
-    size_t string_size = strlen(string);
-    pdl_malloc_log_file_string(string, string_size, eof_size);
-
+    int offset = sprintf(string, "%lld %s %p %ld %ld\n", time, type, ptr, size, rsize);
     void *frames[128];
     int count = backtrace(frames, 128);
     for (int i = 0; i < count; i++) {
-        sprintf(string, "%d: %p\n%s", count - i, frames[i], eof);
-        size_t string_size = strlen(string);
-        pdl_malloc_log_file_string(string, string_size, eof_size);
+        offset += sprintf(string + offset, "%d: %p\n", count - i, frames[i]);
     }
 
+    offset += sprintf(string + offset, "%s", eof);
+    size_t string_size = strlen(string);
+    assert(string_size + 1 <= sizeof(string));
+    pdl_malloc_lock();
+    pdl_malloc_log_file_string(string, string_size, eof_size);
     pdl_malloc_unlock();
 }
 
