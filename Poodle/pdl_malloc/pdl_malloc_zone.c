@@ -9,6 +9,7 @@
 #import "pdl_malloc_zone.h"
 #import <pthread.h>
 #import <stdio.h>
+#import <unistd.h>
 #import <assert.h>
 #import <string.h>
 #import <os/lock.h>
@@ -111,6 +112,37 @@ int (*pdl_malloc_pthread_create(void))(pthread_t *, const pthread_attr_t *, void
 
 void pdl_malloc_set_pthread_create(int(*pthread_create)(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *)) {
     _pdl_malloc_pthread_create = pthread_create;
+}
+
+#pragma mark - file log
+
+static FILE *_pdl_malloc_log_file = NULL;
+
+static void pdl_malloc_log_file(const char *type, void *ptr, size_t size, size_t rsize) {
+    FILE *file = _pdl_malloc_log_file;
+    if (!file) {
+        return;
+    }
+
+    int fd = fileno(file);
+    void *frames[128];
+    char *string = (char *)frames;
+    sprintf(string, "%s %p %ld %ld\n", type, ptr, size, rsize);
+    write(fd, string, strlen(string));
+    int count = backtrace(frames, 128);
+    for (int i = 0; i < count; i++) {
+        sprintf(string, "%d: %p\n", count - i, frames[i]);
+        write(fd, string, strlen(string));
+    }
+}
+
+bool pdl_malloc_set_log_file_path(const char *file) {
+    if (_pdl_malloc_log_file) {
+        return false;
+    }
+
+    _pdl_malloc_log_file = fopen(file, "w+");
+    return _pdl_malloc_log_file != NULL;
 }
 
 #pragma mark - private zone
@@ -269,6 +301,11 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
         return;
     }
 
+    if (records && _policy == pdl_malloc_trace_policy_log) {
+        pdl_malloc_log_file("init", ptr, size, 0);
+        return;
+    }
+
     pdl_malloc_info_t info = pdl_malloc_map_get(ptr, true);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
@@ -309,12 +346,17 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
     pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_init", ptr, size, false);
 }
 
-static void pdl_malloc_destroy(void *ptr, size_t rsize, size_t size) {
+static void pdl_malloc_destroy(void *ptr, size_t size, size_t rsize) {
     if (!ptr) {
         return;
     }
 
     if (!_zone) {
+        return;
+    }
+
+    if (_policy == pdl_malloc_trace_policy_log) {
+        pdl_malloc_log_file("destroy", ptr, size, rsize);
         return;
     }
 
@@ -330,10 +372,10 @@ static void pdl_malloc_destroy(void *ptr, size_t rsize, size_t size) {
             pdl_malloc_assert(0);
         }
         info->live = false;
-        if (size == 0) {
-            memset(ptr, 0x55, rsize);
+        if (rsize == 0) {
+            memset(ptr, 0x55, size);
         }
-        pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_destroy", ptr, rsize, size, true);
+        pdl_malloc_log("%s %p %d %d\n", "pdl_malloc_destroy", ptr, size, rsize, true);
         switch (_policy) {
             case pdl_malloc_trace_policy_live_allocations:
             case pdl_malloc_trace_policy_custom_zone:
@@ -612,7 +654,8 @@ bool pdl_malloc_enable_trace(pdl_malloc_trace_policy policy) {
 
     switch (policy) {
         case pdl_malloc_trace_policy_live_allocations:
-        case pdl_malloc_trace_policy_allocation_and_free: {
+        case pdl_malloc_trace_policy_allocation_and_free:
+        case pdl_malloc_trace_policy_log: {
             _zone = malloc_default_zone();
 
             pdl_malloc_log("pdl_malloc_zone_enumerate begin\n");
@@ -627,7 +670,6 @@ bool pdl_malloc_enable_trace(pdl_malloc_trace_policy policy) {
             _zone = malloc_create_zone(0, 0);
             malloc_set_zone_name(_zone, "pdl_custom_zone");
         } break;
-
         default:
             return false;
             break;
