@@ -8,6 +8,8 @@
 
 #import "NSLock+PDLExtension.h"
 
+__unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_empty(void) {}
+
 #if __has_feature(objc_arc)
 #error This file must be compiled with flag "-fno-objc-arc"
 #endif

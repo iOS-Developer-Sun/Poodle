@@ -8,6 +8,8 @@
 
 #import "NSUserDefaults+PDLExtension.h"
 
+__unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_empty(void) {}
+
 @implementation NSUserDefaults (PDLExtension)
 
 - (id)objectForKeyedSubscript:(id)key {

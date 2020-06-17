@@ -8,6 +8,8 @@
 
 #import "UIViewController+PDLNavigationBar.h"
 
+__unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_empty(void) {}
+
 @implementation UIViewController (PDLNavigationBar)
 
 static UIBarButtonItem *customBarItemWithImageTargetAction(UIImage *image, id target, SEL action) {
