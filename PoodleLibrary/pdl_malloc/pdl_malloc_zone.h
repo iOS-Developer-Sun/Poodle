@@ -13,6 +13,7 @@ typedef enum pdl_malloc_trace_policy {
     pdl_malloc_trace_policy_live_allocations,
     pdl_malloc_trace_policy_allocation_and_free,
     pdl_malloc_trace_policy_custom_zone,
+    pdl_malloc_trace_policy_log,
 }pdl_malloc_trace_policy;
 
 extern malloc_zone_t *pdl_malloc_zone(void);
@@ -37,5 +38,7 @@ extern void pdl_malloc_set_pthread_create(int(*pthread_create)(pthread_t *, cons
 
 extern void pdl_malloc_zone_show_backtrace(void *pointer);
 extern void pdl_malloc_zone_hide_backtrace(void *pointer);
+
+extern bool pdl_malloc_set_log_file_path(const char *file, size_t file_size);
 
 extern bool pdl_malloc_enable_trace(pdl_malloc_trace_policy policy);
