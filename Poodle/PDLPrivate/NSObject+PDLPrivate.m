@@ -10,6 +10,8 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
+__unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_empty(void) {}
+
 @implementation NSObject (PDLPrivate)
 
 @dynamic _ivarDescription;

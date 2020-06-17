@@ -10,6 +10,8 @@
 #import "NSObject+PDLImplementationInterceptor.h"
 #import <pthread.h>
 
+__unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_empty(void) {}
+
 @implementation NSObject (PDLThreadSafetifyProperty)
 
 static pthread_mutex_t _lock = PTHREAD_MUTEX_INITIALIZER;

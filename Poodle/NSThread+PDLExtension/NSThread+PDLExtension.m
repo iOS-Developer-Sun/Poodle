@@ -11,6 +11,8 @@
 #import "pdl_mach.h"
 #import "NSObject+PDLExtension.h"
 
+__unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_empty(void) {}
+
 @implementation NSThread (PDLExtension)
 
 - (pthread_t)pdl_pthread {
