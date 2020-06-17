@@ -14,6 +14,7 @@
 #import <string.h>
 #import <os/lock.h>
 #import <sys/mman.h>
+#import <sys/fcntl.h>
 #import <mach/mach.h>
 #import "pdl_backtrace.h"
 #import "pdl_dictionary.h"
@@ -114,35 +115,89 @@ void pdl_malloc_set_pthread_create(int(*pthread_create)(pthread_t *, const pthre
     _pdl_malloc_pthread_create = pthread_create;
 }
 
-#pragma mark - file log
+#pragma mark - lock
 
-static FILE *_pdl_malloc_log_file = NULL;
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
 
-static void pdl_malloc_log_file(const char *type, void *ptr, size_t size, size_t rsize) {
-    FILE *file = _pdl_malloc_log_file;
-    if (!file) {
-        return;
-    }
+static pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
+static os_unfair_lock _unfair_lock = OS_UNFAIR_LOCK_INIT;
 
-    int fd = fileno(file);
-    void *frames[128];
-    char *string = (char *)frames;
-    sprintf(string, "%s %p %ld %ld\n", type, ptr, size, rsize);
-    write(fd, string, strlen(string));
-    int count = backtrace(frames, 128);
-    for (int i = 0; i < count; i++) {
-        sprintf(string, "%d: %p\n", count - i, frames[i]);
-        write(fd, string, strlen(string));
+static void pdl_malloc_lock() {
+    if (&os_unfair_lock_lock) {
+        os_unfair_lock_lock(&_unfair_lock);
+    } else {
+        pthread_mutex_lock(&_mutex);
     }
 }
 
+static void pdl_malloc_unlock() {
+    if (&os_unfair_lock_unlock) {
+        os_unfair_lock_unlock(&_unfair_lock);
+    } else {
+        pthread_mutex_unlock(&_mutex);
+    }
+}
+
+#pragma mark - file log
+
+static void *_pdl_malloc_log_file_map = MAP_FAILED;
+static size_t _pdl_malloc_log_file_size = 0;
+static size_t _pdl_malloc_log_file_current = 0;
+
+static void pdl_malloc_log_file_string(char *string) {
+    size_t size =  strlen(string);
+    if (_pdl_malloc_log_file_size < _pdl_malloc_log_file_current + size) {
+        return;
+    }
+
+    memcpy(_pdl_malloc_log_file_map + _pdl_malloc_log_file_current, string, size);
+    _pdl_malloc_log_file_current += size;
+}
+
+
+static void pdl_malloc_log_file(const char *type, void *ptr, size_t size, size_t rsize) {
+    if (_pdl_malloc_log_file_map == MAP_FAILED) {
+        return;
+    }
+
+    pdl_malloc_lock();
+
+    void *frames[128];
+
+    char *string = (char *)frames;
+    sprintf(string, "%s %p %ld %ld\n", type, ptr, size, rsize);
+    pdl_malloc_log_file_string(string);
+
+    int count = backtrace(frames, 128);
+    for (int i = 0; i < count; i++) {
+        sprintf(string, "%d: %p\n", count - i, frames[i]);
+        pdl_malloc_log_file_string(string);
+    }
+
+    pdl_malloc_unlock();
+}
+
 bool pdl_malloc_set_log_file_path(const char *file) {
-    if (_pdl_malloc_log_file) {
+    if (_pdl_malloc_log_file_map != MAP_FAILED) {
         return false;
     }
 
-    _pdl_malloc_log_file = fopen(file, "w+");
-    return _pdl_malloc_log_file != NULL;
+    int fd = open(file, O_CREAT | O_RDWR | O_TRUNC, 00777);
+    if (fd >= 0) {
+        size_t size = 128 * 1024 * 1024;
+        lseek(fd, size - 1, SEEK_SET);
+        write(fd, "", 1);
+
+        void *map = mmap(NULL, size, PROT_READ | PROT_WRITE, MAP_SHARED, fd, 0);
+        if (map != MAP_FAILED) {
+            _pdl_malloc_log_file_map = map;
+            _pdl_malloc_log_file_size = size;
+        }
+        close(fd);
+    }
+    return _pdl_malloc_log_file_map != MAP_FAILED;
 }
 
 #pragma mark - private zone
@@ -207,29 +262,6 @@ static pdl_dictionary_t pdl_malloc_map(void) {
     return _dictionary;
 }
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-#pragma clang diagnostic ignored "-Wunguarded-availability-new"
-
-static pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
-static os_unfair_lock _unfair_lock = OS_UNFAIR_LOCK_INIT;
-
-static void pdl_malloc_map_lock() {
-    if (&os_unfair_lock_lock) {
-        os_unfair_lock_lock(&_unfair_lock);
-    } else {
-        pthread_mutex_lock(&_mutex);
-    }
-}
-
-static void pdl_malloc_map_unlock() {
-    if (&os_unfair_lock_unlock) {
-        os_unfair_lock_unlock(&_unfair_lock);
-    } else {
-        pthread_mutex_unlock(&_mutex);
-    }
-}
-
 #pragma clang diagnostic pop
 
 void pdl_malloc_map_print(void) {
@@ -257,7 +289,7 @@ unsigned int pdl_malloc_map_count(void) {
 
 static void *pdl_malloc_map_get(void *key, bool lock) {
     if (lock) {
-        pdl_malloc_map_lock();
+        pdl_malloc_lock();
     }
 
     pdl_dictionary_t map = pdl_malloc_map();
@@ -267,16 +299,16 @@ static void *pdl_malloc_map_get(void *key, bool lock) {
         value = *object;
     }
     if (lock) {
-        pdl_malloc_map_unlock();
+        pdl_malloc_unlock();
     }
     return value;
 }
 
 static void pdl_malloc_map_set(void *key, void *value) {
-    pdl_malloc_map_lock();
+    pdl_malloc_lock();
     pdl_dictionary_t map = pdl_malloc_map();
     pdl_dictionary_setObjectForKey(map, value, key);
-    pdl_malloc_map_unlock();
+    pdl_malloc_unlock();
 }
 
 #pragma mark - trace info
@@ -688,7 +720,7 @@ void pdl_malloc_disable_trace(void) {
     _zone = NULL;
 
     pdl_dictionary_t map = pdl_malloc_map();
-    pdl_malloc_map_lock();
+    pdl_malloc_lock();
     void **keys = NULL;
     unsigned int count = 0;
     pdl_dictionary_getAllKeys(map, &keys, &count);
@@ -704,7 +736,7 @@ void pdl_malloc_disable_trace(void) {
     }
     pdl_dictionary_removeAllObjects(map);
     pdl_malloc_private_zone_free(keys);
-    pdl_malloc_map_unlock();
+    pdl_malloc_unlock();
 
     return;
 }
@@ -750,7 +782,7 @@ void pdl_malloc_zone_show_backtrace(void *pointer) {
         return;
     }
 
-    pdl_malloc_map_lock();
+    pdl_malloc_lock();
     pdl_malloc_info_t info = pdl_malloc_map_get(pointer, false);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
@@ -762,7 +794,7 @@ void pdl_malloc_zone_show_backtrace(void *pointer) {
             pdl_backtrace_thread_show_with_start(info->fbt, true, _pdl_malloc_pthread_create);
         }
     }
-    pdl_malloc_map_unlock();
+    pdl_malloc_unlock();
 }
 
 void pdl_malloc_zone_hide_backtrace(void *pointer) {
@@ -779,7 +811,7 @@ void pdl_malloc_zone_hide_backtrace(void *pointer) {
         return;
     }
 
-    pdl_malloc_map_lock();
+    pdl_malloc_lock();
     pdl_malloc_info_t info = pdl_malloc_map_get(pointer, false);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
@@ -791,5 +823,5 @@ void pdl_malloc_zone_hide_backtrace(void *pointer) {
             pdl_backtrace_thread_hide(info->fbt);
         }
     }
-    pdl_malloc_map_unlock();
+    pdl_malloc_unlock();
 }
