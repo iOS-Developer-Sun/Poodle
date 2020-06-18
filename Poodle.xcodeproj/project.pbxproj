@@ -149,6 +149,9 @@
 		B899F9EF245065DA00EFBB39 /* PDLViewControllerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */; };
 		B899F9F924506A3A00EFBB39 /* PDLViewControllerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */; };
 		B899F9FA24506A4200EFBB39 /* PDLViewControllerListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B899F9EE245065DA00EFBB39 /* PDLViewControllerListViewController.h */; };
+		B8B7B5AE249B6265008D4604 /* pdl_objc_runtime.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B7B5A1249B61CB008D4604 /* pdl_objc_runtime.h */; };
+		B8B7B5B2249B9132008D4604 /* pdl_objc_runtime.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */; };
+		B8B7B5B3249B9143008D4604 /* pdl_objc_runtime.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */; };
 		B8DEC4C424877D1800DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
 		B8DEC4CE2487807900DB3D0E /* pdl_dispatch_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */; };
 		B8DEC4CF2487807E00DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
@@ -488,6 +491,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B8AD195C23D1B433005A7363;
 			remoteInfo = "NSObject+PDLThreadSafetifyProperty";
+		};
+		B8B7B5AF249B6272008D4604 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8B7B5A4249B6240008D4604;
+			remoteInfo = pdl_objc_runtime;
 		};
 		B8B9A56D234F9A570069476E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1016,6 +1026,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B8B7B5A7249B6240008D4604 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B8B7B5AE249B6265008D4604 /* pdl_objc_runtime.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B8B9A565234F9A100069476E /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1514,6 +1534,9 @@
 		B899F9F824506A2900EFBB39 /* libPDLViewControllerListViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLViewControllerListViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AD194923D15CD7005A7363 /* libPDLNonThreadSafePropertyObserver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLNonThreadSafePropertyObserver.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AD196423D1B433005A7363 /* libNSObject+PDLThreadSafetifyProperty.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLThreadSafetifyProperty.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8B7B5A1249B61CB008D4604 /* pdl_objc_runtime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_objc_runtime.h; sourceTree = "<group>"; };
+		B8B7B5AC249B6240008D4604 /* libpdl_objc_runtime.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_objc_runtime.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_objc_runtime.m; sourceTree = "<group>"; };
 		B8B9A56A234F9A100069476E /* libPDLDatabase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLDatabase.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_dispatch_backtrace.h; sourceTree = "<group>"; };
 		B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_dispatch_backtrace.m; sourceTree = "<group>"; };
@@ -1942,6 +1965,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B8AD195E23D1B433005A7363 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8B7B5A6249B6240008D4604 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2419,6 +2449,7 @@
 				B87953472487455000798005 /* libpdl_pthread_backtrace.a */,
 				B8DEC4CD2487805B00DB3D0E /* libpdl_dispatch_backtrace.a */,
 				B83CAA81248B49B4009C784A /* libpdl_security.a */,
+				B8B7B5AC249B6240008D4604 /* libpdl_objc_runtime.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2441,6 +2472,15 @@
 				B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */,
 			);
 			path = PDLViewControllerListViewController;
+			sourceTree = "<group>";
+		};
+		B8B7B5A0249B61B4008D4604 /* pdl_objc_runtime */ = {
+			isa = PBXGroup;
+			children = (
+				B8B7B5A1249B61CB008D4604 /* pdl_objc_runtime.h */,
+				B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */,
+			);
+			path = pdl_objc_runtime;
 			sourceTree = "<group>";
 		};
 		B8DEC4C124877D1800DB3D0E /* pdl_dispatch_backtrace */ = {
@@ -3140,6 +3180,7 @@
 				B8E56E3C23D70017008D2DA1 /* pdl_mach_object */,
 				B8E56E2F23D70017008D2DA1 /* pdl_malloc */,
 				B8E56E5123D70017008D2DA1 /* pdl_objc_message */,
+				B8B7B5A0249B61B4008D4604 /* pdl_objc_runtime */,
 				B8E56E4823D70017008D2DA1 /* pdl_os */,
 				B8E56E3923D70017008D2DA1 /* pdl_os_unfair_lock_tracer */,
 				B8E56E1F23D70016008D2DA1 /* pdl_pthread */,
@@ -3549,6 +3590,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B8B7B5B0249B6272008D4604 /* PBXTargetDependency */,
 				B83CAA85248B49FE009C784A /* PBXTargetDependency */,
 				B8DEC4D12487808A00DB3D0E /* PBXTargetDependency */,
 				B879534B2487456E00798005 /* PBXTargetDependency */,
@@ -3671,6 +3713,24 @@
 			name = "NSObject+PDLThreadSafetifyProperty";
 			productName = "CAAnimation+PDLExtension";
 			productReference = B8AD196423D1B433005A7363 /* libNSObject+PDLThreadSafetifyProperty.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B8B7B5A4249B6240008D4604 /* pdl_objc_runtime */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8B7B5A9249B6240008D4604 /* Build configuration list for PBXNativeTarget "pdl_objc_runtime" */;
+			buildPhases = (
+				B8B7B5A5249B6240008D4604 /* Sources */,
+				B8B7B5A6249B6240008D4604 /* Frameworks */,
+				B8B7B5A7249B6240008D4604 /* CopyFiles */,
+				B8B7B5A8249B6240008D4604 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pdl_objc_runtime;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B8B7B5AC249B6240008D4604 /* libpdl_objc_runtime.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		B8B9A562234F9A100069476E /* PDLDatabase */ = {
@@ -4513,6 +4573,7 @@
 				B8FC6CB022EF071E005B91DE /* pdl_mach_object */,
 				B8FC6CB922EF071F005B91DE /* pdl_malloc */,
 				B8FC6ACB22EEFCF3005B91DE /* pdl_objc_message */,
+				B8B7B5A4249B6240008D4604 /* pdl_objc_runtime */,
 				B8FC6CC222EF0720005B91DE /* pdl_os */,
 				B8FC6ADE22EEFE6A005B91DE /* pdl_os_unfair_lock_tracer */,
 				B8FC6CCB22EF0721005B91DE /* pdl_pthread */,
@@ -4924,6 +4985,23 @@
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
 		B8AD196023D1B433005A7363 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B8B7B5A8249B6240008D4604 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -5849,6 +5927,7 @@
 				B85D45D9240E859000CBF758 /* PDLDatabaseTableViewController.m in Sources */,
 				B85D45DA240E859000CBF758 /* PDLDatabaseViewController.m in Sources */,
 				B85D45DB240E859000CBF758 /* PDLDataQueryViewController.m in Sources */,
+				B8B7B5B2249B9132008D4604 /* pdl_objc_runtime.m in Sources */,
 				B85D45DC240E859000CBF758 /* PDLDirectoryViewController.m in Sources */,
 				B85D45DD240E859000CBF758 /* PDLFileSystemViewController.m in Sources */,
 				B85D45DE240E859000CBF758 /* PDLPropertyListViewController.m in Sources */,
@@ -6028,6 +6107,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E56F2123D701EC008D2DA1 /* NSObject+PDLThreadSafetifyProperty.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8B7B5A5249B6240008D4604 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8B7B5B3249B9143008D4604 /* pdl_objc_runtime.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6505,6 +6592,11 @@
 			isa = PBXTargetDependency;
 			target = B8AD195C23D1B433005A7363 /* NSObject+PDLThreadSafetifyProperty */;
 			targetProxy = B8AD196723D1B4AC005A7363 /* PBXContainerItemProxy */;
+		};
+		B8B7B5B0249B6272008D4604 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8B7B5A4249B6240008D4604 /* pdl_objc_runtime */;
+			targetProxy = B8B7B5AF249B6272008D4604 /* PBXContainerItemProxy */;
 		};
 		B8B9A56E234F9A570069476E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -7400,6 +7492,28 @@
 			name = Debug;
 		};
 		B8AD196323D1B433005A7363 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B8B7B5AA249B6240008D4604 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B8B7B5AB249B6240008D4604 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -8580,6 +8694,15 @@
 			buildConfigurations = (
 				B8AD196223D1B433005A7363 /* Debug */,
 				B8AD196323D1B433005A7363 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B8B7B5A9249B6240008D4604 /* Build configuration list for PBXNativeTarget "pdl_objc_runtime" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8B7B5AA249B6240008D4604 /* Debug */,
+				B8B7B5AB249B6240008D4604 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
