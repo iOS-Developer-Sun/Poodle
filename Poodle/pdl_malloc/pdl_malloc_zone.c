@@ -149,21 +149,26 @@ static size_t _pdl_malloc_log_file_current = 0;
 
 static void pdl_malloc_log_file_string(char *string, size_t string_size, size_t eof_size) {
     size_t size = string_size;
-    assert(_pdl_malloc_log_file_size >= _pdl_malloc_log_file_current);
+    pdl_malloc_lock();
+//    assert(_pdl_malloc_log_file_size >= _pdl_malloc_log_file_current);
     size_t current = _pdl_malloc_log_file_current;
-    size_t offset = 0;
+
+    void *tail_dst = _pdl_malloc_log_file_map + current;
+    void *tail_src = string;
+    size_t tail_size = 0;
+
     if (_pdl_malloc_log_file_size < current + size) {
-        size_t left = _pdl_malloc_log_file_size - current;
-        assert(size > left);
-        memcpy(_pdl_malloc_log_file_map + current, string, left);
+        tail_size = _pdl_malloc_log_file_size - current;
+//        assert(size > tail_size);
         current = 0;
-        size -= left;
-        offset = left;
+        size -= tail_size;
     }
 
-    memcpy(_pdl_malloc_log_file_map + current, string + offset, size);
+    void *head_dst = _pdl_malloc_log_file_map + current;
+    void *head_src = string + tail_size;
+    size_t head_size = size;
     current += size;
-    assert(_pdl_malloc_log_file_size >= size);
+//    assert(_pdl_malloc_log_file_size >= size);
     if (current == eof_size) {
         current = 0;
     } else if (current < eof_size) {
@@ -172,6 +177,15 @@ static void pdl_malloc_log_file_string(char *string, size_t string_size, size_t 
         current -= eof_size;
     }
     _pdl_malloc_log_file_current = current;
+    pdl_malloc_unlock();
+
+    if (tail_size) {
+        memcpy(tail_dst, tail_src, tail_size);
+    }
+    if (head_size) {
+        memcpy(head_dst, head_src, head_size);
+    }
+
 }
 
 static void pdl_malloc_log_file(const char *type, void *ptr, size_t size, size_t rsize) {
@@ -196,9 +210,7 @@ static void pdl_malloc_log_file(const char *type, void *ptr, size_t size, size_t
     offset += sprintf(string + offset, "%s", eof);
     size_t string_size = strlen(string);
     assert(string_size + 1 <= sizeof(string));
-    pdl_malloc_lock();
     pdl_malloc_log_file_string(string, string_size, eof_size);
-    pdl_malloc_unlock();
 }
 
 bool pdl_malloc_set_log_file_path(const char *file, size_t file_size) {
