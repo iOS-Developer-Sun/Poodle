@@ -10,14 +10,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-unsigned int pdl_listLength(struct pdl_list *list) {
+unsigned int pdl_list_length(pdl_list *list) {
     return list->count;
 }
 
-struct pdl_list *pdl_list_create(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *)) {
+pdl_list *pdl_list_create(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *)) {
     void *(*m_ptr)(size_t) = malloc_ptr ?: &malloc;
     void(*f_ptr)(void *) = free_ptr ?: &free;
-    struct pdl_list *ret = m_ptr(sizeof(struct pdl_list));
+    pdl_list *ret = m_ptr(sizeof(pdl_list));
     if (!ret) {
         return NULL;
     }
@@ -30,53 +30,40 @@ struct pdl_list *pdl_list_create(void *(*malloc_ptr)(size_t), void(*free_ptr)(vo
     return ret;
 }
 
-struct pdl_list *pdl_list_create_with_array(void **vals, unsigned int count) {
-    struct pdl_list *ret = pdl_list_create(NULL, NULL);
-    if (!ret) {
-        return NULL;
-    }
-
-    struct pdl_list_node *head = NULL;
-    struct pdl_list_node *tail = NULL;
-    for (unsigned int i = 0; i < count; i++) {
-        struct pdl_list_node *node = ret->malloc(sizeof(struct pdl_list_node));
-        node->val = vals[i];
-        if (i == 0) {
-            node->prev = NULL;
-            node->next = NULL;
-            head = node;
-        } else {
-            node->prev = tail;
-            node->next = NULL;
-            node->prev->next = node;
-        }
-        tail = node;
-    }
-    ret->head = head;
-    ret->tail = tail;
-    ret->count = count;
-    return ret;
-}
-
-void pdl_list_destroy(struct pdl_list *list) {
-    struct pdl_list_node *node = list->head;
+void pdl_list_destroy(pdl_list *list) {
+    pdl_list_node *node = list->head;
     while (node) {
-        struct pdl_list_node *temp = node;
+        pdl_list_node *temp = node;
         node = node->next;
         list->free(temp);
     }
     list->free(list);
 }
 
-struct pdl_list_node *pdl_list_addToHead(struct pdl_list *list, void *val) {
-    struct pdl_list_node *node = list->malloc(sizeof(struct pdl_list_node));
+pdl_list_node *pdl_list_create_node(pdl_list *list, void *val) {
+    pdl_list_node *node = list->malloc(sizeof(struct pdl_list_node));
     if (!node) {
         return NULL;
     }
 
     node->val = val;
-    struct pdl_list_node *head = list->head;
-    head->prev = node;
+    node->prev = NULL;
+    node->next = NULL;
+
+    return node;
+}
+
+void pdl_list_destroy_node(pdl_list *list, pdl_list_node *node) {
+    list->free(node);
+}
+
+pdl_list_node *pdl_list_add_head(pdl_list *list, pdl_list_node *node) {
+    pdl_list_node *head = list->head;
+    if (head) {
+        head->prev = node;
+    } else {
+        list->tail = node;
+    }
     node->prev = NULL;
     node->next = head;
     list->head = node;
@@ -85,15 +72,13 @@ struct pdl_list_node *pdl_list_addToHead(struct pdl_list *list, void *val) {
     return node;
 }
 
-struct pdl_list_node *pdl_list_addToTail(struct pdl_list *list, void *val) {
-    struct pdl_list_node *node = list->malloc(sizeof(struct pdl_list_node));
-    if (!node) {
-        return NULL;
+pdl_list_node *pdl_list_add_tail(pdl_list *list, pdl_list_node *node) {
+    pdl_list_node *tail = list->tail;
+    if (tail) {
+        tail->next = node;
+    } else {
+        list->head = node;
     }
-
-    node->val = val;
-    struct pdl_list_node *tail = list->tail;
-    tail->next = node;
     node->prev = tail;
     node->next = NULL;
     list->tail = node;
@@ -102,51 +87,39 @@ struct pdl_list_node *pdl_list_addToTail(struct pdl_list *list, void *val) {
     return node;
 }
 
-struct pdl_list_node *pdl_list_insertBefore(struct pdl_list *list, struct pdl_list_node *node, void *val) {
-    struct pdl_list_node *insert = list->malloc(sizeof(struct pdl_list_node));
-    if (!insert) {
-        return NULL;
-    }
-
-    insert->val = val;
-    struct pdl_list_node *prev = node->prev;
+pdl_list_node *pdl_list_insert_before(pdl_list *list, pdl_list_node *before, pdl_list_node *node) {
+    pdl_list_node *prev = before->prev;
     if (prev) {
-        prev->next = insert;
+        prev->next = node;
     } else {
-        list->head = insert;
+        list->head = node;
     }
-    node->prev = insert;
-    insert->prev = prev;
-    insert->next = node;
+    before->prev = node;
+    node->prev = prev;
+    node->next = before;
     list->count++;
 
-    return node;
+    return before;
 }
 
-struct pdl_list_node *pdl_list_insertAfter(struct pdl_list *list, struct pdl_list_node *node, void *val) {
-    struct pdl_list_node *insert = list->malloc(sizeof(struct pdl_list_node));
-    if (!insert) {
-        return NULL;
-    }
-
-    insert->val = val;
-    struct pdl_list_node *next = node->next;
+pdl_list_node *pdl_list_insert_after(pdl_list *list, pdl_list_node *after, pdl_list_node *node) {
+    pdl_list_node *next = after->next;
     if (next) {
-        next->prev = insert;
+        next->prev = node;
     } else {
-        list->tail = insert;
+        list->tail = node;
     }
-    node->next = insert;
-    insert->prev = node;
-    insert->next = next;
+    after->next = node;
+    node->prev = after;
+    node->next = next;
     list->count++;
 
-    return node;
+    return after;
 }
 
-void pdl_list_remove(struct pdl_list *list, struct pdl_list_node *node) {
-    struct pdl_list_node *prev = node->prev;
-    struct pdl_list_node *next = node->next;
+void pdl_list_remove(pdl_list *list, pdl_list_node *node) {
+    pdl_list_node *prev = node->prev;
+    pdl_list_node *next = node->next;
     if (prev) {
         prev->next = node->next;
     } else {
@@ -157,12 +130,25 @@ void pdl_list_remove(struct pdl_list *list, struct pdl_list_node *node) {
     } else {
         list->tail = node->prev;
     }
-    list->free(node);
+    node->prev = NULL;
+    node->next = NULL;
     list->count--;
 }
 
-void pdl_list_print(struct pdl_list *list) {
-    struct pdl_list_node *node = list->head;
+void pdl_list_remove_and_destroy_all(pdl_list *list) {
+    pdl_list_node *current = list->head;
+    while (current) {
+        pdl_list_node *node = current;
+        current = current->next;
+        list->free(node);
+    }
+    list->head = NULL;
+    list->tail = NULL;
+    list->count = 0;
+}
+
+void pdl_list_print(pdl_list *list) {
+    pdl_list_node *node = list->head;
     printf("printList: ");
     while (node) {
         printf("%p", node->val);

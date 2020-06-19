@@ -7,133 +7,216 @@
 //
 
 #include "pdl_dictionary.h"
-#include "pdl_hash.h"
-#include "pdl_array.h"
 #include <stdio.h>
 #include <limits.h>
+#include "pdl_hash.h"
+#include "pdl_list.h"
 
-struct pdl_dictionary {
-    pdl_hash hashMap;
-    unsigned int count;
-};
+typedef struct pdl_dictionary {
+    pdl_hash hash;
+    unsigned int count_limit;
+    pdl_list *limit_list;
+    pdl_hash limit_hash;
+} pdl_dictionary;
 
 pdl_dictionary_t pdl_dictionary_create(void) {
-    return pdl_dictionary_create_with_max_count_malloc_pointers(0, NULL, NULL);
+    return pdl_dictionary_create_with_count_limit_and_malloc_pointers(0, NULL, NULL);
 }
 
-pdl_dictionary_t pdl_dictionary_create_with_max_count(unsigned int count) {
-    return pdl_dictionary_create_with_max_count_malloc_pointers(count, NULL, NULL);
+pdl_dictionary_t pdl_dictionary_create_with_count_limit(unsigned int count_limit) {
+    return pdl_dictionary_create_with_count_limit_and_malloc_pointers(count_limit, NULL, NULL);
 }
 
 pdl_dictionary_t pdl_dictionary_create_with_malloc_pointers(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *)) {
-    return pdl_dictionary_create_with_max_count_malloc_pointers(0, malloc_ptr, free_ptr);
+    return pdl_dictionary_create_with_count_limit_and_malloc_pointers(0, malloc_ptr, free_ptr);
 }
 
-pdl_dictionary_t pdl_dictionary_create_with_max_count_malloc_pointers(unsigned int count, void *(*malloc_ptr)(size_t), void(*free_ptr)(void *)) {
+pdl_dictionary_t pdl_dictionary_create_with_count_limit_and_malloc_pointers(unsigned int count_limit, void *(*malloc_ptr)(size_t), void(*free_ptr)(void *)) {
     void *(*m_ptr)(size_t) = malloc_ptr ?: &malloc;
     void(*f_ptr)(void *) = free_ptr ?: &free;
-    struct pdl_dictionary *dictionary = m_ptr(sizeof(struct pdl_dictionary));
-    dictionary->hashMap.map = NULL;
-    dictionary->hashMap.malloc = m_ptr;
-    dictionary->hashMap.free = f_ptr;
-    dictionary->count = (count == 0) ? UINT_MAX : count;
-    return dictionary;
+    pdl_dictionary *dict = m_ptr(sizeof(pdl_dictionary));
+    if (!dict) {
+        return NULL;
+    }
+
+    dict->hash.map = NULL;
+    dict->hash.malloc = m_ptr;
+    dict->hash.free = f_ptr;
+    dict->count_limit = count_limit;
+    if (count_limit > 0) {
+        pdl_list *cache_list = pdl_list_create(m_ptr, f_ptr);
+        if (!cache_list) {
+            f_ptr(dict);
+            return NULL;
+        }
+        dict->limit_list = cache_list;
+        dict->limit_hash.map = NULL;
+        dict->limit_hash.malloc = m_ptr;
+        dict->limit_hash.free = f_ptr;
+    }
+
+    return dict;
 }
 
-void **pdl_dictionary_object_for_key(pdl_dictionary_t dictionary, void *key) {
+void **pdl_dictionary_get(pdl_dictionary_t dictionary, void *key) {
     if (!key) {
         return NULL;
     }
 
-    pdl_hash *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
-    void **object = pdl_hash_get_value(map, key);
-    return object;
-}
+    pdl_dictionary *dict = dictionary;
+    pdl_hash *hash = &(dict->hash);
+    void **value = pdl_hash_get_value(hash, key);
 
-void pdl_dictionary_remove_object_for_key(pdl_dictionary_t dictionary, void *key) {
-    if (!key) {
-        return;
-    }
-
-    pdl_hash *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
-    pdl_hash_delete(map, key);
-}
-
-void pdl_dictionary_remove_all_objects(pdl_dictionary_t dictionary) {
-    pdl_hash *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
-    pdl_hash_delete_all(map);
-}
-
-void pdl_dictionary_set_object_for_key(pdl_dictionary_t dictionary, void *object, void *key) {
-    if (!key) {
-        return;
-    }
-
-    pdl_hash *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
-    if (object) {
-        pdl_hash_set_value(map, key, object);
-    } else {
-        pdl_hash_delete(map, key);
-    }
-}
-
-pdl_dictionary_t pdl_dictionary_copy(pdl_dictionary_t dictionary) {
-    struct pdl_dictionary *copy = pdl_dictionary_create();
-    void **keys = NULL;
-    unsigned int count = 0;
-    pdl_hash *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
-    pdl_hash_get_all_keys(map, &keys, &count);
-    if (keys) {
-        for (unsigned int i = 0; i < count; i++) {
-            void *key = keys[i];
-            void **object = pdl_hash_get_value(map, key);
-            pdl_hash_set_value(&(((struct pdl_dictionary *)copy)->hashMap), key, *object);
+    if (dict->count_limit > 0) {
+        pdl_hash *cache_hash = &(dict->limit_hash);
+        pdl_list_node **node_value = (pdl_list_node **)pdl_hash_get_value(cache_hash, key);
+        if (node_value) {
+            pdl_list_node *node = *node_value;
+            pdl_list *cache_list = dict->limit_list;
+            pdl_list_remove(cache_list, node);
+            pdl_list_add_head(cache_list, node);
         }
-        map->free(keys);
     }
-    return copy;
+
+    return value;
 }
 
-pdl_array_t pdl_dictionary_all_keys(pdl_dictionary_t dictionary) {
-    pdl_hash *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
-    unsigned int count = 0;
-    void **keys = NULL;
-    pdl_hash_get_all_keys(map, &keys, &count);
-    pdl_array_t array = pdl_array_create(count);
-    for (unsigned int i = 0; i < count; i++) {
-        pdl_array_add_object(array, keys[i]);
+void pdl_dictionary_remove(pdl_dictionary_t dictionary, void *key) {
+    if (!key) {
+        return;
     }
-    map->free(keys);
-    return array;
+
+    pdl_dictionary *dict = dictionary;
+    pdl_hash *hash = &(dict->hash);
+    void **value = pdl_hash_get_value(hash, key);
+
+    if (!value) {
+        return;
+    }
+
+    pdl_hash_delete(hash, key);
+
+    if (dict->count_limit > 0) {
+        pdl_hash *cache_hash = &(dict->limit_hash);
+        pdl_list_node *node = *(pdl_list_node **)pdl_hash_get_value(cache_hash, key);
+        pdl_list *cache_list = dict->limit_list;
+        pdl_list_remove(cache_list, node);
+        pdl_list_destroy_node(cache_list, node);
+        pdl_hash_delete(cache_hash, key);
+    }
+}
+
+void pdl_dictionary_remove_all(pdl_dictionary_t dictionary) {
+    pdl_dictionary *dict = dictionary;
+    pdl_hash *hash = &(dict->hash);
+    pdl_hash_delete_all(hash);
+
+    if (dict->count_limit > 0) {
+        pdl_hash *cache_hash = &(dict->limit_hash);
+        pdl_hash_delete_all(cache_hash);
+        pdl_list *cache_list = dict->limit_list;
+        pdl_list_remove_and_destroy_all(cache_list);
+    }
+}
+
+void pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value) {
+    if (!key) {
+        return;
+    }
+
+    pdl_dictionary *dict = dictionary;
+    pdl_hash *hash = &(dict->hash);
+
+    void **original_value = pdl_hash_get_value(hash, key);
+    if (original_value) {
+        pdl_hash_delete(hash, key);
+    }
+
+    if (value) {
+        pdl_hash_set_value(hash, key, value);
+    }
+
+    if (dict->count_limit > 0) {
+        pdl_hash *cache_hash = &(dict->limit_hash);
+        pdl_list_node **node_value = (pdl_list_node **)pdl_hash_get_value(cache_hash, key);
+        pdl_list *cache_list = dict->limit_list;
+        if (node_value) {
+            pdl_list_node *node = *node_value;
+            pdl_list_remove(cache_list, node);
+            if (value) {
+                pdl_list_add_head(cache_list, node);
+            } else {
+                pdl_list_destroy_node(cache_list, node);
+                pdl_hash_delete(cache_hash, key);
+            }
+        } else {
+            if (value) {
+                pdl_list_node *node = pdl_list_create_node(cache_list, key);
+                pdl_list_add_head(cache_list, node);
+                pdl_hash_set_value(cache_hash, key, node);
+            }
+        }
+
+        if (pdl_list_length(cache_list) > dict->count_limit) {
+            pdl_list_node *last = cache_list->tail;
+            void *last_key = last->val;
+            pdl_dictionary_remove(dict, last_key);
+        }
+    }
 }
 
 void pdl_dictionary_get_all_keys(pdl_dictionary_t dictionary, void ***keys, unsigned int *count) {
-    pdl_hash *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
-    pdl_hash_get_all_keys(map, keys, count);
+    pdl_dictionary *dict = dictionary;
+    pdl_hash *hash = &(dict->hash);
+    pdl_hash_get_all_keys(hash, keys, count);
+}
+
+void pdl_dictionary_destroy_keys(pdl_dictionary_t dictionary, void **keys) {
+    pdl_dictionary *dict = dictionary;
+    pdl_hash *hash = &(dict->hash);
+    hash->free(keys);
 }
 
 void pdl_dictionary_destroy(pdl_dictionary_t dictionary) {
-    pdl_hash *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
-    pdl_hash_destroy(map);
-    map->free(dictionary);
+    pdl_dictionary *dict = dictionary;
+    pdl_hash *hash = &(dict->hash);
+    pdl_hash_destroy(hash);
+    if (dict->count_limit > 0) {
+        pdl_hash *cache_hash = &(dict->limit_hash);
+        pdl_hash_destroy(cache_hash);
+        pdl_list *cache_list = dict->limit_list;
+        pdl_list_destroy(cache_list);
+    }
+    hash->free(dictionary);
 }
 
 unsigned int pdl_dictionary_count(pdl_dictionary_t dictionary) {
-    pdl_hash *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
-    return pdl_hash_count(map);
+    pdl_dictionary *dict = dictionary;
+    pdl_hash *hash = &(dict->hash);
+    unsigned int count = pdl_hash_count(hash);
+    return count;
 }
 
 void pdl_dictionary_print(pdl_dictionary_t dictionary) {
-    pdl_hash *map = &(((struct pdl_dictionary *)dictionary)->hashMap);
+    pdl_dictionary *dict = dictionary;
+    pdl_hash *hash = &(dict->hash);
     unsigned int count = 0;
     void **keys = NULL;
-    pdl_hash_get_all_keys(map, &keys, &count);
+    pdl_hash_get_all_keys(hash, &keys, &count);
     printf("[%d]", count);
+    pdl_list_node *node = NULL;
     for (unsigned int i = 0; i < count; i++) {
         void *key = keys[i];
-        void *object = pdl_dictionary_object_for_key(dictionary, key);
-        printf(" <%p : %p>", key, object);
+        if (dict->count_limit > 0) {
+            if (i == 0) {
+                node = dict->limit_list->head;
+            }
+            key = node->val;
+            node = node->next;
+        }
+        void *value = pdl_dictionary_get(dictionary, key);
+        printf(" <%p : %p>", key, value);
     }
     printf("\n");
-    map->free(keys);
+    hash->free(keys);
 }
