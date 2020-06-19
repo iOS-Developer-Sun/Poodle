@@ -126,8 +126,7 @@
 		B85D4620240E861A00CBF758 /* pdl_systemcall.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E0523D70016008D2DA1 /* pdl_systemcall.c */; };
 		B85D4621240E861A00CBF758 /* pdl_array.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56ED723D7001A008D2DA1 /* pdl_array.c */; };
 		B85D4622240E861A00CBF758 /* pdl_dictionary.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56ED423D7001A008D2DA1 /* pdl_dictionary.c */; };
-		B85D4623240E861A00CBF758 /* pdl_hashMap.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EC923D7001A008D2DA1 /* pdl_hashMap.c */; };
-		B85D4624240E861A00CBF758 /* pdl_listNode.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56ECB23D7001A008D2DA1 /* pdl_listNode.c */; };
+		B85D4623240E861A00CBF758 /* pdl_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EC923D7001A008D2DA1 /* pdl_hash.c */; };
 		B85D4625240E861A00CBF758 /* PDLDirectoryViewControllerResources.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EB523D7001A008D2DA1 /* PDLDirectoryViewControllerResources.c */; };
 		B8795305248512A200798005 /* PDLBacktrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8795304248512A200798005 /* PDLBacktrace.m */; };
 		B879530F248512C500798005 /* PDLBacktrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8795303248512A200798005 /* PDLBacktrace.h */; };
@@ -155,6 +154,9 @@
 		B8B7B5B7249B9285008D4604 /* NSObject+PDLAllocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5B6249B9285008D4604 /* NSObject+PDLAllocation.m */; };
 		B8B7B5C1249B933C008D4604 /* NSObject+PDLAllocation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B7B5B5249B9285008D4604 /* NSObject+PDLAllocation.h */; };
 		B8B7B5C2249B9342008D4604 /* NSObject+PDLAllocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5B6249B9285008D4604 /* NSObject+PDLAllocation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		B8B7B5C9249CE7FE008D4604 /* pdl_list.c in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5C7249CE7FD008D4604 /* pdl_list.c */; };
+		B8B7B5CA249CE80E008D4604 /* pdl_list.c in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5C7249CE7FD008D4604 /* pdl_list.c */; };
+		B8B7B5CB249CE814008D4604 /* pdl_list.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B7B5C8249CE7FE008D4604 /* pdl_list.h */; };
 		B8DEC4C424877D1800DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
 		B8DEC4CE2487807900DB3D0E /* pdl_dispatch_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */; };
 		B8DEC4CF2487807E00DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
@@ -253,11 +255,9 @@
 		B8E56F5A23D70348008D2DA1 /* pdl_systemcall.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E0323D70016008D2DA1 /* pdl_systemcall.h */; };
 		B8E56F5B23D7037C008D2DA1 /* pdl_array.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56ED723D7001A008D2DA1 /* pdl_array.c */; };
 		B8E56F5C23D7037C008D2DA1 /* pdl_dictionary.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56ED423D7001A008D2DA1 /* pdl_dictionary.c */; };
-		B8E56F5D23D7037C008D2DA1 /* pdl_hashMap.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EC923D7001A008D2DA1 /* pdl_hashMap.c */; };
-		B8E56F5E23D7037C008D2DA1 /* pdl_listNode.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56ECB23D7001A008D2DA1 /* pdl_listNode.c */; };
+		B8E56F5D23D7037C008D2DA1 /* pdl_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EC923D7001A008D2DA1 /* pdl_hash.c */; };
 		B8E56F5F23D70393008D2DA1 /* pdl_array.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56ED223D7001A008D2DA1 /* pdl_array.h */; };
 		B8E56F6023D70393008D2DA1 /* pdl_dictionary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56ECA23D7001A008D2DA1 /* pdl_dictionary.h */; };
-		B8E56F6223D70393008D2DA1 /* pdl_listNode.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56ED523D7001A008D2DA1 /* pdl_listNode.h */; };
 		B8E56F6323D70393008D2DA1 /* pdl_utils.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56ED623D7001A008D2DA1 /* pdl_utils.h */; };
 		B8E56F6423D703EE008D2DA1 /* PDLAddressQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E5A23D70017008D2DA1 /* PDLAddressQueryViewController.m */; };
 		B8E56F6523D703F3008D2DA1 /* PDLAddressQueryViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E5923D70017008D2DA1 /* PDLAddressQueryViewController.h */; };
@@ -1451,9 +1451,9 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				B8B7B5CB249CE814008D4604 /* pdl_list.h in CopyFiles */,
 				B8E56F5F23D70393008D2DA1 /* pdl_array.h in CopyFiles */,
 				B8E56F6023D70393008D2DA1 /* pdl_dictionary.h in CopyFiles */,
-				B8E56F6223D70393008D2DA1 /* pdl_listNode.h in CopyFiles */,
 				B8E56F6323D70393008D2DA1 /* pdl_utils.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1560,6 +1560,8 @@
 		B8B7B5B5249B9285008D4604 /* NSObject+PDLAllocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+PDLAllocation.h"; sourceTree = "<group>"; };
 		B8B7B5B6249B9285008D4604 /* NSObject+PDLAllocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLAllocation.m"; sourceTree = "<group>"; };
 		B8B7B5C0249B9307008D4604 /* libNSObject+PDLAllocation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLAllocation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8B7B5C7249CE7FD008D4604 /* pdl_list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_list.c; sourceTree = "<group>"; };
+		B8B7B5C8249CE7FE008D4604 /* pdl_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_list.h; sourceTree = "<group>"; };
 		B8B9A56A234F9A100069476E /* libPDLDatabase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLDatabase.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_dispatch_backtrace.h; sourceTree = "<group>"; };
 		B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_dispatch_backtrace.m; sourceTree = "<group>"; };
@@ -1744,18 +1746,16 @@
 		B8E56EC523D7001A008D2DA1 /* PDLDataQueryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLDataQueryViewController.h; sourceTree = "<group>"; };
 		B8E56EC623D7001A008D2DA1 /* PDLDatabaseTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLDatabaseTableViewController.m; sourceTree = "<group>"; };
 		B8E56EC723D7001A008D2DA1 /* PDLTextViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLTextViewController.h; sourceTree = "<group>"; };
-		B8E56EC923D7001A008D2DA1 /* pdl_hashMap.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pdl_hashMap.c; sourceTree = "<group>"; };
+		B8E56EC923D7001A008D2DA1 /* pdl_hash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pdl_hash.c; sourceTree = "<group>"; };
 		B8E56ECA23D7001A008D2DA1 /* pdl_dictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_dictionary.h; sourceTree = "<group>"; };
-		B8E56ECB23D7001A008D2DA1 /* pdl_listNode.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pdl_listNode.c; sourceTree = "<group>"; };
 		B8E56ECD23D7001A008D2DA1 /* utlist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utlist.h; sourceTree = "<group>"; };
 		B8E56ECE23D7001A008D2DA1 /* utarray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utarray.h; sourceTree = "<group>"; };
 		B8E56ECF23D7001A008D2DA1 /* utringbuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utringbuffer.h; sourceTree = "<group>"; };
 		B8E56ED023D7001A008D2DA1 /* uthash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = uthash.h; sourceTree = "<group>"; };
 		B8E56ED123D7001A008D2DA1 /* utstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utstring.h; sourceTree = "<group>"; };
 		B8E56ED223D7001A008D2DA1 /* pdl_array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_array.h; sourceTree = "<group>"; };
-		B8E56ED323D7001A008D2DA1 /* pdl_hashMap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_hashMap.h; sourceTree = "<group>"; };
+		B8E56ED323D7001A008D2DA1 /* pdl_hash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_hash.h; sourceTree = "<group>"; };
 		B8E56ED423D7001A008D2DA1 /* pdl_dictionary.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pdl_dictionary.c; sourceTree = "<group>"; };
-		B8E56ED523D7001A008D2DA1 /* pdl_listNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_listNode.h; sourceTree = "<group>"; };
 		B8E56ED623D7001A008D2DA1 /* pdl_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_utils.h; sourceTree = "<group>"; };
 		B8E56ED723D7001A008D2DA1 /* pdl_array.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pdl_array.c; sourceTree = "<group>"; };
 		B8E56ED923D7001A008D2DA1 /* CAAnimation+PDLExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CAAnimation+PDLExtension.h"; sourceTree = "<group>"; };
@@ -3078,10 +3078,10 @@
 				B8E56ED223D7001A008D2DA1 /* pdl_array.h */,
 				B8E56ED423D7001A008D2DA1 /* pdl_dictionary.c */,
 				B8E56ECA23D7001A008D2DA1 /* pdl_dictionary.h */,
-				B8E56EC923D7001A008D2DA1 /* pdl_hashMap.c */,
-				B8E56ED323D7001A008D2DA1 /* pdl_hashMap.h */,
-				B8E56ECB23D7001A008D2DA1 /* pdl_listNode.c */,
-				B8E56ED523D7001A008D2DA1 /* pdl_listNode.h */,
+				B8E56EC923D7001A008D2DA1 /* pdl_hash.c */,
+				B8E56ED323D7001A008D2DA1 /* pdl_hash.h */,
+				B8B7B5C7249CE7FD008D4604 /* pdl_list.c */,
+				B8B7B5C8249CE7FE008D4604 /* pdl_list.h */,
 				B8E56ED623D7001A008D2DA1 /* pdl_utils.h */,
 				B8E56ECC23D7001A008D2DA1 /* uthash */,
 			);
@@ -5943,8 +5943,7 @@
 				B85D4620240E861A00CBF758 /* pdl_systemcall.c in Sources */,
 				B85D4621240E861A00CBF758 /* pdl_array.c in Sources */,
 				B85D4622240E861A00CBF758 /* pdl_dictionary.c in Sources */,
-				B85D4623240E861A00CBF758 /* pdl_hashMap.c in Sources */,
-				B85D4624240E861A00CBF758 /* pdl_listNode.c in Sources */,
+				B85D4623240E861A00CBF758 /* pdl_hash.c in Sources */,
 				B85D4625240E861A00CBF758 /* PDLDirectoryViewControllerResources.c in Sources */,
 				B85D4619240E85B000CBF758 /* dsc_extractor.cpp in Sources */,
 				B85D461A240E85B000CBF758 /* dsc_iterator.cpp in Sources */,
@@ -6016,6 +6015,7 @@
 				B85D45E2240E859000CBF758 /* PDLFormView.m in Sources */,
 				B85D45E3240E859000CBF758 /* PDLClassListViewController.m in Sources */,
 				B85D45E4240E859000CBF758 /* PDLClassViewController.m in Sources */,
+				B8B7B5C9249CE7FE008D4604 /* pdl_list.c in Sources */,
 				B85D45E5240E859000CBF758 /* PDLImageListViewController.m in Sources */,
 				B85D45E6240E859000CBF758 /* PDLProtocolListViewController.m in Sources */,
 				B85D45E7240E859000CBF758 /* PDLProtocolViewController.m in Sources */,
@@ -6538,10 +6538,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8B7B5CA249CE80E008D4604 /* pdl_list.c in Sources */,
 				B8E56F5B23D7037C008D2DA1 /* pdl_array.c in Sources */,
 				B8E56F5C23D7037C008D2DA1 /* pdl_dictionary.c in Sources */,
-				B8E56F5D23D7037C008D2DA1 /* pdl_hashMap.c in Sources */,
-				B8E56F5E23D7037C008D2DA1 /* pdl_listNode.c in Sources */,
+				B8E56F5D23D7037C008D2DA1 /* pdl_hash.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
