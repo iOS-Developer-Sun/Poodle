@@ -138,6 +138,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.requires_arc = false
             ss.requires_arc = ['NSObject+PDLDebug/NSObject+PDLAllocation.m']
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+            ss.dependency pod_name + '/PDLBacktrace'
         end
 
         s.subspec 'NSObject+PDLDebug' do |ss|
