@@ -32,10 +32,9 @@ typedef struct pdl_backtrace {
 static void *pdl_backtrace_wait(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     pthread_mutex_t *wait_lock = &(bt->wait_lock);
-    pthread_mutex_unlock(wait_lock);
-
     pthread_mutex_t *lock = &(bt->lock);
     pthread_mutex_lock(lock);
+    pthread_mutex_unlock(wait_lock);
     pthread_mutex_lock(lock);
     pthread_mutex_unlock(lock);
 
@@ -250,7 +249,11 @@ void pdl_backtrace_thread_hide(pdl_backtrace_t backtrace) {
         return;
     }
 
-    pthread_mutex_unlock(&(bt->lock));
+    pthread_mutex_t *wait_lock = &(bt->wait_lock);
+    pthread_mutex_t *lock = &(bt->lock);
+    pthread_mutex_lock(wait_lock);
+    pthread_mutex_unlock(wait_lock);
+    pthread_mutex_unlock(lock);
     pthread_join(bt->thread, NULL);
     bt->thread = NULL;
 }
