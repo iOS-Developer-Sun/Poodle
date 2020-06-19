@@ -16,14 +16,17 @@ extern "C" {
 typedef void *pdl_dictionary_t;
 
 extern pdl_dictionary_t pdl_dictionary_create(void);
+extern pdl_dictionary_t pdl_dictionary_create_with_max_count(unsigned int count);
 extern pdl_dictionary_t pdl_dictionary_create_with_malloc_pointers(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *));
-extern void **pdl_dictionary_objectForKey(pdl_dictionary_t dictionary, void *key);
-extern void pdl_dictionary_removeObjectForKey(pdl_dictionary_t dictionary, void *key);
-extern void pdl_dictionary_removeAllObjects(pdl_dictionary_t dictionary);
-extern void pdl_dictionary_setObjectForKey(pdl_dictionary_t dictionary, void *object, void *key);
+extern pdl_dictionary_t pdl_dictionary_create_with_max_count_malloc_pointers(unsigned int count, void *(*malloc_ptr)(size_t), void(*free_ptr)(void *));
+
+extern void **pdl_dictionary_object_for_key(pdl_dictionary_t dictionary, void *key);
+extern void pdl_dictionary_remove_object_for_key(pdl_dictionary_t dictionary, void *key);
+extern void pdl_dictionary_remove_all_objects(pdl_dictionary_t dictionary);
+extern void pdl_dictionary_set_object_for_key(pdl_dictionary_t dictionary, void *object, void *key);
 extern pdl_dictionary_t pdl_dictionary_copy(pdl_dictionary_t dictionary);
-extern pdl_array_t pdl_dictionary_allKeys(pdl_dictionary_t dictionary);
-extern void pdl_dictionary_getAllKeys(pdl_dictionary_t dictionary, void ***keys, unsigned int *count);
+extern pdl_array_t pdl_dictionary_all_keys(pdl_dictionary_t dictionary);
+extern void pdl_dictionary_get_all_keys(pdl_dictionary_t dictionary, void ***keys, unsigned int *count);
 extern void pdl_dictionary_destroy(pdl_dictionary_t dictionary);
 extern unsigned int pdl_dictionary_count(pdl_dictionary_t dictionary);
 extern void pdl_dictionary_print(pdl_dictionary_t dictionary);
