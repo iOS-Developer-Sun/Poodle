@@ -13,33 +13,36 @@
 extern "C" {
 #endif
     
-struct pdl_list_node {
+typedef struct pdl_list_node {
     void *val;
     struct pdl_list_node *prev;
     struct pdl_list_node *next;
-};
+} pdl_list_node;
 
-struct pdl_list {
+typedef struct pdl_list {
     struct pdl_list_node *head;
     struct pdl_list_node *tail;
     unsigned int count;
     void *(*malloc)(size_t);
     void (*free)(void *);
-};
+} pdl_list;
 
-extern unsigned int pdl_listLength(struct pdl_list *list);
+extern unsigned int pdl_list_length(pdl_list *list);
 
-extern struct pdl_list *pdl_list_create(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *));
-extern struct pdl_list *pdl_list_create_with_array(void **vals, unsigned int count);
-extern void pdl_list_destroy(struct pdl_list *list);
+extern pdl_list *pdl_list_create(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *));
+extern void pdl_list_destroy(pdl_list *list);
 
-extern struct pdl_list_node *pdl_list_addToHead(struct pdl_list *list, void *val);
-extern struct pdl_list_node *pdl_list_addToTail(struct pdl_list *list, void *val);
-extern struct pdl_list_node *pdl_list_insertBefore(struct pdl_list *list, struct pdl_list_node *node, void *val);
-extern struct pdl_list_node *pdl_list_insertAfter(struct pdl_list *list, struct pdl_list_node *node, void *val);
-extern void pdl_list_remove(struct pdl_list *list, struct pdl_list_node *node);
+extern pdl_list_node *pdl_list_create_node(pdl_list *list, void *val);
+extern void pdl_list_destroy_node(pdl_list *list, pdl_list_node *node);
 
-extern void pdl_list_print(struct pdl_list *list);
+extern pdl_list_node *pdl_list_add_head(pdl_list *list, pdl_list_node *node);
+extern pdl_list_node *pdl_list_add_tail(pdl_list *list, pdl_list_node *node);
+extern pdl_list_node *pdl_list_insert_before(pdl_list *list, pdl_list_node *before, pdl_list_node *node);
+extern pdl_list_node *pdl_list_insert_after(pdl_list *list, pdl_list_node *after, pdl_list_node *node);
+extern void pdl_list_remove(pdl_list *list, pdl_list_node *node);
+extern void pdl_list_remove_and_destroy_all(pdl_list *list);
+
+extern void pdl_list_print(pdl_list *list);
 
 #ifdef __cplusplus
 }

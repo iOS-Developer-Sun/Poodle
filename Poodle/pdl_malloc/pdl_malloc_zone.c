@@ -308,7 +308,7 @@ void pdl_malloc_map_print(void) {
     for (unsigned int i = 0; i < count; i++) {
         void *key = keys[i];
         void *value = NULL;
-        void **object = pdl_dictionary_object_for_key(map, key);
+        void **object = pdl_dictionary_get(map, key);
         if (object) {
             value = *object;
         }
@@ -330,7 +330,7 @@ static void *pdl_malloc_map_get(void *key, bool lock) {
 
     pdl_dictionary_t map = pdl_malloc_map();
     void *value = NULL;
-    void **object = pdl_dictionary_object_for_key(map, key);
+    void **object = pdl_dictionary_get(map, key);
     if (object) {
         value = *object;
     }
@@ -343,7 +343,7 @@ static void *pdl_malloc_map_get(void *key, bool lock) {
 static void pdl_malloc_map_set(void *key, void *value) {
     pdl_malloc_lock();
     pdl_dictionary_t map = pdl_malloc_map();
-    pdl_dictionary_set_object_for_key(map, value, key);
+    pdl_dictionary_set(map, key, value);
     pdl_malloc_unlock();
 }
 
@@ -770,7 +770,7 @@ void pdl_malloc_disable_trace(void) {
         pdl_backtrace_destroy(info->fbt);
         pdl_malloc_private_zone_free(info);
     }
-    pdl_dictionary_remove_all_objects(map);
+    pdl_dictionary_remove_all(map);
     pdl_malloc_private_zone_free(keys);
     pdl_malloc_unlock();
 
