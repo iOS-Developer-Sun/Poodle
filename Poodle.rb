@@ -128,6 +128,18 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'Foundation'
         end
 
+        s.subspec 'NSObject+PDLAllocation' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'NSObject+PDLAllocation/' + source_files
+            ss.vendored_library = base + 'NSObject+PDLAllocation/' + librariy_files
+            ss.frameworks = 'Foundation'
+            ss.requires_arc = false
+            ss.requires_arc = ['NSObject+PDLDebug/NSObject+PDLAllocation.m']
+            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+        end
+
         s.subspec 'NSObject+PDLDebug' do |ss|
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
