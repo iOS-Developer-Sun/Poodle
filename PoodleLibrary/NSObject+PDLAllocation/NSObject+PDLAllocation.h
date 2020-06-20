@@ -20,7 +20,7 @@ typedef NS_ENUM(NSUInteger, PDLAllocationPolicy) {
 @interface NSObject (PDLAllocation)
 
 @property (assign, class) unsigned int pdl_allocationRecordHiddenCount;
-@property (assign, class) NSUInteger pdl_recordMaxCount;
+@property (assign, class) unsigned int pdl_recordMaxCount;
 
 + (PDLBacktrace *)pdl_allocationBacktrace:(__unsafe_unretained id)object;
 + (PDLBacktrace *)pdl_deallocationBacktrace:(__unsafe_unretained id)object;

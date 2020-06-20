@@ -15,10 +15,13 @@ extern "C" {
 
 typedef void *pdl_dictionary_t;
 
-extern pdl_dictionary_t pdl_dictionary_create(void);
-extern pdl_dictionary_t pdl_dictionary_create_with_count_limit(unsigned int count_limit);
-extern pdl_dictionary_t pdl_dictionary_create_with_malloc_pointers(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *));
-extern pdl_dictionary_t pdl_dictionary_create_with_count_limit_and_malloc_pointers(unsigned int count_limit, void *(*malloc_ptr)(size_t), void(*free_ptr)(void *));
+typedef struct pdl_dictionary_attr {
+    unsigned int count_limit;
+    void *(*malloc)(size_t);
+    void (*free)(void *);
+} pdl_dictionary_attr;
+
+extern pdl_dictionary_t pdl_dictionary_create(pdl_dictionary_attr *attr);
 
 extern void **pdl_dictionary_get(pdl_dictionary_t dictionary, void *key);
 extern void pdl_dictionary_remove(pdl_dictionary_t dictionary, void *key);
