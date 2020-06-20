@@ -19,6 +19,7 @@ typedef void *pdl_backtrace_t;
 
 extern pdl_backtrace_t pdl_backtrace_create(void);
 extern pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *));
+extern pdl_backtrace_t pdl_backtrace_copy(pdl_backtrace_t backtrace);
 extern const char *pdl_backtrace_get_name(pdl_backtrace_t backtrace);
 extern void pdl_backtrace_set_name(pdl_backtrace_t backtrace, const char *name);
 extern void pdl_backtrace_record(pdl_backtrace_t backtrace, unsigned int hidden_count);

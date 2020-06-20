@@ -9,7 +9,7 @@
 #import "NSObject+PDLAllocation.h"
 #import "NSObject+PDLImplementationInterceptor.h"
 #import "pdl_dictionary.h"
-#import "PDLBacktrace.h"
+#import "pdl_backtrace.h"
 
 #if __has_feature(objc_arc)
 #error This file must be compiled with flag "-fno-objc-arc"
@@ -23,8 +23,8 @@ static PDLAllocationPolicy _policy;
 
 @property (nonatomic, unsafe_unretained) id object;
 @property (nonatomic, unsafe_unretained) Class cls;
-@property (nonatomic, strong) PDLBacktrace *backtraceAlloc;
-@property (nonatomic, strong) PDLBacktrace *backtraceDealloc;
+@property (nonatomic, assign, readonly) pdl_backtrace_t backtraceAlloc;
+@property (nonatomic, assign, readonly) pdl_backtrace_t backtraceDealloc;
 @property (nonatomic, assign) BOOL live;
 @property (nonatomic, assign) unsigned int hiddenCount;
 
@@ -44,36 +44,49 @@ static PDLAllocationPolicy _policy;
 }
 
 - (void)dealloc {
+    pdl_backtrace_destroy(_backtraceAlloc);
+    pdl_backtrace_destroy(_backtraceDealloc);
 #if !__has_feature(objc_arc)
-    [_backtraceAlloc release];
-    [_backtraceDealloc release];
-
     [super dealloc];
 #endif
 }
 
 - (void)recordAlloc {
-    PDLBacktrace *bt = [[PDLBacktrace alloc] init];
-    bt.name = [NSString stringWithFormat:@"alloc_%s_%p(%s)", class_getName(_cls), _object, class_getName(object_getClass(_object))];
-    [bt record:self.hiddenCount];
-    self.backtraceAlloc = bt;
-    [bt release];
+    pdl_backtrace_destroy(_backtraceAlloc);
+    _backtraceAlloc = nil;
+
+    pdl_backtrace_t bt = pdl_backtrace_create();
+    char name[64];
+    snprintf(name, sizeof(name), "alloc_%s_%p(%s)", class_getName(_cls), _object, class_getName(object_getClass(_object)));
+    pdl_backtrace_set_name(bt, name);
+    pdl_backtrace_record(bt, _hiddenCount);
+    _backtraceAlloc = bt;
 }
 
 - (void)clearAlloc {
-    self.backtraceAlloc = nil;
+    if (_backtraceAlloc) {
+        pdl_backtrace_destroy(_backtraceAlloc);
+        _backtraceAlloc = nil;
+    }
 }
 
 - (void)recordDealloc {
-    PDLBacktrace *bt = [[PDLBacktrace alloc] init];
-    bt.name = [NSString stringWithFormat:@"dealloc_%s_%p(%s)", class_getName(_cls), _object, class_getName(object_getClass(_object))];
-    [bt record:self.hiddenCount];
-    self.backtraceDealloc = bt;
-    [bt release];
+    pdl_backtrace_destroy(_backtraceDealloc);
+    _backtraceDealloc = nil;
+
+    pdl_backtrace_t bt = pdl_backtrace_create();
+    char name[64];
+    snprintf(name, sizeof(name), "dealloc_%s_%p(%s)", class_getName(_cls), _object, class_getName(object_getClass(_object)));
+    pdl_backtrace_set_name(bt, name);
+    pdl_backtrace_record(bt, self.hiddenCount);
+    _backtraceDealloc = bt;
 }
 
 - (void)clearDealloc {
-    self.backtraceDealloc = nil;
+    if (_backtraceDealloc) {
+        pdl_backtrace_destroy(_backtraceDealloc);
+        _backtraceDealloc = nil;
+    }
 }
 
 #pragma mark - debug
@@ -165,9 +178,6 @@ static void pdl_allocation_map_set(void *key, void *value) {
 
     Class cls = object_getClass(object);
     if (cls == [PDLAllocationInfo class]) {
-        return NO;
-    }
-    if (cls == [PDLBacktrace class]) {
         return NO;
     }
 
@@ -318,14 +328,18 @@ static unsigned int _pdl_recordMaxCount = 0;
 + (PDLBacktrace *)pdl_allocationBacktrace:(__unsafe_unretained id)object {
     @synchronized ([PDLAllocationInfo class]) {
         PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
-        return info.backtraceAlloc;
+        pdl_backtrace_t backtrace = pdl_backtrace_copy(info.backtraceAlloc);
+        PDLBacktrace *ret = [[PDLBacktrace alloc] initWithBacktrace:backtrace];
+        return ret;
     }
 }
 
 + (PDLBacktrace *)pdl_deallocationBacktrace:(__unsafe_unretained id)object {
     @synchronized ([PDLAllocationInfo class]) {
         PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
-        return info.backtraceDealloc;
+        pdl_backtrace_t backtrace = pdl_backtrace_copy(info.backtraceDealloc);
+        PDLBacktrace *ret = [[PDLBacktrace alloc] initWithBacktrace:backtrace];
+        return ret;
     }
 }
 
