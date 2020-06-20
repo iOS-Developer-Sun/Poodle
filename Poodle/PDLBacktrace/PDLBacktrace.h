@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import <pdl_backtrace.h>
+#import "pdl_backtrace.h"
 
 @interface PDLBacktrace : NSObject
 

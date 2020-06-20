@@ -7,8 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-
-NS_ASSUME_NONNULL_BEGIN
+#import "pdl_backtrace.h"
 
 @interface PDLBacktrace : NSObject
 
@@ -16,12 +15,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) BOOL isShown;
 @property (readonly) NSArray <NSNumber *>*frames;
 
+- (instancetype)init;
+- (instancetype)initWithBacktrace:(pdl_backtrace_t)backtrace;
 - (void)record;
 - (void)record:(unsigned int)hiddenCount;
 - (void)show;
 - (void)showWithoutWaiting;
+- (void)showWithThreadStart:(int (*)(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *))thread_create;
 - (void)hide;
 
 @end
-
-NS_ASSUME_NONNULL_END
