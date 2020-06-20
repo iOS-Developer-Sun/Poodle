@@ -122,6 +122,31 @@ pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_ptr)(si
     return bt;
 }
 
+pdl_backtrace_t pdl_backtrace_copy(pdl_backtrace_t backtrace) {
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return NULL;
+    }
+
+    void *(*m_ptr)(size_t) = bt->malloc_ptr;
+    void(*f_ptr)(void *) = bt->free_ptr;
+
+    pdl_backtrace *copy = pdl_backtrace_create_with_malloc_pointers(m_ptr, f_ptr);
+    if (!copy) {
+        return NULL;
+    }
+
+    strlcpy(copy->thread_name, bt->thread_name, sizeof(copy->thread_name));
+
+    int frames_count = bt->frames_count;
+    void **frames = bt->malloc_ptr(sizeof(void *) * frames_count);
+    memcpy(frames, bt->frames, sizeof(void *) * frames_count);
+    copy->frames = frames;
+    copy->frames_count = frames_count;
+
+    return copy;
+}
+
 const char *pdl_backtrace_get_name(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (!bt) {

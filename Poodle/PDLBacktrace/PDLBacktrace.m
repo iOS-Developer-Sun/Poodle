@@ -7,7 +7,6 @@
 //
 
 #import "PDLBacktrace.h"
-#import "pdl_backtrace.h"
 
 @interface PDLBacktrace ()
 
@@ -21,6 +20,18 @@
     self = [super init];
     if (self) {
         _backtrace = pdl_backtrace_create();
+    }
+    return self;
+}
+
+- (instancetype)initWithBacktrace:(pdl_backtrace_t)backtrace {
+    if (!backtrace) {
+        return nil;
+    }
+
+    self = [super init];
+    if (self) {
+        _backtrace = backtrace;
     }
     return self;
 }
@@ -79,6 +90,10 @@
 
 - (void)showWithoutWaiting {
     pdl_backtrace_thread_show(self.backtrace, NO);
+}
+
+- (void)showWithThreadStart:(int (*)(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *))thread_create {
+    pdl_backtrace_thread_show_with_start(self.backtrace, YES, thread_create);
 }
 
 - (void)hide {
