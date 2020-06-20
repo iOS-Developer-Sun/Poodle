@@ -43,10 +43,12 @@ static PDLAllocationPolicy _policy;
 }
 
 - (void)dealloc {
+#if !__has_feature(objc_arc)
     [_backtraceAlloc release];
     [_backtraceDealloc release];
 
     [super dealloc];
+#endif
 }
 
 - (void)recordAlloc {
@@ -75,16 +77,16 @@ static PDLAllocationPolicy _policy;
 
 #pragma mark - debug
 
-+ (NSMutableSet *)uncaughtClassesMap {
-    static NSMutableSet *uncaughtClassesMap = nil;
++ (NSMutableSet *)uncaughtAllocClassesMap {
+    static NSMutableSet *uncaughtAllocClassesMap = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        uncaughtClassesMap = [NSMutableSet set];
+        uncaughtAllocClassesMap = [NSMutableSet set];
 #if !__has_feature(objc_arc)
-        [uncaughtClassesMap retain];
+        [uncaughtAllocClassesMap retain];
 #endif
     });
-    return uncaughtClassesMap;
+    return uncaughtAllocClassesMap;
 }
 
 + (NSMutableSet *)doubleAllocClassesMap {
@@ -129,6 +131,9 @@ static PDLAllocationPolicy _policy;
     }
 
     NSMutableDictionary *allocations = [self allocations];
+    if (allocations.count == [PDLAllocationInfo pdl_recordMaxCount] - 1) {
+        [allocations removeAllObjects];
+    }
     allocations[@((unsigned long)(__bridge void *)object)] = info;
 }
 
@@ -139,10 +144,11 @@ static PDLAllocationPolicy _policy;
         return NO;
     }
 
-    if ([object isKindOfClass:[PDLAllocationInfo class]]) {
+    Class cls = object_getClass(object);
+    if (cls == [PDLAllocationInfo class]) {
         return NO;
     }
-    if ([object isKindOfClass:[PDLBacktrace class]]) {
+    if (cls == [PDLBacktrace class]) {
         return NO;
     }
 
@@ -154,7 +160,7 @@ static PDLAllocationPolicy _policy;
         return;
     }
 
-    @synchronized (self) {
+    @synchronized ([PDLAllocationInfo class]) {
         PDLAllocationInfo *info = [self allocationInfoForObject:object];
         if (info) {
             [[PDLAllocationInfo doubleAllocClassesMap] addObject:object_getClass(object)];
@@ -174,12 +180,12 @@ static PDLAllocationPolicy _policy;
         return;
     }
 
-    @synchronized (self) {
+    @synchronized ([PDLAllocationInfo class]) {
         PDLAllocationInfo *info = [self allocationInfoForObject:object];
         if (info) {
             if (info.live == false) {
                 [info clearAlloc];
-                [[PDLAllocationInfo uncaughtClassesMap] addObject:object_getClass(object)];
+                [[PDLAllocationInfo uncaughtAllocClassesMap] addObject:object_getClass(object)];
             }
             info.live = false;
             switch (_policy) {
@@ -194,7 +200,7 @@ static PDLAllocationPolicy _policy;
                     break;
             }
         } else {
-            [[PDLAllocationInfo uncaughtClassesMap] addObject:object_getClass(object)];
+            [[PDLAllocationInfo uncaughtAllocClassesMap] addObject:object_getClass(object)];
         }
     }
 }
@@ -281,15 +287,27 @@ static bool _pdl_allocationRecordHiddenCount = 0;
     _pdl_allocationRecordHiddenCount = pdl_allocationRecordHiddenCount;
 }
 
+static NSUInteger _pdl_recordMaxCount = NSUIntegerMax;
++ (NSUInteger)pdl_recordMaxCount {
+    return _pdl_recordMaxCount;
+}
+
++ (void)setPdl_recordMaxCount:(NSUInteger)pdl_recordMaxCount {
+    _pdl_recordMaxCount = pdl_recordMaxCount;
+}
 
 + (PDLBacktrace *)pdl_allocationBacktrace:(__unsafe_unretained id)object {
-    PDLAllocationInfo *info = [PDLAllocationInfo allocationInfoForObject:object];
-    return info.backtraceAlloc;
+    @synchronized ([PDLAllocationInfo class]) {
+        PDLAllocationInfo *info = [PDLAllocationInfo allocationInfoForObject:object];
+        return info.backtraceAlloc;
+    }
 }
 
 + (PDLBacktrace *)pdl_deallocationBacktrace:(__unsafe_unretained id)object {
-    PDLAllocationInfo *info = [PDLAllocationInfo allocationInfoForObject:object];
-    return info.backtraceDealloc;
+    @synchronized ([PDLAllocationInfo class]) {
+        PDLAllocationInfo *info = [PDLAllocationInfo allocationInfoForObject:object];
+        return info.backtraceDealloc;
+    }
 }
 
 + (BOOL)pdl_enableAllocation:(PDLAllocationPolicy)policy {
