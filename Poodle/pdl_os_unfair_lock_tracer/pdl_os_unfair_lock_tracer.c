@@ -38,7 +38,7 @@ static pdl_dictionary_t pdl_os_lock_map(void) {
     pdl_spinlock_lock(&lock);
     static pdl_dictionary_t os_lock_map = NULL;
     if (os_lock_map == NULL) {
-        os_lock_map = pdl_dictionary_create();
+        os_lock_map = pdl_dictionary_create(NULL);
     }
     pdl_spinlock_unlock(&lock);
     return os_lock_map;

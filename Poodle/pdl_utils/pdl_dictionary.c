@@ -13,46 +13,42 @@
 #include "pdl_list.h"
 
 typedef struct pdl_dictionary {
+    pdl_dictionary_attr attr;
     pdl_hash hash;
-    unsigned int count_limit;
     pdl_list *limit_list;
     pdl_hash limit_hash;
 } pdl_dictionary;
 
-pdl_dictionary_t pdl_dictionary_create(void) {
-    return pdl_dictionary_create_with_count_limit_and_malloc_pointers(0, NULL, NULL);
-}
+extern pdl_dictionary_t pdl_dictionary_create(pdl_dictionary_attr *attr) {
+    void *(*malloc_ptr)(size_t) = &malloc;
+    void(*free_ptr)(void *) = &free;
+    unsigned int count_limit = 0;
+    if (attr) {
+        malloc_ptr = attr->malloc;
+        free_ptr = attr->free;
+        count_limit = attr->count_limit;
+    }
 
-pdl_dictionary_t pdl_dictionary_create_with_count_limit(unsigned int count_limit) {
-    return pdl_dictionary_create_with_count_limit_and_malloc_pointers(count_limit, NULL, NULL);
-}
-
-pdl_dictionary_t pdl_dictionary_create_with_malloc_pointers(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *)) {
-    return pdl_dictionary_create_with_count_limit_and_malloc_pointers(0, malloc_ptr, free_ptr);
-}
-
-pdl_dictionary_t pdl_dictionary_create_with_count_limit_and_malloc_pointers(unsigned int count_limit, void *(*malloc_ptr)(size_t), void(*free_ptr)(void *)) {
-    void *(*m_ptr)(size_t) = malloc_ptr ?: &malloc;
-    void(*f_ptr)(void *) = free_ptr ?: &free;
-    pdl_dictionary *dict = m_ptr(sizeof(pdl_dictionary));
+    pdl_dictionary *dict = malloc_ptr(sizeof(pdl_dictionary));
     if (!dict) {
         return NULL;
     }
 
+    dict->attr.malloc = malloc_ptr;
+    dict->attr.free = free_ptr;
+    dict->attr.count_limit = count_limit;
+
     dict->hash.map = NULL;
-    dict->hash.malloc = m_ptr;
-    dict->hash.free = f_ptr;
-    dict->count_limit = count_limit;
     if (count_limit > 0) {
-        pdl_list *cache_list = pdl_list_create(m_ptr, f_ptr);
+        pdl_list *cache_list = pdl_list_create(malloc_ptr, free_ptr);
         if (!cache_list) {
-            f_ptr(dict);
+            free_ptr(dict);
             return NULL;
         }
         dict->limit_list = cache_list;
         dict->limit_hash.map = NULL;
-        dict->limit_hash.malloc = m_ptr;
-        dict->limit_hash.free = f_ptr;
+        dict->limit_hash.malloc = malloc_ptr;
+        dict->limit_hash.free = free_ptr;
     }
 
     return dict;
@@ -67,7 +63,7 @@ void **pdl_dictionary_get(pdl_dictionary_t dictionary, void *key) {
     pdl_hash *hash = &(dict->hash);
     void **value = pdl_hash_get_value(hash, key);
 
-    if (dict->count_limit > 0) {
+    if (dict->attr.count_limit > 0) {
         pdl_hash *cache_hash = &(dict->limit_hash);
         pdl_list_node **node_value = (pdl_list_node **)pdl_hash_get_value(cache_hash, key);
         if (node_value) {
@@ -96,7 +92,7 @@ void pdl_dictionary_remove(pdl_dictionary_t dictionary, void *key) {
 
     pdl_hash_delete(hash, key);
 
-    if (dict->count_limit > 0) {
+    if (dict->attr.count_limit > 0) {
         pdl_hash *cache_hash = &(dict->limit_hash);
         pdl_list_node *node = *(pdl_list_node **)pdl_hash_get_value(cache_hash, key);
         pdl_list *cache_list = dict->limit_list;
@@ -111,7 +107,7 @@ void pdl_dictionary_remove_all(pdl_dictionary_t dictionary) {
     pdl_hash *hash = &(dict->hash);
     pdl_hash_delete_all(hash);
 
-    if (dict->count_limit > 0) {
+    if (dict->attr.count_limit > 0) {
         pdl_hash *cache_hash = &(dict->limit_hash);
         pdl_hash_delete_all(cache_hash);
         pdl_list *cache_list = dict->limit_list;
@@ -136,7 +132,7 @@ void pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value) {
         pdl_hash_set_value(hash, key, value);
     }
 
-    if (dict->count_limit > 0) {
+    if (dict->attr.count_limit > 0) {
         pdl_hash *cache_hash = &(dict->limit_hash);
         pdl_list_node **node_value = (pdl_list_node **)pdl_hash_get_value(cache_hash, key);
         pdl_list *cache_list = dict->limit_list;
@@ -157,7 +153,7 @@ void pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value) {
             }
         }
 
-        if (pdl_list_length(cache_list) > dict->count_limit) {
+        if (pdl_list_length(cache_list) > dict->attr.count_limit) {
             pdl_list_node *last = cache_list->tail;
             void *last_key = last->val;
             pdl_dictionary_remove(dict, last_key);
@@ -181,7 +177,7 @@ void pdl_dictionary_destroy(pdl_dictionary_t dictionary) {
     pdl_dictionary *dict = dictionary;
     pdl_hash *hash = &(dict->hash);
     pdl_hash_destroy(hash);
-    if (dict->count_limit > 0) {
+    if (dict->attr.count_limit > 0) {
         pdl_hash *cache_hash = &(dict->limit_hash);
         pdl_hash_destroy(cache_hash);
         pdl_list *cache_list = dict->limit_list;
@@ -207,7 +203,7 @@ void pdl_dictionary_print(pdl_dictionary_t dictionary) {
     pdl_list_node *node = NULL;
     for (unsigned int i = 0; i < count; i++) {
         void *key = keys[i];
-        if (dict->count_limit > 0) {
+        if (dict->attr.count_limit > 0) {
             if (i == 0) {
                 node = dict->limit_list->head;
             }

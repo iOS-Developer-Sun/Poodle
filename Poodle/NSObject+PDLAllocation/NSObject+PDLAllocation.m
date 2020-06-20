@@ -8,6 +8,7 @@
 
 #import "NSObject+PDLAllocation.h"
 #import "NSObject+PDLImplementationInterceptor.h"
+#import "pdl_dictionary.h"
 #import "PDLBacktrace.h"
 
 #if __has_feature(objc_arc)
@@ -103,38 +104,82 @@ static PDLAllocationPolicy _policy;
 
 #pragma mark - storage
 
-+ (NSMutableDictionary *)allocations {
-    static NSMutableDictionary *allocations = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        allocations = [NSMutableDictionary dictionary];
-#if !__has_feature(objc_arc)
-        [allocations retain];
-#endif
-    });
-    return allocations;
+//+ (NSMutableDictionary *)allocations {
+//    static NSMutableDictionary *allocations = nil;
+//    static dispatch_once_t onceToken;
+//    dispatch_once(&onceToken, ^{
+//        allocations = [NSMutableDictionary dictionary];
+//#if !__has_feature(objc_arc)
+//        [allocations retain];
+//#endif
+//    });
+//    return allocations;
+//}
+
+//+ (PDLAllocationInfo *)allocationInfoForObject:(__unsafe_unretained id)object {
+//    if (!object) {
+//        return nil;
+//    }
+//
+//    NSMutableDictionary *allocations = [self allocations];
+//    PDLAllocationInfo *info = allocations[@((unsigned long)(__bridge void *)object)];
+//    return info;
+//}
+//
+//+ (void)setAllocationInfo:(PDLAllocationInfo *)info forObject:(__unsafe_unretained id)object {
+//    if (!object) {
+//        return;
+//    }
+//
+//    NSMutableDictionary *allocations = [self allocations];
+//    if (allocations.count == [PDLAllocationInfo pdl_recordMaxCount] - 1) {
+//        [allocations removeAllObjects];
+//    }
+//    allocations[@((unsigned long)(__bridge void *)object)] = info;
+//}
+
+#pragma mark - storage
+
+static pdl_dictionary_t pdl_allocation_map(void) {
+    static pdl_dictionary_t _dictionary = NULL;
+    if (!_dictionary) {
+        unsigned int count_limit = [NSObject pdl_recordMaxCount];
+        pdl_dictionary_attr attr = {count_limit, NULL, NULL};
+        _dictionary = pdl_dictionary_create(&attr);
+    }
+    return _dictionary;
 }
 
-+ (PDLAllocationInfo *)allocationInfoForObject:(__unsafe_unretained id)object {
-    if (!object) {
-        return nil;
-    }
+#pragma clang diagnostic pop
 
-    NSMutableDictionary *allocations = [self allocations];
-    PDLAllocationInfo *info = allocations[@((unsigned long)(__bridge void *)object)];
-    return info;
+unsigned int pdl_allocation_map_count(void) {
+    pdl_dictionary_t map = pdl_allocation_map();
+    unsigned int count = pdl_dictionary_count(map);
+    return count;
 }
 
-+ (void)setAllocationInfo:(PDLAllocationInfo *)info forObject:(__unsafe_unretained id)object {
-    if (!object) {
-        return;
+static void *pdl_allocation_map_get(void *key, bool lock) {
+    if (lock) {
+//        pdl_allocation_lock();
     }
 
-    NSMutableDictionary *allocations = [self allocations];
-    if (allocations.count == [PDLAllocationInfo pdl_recordMaxCount] - 1) {
-        [allocations removeAllObjects];
+    pdl_dictionary_t map = pdl_allocation_map();
+    void *value = NULL;
+    void **object = pdl_dictionary_get(map, key);
+    if (object) {
+        value = *object;
     }
-    allocations[@((unsigned long)(__bridge void *)object)] = info;
+    if (lock) {
+//        pdl_allocation_unlock();
+    }
+    return value;
+}
+
+static void pdl_allocation_map_set(void *key, void *value) {
+//    pdl_allocation_lock();
+    pdl_dictionary_t map = pdl_allocation_map();
+    pdl_dictionary_set(map, value, key);
+//    pdl_allocation_unlock();
 }
 
 #pragma mark -
@@ -161,13 +206,12 @@ static PDLAllocationPolicy _policy;
     }
 
     @synchronized ([PDLAllocationInfo class]) {
-        PDLAllocationInfo *info = [self allocationInfoForObject:object];
+        PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
         if (info) {
             [[PDLAllocationInfo doubleAllocClassesMap] addObject:object_getClass(object)];
         } else {
             info = [[PDLAllocationInfo alloc] initWithObject:object];
-            [self setAllocationInfo:info forObject:object];
-            [info release];
+            pdl_allocation_map_set(object, info);
         }
 
         [info clearDealloc];
@@ -181,7 +225,7 @@ static PDLAllocationPolicy _policy;
     }
 
     @synchronized ([PDLAllocationInfo class]) {
-        PDLAllocationInfo *info = [self allocationInfoForObject:object];
+        PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
         if (info) {
             if (info.live == false) {
                 [info clearAlloc];
@@ -190,7 +234,8 @@ static PDLAllocationPolicy _policy;
             info.live = false;
             switch (_policy) {
                 case PDLAllocationPolicyLiveAllocations:
-                    [self setAllocationInfo:nil forObject:object];
+                    pdl_allocation_map_set(object, NULL);
+                    [info release];
                     break;
                 case PDLAllocationPolicyAllocationAndFree:
                     [info recordDealloc];
@@ -287,25 +332,25 @@ static bool _pdl_allocationRecordHiddenCount = 0;
     _pdl_allocationRecordHiddenCount = pdl_allocationRecordHiddenCount;
 }
 
-static NSUInteger _pdl_recordMaxCount = NSUIntegerMax;
-+ (NSUInteger)pdl_recordMaxCount {
+static unsigned int _pdl_recordMaxCount = 0;
++ (unsigned int)pdl_recordMaxCount {
     return _pdl_recordMaxCount;
 }
 
-+ (void)setPdl_recordMaxCount:(NSUInteger)pdl_recordMaxCount {
++ (void)setPdl_recordMaxCount:(unsigned int)pdl_recordMaxCount {
     _pdl_recordMaxCount = pdl_recordMaxCount;
 }
 
 + (PDLBacktrace *)pdl_allocationBacktrace:(__unsafe_unretained id)object {
     @synchronized ([PDLAllocationInfo class]) {
-        PDLAllocationInfo *info = [PDLAllocationInfo allocationInfoForObject:object];
+        PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
         return info.backtraceAlloc;
     }
 }
 
 + (PDLBacktrace *)pdl_deallocationBacktrace:(__unsafe_unretained id)object {
     @synchronized ([PDLAllocationInfo class]) {
-        PDLAllocationInfo *info = [PDLAllocationInfo allocationInfoForObject:object];
+        PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
         return info.backtraceDealloc;
     }
 }

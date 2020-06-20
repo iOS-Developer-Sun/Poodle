@@ -32,7 +32,7 @@ static pdl_dictionary_t pdl_rw_lock_map(void) {
     static pdl_dictionary_t rw_lock_map = NULL;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        rw_lock_map = pdl_dictionary_create();
+        rw_lock_map = pdl_dictionary_create(NULL);
     });
     return rw_lock_map;
 }
