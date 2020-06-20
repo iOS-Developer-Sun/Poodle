@@ -6,7 +6,6 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#include "pdl_array.h"
 #include <malloc/malloc.h>
 
 #ifdef __cplusplus
@@ -15,11 +14,20 @@ extern "C" {
 
 typedef void *pdl_dictionary_t;
 
+typedef struct pdl_callbacks {
+    void (*retain)(void *);
+    void (*release)(void *);
+} pdl_callbacks;
+
 typedef struct pdl_dictionary_attr {
     unsigned int count_limit;
     void *(*malloc)(size_t);
     void (*free)(void *);
+    pdl_callbacks key_callbacks;
+    pdl_callbacks value_callbacks;
 } pdl_dictionary_attr;
+
+#define PDL_DICTIONARY_ATTR_INIT {0}
 
 extern pdl_dictionary_t pdl_dictionary_create(pdl_dictionary_attr *attr);
 

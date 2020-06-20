@@ -104,47 +104,21 @@ static PDLAllocationPolicy _policy;
 
 #pragma mark - storage
 
-//+ (NSMutableDictionary *)allocations {
-//    static NSMutableDictionary *allocations = nil;
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        allocations = [NSMutableDictionary dictionary];
-//#if !__has_feature(objc_arc)
-//        [allocations retain];
-//#endif
-//    });
-//    return allocations;
-//}
+static void pdl_allocation_retain(void *info) {
+    [(PDLAllocationInfo *)info retain];
+}
 
-//+ (PDLAllocationInfo *)allocationInfoForObject:(__unsafe_unretained id)object {
-//    if (!object) {
-//        return nil;
-//    }
-//
-//    NSMutableDictionary *allocations = [self allocations];
-//    PDLAllocationInfo *info = allocations[@((unsigned long)(__bridge void *)object)];
-//    return info;
-//}
-//
-//+ (void)setAllocationInfo:(PDLAllocationInfo *)info forObject:(__unsafe_unretained id)object {
-//    if (!object) {
-//        return;
-//    }
-//
-//    NSMutableDictionary *allocations = [self allocations];
-//    if (allocations.count == [PDLAllocationInfo pdl_recordMaxCount] - 1) {
-//        [allocations removeAllObjects];
-//    }
-//    allocations[@((unsigned long)(__bridge void *)object)] = info;
-//}
-
-#pragma mark - storage
+static void pdl_allocation_release(void *info) {
+    [(PDLAllocationInfo *)info release];
+}
 
 static pdl_dictionary_t pdl_allocation_map(void) {
     static pdl_dictionary_t _dictionary = NULL;
     if (!_dictionary) {
-        unsigned int count_limit = [NSObject pdl_recordMaxCount];
-        pdl_dictionary_attr attr = {count_limit, NULL, NULL};
+        pdl_dictionary_attr attr = PDL_DICTIONARY_ATTR_INIT;
+        attr.count_limit = [NSObject pdl_recordMaxCount];
+        attr.value_callbacks.retain = &pdl_allocation_retain;
+        attr.value_callbacks.release = &pdl_allocation_release;
         _dictionary = pdl_dictionary_create(&attr);
     }
     return _dictionary;
@@ -178,7 +152,7 @@ static void *pdl_allocation_map_get(void *key, bool lock) {
 static void pdl_allocation_map_set(void *key, void *value) {
 //    pdl_allocation_lock();
     pdl_dictionary_t map = pdl_allocation_map();
-    pdl_dictionary_set(map, value, key);
+    pdl_dictionary_set(map, key, value);
 //    pdl_allocation_unlock();
 }
 
@@ -212,6 +186,7 @@ static void pdl_allocation_map_set(void *key, void *value) {
         } else {
             info = [[PDLAllocationInfo alloc] initWithObject:object];
             pdl_allocation_map_set(object, info);
+            [info release];
         }
 
         [info clearDealloc];
@@ -235,7 +210,6 @@ static void pdl_allocation_map_set(void *key, void *value) {
             switch (_policy) {
                 case PDLAllocationPolicyLiveAllocations:
                     pdl_allocation_map_set(object, NULL);
-                    [info release];
                     break;
                 case PDLAllocationPolicyAllocationAndFree:
                     [info recordDealloc];
