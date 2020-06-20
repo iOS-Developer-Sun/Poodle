@@ -13,7 +13,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-    
+
+typedef struct pdl_hash_callbacks {
+    void (*retain)(void *);
+    void (*release)(void *);
+} pdl_hash_callbacks;
+
 typedef struct pdl_hash_item {
     void *key;
     void *value;
@@ -24,6 +29,8 @@ typedef struct pdl_hash {
     pdl_hash_item *map;
     void *(*malloc)(size_t);
     void (*free)(void *);
+    pdl_hash_callbacks key_callbacks;
+    pdl_hash_callbacks value_callbacks;
 } pdl_hash;
 
 extern void pdl_hash_delete(pdl_hash *map, void *key);

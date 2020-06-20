@@ -293,7 +293,9 @@ void pdl_malloc_zone_enumerate(malloc_zone_t *zone, void *data, void(*function)(
 static pdl_dictionary_t pdl_malloc_map(void) {
     static pdl_dictionary_t _dictionary = NULL;
     if (!_dictionary) {
-        pdl_dictionary_attr attr = {0, &pdl_malloc_private_zone_malloc, &pdl_malloc_private_zone_free};
+        pdl_dictionary_attr attr = PDL_DICTIONARY_ATTR_INIT;
+        attr.malloc = &pdl_malloc_private_zone_malloc;
+        attr.free = &pdl_malloc_private_zone_free;
         _dictionary = pdl_dictionary_create(&attr);
     }
     return _dictionary;
