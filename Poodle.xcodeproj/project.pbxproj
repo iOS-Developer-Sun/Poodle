@@ -18,6 +18,9 @@
 		B858422C246B963E00AC3717 /* pdl_backtrace.c in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.c */; };
 		B85842AF246B96AE00AC3717 /* pdl_backtrace.c in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.c */; };
 		B85842B0246B96B400AC3717 /* pdl_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8584229246B961400AC3717 /* pdl_backtrace.h */; };
+		B85B447A24A0EC6200B25A3E /* pdl_allocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B85B447924A0EC6200B25A3E /* pdl_allocation.m */; };
+		B85B447B24A0EC9100B25A3E /* pdl_allocation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B85B447824A0EC6200B25A3E /* pdl_allocation.h */; };
+		B85B447C24A0EC9700B25A3E /* pdl_allocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B85B447924A0EC6200B25A3E /* pdl_allocation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B85D45A7240E84DA00CBF758 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B85D45A6240E84DA00CBF758 /* AppDelegate.m */; };
 		B85D45AD240E84DA00CBF758 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B85D45AC240E84DA00CBF758 /* ViewController.m */; };
 		B85D45B0240E84DA00CBF758 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B85D45AE240E84DA00CBF758 /* Main.storyboard */; };
@@ -151,9 +154,6 @@
 		B8B7B5AE249B6265008D4604 /* pdl_objc_runtime.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B7B5A1249B61CB008D4604 /* pdl_objc_runtime.h */; };
 		B8B7B5B2249B9132008D4604 /* pdl_objc_runtime.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */; };
 		B8B7B5B3249B9143008D4604 /* pdl_objc_runtime.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */; };
-		B8B7B5B7249B9285008D4604 /* NSObject+PDLAllocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5B6249B9285008D4604 /* NSObject+PDLAllocation.m */; };
-		B8B7B5C1249B933C008D4604 /* NSObject+PDLAllocation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B7B5B5249B9285008D4604 /* NSObject+PDLAllocation.h */; };
-		B8B7B5C2249B9342008D4604 /* NSObject+PDLAllocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5B6249B9285008D4604 /* NSObject+PDLAllocation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B8B7B5C9249CE7FE008D4604 /* pdl_list.c in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5C7249CE7FD008D4604 /* pdl_list.c */; };
 		B8B7B5CA249CE80E008D4604 /* pdl_list.c in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5C7249CE7FD008D4604 /* pdl_list.c */; };
 		B8B7B5CB249CE814008D4604 /* pdl_list.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B7B5C8249CE7FE008D4604 /* pdl_list.h */; };
@@ -1052,7 +1052,7 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				B8B7B5C1249B933C008D4604 /* NSObject+PDLAllocation.h in CopyFiles */,
+				B85B447B24A0EC9100B25A3E /* pdl_allocation.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1513,6 +1513,8 @@
 		B8584229246B961400AC3717 /* pdl_backtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_backtrace.h; sourceTree = "<group>"; };
 		B858422B246B963E00AC3717 /* pdl_backtrace.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_backtrace.c; sourceTree = "<group>"; };
 		B85842AE246B968D00AC3717 /* libpdl_backtrace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_backtrace.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B85B447824A0EC6200B25A3E /* pdl_allocation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_allocation.h; sourceTree = "<group>"; };
+		B85B447924A0EC6200B25A3E /* pdl_allocation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_allocation.m; sourceTree = "<group>"; };
 		B85D459E240E7CF100CBF758 /* PoodleLibrary */ = {isa = PBXFileReference; lastKnownFileType = folder; path = PoodleLibrary; sourceTree = "<group>"; };
 		B85D45A3240E84DA00CBF758 /* PoodleApplication.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PoodleApplication.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B85D45A5240E84DA00CBF758 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -1557,8 +1559,6 @@
 		B8B7B5A1249B61CB008D4604 /* pdl_objc_runtime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_objc_runtime.h; sourceTree = "<group>"; };
 		B8B7B5AC249B6240008D4604 /* libpdl_objc_runtime.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_objc_runtime.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_objc_runtime.m; sourceTree = "<group>"; };
-		B8B7B5B5249B9285008D4604 /* NSObject+PDLAllocation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+PDLAllocation.h"; sourceTree = "<group>"; };
-		B8B7B5B6249B9285008D4604 /* NSObject+PDLAllocation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLAllocation.m"; sourceTree = "<group>"; };
 		B8B7B5C0249B9307008D4604 /* libNSObject+PDLAllocation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLAllocation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8B7B5C7249CE7FD008D4604 /* pdl_list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_list.c; sourceTree = "<group>"; };
 		B8B7B5C8249CE7FE008D4604 /* pdl_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_list.h; sourceTree = "<group>"; };
@@ -2514,13 +2514,13 @@
 			path = pdl_objc_runtime;
 			sourceTree = "<group>";
 		};
-		B8B7B5B4249B9266008D4604 /* NSObject+PDLAllocation */ = {
+		B8B7B5B4249B9266008D4604 /* pdl_allocation */ = {
 			isa = PBXGroup;
 			children = (
-				B8B7B5B5249B9285008D4604 /* NSObject+PDLAllocation.h */,
-				B8B7B5B6249B9285008D4604 /* NSObject+PDLAllocation.m */,
+				B85B447824A0EC6200B25A3E /* pdl_allocation.h */,
+				B85B447924A0EC6200B25A3E /* pdl_allocation.m */,
 			);
-			path = "NSObject+PDLAllocation";
+			path = pdl_allocation;
 			sourceTree = "<group>";
 		};
 		B8DEC4C124877D1800DB3D0E /* pdl_dispatch_backtrace */ = {
@@ -3199,7 +3199,6 @@
 				B8E56EF723D7001A008D2DA1 /* NSJSONSerialization+PDLExtension */,
 				B8E56E4B23D70017008D2DA1 /* NSLock+PDLExtension */,
 				B8E56E8323D70018008D2DA1 /* NSMapTable+PDLExtension */,
-				B8B7B5B4249B9266008D4604 /* NSObject+PDLAllocation */,
 				B8E56DFE23D70016008D2DA1 /* NSObject+PDLDebug */,
 				B8E56E2223D70017008D2DA1 /* NSObject+PDLExtension */,
 				B8E56E2523D70017008D2DA1 /* NSObject+PDLImplementationInterceptor */,
@@ -3208,6 +3207,7 @@
 				B8E56E8623D70018008D2DA1 /* NSObject+PDLWeakifyUnsafeUnretainedProperty */,
 				B8E56E2C23D70017008D2DA1 /* NSThread+PDLExtension */,
 				B8E56E6A23D70018008D2DA1 /* NSUserDefaults+PDLExtension */,
+				B8B7B5B4249B9266008D4604 /* pdl_allocation */,
 				B8E56E3223D70017008D2DA1 /* pdl_asm */,
 				B8584227246B961400AC3717 /* pdl_backtrace */,
 				B8E56EA423D70019008D2DA1 /* pdl_die */,
@@ -3775,9 +3775,9 @@
 			productReference = B8B7B5AC249B6240008D4604 /* libpdl_objc_runtime.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		B8B7B5B8249B9307008D4604 /* NSObject+PDLAllocation */ = {
+		B8B7B5B8249B9307008D4604 /* pdl_allocation */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B8B7B5BD249B9307008D4604 /* Build configuration list for PBXNativeTarget "NSObject+PDLAllocation" */;
+			buildConfigurationList = B8B7B5BD249B9307008D4604 /* Build configuration list for PBXNativeTarget "pdl_allocation" */;
 			buildPhases = (
 				B8B7B5B9249B9307008D4604 /* Sources */,
 				B8B7B5BA249B9307008D4604 /* Frameworks */,
@@ -3788,7 +3788,7 @@
 			);
 			dependencies = (
 			);
-			name = "NSObject+PDLAllocation";
+			name = pdl_allocation;
 			productName = "CAAnimation+PDLExtension";
 			productReference = B8B7B5C0249B9307008D4604 /* libNSObject+PDLAllocation.a */;
 			productType = "com.apple.product-type.library.static";
@@ -4612,7 +4612,6 @@
 				B8FC6BD222EF04CB005B91DE /* NSJSONSerialization+PDLExtension */,
 				B8FC6C1922EF0593005B91DE /* NSLock+PDLExtension */,
 				B8FC6C2422EF05BB005B91DE /* NSMapTable+PDLExtension */,
-				B8B7B5B8249B9307008D4604 /* NSObject+PDLAllocation */,
 				B8FC6BBF22EF03AA005B91DE /* NSObject+PDLImplementationInterceptor */,
 				B8FC6C2D22EF05BE005B91DE /* NSObject+PDLDebug */,
 				B8FC6C3622EF05BF005B91DE /* NSObject+PDLExtension */,
@@ -4621,6 +4620,7 @@
 				B8FC6C3F22EF05C0005B91DE /* NSObject+PDLWeakifyUnsafeUnretainedProperty */,
 				B8FC6C4822EF05C1005B91DE /* NSThread+PDLExtension */,
 				B8FC6C5C22EF0637005B91DE /* NSUserDefaults+PDLExtension */,
+				B8B7B5B8249B9307008D4604 /* pdl_allocation */,
 				B8FC6D9022EFD95E005B91DE /* pdl_asm */,
 				B85842A6246B968D00AC3717 /* pdl_backtrace */,
 				B8FC6C9522EF0718005B91DE /* pdl_die */,
@@ -5964,6 +5964,7 @@
 				B85D4611240E85A600CBF758 /* pdl_objc_message-arm.s in Sources */,
 				B85D4612240E85A600CBF758 /* pdl_objc_message-arm64.s in Sources */,
 				B85D4613240E85A600CBF758 /* pdl_objc_message-i386.s in Sources */,
+				B85B447A24A0EC6200B25A3E /* pdl_allocation.m in Sources */,
 				B85D4614240E85A600CBF758 /* pdl_objc_message-x86_64.s in Sources */,
 				B85D4615240E85A600CBF758 /* pdl_systemcall-arm.s in Sources */,
 				B8DEC4C424877D1800DB3D0E /* pdl_dispatch_backtrace.m in Sources */,
@@ -5991,7 +5992,6 @@
 				B85D45CD240E859000CBF758 /* NSUserDefaults+PDLExtension.m in Sources */,
 				B85D45CE240E859000CBF758 /* pdl_mach.m in Sources */,
 				B85D45CF240E859000CBF758 /* pdl_mach_o_const_symbols.m in Sources */,
-				B8B7B5B7249B9285008D4604 /* NSObject+PDLAllocation.m in Sources */,
 				B8795337248688D800798005 /* pdl_thread-arm64.s in Sources */,
 				B85D45D0240E859000CBF758 /* pdl_mach_o_symbol_pointer.m in Sources */,
 				B85D45D2240E859000CBF758 /* pdl_objc_message.m in Sources */,
@@ -6201,7 +6201,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8B7B5C2249B9342008D4604 /* NSObject+PDLAllocation.m in Sources */,
+				B85B447C24A0EC9700B25A3E /* pdl_allocation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6687,7 +6687,7 @@
 		};
 		B8B7B5C4249B934D008D4604 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B8B7B5B8249B9307008D4604 /* NSObject+PDLAllocation */;
+			target = B8B7B5B8249B9307008D4604 /* pdl_allocation */;
 			targetProxy = B8B7B5C3249B934D008D4604 /* PBXContainerItemProxy */;
 		};
 		B8B9A56E234F9A570069476E /* PBXTargetDependency */ = {
@@ -8821,7 +8821,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B8B7B5BD249B9307008D4604 /* Build configuration list for PBXNativeTarget "NSObject+PDLAllocation" */ = {
+		B8B7B5BD249B9307008D4604 /* Build configuration list for PBXNativeTarget "pdl_allocation" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B8B7B5BE249B9307008D4604 /* Debug */,
