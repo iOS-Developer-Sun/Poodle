@@ -7,8 +7,6 @@
 //
 
 #include "pdl_objc_message.h"
-#include "pdl_dynamic.h"
-#include <objc/message.h>
 
 static void(*_pdl_objc_msgSend_before_action)(__unsafe_unretained id self, SEL _cmd) = NULL;
 static void(*_pdl_objc_msgSendSuper_before_action)(struct objc_super *super, SEL _cmd) = NULL;
@@ -45,18 +43,12 @@ void pdl_objc_msgSendSuper_before(struct objc_super *super, SEL _cmd) {
     }
 }
 
-extern IMP pdl_objc_msgSend;
-extern IMP pdl_objc_msgSendSuper2;
-
-PDL_DYLD_INTERPOSE(pdl_objc_msgSend, objc_msgSend)
-PDL_DYLD_INTERPOSE(pdl_objc_msgSendSuper2, objc_msgSendSuper2)
+void(*pdl_objc_msgSend_original)(void) = &objc_msgSend;
+void(*pdl_objc_msgSendSuper2_original)(void) = &objc_msgSendSuper2;
 
 #ifndef __arm64__
 
-extern IMP pdl_objc_msgSend_stret;
-extern IMP pdl_objc_msgSendSuper2_stret;
-
-PDL_DYLD_INTERPOSE(pdl_objc_msgSend_stret, objc_msgSend_stret)
-PDL_DYLD_INTERPOSE(pdl_objc_msgSendSuper2_stret, objc_msgSendSuper2_stret)
+void(*pdl_objc_msgSend_stret_original)(void) = &objc_msgSend_stret;
+void(*pdl_objc_msgSendSuper2_stret_original)(void) = &objc_msgSendSuper2_stret;
 
 #endif

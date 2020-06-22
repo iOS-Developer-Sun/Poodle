@@ -21,7 +21,8 @@ _pdl_objc_msgSend:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
     call    _pdl_objc_msgSend_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
-    jmp    _objc_msgSend
+    movq    _pdl_objc_msgSend_original(%rip), %r11
+    jmp     *%r11
 
 _pdl_objc_msgSend_stret:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
@@ -29,18 +30,22 @@ _pdl_objc_msgSend_stret:
     movq    %a3, %a2
     call    _pdl_objc_msgSend_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
-    jmp    _objc_msgSend_stret
+    movq    _pdl_objc_msgSend_stret_original(%rip), %r11
+    jmp     *%r11
 
 _pdl_objc_msgSendSuper2:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
     call    _pdl_objc_msgSendSuper_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
-    jmp    _objc_msgSendSuper2
+    movq    _pdl_objc_msgSendSuper2_original(%rip), %r11
+    jmp     *%r11
+
 
 _pdl_objc_msgSendSuper2_stret:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
     call    _pdl_objc_msgSendSuper_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
-    jmp    _objc_msgSendSuper2_stret
+    movq    _pdl_objc_msgSendSuper2_stret_original(%rip), %r11
+    jmp     *%r11
 
 #endif

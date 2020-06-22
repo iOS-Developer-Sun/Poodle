@@ -21,7 +21,9 @@ _pdl_objc_msgSend:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
     bl     _pdl_objc_msgSend_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
-    b      _objc_msgSend
+    adrp x9, _pdl_objc_msgSend_original@PAGE
+    ldr x9, [x9, _pdl_objc_msgSend_original@PAGEOFF]
+    br x9
 
 _pdl_objc_msgSend_stret:
     b      _pdl_objc_msgSend
@@ -30,7 +32,9 @@ _pdl_objc_msgSendSuper2:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
     bl     _pdl_objc_msgSendSuper_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
-    b      _objc_msgSendSuper2
+    adrp x9, _pdl_objc_msgSendSuper2_original@PAGE
+    ldr x9, [x9, _pdl_objc_msgSendSuper2_original@PAGEOFF]
+    br x9
 
 _pdl_objc_msgSendSuper2_stret:
     b      _pdl_objc_msgSendSuper2
