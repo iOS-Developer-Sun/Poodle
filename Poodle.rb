@@ -343,7 +343,6 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.source_files = base + 'pdl_objc_message/' + source_files
             ss.vendored_library = base + 'pdl_objc_message/' + librariy_files
             ss.frameworks = 'Foundation'
-            ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency pod_name + '/pdl_asm'
             ss.dependency pod_name + '/PDLPrivate'
         end

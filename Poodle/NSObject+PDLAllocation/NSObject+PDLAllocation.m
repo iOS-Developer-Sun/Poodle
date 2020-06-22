@@ -7,6 +7,7 @@
 //
 
 #import "NSObject+PDLAllocation.h"
+#import <os/lock.h>
 #import "NSObject+PDLImplementationInterceptor.h"
 #import "pdl_dictionary.h"
 #import "pdl_backtrace.h"
@@ -15,7 +16,35 @@
 #error This file must be compiled with flag "-fno-objc-arc"
 #endif
 
+unsigned int pdl_allocation_record_hidden_count = 0;
+unsigned int pdl_record_max_count = 0;
+
 static PDLAllocationPolicy _policy;
+
+#pragma mark - lock
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+
+static pthread_mutex_t _mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
+//static os_unfair_lock _unfair_lock = OS_UNFAIR_LOCK_INIT;
+
+static void pdl_allocation_lock() {
+//    if (&os_unfair_lock_lock) {
+//        os_unfair_lock_lock(&_unfair_lock);
+//    } else {
+        pthread_mutex_lock(&_mutex);
+//    }
+}
+
+static void pdl_allocation_unlock() {
+//    if (&os_unfair_lock_unlock) {
+//        os_unfair_lock_unlock(&_unfair_lock);
+//    } else {
+        pthread_mutex_unlock(&_mutex);
+//    }
+}
 
 #pragma mark - trace info
 
@@ -38,7 +67,7 @@ static PDLAllocationPolicy _policy;
         _object = object;
         _cls = object_getClass(object);
         _live = YES;
-        _hiddenCount = [PDLAllocationInfo pdl_allocationRecordHiddenCount];
+        _hiddenCount = pdl_allocation_record_hidden_count;
     }
     return self;
 }
@@ -129,7 +158,7 @@ static pdl_dictionary_t pdl_allocation_map(void) {
     static pdl_dictionary_t _dictionary = NULL;
     if (!_dictionary) {
         pdl_dictionary_attr attr = PDL_DICTIONARY_ATTR_INIT;
-        attr.count_limit = [NSObject pdl_recordMaxCount];
+        attr.count_limit = pdl_record_max_count;
         attr.value_callbacks.retain = &pdl_allocation_retain;
         attr.value_callbacks.release = &pdl_allocation_release;
         _dictionary = pdl_dictionary_create(&attr);
@@ -189,19 +218,21 @@ static void pdl_allocation_map_set(void *key, void *value) {
         return;
     }
 
-    @synchronized ([PDLAllocationInfo class]) {
-        PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
-        if (info) {
-            [[PDLAllocationInfo doubleAllocClassesMap] addObject:object_getClass(object)];
-        } else {
-            info = [[PDLAllocationInfo alloc] initWithObject:object];
-            pdl_allocation_map_set(object, info);
-            [info release];
-        }
+    pdl_allocation_lock();
 
-        [info clearDealloc];
-        [info recordAlloc];
+    PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
+    if (info) {
+        [[PDLAllocationInfo doubleAllocClassesMap] addObject:object_getClass(object)];
+    } else {
+        info = [[PDLAllocationInfo alloc] initWithObject:object];
+        pdl_allocation_map_set(object, info);
+        [info release];
     }
+
+    [info clearDealloc];
+    [info recordAlloc];
+
+    pdl_allocation_unlock();
 }
 
 + (void)destroy:(__unsafe_unretained id)object {
@@ -209,29 +240,59 @@ static void pdl_allocation_map_set(void *key, void *value) {
         return;
     }
 
-    @synchronized ([PDLAllocationInfo class]) {
-        PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
-        if (info) {
-            if (info.live == false) {
-                [info clearAlloc];
-                [[PDLAllocationInfo uncaughtAllocClassesMap] addObject:object_getClass(object)];
-            }
-            info.live = false;
-            switch (_policy) {
-                case PDLAllocationPolicyLiveAllocations:
-                    pdl_allocation_map_set(object, NULL);
-                    break;
-                case PDLAllocationPolicyAllocationAndFree:
-                    [info recordDealloc];
-                    break;
+    pdl_allocation_lock();
 
-                default:
-                    break;
-            }
-        } else {
+    PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
+    if (info) {
+        if (info.live == false) {
+            [info clearAlloc];
             [[PDLAllocationInfo uncaughtAllocClassesMap] addObject:object_getClass(object)];
         }
+        info.live = false;
+        switch (_policy) {
+            case PDLAllocationPolicyLiveAllocations:
+                pdl_allocation_map_set(object, NULL);
+                break;
+            case PDLAllocationPolicyAllocationAndFree:
+                [info recordDealloc];
+                break;
+
+            default:
+                break;
+        }
+    } else {
+        [[PDLAllocationInfo uncaughtAllocClassesMap] addObject:object_getClass(object)];
     }
+
+    pdl_allocation_unlock();
+}
+
+pdl_backtrace_t pdl_allocation_backtrace(__unsafe_unretained id object) {
+    pdl_allocation_lock();
+
+    PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
+    pdl_backtrace_t backtrace = NULL;
+    if (info) {
+        backtrace = pdl_backtrace_copy(info->_backtraceAlloc);
+    }
+
+    pdl_allocation_unlock();
+
+    return backtrace;
+}
+
+pdl_backtrace_t pdl_deallocation_backtrace(__unsafe_unretained id object) {
+    pdl_allocation_lock();
+
+    PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
+    pdl_backtrace_t backtrace = NULL;
+    if (info) {
+        backtrace = pdl_backtrace_copy(info->_backtraceDealloc);
+    }
+
+    pdl_allocation_unlock();
+
+    return backtrace;
 }
 
 @end
@@ -305,43 +366,7 @@ __unused static void pdl_dealloc(__unsafe_unretained id self, SEL _cmd) {
     }
 }
 
-#pragma mark - record hidden count
-
-static bool _pdl_allocationRecordHiddenCount = 0;
-+ (unsigned int)pdl_allocationRecordHiddenCount {
-    return _pdl_allocationRecordHiddenCount;
-}
-
-+ (void)setPdl_allocationRecordHiddenCount:(unsigned int)pdl_allocationRecordHiddenCount {
-    _pdl_allocationRecordHiddenCount = pdl_allocationRecordHiddenCount;
-}
-
-static unsigned int _pdl_recordMaxCount = 0;
-+ (unsigned int)pdl_recordMaxCount {
-    return _pdl_recordMaxCount;
-}
-
-+ (void)setPdl_recordMaxCount:(unsigned int)pdl_recordMaxCount {
-    _pdl_recordMaxCount = pdl_recordMaxCount;
-}
-
-+ (PDLBacktrace *)pdl_allocationBacktrace:(__unsafe_unretained id)object {
-    @synchronized ([PDLAllocationInfo class]) {
-        PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
-        pdl_backtrace_t backtrace = pdl_backtrace_copy(info.backtraceAlloc);
-        PDLBacktrace *ret = [[PDLBacktrace alloc] initWithBacktrace:backtrace];
-        return ret;
-    }
-}
-
-+ (PDLBacktrace *)pdl_deallocationBacktrace:(__unsafe_unretained id)object {
-    @synchronized ([PDLAllocationInfo class]) {
-        PDLAllocationInfo *info = pdl_allocation_map_get(object, false);
-        pdl_backtrace_t backtrace = pdl_backtrace_copy(info.backtraceDealloc);
-        PDLBacktrace *ret = [[PDLBacktrace alloc] initWithBacktrace:backtrace];
-        return ret;
-    }
-}
+#pragma mark -
 
 + (BOOL)pdl_enableAllocation:(PDLAllocationPolicy)policy {
     _policy = policy;

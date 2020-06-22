@@ -7,7 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "PDLBacktrace.h"
+#import "pdl_backtrace.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -19,11 +19,11 @@ typedef NS_ENUM(NSUInteger, PDLAllocationPolicy) {
 
 @interface NSObject (PDLAllocation)
 
-@property (assign, class) unsigned int pdl_allocationRecordHiddenCount;
-@property (assign, class) unsigned int pdl_recordMaxCount;
+extern unsigned int pdl_allocation_record_hidden_count;
+extern unsigned int pdl_record_max_count;
 
-+ (PDLBacktrace *)pdl_allocationBacktrace:(__unsafe_unretained id)object;
-+ (PDLBacktrace *)pdl_deallocationBacktrace:(__unsafe_unretained id)object;
+pdl_backtrace_t pdl_allocation_backtrace(__unsafe_unretained id object);
+pdl_backtrace_t pdl_deallocation_backtrace(__unsafe_unretained id object);
 
 + (BOOL)pdl_enableAllocation:(PDLAllocationPolicy)policy;
 
