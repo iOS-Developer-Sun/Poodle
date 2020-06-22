@@ -11,19 +11,19 @@
 static void(*_pdl_objc_msgSend_before_action)(__unsafe_unretained id self, SEL _cmd) = NULL;
 static void(*_pdl_objc_msgSendSuper_before_action)(struct objc_super *super, SEL _cmd) = NULL;
 
-void(*pdl_get_objc_msgSend_before_action(void))(__unsafe_unretained id self, SEL _cmd) {
+void(*pdl_objc_message_msgSend_before_action(void))(__unsafe_unretained id self, SEL _cmd) {
     return _pdl_objc_msgSend_before_action;
 }
 
-void pdl_set_objc_msgSend_before_action(void(*pdl_objc_msgSend_before_action)(__unsafe_unretained id self, SEL _cmd)) {
+void pdl_objc_message_set_msgSend_before_action(void(*pdl_objc_msgSend_before_action)(__unsafe_unretained id self, SEL _cmd)) {
     _pdl_objc_msgSend_before_action = pdl_objc_msgSend_before_action;
 }
 
-void(*pdl_get_objc_msgSendSuper_before_action(void))(struct objc_super *super, SEL _cmd) {
+void(*pdl_objc_message_msgSendSuper_before_action(void))(struct objc_super *super, SEL _cmd) {
     return _pdl_objc_msgSendSuper_before_action;
 }
 
-void pdl_set_objc_msgSendSuper_before_action(void(*pdl_objc_msgSendSuper_before_action)(struct objc_super *super, SEL _cmd)) {
+void pdl_objc_message_set_msgSendSuper_before_action(void(*pdl_objc_msgSendSuper_before_action)(struct objc_super *super, SEL _cmd)) {
     _pdl_objc_msgSendSuper_before_action = pdl_objc_msgSendSuper_before_action;
 }
 
