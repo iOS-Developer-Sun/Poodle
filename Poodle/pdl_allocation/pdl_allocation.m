@@ -16,8 +16,21 @@
 #error This file must be compiled with flag "-fno-objc-arc"
 #endif
 
-unsigned int pdl_allocation_record_hidden_count = 0;
-unsigned int pdl_record_max_count = 0;
+static unsigned int _pdl_allocation_record_hidden_count = 0;
+unsigned int pdl_allocation_record_hidden_count(void) {
+    return _pdl_allocation_record_hidden_count;
+}
+void pdl_allocation_set_record_hidden_count(unsigned int hidden_count) {
+    _pdl_allocation_record_hidden_count = hidden_count;
+}
+
+static unsigned int _pdl_allocation_record_max_object_count = 0;
+unsigned int pdl_allocation_record_max_object_count(void) {
+    return _pdl_allocation_record_max_object_count;
+}
+void pdl_allocation_set_record_max_object_count(unsigned int max_count) {
+    _pdl_allocation_record_max_object_count = max_count;
+}
 
 static bool _enabled = false;
 static pdl_allocation_policy _policy = -1;
@@ -56,7 +69,7 @@ static pdl_allocation_info *pdl_allocation_info_create(__unsafe_unretained id ob
     info->backtraceAlloc = NULL;
     info->backtraceDealloc = NULL;
     info->live = true;
-    info->hidden_count = pdl_allocation_record_hidden_count;
+    info->hidden_count = _pdl_allocation_record_hidden_count;
 
     return info;
 }
@@ -136,7 +149,7 @@ static pdl_dictionary_t pdl_allocation_map(void) {
     static pdl_dictionary_t _dictionary = NULL;
     if (!_dictionary) {
         pdl_dictionary_attr attr = PDL_DICTIONARY_ATTR_INIT;
-        attr.count_limit = pdl_record_max_count;
+        attr.count_limit = _pdl_allocation_record_max_object_count;
         _dictionary = pdl_dictionary_create(&attr);
     }
     return _dictionary;
@@ -331,7 +344,7 @@ __unused static void pdl_dealloc(__unsafe_unretained id self, SEL _cmd) {
 
 #pragma mark -
 
-extern bool pdl_allocation_enable(pdl_allocation_policy policy) {
+bool pdl_allocation_enable(pdl_allocation_policy policy) {
     _policy = policy;
 
     static BOOL ret = YES;
