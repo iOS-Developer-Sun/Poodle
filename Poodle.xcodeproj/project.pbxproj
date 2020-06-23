@@ -18,7 +18,7 @@
 		B858422C246B963E00AC3717 /* pdl_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.m */; };
 		B85842AF246B96AE00AC3717 /* pdl_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.m */; };
 		B85842B0246B96B400AC3717 /* pdl_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8584229246B961400AC3717 /* pdl_backtrace.h */; };
-		B85B447A24A0EC6200B25A3E /* pdl_allocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B85B447924A0EC6200B25A3E /* pdl_allocation.m */; };
+		B85B447A24A0EC6200B25A3E /* pdl_allocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B85B447924A0EC6200B25A3E /* pdl_allocation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B85B447B24A0EC9100B25A3E /* pdl_allocation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B85B447824A0EC6200B25A3E /* pdl_allocation.h */; };
 		B85B447C24A0EC9700B25A3E /* pdl_allocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B85B447924A0EC6200B25A3E /* pdl_allocation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B85D45A7240E84DA00CBF758 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B85D45A6240E84DA00CBF758 /* AppDelegate.m */; };

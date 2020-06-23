@@ -32,6 +32,15 @@ void pdl_allocation_set_record_max_object_count(unsigned int max_count) {
     _pdl_allocation_record_max_object_count = max_count;
 }
 
+static unsigned int _pdl_allocation_zombie_duration = 0;
+unsigned int pdl_allocation_zombie_duration(void) {
+    return _pdl_allocation_zombie_duration;
+}
+
+void pdl_allocation_set_zombie_duration(unsigned int zombie_duration) {
+    _pdl_allocation_zombie_duration = zombie_duration;
+}
+
 static bool _enabled = false;
 static pdl_allocation_policy _policy = -1;
 static Class pdl_allocation_class = NULL;
@@ -301,6 +310,13 @@ pdl_backtrace_t pdl_deallocation_backtrace(__unsafe_unretained id object) {
     return backtrace;
 }
 
+#pragma mark - zombie
+
+static Class _pdl_allocation_zombie_class = NULL;
+Class pdl_allocation_zombie_class(void) {
+    return _pdl_allocation_zombie_class;
+}
+
 #pragma mark - hook
 
 __unused static id pdl_alloc(__unsafe_unretained id self, SEL _cmd) {
@@ -360,6 +376,37 @@ __unused static void pdl_dealloc(__unsafe_unretained id self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
     __unsafe_unretained id object = self;
     pdl_allocation_destroy(object);
+
+    unsigned int zombie_duration = _pdl_allocation_zombie_duration;
+    if (zombie_duration > 0) {
+        objc_destructInstance(object);
+        object_setClass(object, _pdl_allocation_zombie_class);
+        dispatch_block_t block = ^{
+            if (_imp) {
+                ((void (*)(id, SEL))_imp)(self, _cmd);
+            } else {
+                struct objc_super su = {self, class_getSuperclass(_class)};
+                ((void (*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);
+            }
+        };
+        dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(0, 0));
+        dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, zombie_duration * NSEC_PER_SEC, 1 * NSEC_PER_SEC);
+        __block bool start = NO;
+        dispatch_source_set_event_handler(timer, ^{
+            if (!start) {
+                start = YES;
+                return;
+            }
+
+            block();
+            dispatch_source_cancel(timer);
+            dispatch_release(timer);
+        });
+        dispatch_resume(timer);
+
+        return;
+    }
+
     if (_imp) {
         ((void (*)(id, SEL))_imp)(self, _cmd);
     } else {
@@ -378,6 +425,7 @@ bool pdl_allocation_enable(pdl_allocation_policy policy) {
     dispatch_once(&onceToken, ^{
         pdl_allocation_lock();
         pdl_allocation_class = [pdl_allocation class];
+        _pdl_allocation_zombie_class = objc_lookUpClass("_NSZombie_");
 
         Class cls = [NSObject class];
         id meta = object_getClass(cls);
@@ -385,7 +433,7 @@ bool pdl_allocation_enable(pdl_allocation_policy policy) {
         ret &= [meta pdl_interceptSelector:@selector(allocWithZone:) withInterceptorImplementation:(IMP)&pdl_allocWithZone isStructRet:NO addIfNotExistent:YES data:NULL];
         ret &= [meta pdl_interceptSelector:@selector(new) withInterceptorImplementation:(IMP)&pdl_new isStructRet:NO addIfNotExistent:YES data:NULL];
 //        ret = [cls pdl_interceptSelector:@selector(init) withInterceptorImplementation:(IMP)&pdl_init isStructRet:NO addIfNotExistent:YES data:NULL];
-        ret &= [cls pdl_interceptSelector:sel_registerName("dealloc") withInterceptorImplementation:(IMP)&pdl_dealloc isStructRet:NO addIfNotExistent:YES data:NULL];
+        ret &= [cls pdl_interceptSelector:@selector(dealloc) withInterceptorImplementation:(IMP)&pdl_dealloc isStructRet:NO addIfNotExistent:YES data:NULL];
 
         _enabled = ret;
 
