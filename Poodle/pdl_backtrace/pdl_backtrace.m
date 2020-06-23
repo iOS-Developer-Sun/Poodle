@@ -7,11 +7,13 @@
 //
 
 #import "pdl_backtrace.h"
+#import <Foundation/Foundation.h>
 #import <malloc/malloc.h>
 #import <assert.h>
 #import <string.h>
 #import <stdio.h>
 #import <limits.h>
+#import <objc/runtime.h>
 #import "pdl_thread.h"
 
 #define PDL_BACKTRACE_FRAMES_MAX_COUNT 128
@@ -19,6 +21,7 @@
 #define MAXTHREADNAMESIZE 64
 
 typedef struct pdl_backtrace {
+    void *isa;
     void *(*malloc_ptr)(size_t);
     void(*free_ptr)(void *);
     void **frames;
@@ -28,6 +31,19 @@ typedef struct pdl_backtrace {
     pthread_mutex_t wait_lock;
     char thread_name[MAXTHREADNAMESIZE];
 } pdl_backtrace;
+
+@interface pdl_backtrace_info : NSObject
+
+@end
+
+@implementation pdl_backtrace_info
+
+- (NSString *)description {
+    pdl_backtrace *bt = (__bridge typeof(bt))self;
+    return [NSString stringWithFormat:@"<pdl_backtrace: %p; frames_count = %d; frames = %p; thread = %p; thread_name = %s>", bt, bt->frames_count, bt->frames, bt->thread, bt->thread_name];
+}
+
+@end
 
 static void *pdl_backtrace_wait(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
@@ -111,6 +127,7 @@ pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_ptr)(si
     }
 
     memset(bt, 0, size);
+    bt->isa = (__bridge void *)(objc_getClass("pdl_backtrace_info"));
     bt->malloc_ptr = m_ptr;
     bt->free_ptr = f_ptr;
     pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
