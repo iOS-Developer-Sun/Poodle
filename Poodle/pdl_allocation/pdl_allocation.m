@@ -34,6 +34,7 @@ void pdl_allocation_set_record_max_object_count(unsigned int max_count) {
 
 static bool _enabled = false;
 static pdl_allocation_policy _policy = -1;
+static Class pdl_allocation_class = NULL;
 
 #pragma mark - lock
 
@@ -50,10 +51,11 @@ static void pdl_allocation_unlock() {
 #pragma mark - trace info
 
 typedef struct {
+    Class isa;
     __unsafe_unretained id object;
     __unsafe_unretained Class cls;
-    pdl_backtrace_t backtraceAlloc;
-    pdl_backtrace_t backtraceDealloc;
+    pdl_backtrace_t backtrace_alloc;
+    pdl_backtrace_t backtrace_dealloc;
     bool live;
     unsigned int hidden_count;
 } pdl_allocation_info;
@@ -64,10 +66,11 @@ static pdl_allocation_info *pdl_allocation_info_create(__unsafe_unretained id ob
         return NULL;
     }
 
+    info->isa = pdl_allocation_class;
     info->object = object;
     info->cls = object_getClass(object);
-    info->backtraceAlloc = NULL;
-    info->backtraceDealloc = NULL;
+    info->backtrace_alloc = NULL;
+    info->backtrace_dealloc = NULL;
     info->live = true;
     info->hidden_count = _pdl_allocation_record_hidden_count;
 
@@ -75,49 +78,63 @@ static pdl_allocation_info *pdl_allocation_info_create(__unsafe_unretained id ob
 }
 
 static void pdl_allocation_info_destroy(pdl_allocation_info *info) {
-    pdl_backtrace_destroy(info->backtraceAlloc);
-    pdl_backtrace_destroy(info->backtraceDealloc);
+    pdl_backtrace_destroy(info->backtrace_alloc);
+    pdl_backtrace_destroy(info->backtrace_dealloc);
+    free(info);
 }
 
 static void pdl_allocation_record_alloc(pdl_allocation_info *info) {
-    pdl_backtrace_destroy(info->backtraceAlloc);
-    info->backtraceAlloc = nil;
+    pdl_backtrace_destroy(info->backtrace_alloc);
+    info->backtrace_alloc = nil;
 
     pdl_backtrace_t bt = pdl_backtrace_create();
     char name[64];
     snprintf(name, sizeof(name), "alloc_%s_%p(%s)", class_getName(info->cls), info->object, class_getName(object_getClass(info->object)));
     pdl_backtrace_set_name(bt, name);
     pdl_backtrace_record(bt, info->hidden_count);
-    info->backtraceAlloc = bt;
+    info->backtrace_alloc = bt;
 }
 
 static void pdl_allocation_clear_alloc(pdl_allocation_info *info) {
-    if (info->backtraceAlloc) {
-        pdl_backtrace_destroy(info->backtraceAlloc);
-        info->backtraceAlloc = nil;
+    if (info->backtrace_alloc) {
+        pdl_backtrace_destroy(info->backtrace_alloc);
+        info->backtrace_alloc = nil;
     }
 }
 
 static void pdl_allocation_record_dealloc(pdl_allocation_info *info) {
-    pdl_backtrace_destroy(info->backtraceDealloc);
-    info->backtraceDealloc = nil;
+    pdl_backtrace_destroy(info->backtrace_dealloc);
+    info->backtrace_dealloc = nil;
 
     pdl_backtrace_t bt = pdl_backtrace_create();
     char name[64];
     snprintf(name, sizeof(name), "dealloc_%s_%p(%s)", class_getName(info->cls), info->object, class_getName(object_getClass(info->object)));
     pdl_backtrace_set_name(bt, name);
     pdl_backtrace_record(bt, info->hidden_count);
-    info->backtraceDealloc = bt;
+    info->backtrace_dealloc = bt;
 }
 
 static void pdl_allocation_clear_dealloc(pdl_allocation_info *info) {
-    if (info->backtraceDealloc) {
-        pdl_backtrace_destroy(info->backtraceDealloc);
-        info->backtraceDealloc = nil;
+    if (info->backtrace_dealloc) {
+        pdl_backtrace_destroy(info->backtrace_dealloc);
+        info->backtrace_dealloc = nil;
     }
 }
 
 #pragma mark - debug
+
+@interface pdl_allocation : NSObject
+
+@end
+
+@implementation pdl_allocation
+
+- (NSString *)description {
+    pdl_allocation_info *info = (typeof(info))self;
+    return [NSString stringWithFormat:@"<pdl_allocation: %p; object class = %s; object = <%s: %p>; live = %d; alloc = %@; dealloc = %@>", info, class_getName(info->cls), class_getName(object_getClass(info->object)), info->object, info->live, info->backtrace_alloc, info->backtrace_dealloc];
+}
+
+@end
 
 static NSMutableSet * pdl_allocation_uncaught_alloc_classes(void) {
     static NSMutableSet *uncaught_alloc_classes = nil;
@@ -173,7 +190,10 @@ static void *pdl_allocation_map_get(__unsafe_unretained id key) {
 
 static void pdl_allocation_map_set(__unsafe_unretained id key, void *value) {
     pdl_dictionary_t map = pdl_allocation_map();
-    pdl_dictionary_set(map, (__bridge void *)key, value);
+    pdl_allocation_info *info = pdl_dictionary_set(map, (__bridge void *)key, value);
+    if (info) {
+        pdl_allocation_info_destroy(info);
+    }
 }
 
 #pragma mark -
@@ -248,7 +268,7 @@ pdl_backtrace_t pdl_allocation_backtrace(__unsafe_unretained id object) {
     pdl_allocation_info *info = pdl_allocation_map_get(object);
     pdl_backtrace_t backtrace = NULL;
     if (info) {
-        backtrace = pdl_backtrace_copy(info->backtraceAlloc);
+        backtrace = pdl_backtrace_copy(info->backtrace_alloc);
     }
 
     pdl_allocation_unlock();
@@ -267,7 +287,7 @@ pdl_backtrace_t pdl_deallocation_backtrace(__unsafe_unretained id object) {
     pdl_allocation_info *info = pdl_allocation_map_get(object);
     pdl_backtrace_t backtrace = NULL;
     if (info) {
-        backtrace = pdl_backtrace_copy(info->backtraceDealloc);
+        backtrace = pdl_backtrace_copy(info->backtrace_dealloc);
     }
 
     pdl_allocation_unlock();
@@ -351,6 +371,7 @@ bool pdl_allocation_enable(pdl_allocation_policy policy) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         pdl_allocation_lock();
+        pdl_allocation_class = [pdl_allocation class];
 
         Class cls = [NSObject class];
         id meta = object_getClass(cls);

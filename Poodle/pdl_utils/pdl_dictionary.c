@@ -83,9 +83,9 @@ void **pdl_dictionary_get(pdl_dictionary_t dictionary, void *key) {
     return value;
 }
 
-void pdl_dictionary_remove(pdl_dictionary_t dictionary, void *key) {
+void *pdl_dictionary_remove(pdl_dictionary_t dictionary, void *key) {
     if (!key) {
-        return;
+        return NULL;
     }
 
     pdl_dictionary *dict = dictionary;
@@ -93,8 +93,10 @@ void pdl_dictionary_remove(pdl_dictionary_t dictionary, void *key) {
     void **value = pdl_hash_get_value(hash, key);
 
     if (!value) {
-        return;
+        return NULL;
     }
+
+    void *removed = *value;
 
     pdl_hash_delete(hash, key);
 
@@ -106,6 +108,8 @@ void pdl_dictionary_remove(pdl_dictionary_t dictionary, void *key) {
         pdl_list_destroy_node(limit_list, node);
         pdl_hash_delete(limit_hash, key);
     }
+
+    return removed;
 }
 
 void pdl_dictionary_remove_all(pdl_dictionary_t dictionary) {
@@ -121,16 +125,18 @@ void pdl_dictionary_remove_all(pdl_dictionary_t dictionary) {
     }
 }
 
-void pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value) {
+void *pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value) {
     if (!key) {
-        return;
+        return NULL;
     }
 
     pdl_dictionary *dict = dictionary;
     pdl_hash *hash = &(dict->hash);
 
+    void *removed = NULL;
     void **original_value = pdl_hash_get_value(hash, key);
     if (original_value) {
+        removed = *original_value;
         pdl_hash_delete(hash, key);
     }
 
@@ -162,9 +168,11 @@ void pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value) {
         if (pdl_list_length(limit_list) > dict->attr.count_limit) {
             pdl_list_node *last = limit_list->tail;
             void *last_key = last->val;
-            pdl_dictionary_remove(dict, last_key);
+            removed = pdl_dictionary_remove(dict, last_key);
         }
     }
+
+    return removed;
 }
 
 void pdl_dictionary_get_all_keys(pdl_dictionary_t dictionary, void ***keys, unsigned int *count) {
