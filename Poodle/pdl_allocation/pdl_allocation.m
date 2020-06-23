@@ -52,12 +52,16 @@ static void pdl_allocation_unlock() {
 
 typedef struct {
     Class isa;
-    __unsafe_unretained id object;
-    __unsafe_unretained Class cls;
-    pdl_backtrace_t backtrace_alloc;
-    pdl_backtrace_t backtrace_dealloc;
-    bool live;
+    
+#define PDL_ALLOCATION_INFO \
+    __unsafe_unretained id object; \
+    __unsafe_unretained Class cls; \
+    pdl_backtrace_t backtrace_alloc; \
+    pdl_backtrace_t backtrace_dealloc; \
+    bool live; \
     unsigned int hidden_count;
+
+    PDL_ALLOCATION_INFO;
 } pdl_allocation_info;
 
 static pdl_allocation_info *pdl_allocation_info_create(__unsafe_unretained id object) {
@@ -123,7 +127,9 @@ static void pdl_allocation_clear_dealloc(pdl_allocation_info *info) {
 
 #pragma mark - debug
 
-@interface pdl_allocation : NSObject
+@interface pdl_allocation : NSObject {
+    PDL_ALLOCATION_INFO;
+}
 
 @end
 

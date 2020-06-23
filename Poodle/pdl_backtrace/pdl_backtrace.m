@@ -22,17 +22,23 @@
 
 typedef struct pdl_backtrace {
     void *isa;
-    void *(*malloc_ptr)(size_t);
-    void(*free_ptr)(void *);
-    void **frames;
-    int frames_count;
-    pthread_t thread;
-    pthread_mutex_t lock;
-    pthread_mutex_t wait_lock;
+
+#define PDL_BACKTRACE \
+    void *(*malloc_ptr)(size_t); \
+    void(*free_ptr)(void *); \
+    void **frames; \
+    int frames_count; \
+    pthread_t thread; \
+    pthread_mutex_t lock; \
+    pthread_mutex_t wait_lock; \
     char thread_name[MAXTHREADNAMESIZE];
+
+    PDL_BACKTRACE;
 } pdl_backtrace;
 
-@interface pdl_backtrace_info : NSObject
+@interface pdl_backtrace_info : NSObject {
+    PDL_BACKTRACE;
+}
 
 @end
 
