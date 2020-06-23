@@ -21,7 +21,7 @@
 #define MAXTHREADNAMESIZE 64
 
 typedef struct pdl_backtrace {
-    void *isa;
+    __unsafe_unretained Class isa;
 
 #define PDL_BACKTRACE \
     void *(*malloc_ptr)(size_t); \
@@ -35,6 +35,8 @@ typedef struct pdl_backtrace {
 
     PDL_BACKTRACE;
 } pdl_backtrace;
+
+static Class pdl_backtrace_info_class = NULL;
 
 @interface pdl_backtrace_info : NSObject {
     PDL_BACKTRACE;
@@ -123,6 +125,10 @@ pdl_backtrace_t pdl_backtrace_create(void) {
 }
 
 pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *)) {
+    if (!pdl_backtrace_info_class) {
+        pdl_backtrace_info_class = objc_getClass("pdl_backtrace_info");
+    }
+
     void *(*m_ptr)(size_t) = malloc_ptr ?: &malloc;
     void(*f_ptr)(void *) = free_ptr ?: &free;
 
@@ -133,7 +139,7 @@ pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_ptr)(si
     }
 
     memset(bt, 0, size);
-    bt->isa = (__bridge void *)(objc_getClass("pdl_backtrace_info"));
+    bt->isa = pdl_backtrace_info_class;
     bt->malloc_ptr = m_ptr;
     bt->free_ptr = f_ptr;
     pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
