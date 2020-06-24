@@ -23,7 +23,7 @@ extern void pdl_allocation_set_record_max_object_count(unsigned int max_count);
 extern unsigned int pdl_allocation_zombie_duration(void);
 extern void pdl_allocation_set_zombie_duration(unsigned int zombie_duration);
 
-extern Class pdl_allocation_zombie_class(void);
+extern bool pdl_allocation_is_zombie(__unsafe_unretained id object);
 
 extern pdl_backtrace_t pdl_allocation_backtrace(__unsafe_unretained id object);
 extern pdl_backtrace_t pdl_deallocation_backtrace(__unsafe_unretained id object);
