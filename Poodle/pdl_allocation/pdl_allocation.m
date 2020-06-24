@@ -16,12 +16,19 @@
 #error This file must be compiled with flag "-fno-objc-arc"
 #endif
 
-static unsigned int _pdl_allocation_record_hidden_count = 0;
-unsigned int pdl_allocation_record_hidden_count(void) {
-    return _pdl_allocation_record_hidden_count;
+static unsigned int _pdl_allocation_record_alloc_hidden_count = 2;
+unsigned int pdl_allocation_record_alloc_hidden_count(void) {
+    return _pdl_allocation_record_alloc_hidden_count;
 }
-void pdl_allocation_set_record_hidden_count(unsigned int hidden_count) {
-    _pdl_allocation_record_hidden_count = hidden_count;
+void pdl_allocation_set_record_alloc_hidden_count(unsigned int hidden_count) {
+    _pdl_allocation_record_alloc_hidden_count = hidden_count;
+}
+static unsigned int _pdl_allocation_record_dealloc_hidden_count = 2;
+unsigned int pdl_allocation_record_dealloc_hidden_count(void) {
+    return _pdl_allocation_record_dealloc_hidden_count;
+}
+void pdl_allocation_set_record_dealloc_hidden_count(unsigned int hidden_count) {
+    _pdl_allocation_record_dealloc_hidden_count = hidden_count;
 }
 
 static unsigned int _pdl_allocation_record_max_object_count = 0;
@@ -58,8 +65,7 @@ typedef struct {
     __unsafe_unretained Class cls; \
     pdl_backtrace_t backtrace_alloc; \
     pdl_backtrace_t backtrace_dealloc; \
-    bool live; \
-    unsigned int hidden_count;
+    bool live;
 
     PDL_ALLOCATION_INFO;
 } pdl_allocation_info;
@@ -76,7 +82,6 @@ static pdl_allocation_info *pdl_allocation_info_create(__unsafe_unretained id ob
     info->backtrace_alloc = NULL;
     info->backtrace_dealloc = NULL;
     info->live = true;
-    info->hidden_count = _pdl_allocation_record_hidden_count;
 
     return info;
 }
@@ -87,6 +92,7 @@ static void pdl_allocation_info_destroy(pdl_allocation_info *info) {
     free(info);
 }
 
+__attribute__((noinline))
 static void pdl_allocation_record_alloc(pdl_allocation_info *info) {
     pdl_backtrace_destroy(info->backtrace_alloc);
     info->backtrace_alloc = nil;
@@ -95,7 +101,7 @@ static void pdl_allocation_record_alloc(pdl_allocation_info *info) {
     char name[64];
     snprintf(name, sizeof(name), "alloc_%s_%p(%s)", class_getName(info->cls), info->object, class_getName(object_getClass(info->object)));
     pdl_backtrace_set_name(bt, name);
-    pdl_backtrace_record(bt, info->hidden_count);
+    pdl_backtrace_record(bt, _pdl_allocation_record_alloc_hidden_count);
     info->backtrace_alloc = bt;
 }
 
@@ -106,6 +112,7 @@ static void pdl_allocation_record_alloc(pdl_allocation_info *info) {
 //    }
 //}
 
+__attribute__((noinline))
 static void pdl_allocation_record_dealloc(pdl_allocation_info *info) {
     pdl_backtrace_destroy(info->backtrace_dealloc);
     info->backtrace_dealloc = nil;
@@ -114,7 +121,7 @@ static void pdl_allocation_record_dealloc(pdl_allocation_info *info) {
     char name[64];
     snprintf(name, sizeof(name), "dealloc_%s_%p(%s)", class_getName(info->cls), info->object, class_getName(object_getClass(info->object)));
     pdl_backtrace_set_name(bt, name);
-    pdl_backtrace_record(bt, info->hidden_count);
+    pdl_backtrace_record(bt, _pdl_allocation_record_dealloc_hidden_count);
     info->backtrace_dealloc = bt;
 }
 
@@ -204,8 +211,13 @@ static void pdl_allocation_map_set(__unsafe_unretained id key, void *value) {
 
 #pragma mark -
 
+__attribute__((noinline))
 static void pdl_allocation_create(__unsafe_unretained id object) {
     if (!object) {
+        return;
+    }
+
+    if (malloc_size(object) == 0) {
         return;
     }
 
@@ -234,9 +246,14 @@ static void pdl_allocation_create(__unsafe_unretained id object) {
     pdl_allocation_unlock();
 }
 
+__attribute__((noinline))
 static void pdl_allocation_destroy(__unsafe_unretained id object) {
     if (!object) {
         return;
+    }
+
+    if (malloc_size(object) == 0) {
+        assert(0);
     }
 
     pdl_allocation_lock();
