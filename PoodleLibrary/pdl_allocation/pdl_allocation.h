@@ -14,8 +14,10 @@ typedef enum pdl_allocation_policy {
     pdl_allocation_policy_allocation_and_free,
 } pdl_allocation_policy;
 
-extern unsigned int pdl_allocation_record_hidden_count(void);
-extern void pdl_allocation_set_record_hidden_count(unsigned int hidden_count);
+extern unsigned int pdl_allocation_record_alloc_hidden_count(void);
+extern void pdl_allocation_set_record_alloc_hidden_count(unsigned int hidden_count);
+extern unsigned int pdl_allocation_record_dealloc_hidden_count(void);
+extern void pdl_allocation_set_record_dealloc_hidden_count(unsigned int hidden_count);
 
 extern unsigned int pdl_allocation_record_max_object_count(void);
 extern void pdl_allocation_set_record_max_object_count(unsigned int max_count);
