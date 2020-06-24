@@ -27,7 +27,7 @@ struct pdl_mach_object {
     uint32_t segments_count;
     const struct segment_command *segments[8];
     uint32_t total_segments_count;
-    const struct segment_command *total_segments[8];
+    const struct segment_command *total_segments[16];
 
     // mach_header / mach_header_64
     const struct mach_header *header;
@@ -108,7 +108,7 @@ struct pdl_mach_object_64 {
     uint32_t segments_count;
     const struct segment_command_64 *segments[8];
     uint32_t total_segments_count;
-    const struct segment_command_64 *total_segments[8];
+    const struct segment_command_64 *total_segments[16];
 
     // mach_header / mach_header_64
     const struct mach_header_64 *header;

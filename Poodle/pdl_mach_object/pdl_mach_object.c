@@ -73,11 +73,15 @@ bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t 
                 } else {
                     ;
                 }
-                mach_object->total_segments[mach_object->total_segments_count] = segment_command;
+                if (mach_object->total_segments_count < sizeof(mach_object->total_segments) / sizeof(mach_object->total_segments[0])) {
+                    mach_object->total_segments[mach_object->total_segments_count] = segment_command;
+                }
                 mach_object->total_segments_count++;
                 uint64_t filesize = (is64 == false) ? segment_command->filesize : ((struct segment_command_64 *)segment_command)->filesize;
                 if (filesize > 0) {
-                    mach_object->segments[mach_object->segments_count] = segment_command;
+                    if (mach_object->segments_count < sizeof(mach_object->segments) / sizeof(mach_object->segments[0])) {
+                        mach_object->segments[mach_object->segments_count] = segment_command;
+                    }
                     mach_object->segments_count++;
                 }
             } break;
