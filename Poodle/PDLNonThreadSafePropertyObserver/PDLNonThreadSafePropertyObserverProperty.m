@@ -7,11 +7,12 @@
 //
 
 #import "PDLNonThreadSafePropertyObserverProperty.h"
+#import <mach/mach.h>
+#import <objc/runtime.h>
 #import "PDLNonThreadSafePropertyObserverObject.h"
 #import "PDLNonThreadSafePropertyObserver.h"
 #import "PDLNonThreadSafePropertyObserverChecker.h"
-#import <mach/mach.h>
-#import <objc/runtime.h>
+#import "pdl_dispatch.h"
 
 @interface PDLNonThreadSafePropertyObserverChecker (PDLNonThreadSafePropertyObserverProperty)
 
@@ -44,50 +45,12 @@
     return self;
 }
 
-+ (unsigned long)nextQueueNumber {
-    static unsigned long _queueIdentifier = 0;
-    return ++_queueIdentifier;
-}
-
-- (NSString *)queueIdentifier:(dispatch_queue_t)queue {
-    if (!queue) {
-        return nil;
-    }
-
-    static void *PDLNonThreadSafePropertyObserverObjectQueueIdentifierKey = NULL;
-    NSString *queueIdentifier = objc_getAssociatedObject(queue, &PDLNonThreadSafePropertyObserverObjectQueueIdentifierKey);
-    if (queueIdentifier == nil) {
-        unsigned long nextQueueNumber = [self.class nextQueueNumber];
-        queueIdentifier = [NSString stringWithFormat:@"%@q%@", ([self isQueueSerial:queue] ? @"s" : @"c"), @(nextQueueNumber)];
-        objc_setAssociatedObject(queue, &PDLNonThreadSafePropertyObserverObjectQueueIdentifierKey, queueIdentifier, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return queueIdentifier;
-}
-
 - (NSString *)queueLabel:(dispatch_queue_t)queue {
     if (!queue) {
         return nil;
     }
 
-    return @(dispatch_queue_get_label(queue));
-}
-
-- (BOOL)isQueueSerial:(dispatch_queue_t)queue {
-    if (!queue) {
-        return NO;
-    }
-
-    static void *PDLNonThreadSafePropertyObserverObjectIsQueueSerialKey = NULL;
-    NSNumber *isQueueSerialNumber = objc_getAssociatedObject(queue, &PDLNonThreadSafePropertyObserverObjectIsQueueSerialKey);
-    if (isQueueSerialNumber == nil) {
-        NSString *debugDescription = [queue debugDescription];
-        NSString *widthString = [debugDescription substringFromIndex:[debugDescription rangeOfString:@"width"].location];
-        widthString = [widthString substringToIndex:[widthString rangeOfString:@","].location];
-        widthString = [widthString substringFromIndex:[widthString rangeOfString:@"width = "].location + [widthString rangeOfString:@"width = "].length];
-        isQueueSerialNumber = @([widthString isEqualToString:@"0x1"]);
-        objc_setAssociatedObject(queue, &PDLNonThreadSafePropertyObserverObjectIsQueueSerialKey, isQueueSerialNumber, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
-    }
-    return isQueueSerialNumber.boolValue;
+    return @(dispatch_queue_get_label(queue) ?: "");
 }
 
 - (void)recordIsSetter:(BOOL)isSetter isInitializing:(BOOL)isInitializing {
@@ -97,13 +60,10 @@
     NSString *queueLabel = nil;
     BOOL isSerialQueue = NO;
     if ([PDLNonThreadSafePropertyObserver queueCheckerEnabled]) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
-        dispatch_queue_t queue = dispatch_get_current_queue();
-#pragma clang diagnostic pop
-        queueIdentifier = [self queueIdentifier:queue];
+        dispatch_queue_t queue = pdl_dispatch_get_current_queue();
+        queueIdentifier = @(pdl_dispatch_get_queue_unique_identifier(queue)).stringValue;
         queueLabel = [self queueLabel:queue];
-        isSerialQueue = [self isQueueSerial:queue];
+        isSerialQueue = pdl_dispatch_get_queue_width(queue) == 1;
     }
 
     PDLNonThreadSafePropertyObserverAction *action = [[PDLNonThreadSafePropertyObserverAction alloc] init];
