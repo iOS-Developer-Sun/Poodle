@@ -221,6 +221,10 @@ static void pdl_allocation_create(__unsafe_unretained id object) {
         return;
     }
 
+    if (_policy == pdl_allocation_policy_zombie_only) {
+        return;
+    }
+
     pdl_allocation_lock();
 
     pdl_allocation_info *info = pdl_allocation_map_get(object);
@@ -254,6 +258,10 @@ static void pdl_allocation_destroy(__unsafe_unretained id object) {
 
     if (malloc_size(object) == 0) {
         assert(0);
+    }
+
+    if (_policy == pdl_allocation_policy_zombie_only) {
+        return;
     }
 
     pdl_allocation_lock();

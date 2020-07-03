@@ -12,6 +12,7 @@
 typedef enum pdl_allocation_policy {
     pdl_allocation_policy_live_allocations,
     pdl_allocation_policy_allocation_and_free,
+    pdl_allocation_policy_zombie_only,
 } pdl_allocation_policy;
 
 extern unsigned int pdl_allocation_record_alloc_hidden_count(void);

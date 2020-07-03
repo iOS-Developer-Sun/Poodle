@@ -20,7 +20,7 @@ static void *pdl_dispatch_queue_key = NULL;
 
 @interface pdl_dispatch_queue : NSObject
 
-@property (unsafe_unretained, readonly) dispatch_queue_t queue;
+@property (weak, readonly) dispatch_queue_t queue;
 @property (readonly) unsigned long width;
 @property (readonly) unsigned long uniqueIdentifier;
 
@@ -155,11 +155,19 @@ dispatch_queue_t pdl_dispatch_get_current_queue(void) {
 }
 
 unsigned long pdl_dispatch_get_queue_width(dispatch_queue_t queue) {
+    if (!queue) {
+        return  0;
+    }
+
     pdl_dispatch_queue *q = (__bridge pdl_dispatch_queue *)dispatch_queue_get_specific(queue, &pdl_dispatch_queue_key);
     return q.width;
 }
 
 unsigned long pdl_dispatch_get_queue_unique_identifier(dispatch_queue_t queue) {
+    if (!queue) {
+        return  0;
+    }
+
     pdl_dispatch_queue *q = (__bridge pdl_dispatch_queue *)dispatch_queue_get_specific(queue, &pdl_dispatch_queue_key);
     return q.uniqueIdentifier;
 }
