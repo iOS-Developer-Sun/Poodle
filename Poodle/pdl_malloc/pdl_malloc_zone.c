@@ -141,6 +141,8 @@ static void pdl_malloc_unlock() {
     }
 }
 
+#pragma clang diagnostic pop
+
 #pragma mark - file log
 
 static void *_pdl_malloc_log_file_map = MAP_FAILED;
@@ -300,8 +302,6 @@ static pdl_dictionary_t pdl_malloc_map(void) {
     }
     return _dictionary;
 }
-
-#pragma clang diagnostic pop
 
 void pdl_malloc_map_print(void) {
     pdl_dictionary_t map = pdl_malloc_map();
