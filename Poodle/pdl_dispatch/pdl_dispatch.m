@@ -64,12 +64,27 @@ static unsigned long pdl_unique_identifier(void) {
 - (unsigned long)width {
     if (_width == 0) {
         NSString *debugDescription = [self.queue debugDescription];
-        NSString *widthString = [debugDescription substringFromIndex:[debugDescription rangeOfString:@"width"].location];
-        widthString = [widthString substringToIndex:[widthString rangeOfString:@","].location];
-        widthString = [widthString substringFromIndex:[widthString rangeOfString:@"width = "].location + [widthString rangeOfString:@"width = "].length];
-        NSScanner *scanner = [NSScanner scannerWithString:widthString];
         unsigned int result = 0;
-        [scanner scanHexInt:&result];
+
+        NSUInteger operationQueueLocation = [debugDescription rangeOfString:@"NSOperationQueue"].location;
+        if (operationQueueLocation != NSNotFound) {
+            unsigned long long op = 0;
+            NSString *operationQueueString = [debugDescription substringFromIndex:operationQueueLocation];
+            operationQueueString = [operationQueueString substringToIndex:[operationQueueString rangeOfString:@" ("].location];
+            operationQueueString = [operationQueueString substringFromIndex:[operationQueueString rangeOfString:@"NSOperationQueue"].location + [operationQueueString rangeOfString:@"NSOperationQueue"].length];
+            NSScanner *scanner = [NSScanner scannerWithString:operationQueueString];
+            [scanner scanHexLongLong:&op];
+            void *ptr = (void *)(unsigned long)op;
+            assert(malloc_size(ptr));
+            NSOperationQueue *operationQueue = (__bridge id)ptr;
+            result = (unsigned int)operationQueue.maxConcurrentOperationCount;
+        } else {
+            NSString *widthString = [debugDescription substringFromIndex:[debugDescription rangeOfString:@"width"].location];
+            widthString = [widthString substringToIndex:[widthString rangeOfString:@","].location];
+            widthString = [widthString substringFromIndex:[widthString rangeOfString:@"width = "].location + [widthString rangeOfString:@"width = "].length];
+            NSScanner *scanner = [NSScanner scannerWithString:widthString];
+            [scanner scanHexInt:&result];
+        }
         assert(result);
         _width = result;
     }
@@ -119,7 +134,6 @@ static void pdl_dispatch_init_queue(dispatch_queue_t queue) {
         return;
     }
 
-    printf("queue: %p\n", queue);
     pdl_dispatch_register_queue(queue, false);
 }
 
