@@ -61,9 +61,11 @@
     BOOL isSerialQueue = NO;
     if ([PDLNonThreadSafePropertyObserver queueCheckerEnabled]) {
         dispatch_queue_t queue = pdl_dispatch_get_current_queue();
-        queueIdentifier = @(pdl_dispatch_get_queue_unique_identifier(queue)).stringValue;
+        if (queue) {
+            queueIdentifier = @(pdl_dispatch_get_queue_unique_identifier(queue)).stringValue;
+            isSerialQueue = pdl_dispatch_get_queue_width(queue) == 1;
+        }
         queueLabel = [self queueLabel:queue];
-        isSerialQueue = pdl_dispatch_get_queue_width(queue) == 1;
     }
 
     PDLNonThreadSafePropertyObserverAction *action = [[PDLNonThreadSafePropertyObserverAction alloc] init];
