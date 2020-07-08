@@ -20,8 +20,12 @@
 
 #define MAXTHREADNAMESIZE 64
 
+#define PDL_BACKTRACE_CLASS_ENABLED 0
+
 typedef struct pdl_backtrace {
+#if PDL_BACKTRACE_CLASS_ENABLED
     __unsafe_unretained Class isa;
+#endif
 
 #define PDL_BACKTRACE \
     void *(*malloc_ptr)(size_t); \
@@ -35,6 +39,8 @@ typedef struct pdl_backtrace {
 
     PDL_BACKTRACE;
 } pdl_backtrace;
+
+#if PDL_BACKTRACE_CLASS_ENABLED
 
 static Class pdl_backtrace_info_class = NULL;
 
@@ -52,6 +58,8 @@ static Class pdl_backtrace_info_class = NULL;
 }
 
 @end
+
+#endif
 
 static void *pdl_backtrace_wait(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
@@ -125,9 +133,11 @@ pdl_backtrace_t pdl_backtrace_create(void) {
 }
 
 pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *)) {
+#if PDL_BACKTRACE_CLASS_ENABLED
     if (!pdl_backtrace_info_class) {
         pdl_backtrace_info_class = objc_getClass("pdl_backtrace_info");
     }
+#endif
 
     void *(*m_ptr)(size_t) = malloc_ptr ?: &malloc;
     void(*f_ptr)(void *) = free_ptr ?: &free;
@@ -139,7 +149,9 @@ pdl_backtrace_t pdl_backtrace_create_with_malloc_pointers(void *(*malloc_ptr)(si
     }
 
     memset(bt, 0, size);
+#if PDL_BACKTRACE_CLASS_ENABLED
     bt->isa = pdl_backtrace_info_class;
+#endif
     bt->malloc_ptr = m_ptr;
     bt->free_ptr = f_ptr;
     pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
