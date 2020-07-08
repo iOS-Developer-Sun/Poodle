@@ -12,8 +12,8 @@
 extern "C" {
 #endif
 
-extern dispatch_queue_t pdl_dispatch_queue_create(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t (*dispatch_queue_create_original)(const char *label, dispatch_queue_attr_t attr));
-extern dispatch_queue_t pdl_dispatch_queue_create_with_target(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t target, dispatch_queue_t (*dispatch_queue_create_with_target_original)(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t target));
+extern DISPATCH_RETURNS_RETAINED dispatch_queue_t pdl_dispatch_queue_create(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t (*dispatch_queue_create_original)(const char *label, dispatch_queue_attr_t attr));
+extern DISPATCH_RETURNS_RETAINED dispatch_queue_t pdl_dispatch_queue_create_with_target(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t target, dispatch_queue_t (*dispatch_queue_create_with_target_original)(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t target));
 
 extern dispatch_queue_t pdl_dispatch_get_current_queue(void);
 extern unsigned long pdl_dispatch_get_queue_width(dispatch_queue_t queue);

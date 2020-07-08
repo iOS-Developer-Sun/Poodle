@@ -137,13 +137,13 @@ static void pdl_dispatch_init_queue(dispatch_queue_t queue) {
     pdl_dispatch_register_queue(queue, false);
 }
 
-dispatch_queue_t pdl_dispatch_queue_create(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t (*dispatch_queue_create_original)(const char *label, dispatch_queue_attr_t attr)) {
+DISPATCH_RETURNS_RETAINED dispatch_queue_t pdl_dispatch_queue_create(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t (*dispatch_queue_create_original)(const char *label, dispatch_queue_attr_t attr)) {
     dispatch_queue_t queue = dispatch_queue_create_original(label, attr);
     pdl_dispatch_init_queue(queue);
     return queue;
 }
 
-dispatch_queue_t pdl_dispatch_queue_create_with_target(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t target, dispatch_queue_t (*dispatch_queue_create_with_target_original)(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t target)) {
+DISPATCH_RETURNS_RETAINED dispatch_queue_t pdl_dispatch_queue_create_with_target(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t target, dispatch_queue_t (*dispatch_queue_create_with_target_original)(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t target)) {
     dispatch_queue_t queue = dispatch_queue_create_with_target_original(label, attr, target);
     pdl_dispatch_init_queue(queue);
     return queue;
