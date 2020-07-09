@@ -10,6 +10,6 @@
 
 @interface UINavigationController (PDLLongPressPop)
 
-@property (nonatomic, assign) BOOL pdl_supportsLongPressPop; // loadViewIfNeeded
+@property (nonatomic, assign, setter=pdl_setSupportsLongPressPop:) BOOL pdl_supportsLongPressPop; // loadViewIfNeeded
 
 @end

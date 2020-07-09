@@ -132,7 +132,7 @@ static void *UINavigationControllerLongPressPopKey = NULL;
     return longPressPop.enabled;
 }
 
-- (void)setPdl_supportsLongPressPop:(BOOL)pdl_supportsLongPressPop {
+- (void)pdl_setSupportsLongPressPop:(BOOL)pdl_supportsLongPressPop {
     PDLLongPressPop *longPressPop = objc_getAssociatedObject(self, &UINavigationControllerLongPressPopKey);
     if (longPressPop == nil) {
         longPressPop = [[PDLLongPressPop alloc] initWithNavigationController:self];

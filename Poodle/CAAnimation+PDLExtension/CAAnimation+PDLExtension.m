@@ -43,7 +43,7 @@ static void *CAAnimationDelegateKey = NULL;
     return delegate.beginning;
 }
 
-- (void)setPdl_beginning:(void (^)(CAAnimation *))pdl_beginning {
+- (void)pdl_setBeginning:(void (^)(CAAnimation *))pdl_beginning {
     PDLCAAnimationDelegate *delegate = objc_getAssociatedObject(self, &CAAnimationDelegateKey);
     if (delegate == nil) {
         delegate = [[PDLCAAnimationDelegate alloc] init];
@@ -58,7 +58,7 @@ static void *CAAnimationDelegateKey = NULL;
     return delegate.completion;
 }
 
-- (void)setPdl_completion:(void (^)(CAAnimation *, BOOL))pdl_completion {
+- (void)pdl_setCompletion:(void (^)(CAAnimation *, BOOL))pdl_completion {
     PDLCAAnimationDelegate *delegate = objc_getAssociatedObject(self, &CAAnimationDelegateKey);
     if (delegate == nil) {
         delegate = [[PDLCAAnimationDelegate alloc] init];
