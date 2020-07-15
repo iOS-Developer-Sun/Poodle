@@ -638,7 +638,7 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
 
     void *header = NULL;
     size_t size = 0;
-    if (!pdl_malloc_check(objectAddress, &size, &header)) {
+    if (!pdl_malloc_find(objectAddress, &size, &header)) {
         return NO;
     }
 

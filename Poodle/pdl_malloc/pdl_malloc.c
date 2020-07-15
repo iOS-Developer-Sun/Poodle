@@ -29,7 +29,7 @@ static void recorder(void *data, vm_range_t range, unsigned int type, unsigned i
     }
 }
 
-bool pdl_malloc_check(void *address, size_t *size, void **header) {
+bool pdl_malloc_find(void *address, size_t *size, void **header) {
     vm_address_t *zones = NULL;
     unsigned int zoneCount = 0;
     kern_return_t result = malloc_get_all_zones(TASK_NULL, NULL, &zones, &zoneCount);
@@ -68,9 +68,9 @@ bool pdl_malloc_check(void *address, size_t *size, void **header) {
     return true;
 }
 
-void pdl_malloc_check_print(void *address) {
+void pdl_malloc_find_print(void *address) {
     size_t size = 0;
     void *header = NULL;
-    pdl_malloc_check(address, &size, &header);
+    pdl_malloc_find(address, &size, &header);
     malloc_printf("%p:\nsize:%ld, header:%p\n", address, size, header);
 }
