@@ -67,3 +67,10 @@ bool pdl_malloc_check(void *address, size_t *size, void **header) {
 
     return true;
 }
+
+void pdl_malloc_check_print(void *address) {
+    size_t size = 0;
+    void *header = NULL;
+    pdl_malloc_check(address, &size, &header);
+    malloc_printf("%p:\nsize:%ld, header:%p\n", address, size, header);
+}
