@@ -176,6 +176,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/pdl_asm'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/pdl_utils'
+            ss.dependency pod_name + '/pdl_thread_storage'
         end
 
         s.subspec 'NSObject+PDLSelectorProxy' do |ss|
@@ -471,6 +472,16 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'pdl_thread/' + source_files
             ss.vendored_library = base + 'pdl_thread/' + librariy_files
+        end
+
+        s.subspec 'pdl_thread_storage' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'pdl_thread_storage/' + source_files
+            ss.vendored_library = base + 'pdl_thread_storage/' + librariy_files
+            ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/pdl_utils'
         end
 
         s.subspec 'pdl_utils' do |ss|

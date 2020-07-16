@@ -7,10 +7,11 @@
 //
 
 #import "NSObject+PDLMethod.h"
+#import <pthread.h>
 #import <objc/runtime.h>
 #import "NSObject+PDLImplementationInterceptor.h"
 #import "pdl_list.h"
-#import <pthread.h>
+#import "pdl_thread_storage.h"
 
 @implementation NSObject (PDLMethod)
 
@@ -27,37 +28,22 @@ struct PDLMethodActions {
 
 #pragma mark - thread
 
-#define PDL_PTHREAD_KEY_INVALID -1
+static void *pdl_storage_key = &pdl_storage_key;
 
-static pthread_key_t pdl_pthread_key = PDL_PTHREAD_KEY_INVALID;
-
-static void pdl_pthread_info_destroy(void *arg) {
+static void pdl_methods_list_destroy(void *arg) {
     pdl_list *list = (typeof(list))arg;
     assert(list->count == 0);
     pdl_list_destroy(list);
 }
 
-static void pdl_pthread_init(void) {
-    static bool init = false;
-    if (init) {
-        return;
-    }
-
-    static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
-    pthread_mutex_lock(&mutex);
-    if (!init) {
-        init = true;
-
-        pthread_key_create(&pdl_pthread_key, &pdl_pthread_info_destroy);
-    }
-    pthread_mutex_unlock(&mutex);
-}
-
 static pdl_list *pdl_thread_list(void) {
-    pdl_list *list = pthread_getspecific(pdl_pthread_key);
-    if (!list) {
+    pdl_list *list = NULL;
+    void **value = pdl_thread_storage_get(pdl_storage_key);
+    if (!value) {
         list = pdl_list_create(NULL, NULL);
-        pthread_setspecific(pdl_pthread_key, list);
+        pdl_thread_storage_set(pdl_storage_key, list);
+    } else {
+        list = *value;
     }
     return list;
 }
@@ -117,8 +103,12 @@ void *PDLMethodAfter(void) {
 #pragma mark - public methods
 
 + (NSUInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction {
-    pdl_pthread_init();
-    if (pdl_pthread_key == PDL_PTHREAD_KEY_INVALID) {
+    return [self pdl_addInstanceMethodsBeforeAction:beforeAction afterAction:afterAction methodFilter:nil];
+}
+
++ (NSUInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
+    pdl_thread_storage_register(pdl_storage_key, &pdl_methods_list_destroy);
+    if (!pdl_thread_storage_enabled()) {
         return 0;
     }
 
@@ -136,6 +126,10 @@ void *PDLMethodAfter(void) {
     for (unsigned int i = 0; i < count; i++) {
         Method method = methodList[i];
         SEL selector = method_getName(method);
+        if (methodFilter && !methodFilter(selector)) {
+            continue;
+        }
+
         BOOL result = [self pdl_interceptSelector:selector withInterceptorImplementation:(IMP)&PDLMethodEntry isStructRet:nil addIfNotExistent:NO data:actions];
         if (result) {
             ret++;
