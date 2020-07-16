@@ -28,9 +28,9 @@ struct PDLMethodActions {
 
 #pragma mark - thread
 
-static void *pdl_storage_key = &pdl_storage_key;
+static void *_pdl_storage_key = &_pdl_storage_key;
 
-static void pdl_methods_list_destroy(void *arg) {
+__unused static void pdl_methods_list_destroy(void *arg) {
     pdl_list *list = (typeof(list))arg;
     assert(list->count == 0);
     pdl_list_destroy(list);
@@ -38,10 +38,10 @@ static void pdl_methods_list_destroy(void *arg) {
 
 static pdl_list *pdl_thread_list(void) {
     pdl_list *list = NULL;
-    void **value = pdl_thread_storage_get(pdl_storage_key);
+    void **value = pdl_thread_storage_get(_pdl_storage_key);
     if (!value) {
         list = pdl_list_create(NULL, NULL);
-        pdl_thread_storage_set(pdl_storage_key, list);
+        pdl_thread_storage_set(_pdl_storage_key, list);
     } else {
         list = *value;
     }
@@ -102,25 +102,27 @@ void *PDLMethodAfter(void) {
 
 #pragma mark - public methods
 
-+ (NSUInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction {
++ (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction {
     return [self pdl_addInstanceMethodsBeforeAction:beforeAction afterAction:afterAction methodFilter:nil];
 }
 
-+ (NSUInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
-    pdl_thread_storage_register(pdl_storage_key, &pdl_methods_list_destroy);
++ (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
+    NSUInteger ret = -1;
+#ifdef __arm64__
+    pdl_thread_storage_register(_pdl_storage_key, &pdl_methods_list_destroy);
     if (!pdl_thread_storage_enabled()) {
-        return 0;
+        return -1;
     }
 
     struct PDLMethodActions *actions = malloc(sizeof(struct PDLMethodActions));
-    NSUInteger ret = 0;
     if (!actions) {
-        return ret;
+        return -1;
     }
 
     actions->beforeAction = beforeAction;
     actions->afterAction = afterAction;
 
+    ret = 0;
     unsigned int count = 0;
     Method *methodList = class_copyMethodList(self, &count);
     for (unsigned int i = 0; i < count; i++) {
@@ -139,6 +141,7 @@ void *PDLMethodAfter(void) {
     if (ret == 0) {
         free(actions);
     }
+#endif
     return ret;
 }
 

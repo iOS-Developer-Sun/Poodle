@@ -16,6 +16,7 @@
 static pthread_key_t pdl_pthread_key = PDL_PTHREAD_KEY_INVALID;
 
 static pdl_dictionary_t *pdl_registration = NULL;
+static pthread_mutex_t pdl_registration_mutex = PTHREAD_MUTEX_INITIALIZER;
 
 static void pdl_thread_storage_destroy(void *arg) {
     pdl_dictionary_t storage = (typeof(storage))arg;
@@ -26,8 +27,13 @@ static void pdl_thread_storage_destroy(void *arg) {
         void *key = keys[i];
         void **value = pdl_dictionary_get(storage, key);
         if (value) {
+            pthread_mutex_lock(&pdl_registration_mutex);
             void **destructor = pdl_dictionary_get(pdl_registration, key);
-            if (destructor && *destructor) {
+            if (destructor) {
+                destructor = *destructor;
+            }
+            pthread_mutex_unlock(&pdl_registration_mutex);
+            if (destructor) {
                 ((void(*)(void *))destructor)(*value);
             }
         }
@@ -62,12 +68,14 @@ static void pdl_thread_storage_enable(void) {
 }
 
 bool pdl_thread_storage_enabled(void) {
-    return pdl_pthread_key == PDL_PTHREAD_KEY_INVALID;
+    return pdl_pthread_key != PDL_PTHREAD_KEY_INVALID;
 }
 
 void pdl_thread_storage_register(void *key, void(*destructor)(void *)) {
     pdl_thread_storage_enable();
+    pthread_mutex_lock(&pdl_registration_mutex);
     pdl_dictionary_set(pdl_registration, key, destructor);
+    pthread_mutex_unlock(&pdl_registration_mutex);
 }
 
 void **pdl_thread_storage_get(void *key) {
