@@ -435,6 +435,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'pdl_pthread_backtrace/' + librariy_files
             ss.frameworks = 'Foundation'
             ss.dependency pod_name + '/pdl_backtrace'
+            ss.dependency pod_name + '/pdl_thread_storage'
         end
 
         s.subspec 'pdl_pthread_lock_tracer' do |ss|
