@@ -51,9 +51,20 @@ static pdl_list *pdl_thread_list(void) {
 #pragma mark - before && after
 
 extern void PDLMethodEntry(__unsafe_unretained id, SEL);
+extern void PDLMethodEntryFull(__unsafe_unretained id, SEL);
 
 __attribute__((visibility("hidden")))
-void PDLMethodBefore(__unsafe_unretained id self, SEL _cmd, void *lr) {
+void PDLMethodBefore(__unsafe_unretained id self, SEL _cmd) {
+    PDLImplementationInterceptorRecover(_cmd);
+    struct PDLMethodActions *actions = _data;
+    void(*beforeAction)(id, SEL) = (typeof(beforeAction))actions->beforeAction;
+    if (beforeAction) {
+        beforeAction(self, _cmd);
+    }
+}
+
+__attribute__((visibility("hidden")))
+void PDLMethodFullBefore(__unsafe_unretained id self, SEL _cmd, void *lr) {
     // save all
     struct PDLMethodData *data = malloc(sizeof(struct PDLMethodData));
     if (data) {
@@ -74,7 +85,7 @@ void PDLMethodBefore(__unsafe_unretained id self, SEL _cmd, void *lr) {
 }
 
 __attribute__((visibility("hidden")))
-void *PDLMethodAfter(void) {
+void *PDLMethodFullAfter(void) {
     pdl_list *list = pdl_thread_list();
     pdl_list_node *node = list->tail;
     pdl_list_remove(list, node);
@@ -119,8 +130,17 @@ void *PDLMethodAfter(void) {
         return -1;
     }
 
+    if (!beforeAction && !afterAction) {
+        return 0;
+    }
+
     actions->beforeAction = beforeAction;
     actions->afterAction = afterAction;
+
+    IMP imp = (IMP)&PDLMethodEntry;
+    if (afterAction) {
+        imp = (IMP)&PDLMethodEntryFull;
+    }
 
     ret = 0;
     unsigned int count = 0;
@@ -132,7 +152,7 @@ void *PDLMethodAfter(void) {
             continue;
         }
 
-        BOOL result = [self pdl_interceptSelector:selector withInterceptorImplementation:(IMP)&PDLMethodEntry isStructRet:nil addIfNotExistent:NO data:actions];
+        BOOL result = [self pdl_interceptSelector:selector withInterceptorImplementation:imp isStructRet:nil addIfNotExistent:NO data:actions];
         if (result) {
             ret++;
         }
