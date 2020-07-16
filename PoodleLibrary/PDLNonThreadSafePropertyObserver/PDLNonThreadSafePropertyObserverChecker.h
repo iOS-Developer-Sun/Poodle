@@ -11,15 +11,6 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@protocol PDLNonThreadSafePropertyObserverCustomChecker <NSObject>
-
-@optional
-
-- (void)recordAction:(PDLNonThreadSafePropertyObserverAction *)action;
-- (BOOL)isThreadSafe;
-
-@end
-
 @class PDLNonThreadSafePropertyObserverProperty;
 
 @interface PDLNonThreadSafePropertyObserverChecker : NSObject
@@ -30,13 +21,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) NSSet *setters;
 @property (readonly) NSArray *gettersAndSetters;
 
-- (BOOL)isThreadSafe; // will not be called if 'custom' implements 'isThreadSafe'
-
-#pragma mark - custom
-
-@property (nonatomic, strong) id <PDLNonThreadSafePropertyObserverCustomChecker> custom;
-
-- (void)setupCustom; // do nothing, overwrite it using category to set 'custom' when initializing
+- (BOOL)isThreadSafe;
+- (void)recordAction:(PDLNonThreadSafePropertyObserverAction *)action;
 
 @end
 

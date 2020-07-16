@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import "PDLNonThreadSafePropertyObserverProperty.h"
+#import "PDLNonThreadSafePropertyObserverChecker.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -25,6 +26,8 @@ typedef _Nullable PDLNonThreadSafePropertyObserver_PropertyFilter(^_Nullable PDL
 + (void(^)(PDLNonThreadSafePropertyObserverProperty *property))reporter;
 + (void)registerReporter:(void(^)(PDLNonThreadSafePropertyObserverProperty *property))reporter;
 
++ (Class)checkerClass;
++ (void)registerCheckerClass:(Class)checker; // subclass of PDLNonThreadSafePropertyObserverChecker
 
 + (void)observerClass:(Class)aClass
        propertyFilter:(PDLNonThreadSafePropertyObserver_PropertyFilter _Nullable)propertyFilter

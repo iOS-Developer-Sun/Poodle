@@ -73,6 +73,15 @@ static void (^_reporter)(PDLNonThreadSafePropertyObserverProperty *property);
     _reporter = reporter;
 }
 
+static Class _checker = nil;
+
++ (Class)checkerClass {
+    return _checker ?: [PDLNonThreadSafePropertyObserverChecker class];
+}
++ (void)registerCheckerClass:(Class)checker {
+    _checker = checker;
+}
+
 + (void)observerClass:(Class)aClass
        propertyFilter:(PDLNonThreadSafePropertyObserver_PropertyFilter)propertyFilter
     propertyMapFilter:(NSArray <NSString *> *)propertyMapFilter {
