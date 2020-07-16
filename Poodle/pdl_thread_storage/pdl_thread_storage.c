@@ -9,6 +9,7 @@
 #include "pdl_thread_storage.h"
 #include <stdbool.h>
 #include <pthread.h>
+#include <malloc/_malloc.h>
 #include "pdl_dictionary.h"
 
 #define PDL_PTHREAD_KEY_INVALID -1
@@ -38,6 +39,7 @@ static void pdl_thread_storage_destroy(void *arg) {
             }
         }
     }
+    free(keys);
     pdl_dictionary_destroy(storage);
 }
 
