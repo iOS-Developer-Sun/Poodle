@@ -96,7 +96,11 @@ NSArray *object_classMethods(Class aClass) {
     Method *methodList = class_copyMethodList(object_getClass(aClass), &count);
     for (unsigned int i = 0; i < count; i++) {
         Method method = methodList[i];
-        [classMethods addObject:@{@"name" : @(sel_getName(method_getName(method))), @"type" : @(method_getTypeEncoding(method))}];
+        [classMethods addObject:@{
+            @"name" : @(sel_getName(method_getName(method))),
+            @"type" : @(method_getTypeEncoding(method)),
+            @"imp" : [NSString stringWithFormat:@"%p", method_getImplementation(method)],
+        }];
     }
     free(methodList);
     return classMethods.copy;

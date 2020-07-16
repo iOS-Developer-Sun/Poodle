@@ -32,10 +32,10 @@ _cmd = ((struct PDLImplementationInterceptorData *)(void *)_cmd)->method_name
 @interface NSObject (PDLImplementationInterceptor)
 
 + (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation;
-+ (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet addIfNotExistent:(BOOL)addIfNotExistent data:(void *)data;
++ (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(NSNumber *)isStructRet addIfNotExistent:(BOOL)addIfNotExistent data:(void *)data;
 
 + (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation;
-+ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(BOOL)isStructRet addIfNotExistent:(BOOL)addIfNotExistent data:(void *)data;
++ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(NSNumber *)isStructRet addIfNotExistent:(BOOL)addIfNotExistent data:(void *)data;
 
 @end
 

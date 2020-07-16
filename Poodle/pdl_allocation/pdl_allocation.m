@@ -488,11 +488,11 @@ bool pdl_allocation_enable(pdl_allocation_policy policy) {
 
         Class cls = [NSObject class];
         id meta = object_getClass(cls);
-//        ret &= [meta pdl_interceptSelector:@selector(alloc) withInterceptorImplementation:(IMP)&pdl_alloc isStructRet:NO addIfNotExistent:YES data:NULL];
-        ret &= [meta pdl_interceptSelector:@selector(allocWithZone:) withInterceptorImplementation:(IMP)&pdl_allocWithZone isStructRet:NO addIfNotExistent:YES data:NULL];
-        ret &= [meta pdl_interceptSelector:@selector(new) withInterceptorImplementation:(IMP)&pdl_new isStructRet:NO addIfNotExistent:YES data:NULL];
-//        ret = [cls pdl_interceptSelector:@selector(init) withInterceptorImplementation:(IMP)&pdl_init isStructRet:NO addIfNotExistent:YES data:NULL];
-        ret &= [cls pdl_interceptSelector:@selector(dealloc) withInterceptorImplementation:(IMP)&pdl_dealloc isStructRet:NO addIfNotExistent:YES data:NULL];
+//        ret &= [meta pdl_interceptSelector:@selector(alloc) withInterceptorImplementation:(IMP)&pdl_alloc isStructRet:nil addIfNotExistent:YES data:NULL];
+        ret &= [meta pdl_interceptSelector:@selector(allocWithZone:) withInterceptorImplementation:(IMP)&pdl_allocWithZone isStructRet:nil addIfNotExistent:YES data:NULL];
+        ret &= [meta pdl_interceptSelector:@selector(new) withInterceptorImplementation:(IMP)&pdl_new isStructRet:nil addIfNotExistent:YES data:NULL];
+//        ret = [cls pdl_interceptSelector:@selector(init) withInterceptorImplementation:(IMP)&pdl_init isStructRet:nil addIfNotExistent:YES data:NULL];
+        ret &= [cls pdl_interceptSelector:@selector(dealloc) withInterceptorImplementation:(IMP)&pdl_dealloc isStructRet:nil addIfNotExistent:YES data:NULL];
 
         _enabled = ret;
 
