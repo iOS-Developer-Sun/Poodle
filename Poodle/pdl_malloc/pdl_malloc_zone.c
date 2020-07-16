@@ -26,34 +26,9 @@ static malloc_zone_t *_zone = NULL;
 
 #pragma mark - debug
 
-pthread_key_t pdl_malloc_debug_key = 0;
-
-#if 0
-#define PDL_MALLOC_DEBUG_BEGIN \
-{\
-    void *value = pthread_getspecific(pdl_malloc_debug_key);\
-    pthread_setspecific(pdl_malloc_debug_key, value + 1);\
-}
-
-#define PDL_MALLOC_DEBUG_END \
-{\
-    void *value = pthread_getspecific(pdl_malloc_debug_key);\
-    pthread_setspecific(pdl_malloc_debug_key, value - 1);\
-}
-
-#define PDL_MALLOC_DEBUG_IS_DEBUGGING \
-({\
-void *value = pthread_getspecific(pdl_malloc_debug_key);\
-value;\
-})
-
-#else
-
 #define PDL_MALLOC_DEBUG_BEGIN
 #define PDL_MALLOC_DEBUG_END
 #define PDL_MALLOC_DEBUG_IS_DEBUGGING false
-
-#endif
 
 extern int backtrace(void **array, int size);
 extern char **backtrace_symbols(void *const *array, int size);
@@ -713,8 +688,6 @@ bool pdl_malloc_enable_trace(pdl_malloc_trace_policy policy) {
     }
 
     _policy = policy;
-
-    pthread_key_create(&pdl_malloc_debug_key, NULL);
 
     pdl_malloc_map();
 
