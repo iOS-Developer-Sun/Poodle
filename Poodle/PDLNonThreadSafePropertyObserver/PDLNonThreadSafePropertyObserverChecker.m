@@ -26,14 +26,8 @@
         _getters = [NSMutableSet set];
         _setters = [NSMutableSet set];
         _gettersAndSetters = [NSMutableArray array];
-
-        [self setupCustom];
     }
     return self;
-}
-
-- (void)setupCustom {
-    ;
 }
 
 - (NSString *)actionString:(PDLNonThreadSafePropertyObserverAction *)action {
@@ -55,18 +49,6 @@
         if (![_gettersAndSetters.lastObject isEqual:actionString]) {
             [_gettersAndSetters addObject:actionString];
         }
-    }
-
-    if ([self.custom respondsToSelector:@selector(recordAction:)]) {
-        [self.custom recordAction:action];
-    }
-}
-
-- (BOOL)check {
-    if ([self.custom respondsToSelector:@selector(isThreadSafe)]) {
-        return [self.custom isThreadSafe];
-    } else {
-        return [self isThreadSafe];
     }
 }
 

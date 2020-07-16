@@ -17,8 +17,6 @@
 @interface PDLNonThreadSafePropertyObserverChecker (PDLNonThreadSafePropertyObserverProperty)
 
 - (instancetype)initWithObserverProperty:(PDLNonThreadSafePropertyObserverProperty *)property;
-- (void)recordAction:(PDLNonThreadSafePropertyObserverAction *)action;
-- (BOOL)check;
 
 @end
 
@@ -39,7 +37,7 @@
         _identifier = identifier.copy;
 
         _actions = [NSMutableArray array];
-        _checker = [[PDLNonThreadSafePropertyObserverChecker alloc] initWithObserverProperty:self];
+        _checker = [[[PDLNonThreadSafePropertyObserver checkerClass] alloc] initWithObserverProperty:self];
         assert(_checker);
     }
     return self;
@@ -79,7 +77,7 @@
     @synchronized (self) {
         [_actions addObject:action];
         [_checker recordAction:action];
-        if (![_checker check]) {
+        if (![_checker isThreadSafe]) {
             void(^reporter)(PDLNonThreadSafePropertyObserverProperty *property) = [PDLNonThreadSafePropertyObserver reporter];
             if (reporter) {
                 reporter(self);
