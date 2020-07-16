@@ -30,6 +30,21 @@ static void pdl_pthread_info_destroy(void *arg) {
     free(info);
 }
 
+static void pdl_pthread_backtrace_init(void) {
+    static bool init = false;
+    if (init) {
+        return;
+    }
+
+    static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&mutex);
+    if (!init) {
+        init = true;
+        pdl_thread_storage_register(_pdl_storage_key, &pdl_pthread_info_destroy);
+    }
+    pthread_mutex_unlock(&mutex);
+}
+
 static void *pdl_pthread_start(void *arg) {
     pdl_pthread_info *info = (typeof(info))arg;
     if (pdl_thread_storage_enabled()) {
@@ -44,7 +59,7 @@ static void *pdl_pthread_start(void *arg) {
 }
 
 int pdl_pthread_backtrace_create(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg, int (*pthread_create_original)(pthread_t *thread, const pthread_attr_t *attr, void *(*start_routine)(void *), void *arg), unsigned int hidden_count, unsigned int recursion_count) {
-    pdl_thread_storage_register(_pdl_storage_key, &pdl_pthread_info_destroy);
+    pdl_pthread_backtrace_init();
 
     pdl_pthread_info *info = malloc(sizeof(pdl_pthread_info));
     int ret = 0;
