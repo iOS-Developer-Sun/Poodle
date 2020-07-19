@@ -34,7 +34,7 @@ extern pdl_dictionary_t pdl_dictionary_create(pdl_dictionary_attr *attr);
 extern void **pdl_dictionary_get(pdl_dictionary_t dictionary, void *key);
 extern void *pdl_dictionary_remove(pdl_dictionary_t dictionary, void *key);
 extern void pdl_dictionary_remove_all(pdl_dictionary_t dictionary);
-extern void *pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value);
+extern void *pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void **value);
 extern void pdl_dictionary_get_all_keys(pdl_dictionary_t dictionary, void ***keys, unsigned int *count);
 extern void pdl_dictionary_destroy_keys(pdl_dictionary_t dictionary, void **keys);
 extern void pdl_dictionary_destroy(pdl_dictionary_t dictionary);

@@ -48,7 +48,8 @@ API_AVAILABLE(ios(10.0))
 static void pdl_trace_os_lock(os_unfair_lock_t lock, mach_port_t thread) {
     PDL_MAP_LOCK;
     pdl_dictionary_t map = pdl_os_lock_map();
-    pdl_dictionary_set(map, lock, (void *)(unsigned long)thread);
+    void *value = (void *)(unsigned long)thread;
+    pdl_dictionary_set(map, lock, &value);
     PDL_MAP_UNLOCK;
 }
 

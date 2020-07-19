@@ -44,7 +44,8 @@ static void pdl_trace_rw_lock(pthread_rwlock_t *lock, mach_port_t thread) {
     void **object = pdl_dictionary_get(map, lock);
     if (object == NULL) {
         array = pdl_array_create(0);
-        pdl_dictionary_set(map, lock, array);
+        object = &array;
+        pdl_dictionary_set(map, lock, object);
     } else {
         array = *object;
     }

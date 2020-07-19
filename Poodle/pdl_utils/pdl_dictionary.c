@@ -66,10 +66,6 @@ extern pdl_dictionary_t pdl_dictionary_create(pdl_dictionary_attr *attr) {
 }
 
 void **pdl_dictionary_get(pdl_dictionary_t dictionary, void *key) {
-    if (!key) {
-        return NULL;
-    }
-
     pdl_dictionary *dict = dictionary;
     pdl_hash *hash = &(dict->hash);
     void **value = pdl_hash_get_value(hash, key);
@@ -89,10 +85,6 @@ void **pdl_dictionary_get(pdl_dictionary_t dictionary, void *key) {
 }
 
 void *pdl_dictionary_remove(pdl_dictionary_t dictionary, void *key) {
-    if (!key) {
-        return NULL;
-    }
-
     pdl_dictionary *dict = dictionary;
     pdl_hash *hash = &(dict->hash);
     void **value = pdl_hash_get_value(hash, key);
@@ -130,11 +122,7 @@ void pdl_dictionary_remove_all(pdl_dictionary_t dictionary) {
     }
 }
 
-void *pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value) {
-    if (!key) {
-        return NULL;
-    }
-
+void *pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void **value) {
     pdl_dictionary *dict = dictionary;
     pdl_hash *hash = &(dict->hash);
 
@@ -146,7 +134,7 @@ void *pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value) {
     }
 
     if (value) {
-        pdl_hash_set_value(hash, key, value);
+        pdl_hash_set_value(hash, key, *value);
     }
 
     if (dict->attr.count_limit > 0) {
