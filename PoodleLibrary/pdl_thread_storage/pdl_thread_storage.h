@@ -15,7 +15,7 @@ extern "C" {
 extern bool pdl_thread_storage_enabled(void);
 extern void pdl_thread_storage_register(void *key, void(*destructor)(void *));
 extern void **pdl_thread_storage_get(void *key);
-extern void pdl_thread_storage_set(void *key, void *value);
+extern void *pdl_thread_storage_set(void *key, void **value);
 
 #ifdef __cplusplus
 }

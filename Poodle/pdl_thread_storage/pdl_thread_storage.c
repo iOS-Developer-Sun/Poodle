@@ -76,7 +76,7 @@ bool pdl_thread_storage_enabled(void) {
 void pdl_thread_storage_register(void *key, void(*destructor)(void *)) {
     pdl_thread_storage_enable();
     pthread_mutex_lock(&pdl_registration_mutex);
-    pdl_dictionary_set(pdl_registration, key, destructor);
+    pdl_dictionary_set(pdl_registration, key, (void **)&destructor);
     pthread_mutex_unlock(&pdl_registration_mutex);
 }
 
@@ -85,7 +85,7 @@ void **pdl_thread_storage_get(void *key) {
     return pdl_dictionary_get(storage, key);
 }
 
-void pdl_thread_storage_set(void *key, void *value) {
+void *pdl_thread_storage_set(void *key, void **value) {
     pdl_dictionary_t storage = pdl_get_storage();
-    pdl_dictionary_set(storage, key, value);
+    return pdl_dictionary_set(storage, key, value);
 }

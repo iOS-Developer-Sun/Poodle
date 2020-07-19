@@ -48,7 +48,7 @@ static void pdl_pthread_backtrace_init(void) {
 static void *pdl_pthread_start(void *arg) {
     pdl_pthread_info *info = (typeof(info))arg;
     if (pdl_thread_storage_enabled()) {
-        pdl_thread_storage_set(_pdl_storage_key, info);
+        pdl_thread_storage_set(_pdl_storage_key, (void **)&info);
     }
     void *ret = pdl_backtrace_thread_execute(info->backtrace, info->start, info->arg, PDL_PTHREAD_BACKTRACE_FRAME_HIDDEN_COUNT);
     pdl_pthread_info_destroy(info);

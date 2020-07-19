@@ -203,7 +203,7 @@ static void *pdl_allocation_map_get(__unsafe_unretained id key) {
 
 static void pdl_allocation_map_set(__unsafe_unretained id key, void *value) {
     pdl_dictionary_t map = pdl_allocation_map();
-    pdl_allocation_info *info = pdl_dictionary_set(map, (__bridge void *)key, value);
+    pdl_allocation_info *info = pdl_dictionary_set(map, (__bridge void *)key, value ? &value : NULL);
     if (info) {
         pdl_allocation_info_destroy(info);
     }

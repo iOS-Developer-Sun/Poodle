@@ -321,7 +321,7 @@ static void *pdl_malloc_map_get(void *key, bool lock) {
 static void pdl_malloc_map_set(void *key, void *value) {
     pdl_malloc_lock();
     pdl_dictionary_t map = pdl_malloc_map();
-    pdl_dictionary_set(map, key, value);
+    pdl_dictionary_set(map, key, value ? &value : NULL);
     pdl_malloc_unlock();
 }
 

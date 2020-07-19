@@ -46,7 +46,7 @@ static pdl_list *pdl_thread_list(void) {
     void **value = pdl_thread_storage_get(_pdl_storage_key);
     if (!value) {
         list = pdl_list_create(NULL, NULL);
-        pdl_thread_storage_set(_pdl_storage_key, list);
+        pdl_thread_storage_set(_pdl_storage_key, (void **)&list);
     } else {
         list = *value;
     }
