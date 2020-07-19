@@ -14,7 +14,7 @@ __unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_emp
 #error This file must be compiled with flag "-fno-objc-arc"
 #endif
 
-struct NSLockIndexedIvars {
+typedef struct {
     pthread_mutex_t mutex;
     pthread_t thread;
     struct {
@@ -22,25 +22,25 @@ struct NSLockIndexedIvars {
         pthread_cond_t cond;
     } *cond;
     NSString *name;
-};
+} NSLockIndexedIvars;
 
-struct NSLockIndexedIvars2 {
+typedef struct {
     pthread_mutex_t mutex;
     struct {
         pthread_mutex_t mutex;
         pthread_cond_t cond;
     } *cond;
     NSString *name;
-};
+} NSLockIndexedIvars2;
 
 @implementation NSLock (Extension)
 
 - (pthread_mutex_t *)mutex {
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
-        struct NSLockIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
+        NSLockIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->mutex;
     } else {
-        struct NSLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+        NSLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->mutex;
     }
 }
@@ -49,55 +49,55 @@ struct NSLockIndexedIvars2 {
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         return NULL;
     } else {
-        struct NSLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+        NSLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
         return indexedIvars->thread;
     }
 }
 
 - (pthread_mutex_t *)cond_mutex {
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
-        struct NSLockIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
+        NSLockIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->cond->mutex;
     } else {
-        struct NSLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+        NSLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->cond->mutex;
     }
 }
 
 - (pthread_cond_t *)cond_cond {
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
-        struct NSLockIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
+        NSLockIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->cond->cond;
     } else {
-        struct NSLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+        NSLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->cond->cond;
     }
 }
 
 @end
 
-struct NSConditionLockIndexedIvars {
+typedef struct {
     NSCondition *cond;
     pthread_t thread;
     NSInteger condition;
     NSString *name;
-};
+} NSConditionLockIndexedIvars;
 
 @implementation NSConditionLock (Extension)
 
 - (NSCondition *)cond {
-    struct NSConditionLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+    NSConditionLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
     return indexedIvars->cond;
 }
 
 - (pthread_t)thread {
-    struct NSConditionLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+    NSConditionLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
     return indexedIvars->thread;
 }
 
 @end
 
-struct NSRecursiveLockIndexedIvars {
+typedef struct {
     pthread_mutex_t mutex;
     pthread_t pthread;
     NSInteger recursionCount;
@@ -106,58 +106,58 @@ struct NSRecursiveLockIndexedIvars {
         pthread_cond_t cond;
     } *cond;
     NSString *name;
-};
+} NSRecursiveLockIndexedIvars;
 
 @implementation NSRecursiveLock (Extension)
 
 - (pthread_mutex_t *)mutex {
-    struct NSRecursiveLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+    NSRecursiveLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
     return &indexedIvars->mutex;
 }
 
 - (pthread_t)thread {
-    struct NSRecursiveLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+    NSRecursiveLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
     return indexedIvars->pthread;
 }
 
 - (NSInteger)recursionCount {
-    struct NSRecursiveLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+    NSRecursiveLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
     return indexedIvars->recursionCount;
 }
 
 - (pthread_mutex_t *)cond_mutex {
-    struct NSRecursiveLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+    NSRecursiveLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
     return &indexedIvars->cond->mutex;
 }
 
 - (pthread_cond_t *)cond_cond {
-    struct NSRecursiveLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+    NSRecursiveLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
     return &indexedIvars->cond->cond;
 }
 
 @end
 
-struct NSConditionIndexedIvars {
+typedef struct {
     pthread_mutex_t mutex;
     pthread_t thread;
     pthread_cond_t cond;
     NSString *name;
-};
+} NSConditionIndexedIvars;
 
-struct NSConditionIndexedIvars2 {
+typedef struct {
     pthread_mutex_t mutex;
     pthread_cond_t cond;
     NSString *name;
-};
+} NSConditionIndexedIvars2;
 
 @implementation NSCondition (Extension)
 
 - (pthread_mutex_t *)mutex {
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
-        struct NSConditionIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
+        NSConditionIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->mutex;
     } else {
-        struct NSConditionIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+        NSConditionIndexedIvars *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->mutex;
     }
 }
@@ -166,17 +166,17 @@ struct NSConditionIndexedIvars2 {
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         return NULL;
     } else {
-        struct NSConditionIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+        NSConditionIndexedIvars *indexedIvars = object_getIndexedIvars(self);
         return indexedIvars->thread;
     }
 }
 
 - (pthread_cond_t *)cond {
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
-        struct NSConditionIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
+        NSConditionIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->cond;
     } else {
-        struct NSConditionIndexedIvars *indexedIvars = object_getIndexedIvars(self);
+        NSConditionIndexedIvars *indexedIvars = object_getIndexedIvars(self);
         return &indexedIvars->cond;
     }
 }

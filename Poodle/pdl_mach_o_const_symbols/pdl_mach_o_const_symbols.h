@@ -19,7 +19,7 @@ typedef enum {
 } pdl_mach_o_const_symbols_state;
 
 extern pdl_mach_o_const_symbols_state pdl_const_symbols_current_state(void);
-extern struct pdl_mach_o_symbol *pdl_const_symbols(const char *image_name, const char *symbol_name);
+extern pdl_mach_o_symbol *pdl_const_symbols(const char *image_name, const char *symbol_name);
 
 #ifdef __cplusplus
 }

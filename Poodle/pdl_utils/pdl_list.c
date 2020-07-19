@@ -40,13 +40,12 @@ void pdl_list_destroy(pdl_list *list) {
     list->free(list);
 }
 
-pdl_list_node *pdl_list_create_node(pdl_list *list, void *val) {
-    pdl_list_node *node = list->malloc(sizeof(struct pdl_list_node));
+pdl_list_node *pdl_list_create_node(pdl_list *list, size_t extra_size) {
+    pdl_list_node *node = list->malloc(sizeof(struct pdl_list_node) + extra_size);
     if (!node) {
         return NULL;
     }
 
-    node->val = val;
     node->prev = NULL;
     node->next = NULL;
 
@@ -151,7 +150,7 @@ void pdl_list_print(pdl_list *list) {
     pdl_list_node *node = list->head;
     printf("printList: ");
     while (node) {
-        printf("%p", node->val);
+        printf("%p", node);
         node = node->next;
         if (node) {
             printf(" ");

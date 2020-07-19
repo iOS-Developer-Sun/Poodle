@@ -329,14 +329,14 @@ static void pdl_malloc_map_set(void *key, void *value) {
 
 #define PDL_MALLOC_INFO_MAGIC 0x4c4450
 
-typedef struct pdl_malloc_info {
+typedef struct {
     unsigned long magic;
     void *ptr;
     unsigned long size;
     struct pdl_backtrace *bt;
     struct pdl_backtrace *fbt;
     bool live;
-} pdl_malloc_info, *pdl_malloc_info_t;
+} pdl_malloc_info;
 
 static void pdl_malloc_init(void *ptr, size_t size, bool records) {
     if (!ptr) {
@@ -352,7 +352,7 @@ static void pdl_malloc_init(void *ptr, size_t size, bool records) {
         return;
     }
 
-    pdl_malloc_info_t info = pdl_malloc_map_get(ptr, true);
+    pdl_malloc_info *info = pdl_malloc_map_get(ptr, true);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->ptr == ptr);
@@ -406,7 +406,7 @@ static void pdl_malloc_destroy(void *ptr, size_t size, size_t rsize) {
         return;
     }
 
-    pdl_malloc_info_t info = (pdl_malloc_info_t)pdl_malloc_map_get(ptr, true);
+    pdl_malloc_info *info = (typeof(info))pdl_malloc_map_get(ptr, true);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->ptr == ptr);
@@ -449,7 +449,7 @@ static void pdl_malloc_destroy(void *ptr, size_t size, size_t rsize) {
 }
 
 static void pdl_malloc_backtrace(void *ptr) {
-    pdl_malloc_info_t info = pdl_malloc_map_get(ptr, true);
+    pdl_malloc_info *info = pdl_malloc_map_get(ptr, true);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->ptr == ptr);
@@ -738,7 +738,7 @@ void pdl_malloc_disable_trace(void) {
     pdl_dictionary_get_all_keys(map, &keys, &count);
     for (unsigned int i = 0; i < count; i++) {
         void *key = keys[i];
-        pdl_malloc_info_t info = pdl_malloc_map_get(key, false);
+        pdl_malloc_info *info = pdl_malloc_map_get(key, false);
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->ptr == key);
         pdl_malloc_assert(info->bt);
@@ -767,7 +767,7 @@ void pdl_malloc_check_pointer(void *pointer) {
         return;
     }
 
-    pdl_malloc_info_t info = pdl_malloc_map_get(pointer, true);
+    pdl_malloc_info *info = pdl_malloc_map_get(pointer, true);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->ptr == pointer);
@@ -795,7 +795,7 @@ void pdl_malloc_zone_show_backtrace(void *pointer) {
     }
 
     pdl_malloc_lock();
-    pdl_malloc_info_t info = pdl_malloc_map_get(pointer, false);
+    pdl_malloc_info *info = pdl_malloc_map_get(pointer, false);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->ptr == pointer);
@@ -824,7 +824,7 @@ void pdl_malloc_zone_hide_backtrace(void *pointer) {
     }
 
     pdl_malloc_lock();
-    pdl_malloc_info_t info = pdl_malloc_map_get(pointer, false);
+    pdl_malloc_info *info = pdl_malloc_map_get(pointer, false);
     if (info) {
         pdl_malloc_assert(info->magic == PDL_MALLOC_INFO_MAGIC);
         pdl_malloc_assert(info->ptr == pointer);

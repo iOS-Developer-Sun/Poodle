@@ -22,7 +22,7 @@ extern "C" {
         }\
         struct mach_header *header = pdl_mach_o_image(image_name);\
         char *name = (symbol_name);\
-        struct pdl_mach_o_symbol *symbols = pdl_get_mach_o_symbol_list_contains_symbol_name(header, name);\
+        pdl_mach_o_symbol *symbols = pdl_get_mach_o_symbol_list_contains_symbol_name(header, name);\
         if (symbols) {\
             pointer = (typeof(pointer))symbols->symbol;\
             pdl_free_mach_o_symbol_list(symbols);\
@@ -40,7 +40,7 @@ extern "C" {
         }\
         struct mach_header *header = pdl_mach_o_image(image_name);\
         char *name = (symbol_name);\
-        struct pdl_mach_o_symbol *symbols = pdl_mach_o_const_symbol(header, name);\
+        pdl_mach_o_symbol *symbols = pdl_mach_o_const_symbol(header, name);\
         if (symbols) {\
             pointer = (typeof(pointer))symbols->symbol;\
             pdl_free_mach_o_symbol_list(symbols);\
@@ -60,7 +60,7 @@ extern "C" {
  *
  * @return symbol. You must free the node with free() or pdl_free_mach_o_symbol_list()
  */
-extern struct pdl_mach_o_symbol *pdl_mach_o_const_symbol(struct mach_header *header, const char *symbol_name);
+extern pdl_mach_o_symbol *pdl_mach_o_const_symbol(struct mach_header *header, const char *symbol_name);
 
 #endif
 

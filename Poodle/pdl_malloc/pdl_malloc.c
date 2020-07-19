@@ -10,14 +10,14 @@
 #include <malloc/malloc.h>
 #include "pdl_malloc_zone.h"
 
-struct pdl_malloc_recorder_context {
+typedef struct {
     void *address;
     size_t size;
     void *header;
-};
+} pdl_malloc_recorder_context;
 
 static void recorder(void *data, vm_range_t range, unsigned int type, unsigned int count, unsigned int index, bool *stops) {
-    struct pdl_malloc_recorder_context *recorder_context = data;
+    pdl_malloc_recorder_context *recorder_context = data;
     vm_address_t address = range.address;
     vm_size_t size = range.size;
 
@@ -49,7 +49,7 @@ bool pdl_malloc_find(void *address, size_t *size, void **header) {
             }
         }
 
-        struct pdl_malloc_recorder_context context = {address, 0, NULL};
+        pdl_malloc_recorder_context context = {address, 0, NULL};
         pdl_malloc_zone_enumerate(zone, &context, &recorder);
         if (context.size > 0) {
             malloc_size = context.size;

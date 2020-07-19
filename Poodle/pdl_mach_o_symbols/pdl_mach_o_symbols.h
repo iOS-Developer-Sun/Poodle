@@ -17,7 +17,7 @@ extern "C" {
 #include <mach-o/loader.h>
 #include <mach-o/nlist.h>
 
-struct pdl_mach_o_symbol {
+typedef struct pdl_mach_o_symbol {
     // nlist
     uint8_t n_type;
     uint8_t n_sect;
@@ -29,7 +29,7 @@ struct pdl_mach_o_symbol {
     uint32_t symtab_index;
     struct mach_header *header;
     struct pdl_mach_o_symbol *next;
-};
+} pdl_mach_o_symbol;
 
 /**
  * Returns the mach header with the file last component equivalent to the given name.
@@ -66,11 +66,11 @@ extern intptr_t pdl_mach_o_image_vmaddr_slide(struct mach_header *header);
  *
  * @return symbol list. You must free every node of the list with free() or free the list with pdl_free_mach_o_symbol_list()
  */
-extern struct pdl_mach_o_symbol *pdl_get_mach_o_symbol_list_with_symbol_name(struct mach_header *header, char *symbol_name);
-extern struct pdl_mach_o_symbol *pdl_get_mach_o_symbol_list_contains_symbol_name(struct mach_header *header, char *symbol_name);
-extern struct pdl_mach_o_symbol *pdl_get_mach_o_symbol_list(struct mach_header *header, void *filter_data, bool(*filter)(struct pdl_mach_o_symbol *symbol, void *filter_data));
+extern pdl_mach_o_symbol *pdl_get_mach_o_symbol_list_with_symbol_name(struct mach_header *header, char *symbol_name);
+extern pdl_mach_o_symbol *pdl_get_mach_o_symbol_list_contains_symbol_name(struct mach_header *header, char *symbol_name);
+extern pdl_mach_o_symbol *pdl_get_mach_o_symbol_list(struct mach_header *header, void *filter_data, bool(*filter)(pdl_mach_o_symbol *symbol, void *filter_data));
 
-extern void pdl_free_mach_o_symbol_list(struct pdl_mach_o_symbol *symbol_list);
+extern void pdl_free_mach_o_symbol_list(pdl_mach_o_symbol *symbol_list);
 
 #ifdef __cplusplus
 }
