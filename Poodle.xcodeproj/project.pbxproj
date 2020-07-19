@@ -12,6 +12,9 @@
 		B80AF8D724769E78009B9AF8 /* pdl_malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B80AF8D424769E78009B9AF8 /* pdl_malloc.c */; };
 		B80AF8D824769E78009B9AF8 /* pdl_malloc.c in Sources */ = {isa = PBXBuildFile; fileRef = B80AF8D424769E78009B9AF8 /* pdl_malloc.c */; };
 		B80AF8D92476A2FD009B9AF8 /* pdl_malloc_zone.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B80AF8D324769E78009B9AF8 /* pdl_malloc_zone.h */; };
+		B80DF29824C45E6300AE1B00 /* pdl_algorithm.c in Sources */ = {isa = PBXBuildFile; fileRef = B80DF29624C45E6300AE1B00 /* pdl_algorithm.c */; };
+		B80DF29924C45E6300AE1B00 /* pdl_algorithm.c in Sources */ = {isa = PBXBuildFile; fileRef = B80DF29624C45E6300AE1B00 /* pdl_algorithm.c */; };
+		B80DF29A24C45E7F00AE1B00 /* pdl_algorithm.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B80DF29724C45E6300AE1B00 /* pdl_algorithm.h */; };
 		B83CAA78248B487E009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA82248B49C9009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA83248B49D1009C784A /* pdl_security.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83CAA74248B4830009C784A /* pdl_security.h */; };
@@ -1559,6 +1562,7 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				B80DF29A24C45E7F00AE1B00 /* pdl_algorithm.h in CopyFiles */,
 				B8B7B5CB249CE814008D4604 /* pdl_list.h in CopyFiles */,
 				B8E56F5F23D70393008D2DA1 /* pdl_array.h in CopyFiles */,
 				B8E56F6023D70393008D2DA1 /* pdl_dictionary.h in CopyFiles */,
@@ -1611,6 +1615,8 @@
 		B80AF8D224769E78009B9AF8 /* pdl_malloc_zone.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_malloc_zone.c; sourceTree = "<group>"; };
 		B80AF8D324769E78009B9AF8 /* pdl_malloc_zone.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_malloc_zone.h; sourceTree = "<group>"; };
 		B80AF8D424769E78009B9AF8 /* pdl_malloc.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_malloc.c; sourceTree = "<group>"; };
+		B80DF29624C45E6300AE1B00 /* pdl_algorithm.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_algorithm.c; sourceTree = "<group>"; };
+		B80DF29724C45E6300AE1B00 /* pdl_algorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_algorithm.h; sourceTree = "<group>"; };
 		B80FCBB523A9D3B60028844B /* libpdl_mach_o_const_symbols.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_mach_o_const_symbols.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B80FCBC623A9D48F0028844B /* libpdl_mach_o_symbol_pointer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_mach_o_symbol_pointer.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B82334AF23BC982900B1B15B /* libNSObject+PDLSelectorProxy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLSelectorProxy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3298,6 +3304,8 @@
 				B8E56ED323D7001A008D2DA1 /* pdl_hash.h */,
 				B8B7B5C7249CE7FD008D4604 /* pdl_list.c */,
 				B8B7B5C8249CE7FE008D4604 /* pdl_list.h */,
+				B80DF29624C45E6300AE1B00 /* pdl_algorithm.c */,
+				B80DF29724C45E6300AE1B00 /* pdl_algorithm.h */,
 				B8E56ED623D7001A008D2DA1 /* pdl_utils.h */,
 				B8E56ECC23D7001A008D2DA1 /* uthash */,
 			);
@@ -6415,6 +6423,7 @@
 				B85D45DA240E859000CBF758 /* PDLDatabaseViewController.m in Sources */,
 				B85D45DB240E859000CBF758 /* PDLDataQueryViewController.m in Sources */,
 				B8B3AA0124B71E2B008EFBE0 /* NSObject+PDLAssociation.m in Sources */,
+				B80DF29824C45E6300AE1B00 /* pdl_algorithm.c in Sources */,
 				B8B7B5B2249B9132008D4604 /* pdl_objc_runtime.m in Sources */,
 				B85D45DC240E859000CBF758 /* PDLDirectoryViewController.m in Sources */,
 				B85D45DD240E859000CBF758 /* PDLFileSystemViewController.m in Sources */,
@@ -6998,6 +7007,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8B7B5CA249CE80E008D4604 /* pdl_list.c in Sources */,
+				B80DF29924C45E6300AE1B00 /* pdl_algorithm.c in Sources */,
 				B8E56F5B23D7037C008D2DA1 /* pdl_array.c in Sources */,
 				B8E56F5C23D7037C008D2DA1 /* pdl_dictionary.c in Sources */,
 				B8E56F5D23D7037C008D2DA1 /* pdl_hash.c in Sources */,

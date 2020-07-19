@@ -8,6 +8,8 @@
 
 #include "pdl_hash.h"
 
+#define PLD_UTHASH_MALLOC 1
+
 void pdl_hash_delete(pdl_hash *map, void *key) {
     pdl_hash_item *item = NULL;
     HASH_FIND_PTR(map->map, &key, item);
@@ -43,8 +45,10 @@ void pdl_hash_set_value(pdl_hash *map, void *key, void *value) {
         return;
     }
 
+#if PLD_UTHASH_MALLOC
     item->hh.malloc = map->malloc;
     item->hh.free = (typeof(item->hh.free))map->free;
+#endif
     item->key = key;
     item->value = value;
     HASH_ADD_PTR(map->map, key, item);

@@ -24,7 +24,7 @@ typedef struct {
     pdl_hash limit_hash;
 } pdl_dictionary;
 
-extern pdl_dictionary_t pdl_dictionary_create(pdl_dictionary_attr *attr) {
+pdl_dictionary_t pdl_dictionary_create(pdl_dictionary_attr *attr) {
     pdl_dictionary_attr attr_default = PDL_DICTIONARY_ATTR_INIT;
     if (attr) {
         attr_default = *attr;
