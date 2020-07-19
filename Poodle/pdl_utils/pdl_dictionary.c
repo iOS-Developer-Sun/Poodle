@@ -12,7 +12,12 @@
 #include "pdl_hash.h"
 #include "pdl_list.h"
 
-typedef struct pdl_dictionary {
+typedef struct {
+    pdl_list_node node;
+    void *key;
+} pdl_dictionary_node;
+
+typedef struct {
     pdl_dictionary_attr attr;
     pdl_hash hash;
     pdl_list *limit_list;
@@ -159,7 +164,8 @@ void *pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value) {
             }
         } else {
             if (value) {
-                pdl_list_node *node = pdl_list_create_node(limit_list, key);
+                pdl_list_node *node = pdl_list_create_node(limit_list, sizeof(pdl_dictionary_node) - sizeof(pdl_list_node));
+                ((pdl_dictionary_node *)node)->key = key;
                 pdl_list_add_head(limit_list, node);
                 pdl_hash_set_value(limit_hash, key, node);
             }
@@ -167,7 +173,7 @@ void *pdl_dictionary_set(pdl_dictionary_t dictionary, void *key, void *value) {
 
         if (pdl_list_length(limit_list) > dict->attr.count_limit) {
             pdl_list_node *last = limit_list->tail;
-            void *last_key = last->val;
+            void *last_key = ((pdl_dictionary_node *)last)->key;
             removed = pdl_dictionary_remove(dict, last_key);
         }
     }
@@ -221,7 +227,7 @@ void pdl_dictionary_print(pdl_dictionary_t dictionary) {
             if (i == 0) {
                 node = dict->limit_list->head;
             }
-            key = node->val;
+            key = ((pdl_dictionary_node *)node)->key;
             node = node->next;
         }
         void *value = pdl_dictionary_get(dictionary, key);

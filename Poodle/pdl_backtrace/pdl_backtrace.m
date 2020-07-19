@@ -22,7 +22,7 @@
 
 #define PDL_BACKTRACE_CLASS_ENABLED 0
 
-typedef struct pdl_backtrace {
+typedef struct {
 #if PDL_BACKTRACE_CLASS_ENABLED
     __unsafe_unretained Class isa;
 #endif

@@ -16,7 +16,7 @@
 #define PDL_PTHREAD_BACKTRACE_FRAME_HIDDEN_COUNT 1
 #endif
 
-typedef struct pdl_pthread_info {
+typedef struct {
     void *(*start)(void *);
     void *arg;
     pdl_backtrace_t backtrace;

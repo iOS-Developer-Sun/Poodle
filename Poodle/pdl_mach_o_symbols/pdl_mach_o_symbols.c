@@ -13,23 +13,23 @@
 
 // filters
 
-static bool contains_string(struct pdl_mach_o_symbol *symbol, void *filter_data) {
+static bool contains_string(pdl_mach_o_symbol *symbol, void *filter_data) {
     return strstr(symbol->symbol_name, (char *)filter_data);
 }
 
-static bool matches_string(struct pdl_mach_o_symbol *symbol, void *filter_data) {
+static bool matches_string(pdl_mach_o_symbol *symbol, void *filter_data) {
     return strcmp(symbol->symbol_name, (char *)filter_data) == 0;
 }
 
-static struct pdl_mach_o_symbol *_get_mach_o_symbol(struct pdl_mach_o_symbol *pointer, struct mach_header *header, intptr_t vmaddr_slide, const char *name, uint32_t index, void *filter_data, bool(*filter)(struct pdl_mach_o_symbol *symbol, void *filter_data)) {
-    struct pdl_mach_object mach_object;
+static pdl_mach_o_symbol *_get_mach_o_symbol(pdl_mach_o_symbol *pointer, struct mach_header *header, intptr_t vmaddr_slide, const char *name, uint32_t index, void *filter_data, bool(*filter)(pdl_mach_o_symbol *symbol, void *filter_data)) {
+    pdl_mach_object mach_object;
     bool result = pdl_get_mach_object_with_header(header, vmaddr_slide, name, &mach_object);
     if (!result) {
         return pointer;
     }
 
-    struct pdl_mach_o_symbol *current = pointer;
-    struct pdl_mach_o_symbol *ret = pointer;
+    pdl_mach_o_symbol *current = pointer;
+    pdl_mach_o_symbol *ret = pointer;
 
     uint32_t symtab_count = mach_object.symtab_count;
     const struct nlist *symtab_list = mach_object.symtab_list;
@@ -59,7 +59,7 @@ static struct pdl_mach_o_symbol *_get_mach_o_symbol(struct pdl_mach_o_symbol *po
         const char *str = strtab + strx;
         uintptr_t symbol = (uintptr_t)vmaddr_slide + value;
 
-        struct pdl_mach_o_symbol symbol_test;
+        pdl_mach_o_symbol symbol_test;
 
         symbol_test.n_type = type;
         symbol_test.n_desc = desc;
@@ -75,7 +75,7 @@ static struct pdl_mach_o_symbol *_get_mach_o_symbol(struct pdl_mach_o_symbol *po
             continue;
         }
 
-        struct pdl_mach_o_symbol *node = (struct pdl_mach_o_symbol *)malloc(sizeof(struct pdl_mach_o_symbol));
+        pdl_mach_o_symbol *node = (pdl_mach_o_symbol *)malloc(sizeof(pdl_mach_o_symbol));
         if (node == NULL) {
             break;
         }
@@ -94,8 +94,8 @@ static struct pdl_mach_o_symbol *_get_mach_o_symbol(struct pdl_mach_o_symbol *po
     return ret;
 }
 
-struct pdl_mach_o_symbol *get_mach_o_symbol(struct mach_header *header, void *filter_data, bool(*filter)(struct pdl_mach_o_symbol *symbol, void *filter_data)) {
-    struct pdl_mach_o_symbol *symbol = NULL;
+pdl_mach_o_symbol *get_mach_o_symbol(struct mach_header *header, void *filter_data, bool(*filter)(pdl_mach_o_symbol *symbol, void *filter_data)) {
+    pdl_mach_o_symbol *symbol = NULL;
     uint32_t count = _dyld_image_count();
     struct mach_header *header_found = NULL;
     for (uint32_t i = 0; i < count; i++) {
@@ -178,22 +178,22 @@ intptr_t pdl_mach_o_image_vmaddr_slide(struct mach_header *header) {
     return vmaddr_slide;
 }
 
-struct pdl_mach_o_symbol *pdl_get_mach_o_symbol_list_with_symbol_name(struct mach_header *header, char *symbol_name) {
+pdl_mach_o_symbol *pdl_get_mach_o_symbol_list_with_symbol_name(struct mach_header *header, char *symbol_name) {
     return get_mach_o_symbol(header, symbol_name, &matches_string);
 }
 
-struct pdl_mach_o_symbol *pdl_get_mach_o_symbol_list_contains_symbol_name(struct mach_header *header, char *symbol_name) {
+pdl_mach_o_symbol *pdl_get_mach_o_symbol_list_contains_symbol_name(struct mach_header *header, char *symbol_name) {
     return get_mach_o_symbol(header, symbol_name, &contains_string);
 }
 
-struct pdl_mach_o_symbol *pdl_get_mach_o_symbol_list(struct mach_header *header, void *filter_data, bool(*filter)(struct pdl_mach_o_symbol *symbol, void *filter_data)) {
+pdl_mach_o_symbol *pdl_get_mach_o_symbol_list(struct mach_header *header, void *filter_data, bool(*filter)(pdl_mach_o_symbol *symbol, void *filter_data)) {
     return get_mach_o_symbol(header, filter_data, filter);
 }
 
-void pdl_free_mach_o_symbol_list(struct pdl_mach_o_symbol *symbol_list) {
-    struct pdl_mach_o_symbol *node = symbol_list;
+void pdl_free_mach_o_symbol_list(pdl_mach_o_symbol *symbol_list) {
+    pdl_mach_o_symbol *node = symbol_list;
     while (node) {
-        struct pdl_mach_o_symbol *node_to_free = node;
+        pdl_mach_o_symbol *node_to_free = node;
         node = node->next;
         free(node_to_free);
     }

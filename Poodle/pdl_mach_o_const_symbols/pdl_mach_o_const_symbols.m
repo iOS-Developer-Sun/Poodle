@@ -266,8 +266,8 @@
             cpu_subtype_t my_cpusubtype = live->cpusubtype;
 
             struct mach_header *header = NULL;
-            struct pdl_fat_object object;
-            struct pdl_fat_object *fat_object = &object;
+            pdl_fat_object object;
+            pdl_fat_object *fat_object = &object;
             bool isFat = pdl_get_fat_object_with_header((const struct fat_header *)data.bytes, fat_object);
             if (isFat) {
                 uint32_t archCount = fat_object->arch_count;
@@ -284,7 +284,7 @@
                         cpuSubtype = arch->cpusubtype;
                         offset = arch->offset;
                     } else {
-                        struct fat_arch_64 *arch = &((struct pdl_fat_object_64 *)fat_object)->arch_list[i];
+                        struct fat_arch_64 *arch = &((pdl_fat_object_64 *)fat_object)->arch_list[i];
                         cpuType = arch->cputype;
                         cpuSubtype = arch->cpusubtype;
                         offset = arch->offset;
@@ -316,14 +316,14 @@
 
             NSArray *symbolNames = task[imageName];
             for (NSString *symbol in symbolNames) {
-                struct pdl_mach_o_symbol *symbols = pdl_get_mach_o_symbol_list_contains_symbol_name(header, (char *)symbol.UTF8String);
+                pdl_mach_o_symbol *symbols = pdl_get_mach_o_symbol_list_contains_symbol_name(header, (char *)symbol.UTF8String);
                 if (symbols == NULL) {
                     NSLog(@"PDLConstSymbols failed to find symbol for %@ in %@.", symbol, imageName);
                     continue;
                 }
 
                 NSMutableArray *array = [NSMutableArray array];
-                struct pdl_mach_o_symbol *current = symbols;
+                pdl_mach_o_symbol *current = symbols;
                 while (current) {
                     PDLConstSymbol *symbol = [[PDLConstSymbol alloc] init];
                     symbol.n_type = current->n_type;
@@ -349,14 +349,14 @@
     return table.copy;
 }
 
-- (struct pdl_mach_o_symbol *)symbolsWithImageName:(NSString *)imageName symbolName:(NSString *)symbolName {
+- (pdl_mach_o_symbol *)symbolsWithImageName:(NSString *)imageName symbolName:(NSString *)symbolName {
     NSArray *array = self.table[imageName][symbolName];
-    struct pdl_mach_o_symbol *symbols = NULL;
-    struct pdl_mach_o_symbol *current = symbols;
+    pdl_mach_o_symbol *symbols = NULL;
+    pdl_mach_o_symbol *current = symbols;
     struct mach_header *header = pdl_mach_o_image(imageName.UTF8String);
     intptr_t vmaddr_slide = pdl_mach_o_image_vmaddr_slide(header);
     for (PDLConstSymbol *symbol in array) {
-        struct pdl_mach_o_symbol *node = (struct pdl_mach_o_symbol *)malloc(sizeof(struct pdl_mach_o_symbol));
+        pdl_mach_o_symbol *node = (pdl_mach_o_symbol *)malloc(sizeof(pdl_mach_o_symbol));
         if (node == NULL) {
             pdl_free_mach_o_symbol_list(symbols);
             return NULL;
@@ -402,11 +402,11 @@ pdl_mach_o_const_symbols_state pdl_const_symbols_current_state(void) {
 #endif
 }
 
-struct pdl_mach_o_symbol *pdl_const_symbols(const char *image_name, const char *symbol_name) {
+pdl_mach_o_symbol *pdl_const_symbols(const char *image_name, const char *symbol_name) {
 #if TARGET_IPHONE_SIMULATOR
     return NULL;
 #else
-    struct pdl_mach_o_symbol *symbols = [[PDLConstSymbols sharedInstance] symbolsWithImageName:@(image_name) symbolName:@(symbol_name)];
+    pdl_mach_o_symbol *symbols = [[PDLConstSymbols sharedInstance] symbolsWithImageName:@(image_name) symbolName:@(symbol_name)];
     return symbols;
 #endif
 }

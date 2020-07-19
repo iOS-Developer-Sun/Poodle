@@ -15,16 +15,21 @@
 
 @implementation NSObject (PDLMethod)
 
-struct PDLMethodData {
+typedef struct {
     __unsafe_unretained id self;
     struct PDLImplementationInterceptorData *data;
     void *lr;
-};
+} PDLMethodData;
 
-struct PDLMethodActions {
+typedef struct {
+    pdl_list_node node;
+    PDLMethodData data;
+} PDLMethodDataListNode;
+
+typedef struct {
     IMP beforeAction;
     IMP afterAction;
-};
+} PDLMethodActions;
 
 #pragma mark - thread
 
@@ -56,7 +61,7 @@ extern void PDLMethodEntryFull(__unsafe_unretained id, SEL);
 __attribute__((visibility("hidden")))
 void PDLMethodBefore(__unsafe_unretained id self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
-    struct PDLMethodActions *actions = _data;
+    PDLMethodActions *actions = _data;
     void(*beforeAction)(id, SEL) = (typeof(beforeAction))actions->beforeAction;
     if (beforeAction) {
         beforeAction(self, _cmd);
@@ -66,18 +71,16 @@ void PDLMethodBefore(__unsafe_unretained id self, SEL _cmd) {
 __attribute__((visibility("hidden")))
 void PDLMethodFullBefore(__unsafe_unretained id self, SEL _cmd, void *lr) {
     // save all
-    struct PDLMethodData *data = malloc(sizeof(struct PDLMethodData));
-    if (data) {
-        data->self = self;
-        data->data = (struct PDLImplementationInterceptorData *)(void *)_cmd;
-        data->lr = lr;
+    pdl_list *list = pdl_thread_list();
+    pdl_list_node *node = pdl_list_create_node(list, sizeof(PDLMethodDataListNode) - sizeof(pdl_list_node));
+    PDLMethodDataListNode *data = (PDLMethodDataListNode *)node;
+    data->data.self = self;
+    data->data.data = (struct PDLImplementationInterceptorData *)(void *)_cmd;
+    data->data.lr = lr;
+    pdl_list_add_tail(list, node);
 
-        pdl_list *list = pdl_thread_list();
-        pdl_list_node *node = pdl_list_create_node(list, data);
-        pdl_list_add_tail(list, node);
-    }
     PDLImplementationInterceptorRecover(_cmd);
-    struct PDLMethodActions *actions = _data;
+    PDLMethodActions *actions = _data;
     void(*beforeAction)(id, SEL) = (typeof(beforeAction))actions->beforeAction;
     if (beforeAction) {
         beforeAction(self, _cmd);
@@ -89,14 +92,13 @@ void *PDLMethodFullAfter(void) {
     pdl_list *list = pdl_thread_list();
     pdl_list_node *node = list->tail;
     pdl_list_remove(list, node);
-    struct PDLMethodData *data = node->val;
+    PDLMethodDataListNode *data = (PDLMethodDataListNode *)node;
+    __unsafe_unretained id self = data->data.self;
+    SEL _cmd = (SEL)(void *)data->data.data;
+    void *lr = data->data.lr;
     pdl_list_destroy_node(list, node);
-    __unsafe_unretained id self = data->self;
-    SEL _cmd = (SEL)(void *)data->data;
-    void *lr = data->lr;
-    free(data);
     PDLImplementationInterceptorRecover(_cmd);
-    struct PDLMethodActions *actions = _data;
+    PDLMethodActions *actions = _data;
     void(*afterAction)(id, SEL) = (typeof(afterAction))actions->afterAction;
     if (afterAction) {
 //        volatile void *originalLinkRegister = NULL;
@@ -125,7 +127,7 @@ void *PDLMethodFullAfter(void) {
         return -1;
     }
 
-    struct PDLMethodActions *actions = malloc(sizeof(struct PDLMethodActions));
+    PDLMethodActions *actions = malloc(sizeof(PDLMethodActions));
     if (!actions) {
         return -1;
     }

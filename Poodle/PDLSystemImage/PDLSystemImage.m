@@ -12,10 +12,10 @@
 #import "pdl_mach_object.h"
 
 @interface PDLSystemImage () {
-    struct pdl_mach_object _mach_object;
+    pdl_mach_object _mach_object;
 }
 
-@property (nonatomic, assign) struct pdl_mach_object *machObject;
+@property (nonatomic, assign) pdl_mach_object *machObject;
 
 @end
 
@@ -32,7 +32,7 @@ static void imageAdded(const struct mach_header *header, intptr_t vmaddr_slide) 
     }
 
     const char *name = info.dli_fname;
-    struct pdl_mach_object mach_object = {0};
+    pdl_mach_object mach_object = {0};
     ret = pdl_get_mach_object_with_header(header, vmaddr_slide, name, &mach_object);
     if (!ret) {
         return;
@@ -71,7 +71,7 @@ static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide
     }
 }
 
-- (instancetype)initWithMachObject:(struct pdl_mach_object *)machObject {
+- (instancetype)initWithMachObject:(pdl_mach_object *)machObject {
     self = [super init];
     if (self) {
         _machObject = &_mach_object;
@@ -335,7 +335,7 @@ static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide
 
 - (BOOL)dump:(NSString *)path {
     NSMutableData *data = [[NSMutableData alloc] init];
-    struct pdl_mach_object *machObject = self.machObject;
+    pdl_mach_object *machObject = self.machObject;
 
     BOOL is64 = machObject->is64;
     uint64_t slide = self.slide;
@@ -346,7 +346,7 @@ static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide
             const struct segment_command *segment = machObject->segments[i];
             [data appendBytes:(void *)(slide + segment->vmaddr) length:isLastOne ? segment->filesize : segment->vmsize];
         } else {
-            const struct segment_command_64 *segment = ((struct pdl_mach_object_64 *)machObject)->segments[i];
+            const struct segment_command_64 *segment = ((pdl_mach_object_64 *)machObject)->segments[i];
             [data appendBytes:(void *)(slide + segment->vmaddr) length:(NSUInteger)(isLastOne ? segment->filesize : segment->vmsize)];
         }
     }
