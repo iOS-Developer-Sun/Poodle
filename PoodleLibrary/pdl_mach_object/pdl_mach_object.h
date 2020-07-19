@@ -18,7 +18,7 @@ extern "C" {
 #include <mach-o/nlist.h>
 #include <mach-o/fat.h>
 
-struct pdl_mach_object {
+typedef struct pdl_mach_object {
     bool is64;
     bool swaps;
     intptr_t vmaddr_slide;
@@ -97,9 +97,9 @@ struct pdl_mach_object {
     const struct nlist *symtab_list;
     uint32_t strtab_size;
     const char *strtab;
-};
+} pdl_mach_object;
 
-struct pdl_mach_object_64 {
+typedef struct pdl_mach_object_64 {
     bool is64;
     bool swaps;
     intptr_t vmaddr_slide;
@@ -178,12 +178,12 @@ struct pdl_mach_object_64 {
     const struct nlist_64 *symtab_list;
     uint32_t strtab_size;
     const char *strtab;
-};
+} pdl_mach_object_64;
 
-_Static_assert(sizeof(struct pdl_mach_object) == sizeof(struct pdl_mach_object_64),
-                   "Incorrect struct pdl_mach_object size");
+_Static_assert(sizeof(pdl_mach_object) == sizeof(pdl_mach_object_64),
+                   "Incorrect pdl_mach_object size");
 
-struct pdl_fat_object {
+typedef struct pdl_fat_object {
     bool is64;
     bool swaps;
 
@@ -192,9 +192,9 @@ struct pdl_fat_object {
 
     uint32_t arch_count;
     struct fat_arch *arch_list;
-};
+} pdl_fat_object;
 
-struct pdl_fat_object_64 {
+typedef struct pdl_fat_object_64 {
     bool is64;
     bool swaps;
 
@@ -203,14 +203,14 @@ struct pdl_fat_object_64 {
 
     uint32_t arch_count;
     struct fat_arch_64 *arch_list;
-};
+} pdl_fat_object_64;
 
-_Static_assert(sizeof(struct pdl_fat_object) == sizeof(struct pdl_fat_object_64),
-                   "Incorrect struct pdl_fat_object size");
+_Static_assert(sizeof(pdl_fat_object) == sizeof(pdl_fat_object_64),
+                   "Incorrect pdl_fat_object size");
 
-extern bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t vmaddr_slide, const char *name, struct pdl_mach_object *mach_object);
+extern bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t vmaddr_slide, const char *name, pdl_mach_object *mach_object);
 
-extern bool pdl_get_fat_object_with_header(const struct fat_header *header, struct pdl_fat_object *fat_object);
+extern bool pdl_get_fat_object_with_header(const struct fat_header *header, pdl_fat_object *fat_object);
 
 #ifdef __cplusplus
 }
