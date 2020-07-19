@@ -14,9 +14,16 @@ extern "C" {
 #endif
     
 typedef struct pdl_list_node {
-    void *val;
     struct pdl_list_node *prev;
     struct pdl_list_node *next;
+    union {
+        char c[0];
+        int i[0];
+        long l[0];
+        float f[0];
+        double d[0];
+        void *v[0];
+    } data;
 } pdl_list_node;
 
 typedef struct pdl_list {
@@ -32,7 +39,7 @@ extern unsigned int pdl_list_length(pdl_list *list);
 extern pdl_list *pdl_list_create(void *(*malloc_ptr)(size_t), void(*free_ptr)(void *));
 extern void pdl_list_destroy(pdl_list *list);
 
-extern pdl_list_node *pdl_list_create_node(pdl_list *list, void *val);
+extern pdl_list_node *pdl_list_create_node(pdl_list *list, size_t extra_size);
 extern void pdl_list_destroy_node(pdl_list *list, pdl_list_node *node);
 
 extern pdl_list_node *pdl_list_add_head(pdl_list *list, pdl_list_node *node);
