@@ -41,11 +41,25 @@ __unused static void PDLThreadSafetifyMethodAfter(__unsafe_unretained id self, S
 + (NSInteger)pdl_threadSafetifyMethods:(BOOL(^)(SEL selector))filter {
     NSInteger ret = 0;
 #ifdef __arm64__
+    SEL retain = sel_registerName("retain");
+    SEL release = sel_registerName("release");
+    SEL autorelease = sel_registerName("autorelease");
     SEL dealloc = sel_registerName("dealloc");
+
     ret = [self pdl_addInstanceMethodsBeforeAction:(IMP)&PDLThreadSafetifyMethodBefore afterAction:(IMP)&PDLThreadSafetifyMethodAfter methodFilter:^BOOL(SEL  _Nonnull selector) {
-        if (sel_isEqual(dealloc, selector)) {
+        if (sel_isEqual(selector, retain)) {
             return NO;
         }
+        if (sel_isEqual(selector, release)) {
+            return NO;
+        }
+        if (sel_isEqual(selector, autorelease)) {
+            return NO;
+        }
+        if (sel_isEqual(selector, dealloc)) {
+            return NO;
+        }
+
         if (filter) {
             return filter(selector);
         }
