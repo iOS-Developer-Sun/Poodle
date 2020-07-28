@@ -66,12 +66,12 @@ ______PDL_THREAD_FAKE_END_____:
       9e:	50 46	mov	r0, r10
       a0:	00 f0 f6 f8	bl	_pdl_builtin_return_address
       a4:	57 f8 28 2c	ldr	r2, [r7, #-40]
-      a8:	bb f1 01 0f	cmp.w	r11, #1
+      a8:	bb f1 00 0f	cmp.w	r11, #0
       ac:	57 f8 2c 1c	ldr	r1, [r7, #-44]
       b0:	aa 46	mov	r10, r5
       b2:	d7 f8 08 c0	ldr.w	r12, [r7, #8]
       b6:	57 f8 30 ec	ldr	lr, [r7, #-48]
-      ba:	2a db	blt	0x112
+      ba:	2a d0	beq	0x112
       bc:	ab f1 01 09	sub.w	r9, r11, #1
       c0:	00 26	movs	r6, #0
       c2:	08 23	movs	r3, #8

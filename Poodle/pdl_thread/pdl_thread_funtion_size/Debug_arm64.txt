@@ -104,12 +104,12 @@ ______PDL_THREAD_FAKE_END_____:
      1c8:	a0 03 19 f8	stur	x0, [x29, #-112]
      1cc:	a8 c3 5e b8	ldur	w8, [x29, #-20]
      1d0:	1f 01 00 71	cmp	w8, #0
-     1d4:	8d 0e 00 54	b.le	0x3a4
+     1d4:	89 0e 00 54	b.ls	0x3a4
      1d8:	bf c3 17 b8	stur	wzr, [x29, #-132]
      1dc:	a8 c3 57 b8	ldur	w8, [x29, #-132]
      1e0:	a9 c3 5e b8	ldur	w9, [x29, #-20]
      1e4:	1f 01 09 6b	cmp	w8, w9
-     1e8:	ca 0d 00 54	b.ge	0x3a0
+     1e8:	c2 0d 00 54	b.hs	0x3a0
      1ec:	a8 c3 57 b8	ldur	w8, [x29, #-132]
      1f0:	a9 43 5c b8	ldur	w9, [x29, #-60]
      1f4:	08 7d 09 1b	mul	w8, w8, w9

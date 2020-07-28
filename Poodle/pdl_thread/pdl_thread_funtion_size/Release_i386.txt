@@ -89,7 +89,7 @@ ______PDL_THREAD_FAKE_END_____:
       d6:	e8 02 02 00 00	calll	_pdl_builtin_return_address
       db:	83 c4 10	addl	$16, %esp
       de:	85 db	testl	%ebx, %ebx
-      e0:	7e 40	jle	0x122
+      e0:	74 40	je	0x122
       e2:	83 c6 18	addl	$24, %esi
       e5:	8b 55 18	movl	24(%ebp), %edx
       e8:	83 fb 01	cmpl	$1, %ebx
