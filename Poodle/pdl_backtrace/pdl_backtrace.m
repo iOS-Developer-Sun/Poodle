@@ -204,26 +204,28 @@ void pdl_backtrace_set_name(pdl_backtrace_t backtrace, const char *name) {
     strlcpy(bt->thread_name, name ?: "", sizeof(bt->thread_name));
 }
 
-void pdl_backtrace_record(pdl_backtrace_t backtrace, unsigned int hidden_count) {
-    unsigned int valid_hidden_count = hidden_count;
-#ifdef DEBUG
-    if (valid_hidden_count != UINT_MAX) {
-        valid_hidden_count++;
-    }
-#endif
-    pdl_backtrace_record_with_filter(backtrace, valid_hidden_count, NULL);
-}
-
-void pdl_backtrace_record_with_filter(pdl_backtrace_t backtrace, unsigned int hidden_count, pdl_thread_frame_filter *filter) {
+void pdl_backtrace_record(pdl_backtrace_t backtrace, pdl_backtrace_record_attr *attr) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (!bt) {
         return;
     }
 
+    unsigned int hidden_count = 0;
+    pdl_thread_frame_filter *filter = NULL;
     void *lr = NULL;
     void *fp = NULL;
-    if (hidden_count != __UINT32_MAX__) {
+    if (attr) {
+        hidden_count = attr->hidden_count;
+        filter = attr->filter;
+        lr = attr->link_register;
+        fp = attr->frame_pointer;
+    }
+
+    if (!lr && (hidden_count != __UINT32_MAX__)) {
         lr = pdl_builtin_return_address(hidden_count + 1);
+    }
+
+    if (!fp && (hidden_count != __UINT32_MAX__)) {
         fp = pdl_builtin_frame_address(hidden_count);
     }
 

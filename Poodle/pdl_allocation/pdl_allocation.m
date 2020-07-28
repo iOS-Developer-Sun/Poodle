@@ -101,7 +101,9 @@ static void pdl_allocation_record_alloc(pdl_allocation_info *info) {
     char name[64];
     snprintf(name, sizeof(name), "alloc_%s_%p(%s)", class_getName(info->cls), info->object, class_getName(object_getClass(info->object)));
     pdl_backtrace_set_name(bt, name);
-    pdl_backtrace_record(bt, _pdl_allocation_record_alloc_hidden_count);
+    pdl_backtrace_record_attr attr = PDL_BACKTRACE_RECORD_ATTR_INIT;
+    attr.hidden_count = _pdl_allocation_record_alloc_hidden_count;
+    pdl_backtrace_record(bt, &attr);
     info->backtrace_alloc = bt;
 }
 
@@ -121,7 +123,9 @@ static void pdl_allocation_record_dealloc(pdl_allocation_info *info) {
     char name[64];
     snprintf(name, sizeof(name), "dealloc_%s_%p(%s)", class_getName(info->cls), info->object, class_getName(object_getClass(info->object)));
     pdl_backtrace_set_name(bt, name);
-    pdl_backtrace_record(bt, _pdl_allocation_record_dealloc_hidden_count);
+    pdl_backtrace_record_attr attr = PDL_BACKTRACE_RECORD_ATTR_INIT;
+    attr.hidden_count = _pdl_allocation_record_dealloc_hidden_count;
+    pdl_backtrace_record(bt, &attr);
     info->backtrace_dealloc = bt;
 }
 

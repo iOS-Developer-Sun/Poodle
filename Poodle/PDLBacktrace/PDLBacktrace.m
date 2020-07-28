@@ -58,11 +58,13 @@
 }
 
 - (void)record {
-    pdl_backtrace_record(self.backtrace, 0);
+    pdl_backtrace_record(self.backtrace, NULL);
 }
 
 - (void)record:(unsigned int)hiddenCount {
-    pdl_backtrace_record(self.backtrace, hiddenCount);
+    pdl_backtrace_record_attr attr = PDL_BACKTRACE_RECORD_ATTR_INIT;
+    attr.hidden_count = hiddenCount;
+    pdl_backtrace_record(self.backtrace, &attr);
 }
 
 - (BOOL)isShown {

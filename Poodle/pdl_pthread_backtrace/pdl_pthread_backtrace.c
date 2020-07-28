@@ -71,7 +71,10 @@ int pdl_pthread_backtrace_create(pthread_t *thread, const pthread_attr_t *attr, 
         if (backtrace) {
             pdl_thread_frame_filter filter;
             pdl_backtrace_filter_with_count(&filter, recursion_count);
-            pdl_backtrace_record_with_filter(backtrace, hidden_count, &filter);
+            pdl_backtrace_record_attr attr = PDL_BACKTRACE_RECORD_ATTR_INIT;
+            attr.hidden_count = hidden_count;
+            attr.filter = &filter;
+            pdl_backtrace_record(backtrace, &attr);
         }
         info->start = start_routine;
         info->arg = arg;
