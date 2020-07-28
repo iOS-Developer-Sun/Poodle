@@ -117,11 +117,11 @@ ______PDL_THREAD_FAKE_END_____:
      1e0:	83 c4 10	addl	$16, %esp
      1e3:	89 45 c8	movl	%eax, -56(%ebp)
      1e6:	83 7d 0c 00	cmpl	$0, 12(%ebp)
-     1ea:	0f 8e ee 00 00 00	jle	0x2de
+     1ea:	0f 86 ee 00 00 00	jbe	0x2de
      1f0:	c7 45 b8 00 00 00 00	movl	$_pdl_thread_execute, -72(%ebp)
      1f7:	8b 45 b8	movl	-72(%ebp), %eax
      1fa:	3b 45 0c	cmpl	12(%ebp), %eax
-     1fd:	0f 8d d6 00 00 00	jge	0x2d9
+     1fd:	0f 83 d6 00 00 00	jae	0x2d9
      203:	8b 45 b8	movl	-72(%ebp), %eax
      206:	0f af 45 e0	imull	-32(%ebp), %eax
      20a:	89 45 b4	movl	%eax, -76(%ebp)

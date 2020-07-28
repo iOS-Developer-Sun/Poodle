@@ -11,9 +11,9 @@
 
 extern void *pdl_thread_fake(void **frames, void *(*start)(void *), void *arg);
 
-static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
+static void *pdl_thread_fake_end(void **frames, unsigned int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
     int hc = hidden_count;
-    int total_frames_count = frames_count;
+    unsigned int total_frames_count = frames_count;
     if (frames_count == 0) {
         total_frames_count++;
     }
@@ -88,7 +88,7 @@ static void *pdl_thread_fake_end(void **frames, int frames_count, void *(*start)
     return ret;
 }
 
-void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
+void *pdl_thread_execute(void **frames, unsigned int frames_count, void *(*start)(void *), void *arg, int hidden_count) {
     void *ret = pdl_thread_fake_end(frames, frames_count, start, arg, hidden_count);
     return ret;
 }

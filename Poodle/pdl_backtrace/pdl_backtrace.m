@@ -31,7 +31,7 @@ typedef struct {
     void *(*malloc_ptr)(size_t); \
     void(*free_ptr)(void *); \
     void **frames; \
-    int frames_count; \
+    unsigned int frames_count; \
     pthread_t thread; \
     pthread_mutex_t lock; \
     pthread_mutex_t wait_lock; \
@@ -179,7 +179,7 @@ pdl_backtrace_t pdl_backtrace_copy(pdl_backtrace_t backtrace) {
 
     strlcpy(copy->thread_name, bt->thread_name, sizeof(copy->thread_name));
 
-    int frames_count = bt->frames_count;
+    unsigned int frames_count = bt->frames_count;
     void **frames = bt->malloc_ptr(sizeof(void *) * frames_count);
     memcpy(frames, bt->frames, sizeof(void *) * frames_count);
     copy->frames = frames;
@@ -242,6 +242,17 @@ void pdl_backtrace_record(pdl_backtrace_t backtrace, pdl_backtrace_record_attr *
     bt->frames_count = count_recorded;
 }
 
+void pdl_backtrace_set_frames(pdl_backtrace_t backtrace, void *frames, unsigned int frames_count) {
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return;
+    }
+
+    bt->free_ptr(bt->frames);
+    bt->frames = frames;
+    bt->frames_count = frames_count;
+}
+
 void pdl_backtrace_filter_with_count(pdl_thread_frame_filter *filter, unsigned int count) {
     if (!filter) {
         return;
@@ -261,7 +272,7 @@ void **pdl_backtrace_get_frames(pdl_backtrace_t backtrace) {
     return bt->frames;
 }
 
-int pdl_backtrace_get_frames_count(pdl_backtrace_t backtrace) {
+unsigned int pdl_backtrace_get_frames_count(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (!bt) {
         return 0;

@@ -91,11 +91,11 @@ ______PDL_THREAD_FAKE_END_____:
      183:	e8 00 00 00 00	callq	_pdl_builtin_return_address
      188:	48 89 45 90	movq	%rax, -112(%rbp)
      18c:	83 7d ec 00	cmpl	$0, -20(%rbp)
-     190:	0f 8e 5a 01 00 00	jle	0x2f0
+     190:	0f 86 5a 01 00 00	jbe	0x2f0
      196:	c7 85 7c ff ff ff 00 00 00 00	movl	$_pdl_thread_execute, -132(%rbp)
      1a0:	8b 85 7c ff ff ff	movl	-132(%rbp), %eax
      1a6:	3b 45 ec	cmpl	-20(%rbp), %eax
-     1a9:	0f 8d 3c 01 00 00	jge	0x2eb
+     1a9:	0f 83 3c 01 00 00	jae	0x2eb
      1af:	8b 85 7c ff ff ff	movl	-132(%rbp), %eax
      1b5:	0f af 45 c4	imull	-60(%rbp), %eax
      1b9:	89 85 78 ff ff ff	movl	%eax, -136(%rbp)

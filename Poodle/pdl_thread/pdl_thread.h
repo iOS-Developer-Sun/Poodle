@@ -21,7 +21,7 @@ typedef struct pdl_thread_frame_filter {
     void *data;
 } pdl_thread_frame_filter;
 
-extern void *pdl_thread_execute(void **frames, int frames_count, void *(*start)(void *), void *arg, int hidden_count);
+extern void *pdl_thread_execute(void **frames, unsigned int frames_count, void *(*start)(void *), void *arg, int hidden_count);
 
 extern int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, int count);
 

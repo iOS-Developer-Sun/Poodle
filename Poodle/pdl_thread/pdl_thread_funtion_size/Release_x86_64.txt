@@ -75,7 +75,7 @@ ______PDL_THREAD_FAKE_END_____:
       d5:	48 8b 7d b8	movq	-72(%rbp), %rdi
       d9:	48 8b 4d c0	movq	-64(%rbp), %rcx
       dd:	85 c9	testl	%ecx, %ecx
-      df:	7e 4b	jle	0x12c
+      df:	74 4b	je	0x12c
       e1:	44 8d 41 ff	leal	-1(%rcx), %r8d
       e5:	89 ca	movl	%ecx, %edx
       e7:	48 8d 77 10	leaq	16(%rdi), %rsi

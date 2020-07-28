@@ -42,7 +42,7 @@
 #elif defined(__arm__)
 #define pdl_thread_fake_end_size 356
 #elif defined(__arm64__)
-#define pdl_thread_fake_end_size 444
+#define pdl_thread_fake_end_size 456
 #endif
 
 #endif
