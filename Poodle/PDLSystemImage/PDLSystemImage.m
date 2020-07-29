@@ -24,7 +24,7 @@
 static NSMutableDictionary *_systemImages = nil;
 static BOOL _loaded = NO;
 
-static void imageAdded(const struct mach_header *header, intptr_t vmaddr_slide) {
+static void pdl_systemImageAdded(const struct mach_header *header, intptr_t vmaddr_slide) {
     Dl_info info;
     BOOL ret = dladdr(header, &info);
     if (!ret) {
@@ -47,7 +47,7 @@ static void imageAdded(const struct mach_header *header, intptr_t vmaddr_slide) 
     }
 }
 
-static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide) {
+static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vmaddr_slide) {
     PDLSystemImage *systemImage = nil;
     @synchronized (_systemImages) {
         id key = @((unsigned long)header);
@@ -59,16 +59,16 @@ static void imageRemoved(const struct mach_header *header, intptr_t vmaddr_slide
     }
 }
 
-+ (void)initialize {
-    if (self == [PDLSystemImage self]) {
-        static dispatch_once_t onceToken;
-        dispatch_once(&onceToken, ^{
-            _systemImages = [NSMutableDictionary dictionary];
-            _dyld_register_func_for_add_image(&imageAdded);
-            _dyld_register_func_for_remove_image(&imageRemoved);
++ (void)load {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _systemImages = [NSMutableDictionary dictionary];
+        dispatch_async(dispatch_get_global_queue(0, 0), ^{
+            _dyld_register_func_for_add_image(&pdl_systemImageAdded);
+            _dyld_register_func_for_remove_image(&pdl_systemImageRemoved);
             _loaded = YES;
         });
-    }
+    });
 }
 
 - (instancetype)initWithMachObject:(pdl_mach_object *)machObject {
