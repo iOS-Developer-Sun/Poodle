@@ -249,7 +249,9 @@ void pdl_backtrace_set_frames(pdl_backtrace_t backtrace, void *frames, unsigned 
     }
 
     bt->free_ptr(bt->frames);
-    bt->frames = frames;
+    size_t size = sizeof(void *) * frames_count;
+    bt->frames = bt->malloc_ptr(size);
+    memcpy(bt->frames, frames, size);
     bt->frames_count = frames_count;
 }
 
