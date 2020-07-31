@@ -88,7 +88,7 @@ typedef struct pdl_mach_object {
 
     // routines_command / routines_command_64
     const struct routines_command *routines_command;
-    
+
     uint64_t vmsize;
     uint64_t vmaddr;
     uint64_t linkedit_base;
@@ -186,6 +186,7 @@ _Static_assert(sizeof(pdl_mach_object) == sizeof(pdl_mach_object_64),
 typedef struct pdl_fat_object {
     bool is64;
     bool swaps;
+    const char *name;
 
     // fat_header / fat_header_64
     const struct fat_header *header;
@@ -197,6 +198,7 @@ typedef struct pdl_fat_object {
 typedef struct pdl_fat_object_64 {
     bool is64;
     bool swaps;
+    const char *name;
 
     // fat_header / fat_header_64
     const struct fat_header_64 *header;
