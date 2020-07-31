@@ -295,7 +295,7 @@ bool pdl_get_fat_object_with_header(const struct fat_header *header, pdl_fat_obj
     fat_object->is64 = is64;
     fat_object->swaps = swaps;
     fat_object->header = header;
-    fat_object->arch_count = header->nfat_arch;
+    fat_object->arch_count = swaps ? ntohl(header->nfat_arch) : header->nfat_arch;
     fat_object->arch_list = (struct fat_arch *)command_pointer;
 
     return true;
