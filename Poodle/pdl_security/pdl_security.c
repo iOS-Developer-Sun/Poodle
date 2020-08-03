@@ -57,3 +57,16 @@ bool pdl_anti_re(void) {
     ret = true;
     return ret;
 }
+
+__attribute__((visibility("hidden")))
+bool pdl_is_tracing(void) {
+    struct kinfo_proc info;
+    size_t info_size = sizeof(info);
+    int name[4];
+    name[0] = CTL_KERN;
+    name[1] = KERN_PROC;
+    name[2] = KERN_PROC_PID;
+    name[3] = pdl_systemcall_getpid();
+    bool ret = (pdl_systemcall_sysctl(name, 4, &info, &info_size, NULL, 0) != -1) && ((info.kp_proc.p_flag & P_TRACED) != 0);
+    return ret;
+}

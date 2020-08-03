@@ -17,6 +17,7 @@ extern "C" {
 
 __attribute__((visibility("hidden")))
 extern bool pdl_anti_re(void);
+extern bool pdl_is_tracing(void);
 
 #ifdef __cplusplus
 }
