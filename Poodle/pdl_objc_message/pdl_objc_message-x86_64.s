@@ -26,8 +26,6 @@ _pdl_objc_msgSend:
 
 _pdl_objc_msgSend_stret:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
-    movq    %a2, %a1
-    movq    %a3, %a2
     call    _pdl_objc_msgSend_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     movq    _pdl_objc_msgSend_stret_original(%rip), %r11
