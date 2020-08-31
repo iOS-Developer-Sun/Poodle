@@ -9,6 +9,7 @@
 #import "pdl_dispatch.h"
 #import <Foundation/Foundation.h>
 #import <malloc/malloc.h>
+#import <pthread.h>
 
 enum {
     DISPATCH_QUEUE_OVERCOMMIT = 0x2ull,
@@ -108,23 +109,28 @@ static void pdl_dispatch_init(void) {
     if (init) {
         return;
     }
-    init = true;
 
-    pdl_dispatch_register_queue(dispatch_get_main_queue(), true);
+    static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&mutex);
+    if (!init) {
+        pdl_dispatch_register_queue(dispatch_get_main_queue(), true);
 
-    unsigned int qos[] = {
-        QOS_CLASS_USER_INTERACTIVE,
-        QOS_CLASS_USER_INITIATED,
-        QOS_CLASS_DEFAULT,
-        QOS_CLASS_UTILITY,
-        QOS_CLASS_BACKGROUND,
-        QOS_CLASS_MAINTENANCE,
-    };
-    for (unsigned int i = 0; i < sizeof(qos) / sizeof(qos[0]); i++) {
-        long identifier = qos[i];
-        pdl_dispatch_register_queue(dispatch_get_global_queue(identifier, 0), true);
-        pdl_dispatch_register_queue(dispatch_get_global_queue(identifier, 2), true);
+        unsigned int qos[] = {
+            QOS_CLASS_USER_INTERACTIVE,
+            QOS_CLASS_USER_INITIATED,
+            QOS_CLASS_DEFAULT,
+            QOS_CLASS_UTILITY,
+            QOS_CLASS_BACKGROUND,
+            QOS_CLASS_MAINTENANCE,
+        };
+        for (unsigned int i = 0; i < sizeof(qos) / sizeof(qos[0]); i++) {
+            long identifier = qos[i];
+            pdl_dispatch_register_queue(dispatch_get_global_queue(identifier, 0), true);
+            pdl_dispatch_register_queue(dispatch_get_global_queue(identifier, 2), true);
+        }
+        init = true;
     }
+    pthread_mutex_unlock(&mutex);
 }
 
 static void pdl_dispatch_init_queue(dispatch_queue_t queue) {

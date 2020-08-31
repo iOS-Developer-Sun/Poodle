@@ -62,9 +62,9 @@ static void pdl_thread_storage_enable(void) {
     static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&mutex);
     if (!init) {
-        init = true;
         pthread_key_create(&pdl_pthread_key, &pdl_thread_storage_destroy);
         pdl_registration = pdl_dictionary_create(NULL);
+        init = true;
     }
     pthread_mutex_unlock(&mutex);
 }

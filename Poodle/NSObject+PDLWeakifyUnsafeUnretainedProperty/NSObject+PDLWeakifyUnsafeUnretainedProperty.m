@@ -45,9 +45,9 @@
 
 @implementation NSObject (PDLWeakifyUnsafeUnretainedProperty)
 
-static pthread_mutex_t _lock = PTHREAD_MUTEX_INITIALIZER;
 static id pdl_weakPropertyLock(__unsafe_unretained id self, Class aClass, ptrdiff_t offset) {
     NSString *identifier = [NSString stringWithFormat:@"%@.%@", NSStringFromClass(aClass), @(offset)];
+    static pthread_mutex_t _lock = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&_lock);
     NSMutableDictionary *locks = objc_getAssociatedObject(self, &pdl_weakPropertyLock);
     if (locks == nil) {
