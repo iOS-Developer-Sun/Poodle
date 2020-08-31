@@ -39,8 +39,8 @@ static void pdl_pthread_backtrace_init(void) {
     static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&mutex);
     if (!init) {
-        init = true;
         pdl_thread_storage_register(_pdl_storage_key, &pdl_pthread_info_destroy);
+        init = true;
     }
     pthread_mutex_unlock(&mutex);
 }

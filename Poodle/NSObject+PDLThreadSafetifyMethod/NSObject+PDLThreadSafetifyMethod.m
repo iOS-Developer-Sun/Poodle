@@ -16,8 +16,8 @@ __unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_emp
 
 @implementation NSObject (PDLThreadSafetifyMethod)
 
-static pthread_mutex_t _lock = PTHREAD_MUTEX_INITIALIZER;
 static id pdl_threadSafeMethodLock(__unsafe_unretained id self) {
+    static pthread_mutex_t _lock = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&_lock);
     id lock = objc_getAssociatedObject(self, &pdl_threadSafeMethodLock);
     if (lock == nil) {
