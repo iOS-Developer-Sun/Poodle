@@ -13,8 +13,6 @@
 extern "C" {
 #endif
 
-#ifdef __LP64__
-
 extern void(*pdl_objc_message_msgSend_before_action(void))(__unsafe_unretained id self, SEL _cmd);
 extern void pdl_objc_message_set_msgSend_before_action(void(*pdl_objc_msgSend_before_action)(__unsafe_unretained id self, SEL _cmd));
 
@@ -34,8 +32,6 @@ extern void pdl_objc_msgSend_stret(void);
 
 extern void(*pdl_objc_msgSendSuper2_stret_original)(void);
 extern void pdl_objc_msgSendSuper2_stret(void);
-
-#endif
 
 #endif
 

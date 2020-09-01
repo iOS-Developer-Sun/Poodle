@@ -93,30 +93,15 @@ void pdl_malloc_set_pthread_create(int(*pthread_create)(pthread_t *, const pthre
 
 #pragma mark - lock
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-#pragma clang diagnostic ignored "-Wunguarded-availability-new"
-
 static pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
-static os_unfair_lock _unfair_lock = OS_UNFAIR_LOCK_INIT;
 
 static void pdl_malloc_lock() {
-    if (&os_unfair_lock_lock) {
-        os_unfair_lock_lock(&_unfair_lock);
-    } else {
-        pthread_mutex_lock(&_mutex);
-    }
+    pthread_mutex_lock(&_mutex);
 }
 
 static void pdl_malloc_unlock() {
-    if (&os_unfair_lock_unlock) {
-        os_unfair_lock_unlock(&_unfair_lock);
-    } else {
-        pthread_mutex_unlock(&_mutex);
-    }
+    pthread_mutex_unlock(&_mutex);
 }
-
-#pragma clang diagnostic pop
 
 #pragma mark - file log
 
