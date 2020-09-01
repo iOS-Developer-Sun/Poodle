@@ -4897,7 +4897,7 @@
 		B88DB4BF22EAF14B003D20F6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 1120;
+				LastUpgradeCheck = 1160;
 				ORGANIZATIONNAME = Poodle;
 				TargetAttributes = {
 					B85D45A2240E84DA00CBF758 = {
@@ -7996,6 +7996,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
