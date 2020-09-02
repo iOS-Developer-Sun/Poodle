@@ -13,9 +13,94 @@
 .text
 .align 4
 .private_extern _PDLMethodEntry
+.private_extern _PDLMethodEntry_stret
+.private_extern _PDLMethodEntryFull
+.private_extern _PDLMethodEntryFull_stret
 
 _PDLMethodEntry:
 
-nop
+    PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
+    call    _PDLMethodBefore
+    PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
+
+    movl    0x8(%esp), %ecx
+    movl    0x8(%ecx), %eax
+    movl    (%ecx), %ecx
+    movl    %ecx, 0x8(%esp)
+
+    jmp     *%eax
+
+_PDLMethodEntry_stret:
+
+    PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
+    call    _PDLMethodBefore
+    PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
+
+    movl    0xc(%esp), %ecx
+    movl    0x8(%ecx), %eax
+    movl    (%ecx), %ecx
+    movl    %ecx, 0xc(%esp)
+
+    jmp     *%eax
+
+_PDLMethodEntryFull:
+
+    PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
+    movl    0x4(%ebp), %eax     // save lr
+    movl    %eax, 0x8(%esp)
+    call    _PDLMethodFullBefore
+    PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
+
+    movl    %esp, %ebx
+    popl    %eax    // fake sp begin
+
+    movl    0x8(%ebx), %ecx // load arg2 to ecx
+    movl    0x8(%ecx), %eax // fetch imp
+    movl    (%ecx), %ecx    // switch arg
+    movl    %ecx, 0x8(%ebx)
+
+    call    *%eax  // call imp
+
+    push    %eax    // save ret
+
+    PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
+    call    _PDLMethodFullAfter
+    movl    %eax, %ebx  // save lr to ebx
+    PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
+
+    pop     %eax        // load ret
+
+    push    %ebx       // restore lr, fake sp end
+
+    ret
+
+_PDLMethodEntryFull_stret:
+
+#if 0
+PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
+movq    0x8(%rbp), %rdx     // save lr
+call    _PDLMethodFullBefore
+PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
+
+popq    %rax    // fake sp begin
+
+movq    0x10(%rdx), %rax    // fetch imp
+movq    (%rdx), %rdx    // switch arg
+
+call    *%rax   // call imp
+
+pushq   %rax    // save ret
+
+PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
+call    _PDLMethodFullAfter
+movq    %rax, %r11  // save lr to r11
+PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
+
+popq    %rax        // load ret
+
+pushq    %r11    // restore lr, fake sp end
+
+ret
+#endif
 
 #endif
