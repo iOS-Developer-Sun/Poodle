@@ -146,7 +146,7 @@ void *PDLMethodFullAfter(void) {
     if (afterAction) {
         imp = (IMP)&PDLMethodEntryFull;
         imp_stret = (IMP)&PDLMethodEntryFull_stret;
-    }
+    }imp_stret = NULL;
 
     ret = 0;
     unsigned int count = 0;

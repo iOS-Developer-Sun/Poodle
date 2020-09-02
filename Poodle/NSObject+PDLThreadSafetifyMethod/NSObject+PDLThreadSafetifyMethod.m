@@ -21,7 +21,7 @@ static id pdl_threadSafeMethodLock(__unsafe_unretained id self) {
     pthread_mutex_lock(&_lock);
     id lock = objc_getAssociatedObject(self, &pdl_threadSafeMethodLock);
     if (lock == nil) {
-        lock = [[NSObject alloc] init];
+        lock = class_createInstance(objc_getClass("NSObject"), 0);
         objc_setAssociatedObject(self, &pdl_threadSafeMethodLock, lock, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     pthread_mutex_unlock(&_lock);
@@ -41,24 +41,16 @@ __unused static void PDLThreadSafetifyMethodAfter(__unsafe_unretained id self, S
 + (NSInteger)pdl_threadSafetifyMethods:(BOOL(^)(SEL selector))filter {
     NSInteger ret = 0;
 
-    SEL retain = sel_registerName("retain");
-    SEL release = sel_registerName("release");
-    SEL autorelease = sel_registerName("autorelease");
-    SEL dealloc = sel_registerName("dealloc");
-
     ret = [self pdl_addInstanceMethodsBeforeAction:(IMP)&PDLThreadSafetifyMethodBefore afterAction:(IMP)&PDLThreadSafetifyMethodAfter methodFilter:^BOOL(SEL  _Nonnull selector) {
-        if (sel_isEqual(selector, retain)) {
-            return NO;
-        }
-        if (sel_isEqual(selector, release)) {
-            return NO;
-        }
-        if (sel_isEqual(selector, autorelease)) {
-            return NO;
-        }
-        if (sel_isEqual(selector, dealloc)) {
-            return NO;
-        }
+        if (sel_isEqual(selector, sel_registerName("retain"))) {return NO;}
+        if (sel_isEqual(selector, sel_registerName("release"))) {return NO;}
+        if (sel_isEqual(selector, sel_registerName("autorelease"))) {return NO;}
+        if (sel_isEqual(selector, sel_registerName("dealloc"))) {return NO;}
+        if (sel_isEqual(selector, sel_registerName(".cxx_destruct"))) {return NO;}
+        if (sel_isEqual(selector, sel_registerName("_isDeallocating"))) {return NO;}
+        if (sel_isEqual(selector, sel_registerName("_tryRetain"))) {return NO;}
+        if (sel_isEqual(selector, sel_registerName("allowsWeakReference"))) {return NO;}
+        if (sel_isEqual(selector, sel_registerName("retainWeakReference"))) {return NO;}
 
         if (filter) {
             return filter(selector);
