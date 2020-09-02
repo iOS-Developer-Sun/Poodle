@@ -56,7 +56,9 @@ static pdl_list *pdl_thread_list(void) {
 #pragma mark - before && after
 
 extern void PDLMethodEntry(__unsafe_unretained id, SEL);
+extern void PDLMethodEntry_stret(__unsafe_unretained id, SEL);
 extern void PDLMethodEntryFull(__unsafe_unretained id, SEL);
+extern void PDLMethodEntryFull_stret(__unsafe_unretained id, SEL);
 
 __attribute__((visibility("hidden")))
 void PDLMethodBefore(__unsafe_unretained id self, SEL _cmd) {
@@ -121,7 +123,7 @@ void *PDLMethodFullAfter(void) {
 
 + (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
     NSUInteger ret = -1;
-#ifdef __arm64__
+
     pdl_thread_storage_register(_pdl_storage_key, &pdl_methods_list_destroy);
     if (!pdl_thread_storage_enabled()) {
         return -1;
@@ -140,8 +142,10 @@ void *PDLMethodFullAfter(void) {
     actions->afterAction = afterAction;
 
     IMP imp = (IMP)&PDLMethodEntry;
+    IMP imp_stret = (IMP)&PDLMethodEntry_stret;
     if (afterAction) {
         imp = (IMP)&PDLMethodEntryFull;
+        imp_stret = (IMP)&PDLMethodEntryFull_stret;
     }
 
     ret = 0;
@@ -154,7 +158,22 @@ void *PDLMethodFullAfter(void) {
             continue;
         }
 
-        BOOL result = [self pdl_interceptSelector:selector withInterceptorImplementation:imp isStructRet:nil addIfNotExistent:NO data:actions];
+        BOOL result = pdl_interceptSelector2(self, selector, nil, ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
+            if (!exists) {
+                return NULL;
+            }
+            if (isStructRetNumber) {
+                *data = actions;
+                if (isStructRetNumber.boolValue) {
+                    return imp_stret;
+                } else {
+                    return imp;
+                }
+            } else {
+                return NULL;
+            }
+        });
+
         if (result) {
             ret++;
         }
@@ -163,7 +182,7 @@ void *PDLMethodFullAfter(void) {
     if (ret == 0) {
         free(actions);
     }
-#endif
+
     return ret;
 }
 
