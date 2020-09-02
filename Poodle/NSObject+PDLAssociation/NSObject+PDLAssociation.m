@@ -33,10 +33,10 @@
 static id weakWrapperLock(__unsafe_unretained id object) {
     static void *weakWrapperLockKey = NULL;
     id lock = nil;
-    @synchronized ([PDLWeakWrapper class]) {
+    @synchronized (objc_getClass("PDLWeakWrapper")) {
         lock = objc_getAssociatedObject(object, &weakWrapperLockKey);
         if (!lock) {
-            lock = [[NSObject alloc] init];
+            lock = class_createInstance(objc_getClass("NSObject"), 0);
             objc_setAssociatedObject(object, &weakWrapperLockKey, lock, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         }
     }

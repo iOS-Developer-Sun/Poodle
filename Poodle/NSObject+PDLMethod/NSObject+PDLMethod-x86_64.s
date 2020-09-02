@@ -53,29 +53,41 @@ _PDLMethodEntryFull:
 
     pushq   %rax    // save ret
 
+    PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
     call    _PDLMethodFullAfter
     movq    %rax, %r11  // save lr to r11
+    PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
+
     popq    %rax        // load ret
 
-    movq    %r11, 0x8(%rsp)    // restore lr
-    popq    %r11    // fake sp end
+    pushq    %r11    // restore lr, fake sp end
 
     ret
 
 _PDLMethodEntryFull_stret:
 
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
-    movq    0x8(%rbp), %rdx
+    movq    0x8(%rbp), %rdx     // save lr
     call    _PDLMethodFullBefore
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
 
-    movq    0x10(%rdx), %rax
-    movq    (%rdx), %rdx
-    call    *%rax
+    popq    %rax    // fake sp begin
 
-    pushq   %rax
+    movq    0x10(%rdx), %rax    // fetch imp
+    movq    (%rdx), %rdx    // switch arg
+
+    call    *%rax   // call imp
+
+    pushq   %rax    // save ret
+
+    PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
     call    _PDLMethodFullAfter
-    popq   %rax
+    movq    %rax, %r11  // save lr to r11
+    PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
+
+    popq    %rax        // load ret
+
+    pushq    %r11    // restore lr, fake sp end
 
     ret
 
