@@ -40,7 +40,7 @@ __unused static void PDLThreadSafetifyMethodAfter(__unsafe_unretained id self, S
 
 + (NSInteger)pdl_threadSafetifyMethods:(BOOL(^)(SEL selector))filter {
     NSInteger ret = 0;
-#ifdef __arm64__
+
     SEL retain = sel_registerName("retain");
     SEL release = sel_registerName("release");
     SEL autorelease = sel_registerName("autorelease");
@@ -65,7 +65,7 @@ __unused static void PDLThreadSafetifyMethodAfter(__unsafe_unretained id self, S
         }
         return YES;
     }];
-#endif
+
     return ret;
 }
 

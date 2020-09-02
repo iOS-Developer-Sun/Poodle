@@ -35,42 +35,49 @@ struct NSObjectImplementationInterceptorBlock {
 
 @implementation NSObject (PDLImplementationInterceptor)
 
-BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data) {
+BOOL pdl_interceptSelector2(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(^interceptorGenerator)(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data)) {
     Method method = class_getInstanceMethod(aClass, selector);
     IMP implementation = method_getImplementation(method);
     if (implementation == NULL) {
         return NO;
     }
 
+    BOOL exists = YES;
+    void *data = NULL;
     const char *typeEncoding = method_getTypeEncoding(method);
     Method superclassMethod = class_getInstanceMethod(class_getSuperclass(aClass), selector);
     IMP superclassImplementation = method_getImplementation(superclassMethod);
     if (implementation == superclassImplementation) {
-        if (addIfNotExistent == NO) {
-            return NO;
-        }
+        exists = NO;
         implementation = NULL;
     }
 
-    struct PDLImplementationInterceptorData implementationInterceptorData = {selector, (char *)typeEncoding, implementation, aClass, data};
     BOOL isStret = NO;
-
+    NSNumber *isStructRetNumberToReport = isStructRetNumber;
 #if !__arm64__
-    if (isStructRetNumber) {
-        isStret = isStructRetNumber.boolValue;
-    } else {
+    if (!isStructRetNumberToReport) {
         @try {
             NSMethodSignature *methodSignature = [NSMethodSignature signatureWithObjCTypes:typeEncoding];
             NSNumber *isHiddenStructRetNumber = [methodSignature valueForKey:@"isHiddenStructRet"];
             assert(isHiddenStructRetNumber);
-            isStret = isHiddenStructRetNumber.boolValue;
+            isStructRetNumberToReport = isHiddenStructRetNumber;
         } @catch (NSException *exception) {
-            return NO;
+            isStructRetNumberToReport = nil;
         } @finally {
             ;
         }
     }
+    isStret = isStructRetNumberToReport.boolValue;
+#else
+    isStructRetNumberToReport = @(NO);
 #endif
+
+    IMP interceptorImplementation = interceptorGenerator(exists, isStructRetNumberToReport, method, &data);
+    if (!interceptorImplementation) {
+        return NO;
+    }
+
+    struct PDLImplementationInterceptorData implementationInterceptorData = {selector, (char *)typeEncoding, implementation, aClass, data};
 
     id block = nil;
     struct NSObjectImplementationInterceptorBlock *blockPointer = NULL;
@@ -98,9 +105,7 @@ BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementa
     IMP blockImplementation = imp_implementationWithBlock(block);
     IMP originalImplementation = class_replaceMethod(aClass, selector, blockImplementation, typeEncoding);
     (void)originalImplementation;
-    if (!addIfNotExistent) {
-        assert(originalImplementation);
-    }
+    assert((originalImplementation != NULL) == (exists != NO));
     assert(blockPointer->Desc->Block_size == sizeof(struct NSObjectImplementationInterceptorBlock));
     assert(blockPointer->interceptorImplementation == interceptorImplementation);
     assert(blockPointer->data.method_name == implementationInterceptorData.method_name);
@@ -109,6 +114,17 @@ BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementa
     assert(blockPointer->data.method_class == implementationInterceptorData.method_class);
 
     return YES;
+}
+
+BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data) {
+    void *d = data;
+    return pdl_interceptSelector2(aClass, selector, isStructRetNumber, ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
+        if (!exists && !addIfNotExistent) {
+            return NULL;
+        }
+        *data = d;
+        return interceptorImplementation;
+    });
 }
 
 + (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation {

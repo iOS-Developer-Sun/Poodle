@@ -48,6 +48,8 @@ extern "C" {
 extern BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data);
 extern NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data);
 
+extern BOOL pdl_interceptSelector2(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(^interceptorGenerator)(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data));
+
 #ifdef __cplusplus
 }
 #endif
