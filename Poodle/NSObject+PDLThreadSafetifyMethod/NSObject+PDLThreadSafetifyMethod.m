@@ -40,7 +40,7 @@ __unused static void PDLThreadSafetifyMethodAfter(__unsafe_unretained id self, S
 
 + (NSInteger)pdl_threadSafetifyMethods:(BOOL(^)(SEL selector))filter {
     NSInteger ret = 0;
-
+#ifndef __i386__
     ret = [self pdl_addInstanceMethodsBeforeAction:(IMP)&PDLThreadSafetifyMethodBefore afterAction:(IMP)&PDLThreadSafetifyMethodAfter methodFilter:^BOOL(SEL  _Nonnull selector) {
         if (sel_isEqual(selector, sel_registerName("retain"))) {return NO;}
         if (sel_isEqual(selector, sel_registerName("release"))) {return NO;}
@@ -57,7 +57,7 @@ __unused static void PDLThreadSafetifyMethodAfter(__unsafe_unretained id self, S
         }
         return YES;
     }];
-
+#endif
     return ret;
 }
 

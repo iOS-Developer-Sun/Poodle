@@ -12,7 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSObject (PDLThreadSafetifyMethod)
 
+#ifndef __i386__
+
 + (NSInteger)pdl_threadSafetifyMethods:(BOOL(^_Nullable)(SEL selector))filter;
+
+#endif
 
 @end
 
