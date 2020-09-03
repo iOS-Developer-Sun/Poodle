@@ -150,13 +150,14 @@ void *PDLMethodFullAfter(void) {
             continue;
         }
 
-        BOOL result = pdl_intercept(self, selector, nil, ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
+        BOOL result = pdl_intercept(self, selector, nil, ^IMP(BOOL exists, NSNumber **isStructRetNumber, Method method, void **data) {
             if (!exists) {
                 return NULL;
             }
-            if (isStructRetNumber) {
+            NSNumber *number = *isStructRetNumber;
+            if (number) {
                 *data = actions;
-                if (isStructRetNumber.boolValue) {
+                if (number.boolValue) {
                     return imp_stret;
                 } else {
                     return imp;

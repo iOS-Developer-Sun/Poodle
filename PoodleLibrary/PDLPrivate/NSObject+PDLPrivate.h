@@ -10,6 +10,8 @@
 
 @interface NSObject (PDLPrivate)
 
+OBJC_EXPORT void _objc_init(void);
+
 @property (readonly) NSString *_ivarDescription;
 @property (readonly) NSString *_shortMethodDescription;
 @property (readonly) NSString *_methodDescription;

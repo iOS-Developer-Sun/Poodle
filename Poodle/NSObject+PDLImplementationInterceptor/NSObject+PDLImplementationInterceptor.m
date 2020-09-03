@@ -34,50 +34,26 @@ struct NSObjectImplementationInterceptorBlock {
 
 @implementation NSObject (PDLImplementationInterceptor)
 
-BOOL pdl_intercept(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(^interceptor)(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data)) {
-    Method method = class_getInstanceMethod(aClass, selector);
-    IMP implementation = method_getImplementation(method);
-    if (implementation == NULL) {
-        return NO;
-    }
-
-    BOOL exists = YES;
-    void *data = NULL;
-    const char *typeEncoding = method_getTypeEncoding(method);
-    Method superclassMethod = class_getInstanceMethod(class_getSuperclass(aClass), selector);
-    IMP superclassImplementation = method_getImplementation(superclassMethod);
-    if (implementation == superclassImplementation) {
-        exists = NO;
-        implementation = NULL;
-    }
-
-    BOOL isStret = NO;
-    NSNumber *isStructRetNumberToReport = isStructRetNumber;
+NSNumber *pdl_isStructRetNumber(const char *typeEncoding) {
+    NSNumber *isStructRetNumber = nil;
 #if !__arm64__
-    if (!isStructRetNumberToReport) {
-        @try {
-            NSMethodSignature *methodSignature = [NSMethodSignature signatureWithObjCTypes:typeEncoding];
-            NSNumber *isHiddenStructRetNumber = [methodSignature valueForKey:@"isHiddenStructRet"];
-            assert(isHiddenStructRetNumber);
-            isStructRetNumberToReport = isHiddenStructRetNumber;
-        } @catch (NSException *exception) {
-            isStructRetNumberToReport = nil;
-        } @finally {
-            ;
-        }
+    @try {
+        NSMethodSignature *methodSignature = [NSMethodSignature signatureWithObjCTypes:typeEncoding];
+        NSNumber *isHiddenStructRetNumber = [methodSignature valueForKey:@"isHiddenStructRet"];
+        assert(isHiddenStructRetNumber);
+        isStructRetNumber = isHiddenStructRetNumber;
+    } @catch (NSException *exception) {
+        isStructRetNumber = nil;
+    } @finally {
+        ;
     }
-    isStret = isStructRetNumberToReport.boolValue;
 #else
-    isStructRetNumberToReport = @(NO);
+    isStructRetNumber = @(NO);
 #endif
+    return isStructRetNumber;
+}
 
-    IMP interceptorImplementation = interceptor(exists, isStructRetNumberToReport, method, &data);
-    if (!interceptorImplementation) {
-        return NO;
-    }
-
-    struct PDLImplementationInterceptorData implementationInterceptorData = {selector, (char *)typeEncoding, implementation, aClass, data};
-
+IMP pdl_implementation(struct PDLImplementationInterceptorData implementationInterceptorData, IMP interceptorImplementation, BOOL isStret) {
     id block = nil;
     struct NSObjectImplementationInterceptorBlock *blockPointer = NULL;
     if (!isStret) {
@@ -102,9 +78,7 @@ BOOL pdl_intercept(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(
     }
 
     IMP blockImplementation = imp_implementationWithBlock(block);
-    IMP originalImplementation = class_replaceMethod(aClass, selector, blockImplementation, typeEncoding);
-    (void)originalImplementation;
-    assert((originalImplementation != NULL) == (exists != NO));
+
     assert(blockPointer->Desc->Block_size == sizeof(struct NSObjectImplementationInterceptorBlock));
     assert(blockPointer->interceptorImplementation == interceptorImplementation);
     assert(blockPointer->data.method_name == implementationInterceptorData.method_name);
@@ -112,10 +86,83 @@ BOOL pdl_intercept(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(
     assert(blockPointer->data.method_imp == implementationInterceptorData.method_imp);
     assert(blockPointer->data.method_class == implementationInterceptorData.method_class);
 
+    return blockImplementation;
+}
+
+BOOL pdl_intercept(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(^interceptor)(BOOL exists, NSNumber **isStructRetNumber, Method method, void **data)) {
+    Method method = class_getInstanceMethod(aClass, selector);
+    IMP implementation = method_getImplementation(method);
+    if (implementation == NULL) {
+        return NO;
+    }
+
+    BOOL exists = YES;
+    void *data = NULL;
+    const char *typeEncoding = method_getTypeEncoding(method);
+    Method superclassMethod = class_getInstanceMethod(class_getSuperclass(aClass), selector);
+    IMP superclassImplementation = method_getImplementation(superclassMethod);
+    if (implementation == superclassImplementation) {
+        exists = NO;
+        implementation = NULL;
+    }
+
+    NSNumber *isStructRetNumberToReport = isStructRetNumber;
+    if (!isStructRetNumberToReport) {
+        isStructRetNumberToReport = pdl_isStructRetNumber(typeEncoding);
+    }
+
+    IMP interceptorImplementation = interceptor(exists, &isStructRetNumberToReport, method, &data);
+#if !__arm64__
+    if (!isStructRetNumberToReport) {
+        return NO;
+    }
+#endif
+    if (!interceptorImplementation) {
+        return NO;
+    }
+
+    struct PDLImplementationInterceptorData implementationInterceptorData = {selector, (char *)typeEncoding, implementation, aClass, data};
+    IMP blockImplementation = pdl_implementation(implementationInterceptorData, interceptorImplementation, isStructRetNumberToReport.boolValue);
+    IMP originalImplementation = class_replaceMethod(aClass, selector, blockImplementation, typeEncoding);
+    (void)originalImplementation;
+    assert((originalImplementation != NULL) == (exists != NO));
+
     return YES;
 }
 
-NSUInteger pdl_interceptCluster(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(^interceptor)(Class aClass, BOOL exists, NSNumber *isStructRetNumber, Method method, void **data)) {
+BOOL pdl_interceptMethod(Class aClass, Method method, NSNumber *isStructRetNumber, IMP(^interceptor)(NSNumber **isStructRetNumber, void **data)) {
+    IMP implementation = method_getImplementation(method);
+    void *data = NULL;
+    const char *typeEncoding = method_getTypeEncoding(method);
+    SEL selector = method_getName(method);
+
+    NSNumber *isStructRetNumberToReport = isStructRetNumber;
+    if (!isStructRetNumberToReport) {
+        isStructRetNumberToReport = pdl_isStructRetNumber(typeEncoding);
+    }
+
+    IMP interceptorImplementation = interceptor(&isStructRetNumberToReport, &data);
+#if !__arm64__
+    if (!isStructRetNumberToReport) {
+        return NO;
+    }
+#endif
+    if (!interceptorImplementation) {
+        return NO;
+    }
+
+    struct PDLImplementationInterceptorData implementationInterceptorData = {selector, (char *)typeEncoding, implementation, aClass, data};
+
+    IMP blockImplementation = pdl_implementation(implementationInterceptorData, interceptorImplementation, isStructRetNumberToReport.boolValue);
+
+    IMP originalImplementation = method_setImplementation(method, blockImplementation);
+    (void)originalImplementation;
+    assert(originalImplementation == implementation);
+
+    return YES;
+}
+
+NSUInteger pdl_interceptCluster(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(^interceptor)(Class aClass, BOOL exists, NSNumber **isStructRetNumber, Method method, void **data)) {
     CFMutableSetRef classes = CFSetCreateMutable(NULL, 0, NULL);
     unsigned int outCount = 0;
     Class *classList = objc_copyClassList(&outCount);
@@ -144,14 +191,14 @@ NSUInteger pdl_interceptCluster(Class aClass, SEL selector, NSNumber *isStructRe
 
     for (CFIndex i = 0; i < count; i++) {
         Class subclass = (__bridge Class)(subclasses[i]);
-        BOOL intercepted = pdl_intercept(subclass, selector, isStructRetNumber, ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
+        BOOL intercepted = pdl_intercept(subclass, selector, isStructRetNumber, ^IMP(BOOL exists, NSNumber **isStructRetNumber, Method method, void **data) {
             return interceptor(subclass, exists, isStructRetNumber, method, data);
         });
         if (intercepted) {
             ret++;
         }
     }
-    BOOL intercepted = pdl_intercept(aClass, selector, isStructRetNumber, ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
+    BOOL intercepted = pdl_intercept(aClass, selector, isStructRetNumber, ^IMP(BOOL exists, NSNumber **isStructRetNumber, Method method, void **data) {
         return interceptor(aClass, exists, isStructRetNumber, method, data);
     });
     if (intercepted) {
@@ -165,7 +212,7 @@ NSUInteger pdl_interceptCluster(Class aClass, SEL selector, NSNumber *isStructRe
 
 BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data) {
     void *d = data;
-    return pdl_intercept(aClass, selector, isStructRetNumber, ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
+    return pdl_intercept(aClass, selector, isStructRetNumber, ^IMP(BOOL exists, NSNumber **isStructRetNumber, Method method, void **data) {
         if (!exists && !addIfNotExistent) {
             return NULL;
         }
@@ -176,7 +223,7 @@ BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementa
 
 NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data) {
     void *d = data;
-    return pdl_interceptCluster(aClass, selector, isStructRetNumber, ^IMP(__unsafe_unretained Class aClass, BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
+    return pdl_interceptCluster(aClass, selector, isStructRetNumber, ^IMP(__unsafe_unretained Class aClass, BOOL exists, NSNumber **isStructRetNumber, Method method, void **data) {
         if (!exists && !addIfNotExistent) {
             return NULL;
         }

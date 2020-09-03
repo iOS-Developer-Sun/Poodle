@@ -56,7 +56,7 @@ static void pdl_setObjectForKey(__unsafe_unretained id self, SEL _cmd, __unsafe_
     ((typeof(&pdl_setObjectForKey))_imp)(self, _cmd, obj, key);
 }
 
-+ (void)load {
++ (void)pdl_safeOperationEnable {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         {
