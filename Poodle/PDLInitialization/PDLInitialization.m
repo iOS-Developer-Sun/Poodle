@@ -64,7 +64,7 @@ static void pdl_initializeLoad(id self, SEL _cmd) {
     return _count;
 }
 
-+ (NSUInteger)preload {
++ (NSUInteger)preload:(BOOL(^)(Class aClass, IMP imp))filter {
     assert(_loaders == nil);
 
     _loaders = [NSMutableArray array];
@@ -84,7 +84,16 @@ static void pdl_initializeLoad(id self, SEL _cmd) {
             if (sel != loadSelector) {
                 continue;
             }
-            assert(method_getImplementation(method) != loadImp);
+
+            IMP imp = method_getImplementation(method);
+            BOOL shouldAdd = YES;
+            if (filter) {
+                shouldAdd = filter(aClass, imp);
+            }
+            if (!shouldAdd) {
+                continue;
+            }
+
             BOOL ret = pdl_interceptMethod(aClass, method, @(NO), ^IMP(NSNumber *__autoreleasing *isStructRetNumber, void **data) {
                 return loadImp;
             });
