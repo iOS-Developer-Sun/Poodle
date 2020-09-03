@@ -14,9 +14,9 @@
 
 _pdl_die:
 
-movl    0x4(%esp), %eax
-movl    $0, %esp
-movl    $0, %ebp
-jmp     *%eax
+    movl    0x4(%esp), %eax
+    movl    $0, %esp
+    movl    $0, %ebp
+    jmp     *%eax
 
 #endif

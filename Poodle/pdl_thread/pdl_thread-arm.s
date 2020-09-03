@@ -18,13 +18,13 @@
 
 _pdl_thread_fake:
 
-push    {r4, r7, lr}        // new space and backup caller registers
-mov     r4, r7              // store fp
-mov     r7, r0              // fake frames
-mov     r0, r2              // set arg
-blx     r1                  // start(arg)
-mov     r7, r4              // recover fp
-pop     {r4, r7, pc}        // restore caller registers and delete space
-nop
+    push    {r4, r7, lr}        // new space and backup caller registers
+    mov     r4, r7              // store fp
+    mov     r7, r0              // fake frames
+    mov     r0, r2              // set arg
+    blx     r1                  // start(arg)
+    mov     r7, r4              // recover fp
+    pop     {r4, r7, pc}        // restore caller registers and delete space
+    nop
 
 #endif

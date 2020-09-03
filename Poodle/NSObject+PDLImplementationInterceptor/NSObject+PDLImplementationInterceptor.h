@@ -34,8 +34,8 @@ _cmd = ((struct PDLImplementationInterceptorData *)(void *)_cmd)->method_name
 + (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation;
 + (BOOL)pdl_interceptSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(NSNumber *)isStructRet addIfNotExistent:(BOOL)addIfNotExistent data:(void *)data;
 
-+ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation;
-+ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(NSNumber *)isStructRet addIfNotExistent:(BOOL)addIfNotExistent data:(void *)data;
+//+ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation;
+//+ (NSUInteger)pdl_interceptClusterSelector:(SEL)selector withInterceptorImplementation:(IMP)interceptorImplementation isStructRet:(NSNumber *)isStructRet addIfNotExistent:(BOOL)addIfNotExistent data:(void *)data;
 
 @end
 
@@ -45,10 +45,11 @@ _cmd = ((struct PDLImplementationInterceptorData *)(void *)_cmd)->method_name
 extern "C" {
 #endif
 
-extern BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data);
-extern NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data);
+//extern BOOL pdl_interceptSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data);
+//extern NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data);
 
-extern BOOL pdl_interceptSelector2(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(^interceptorGenerator)(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data));
+extern BOOL pdl_interceptSelector2(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(^interceptor)(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data));
+extern NSUInteger pdl_interceptClusterSelector2(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(^interceptor)(Class aClass, BOOL exists, NSNumber *isStructRetNumber, Method method, void **data));
 
 #ifdef __cplusplus
 }

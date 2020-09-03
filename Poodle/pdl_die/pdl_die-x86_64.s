@@ -14,8 +14,8 @@
 
 _pdl_die:
 
-movq    $0, %rbp
-movq    $0, %rsp
-jmp     *%rdi
+    movq    $0, %rbp
+    movq    $0, %rsp
+    jmp     *%rdi
 
 #endif
