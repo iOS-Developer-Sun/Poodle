@@ -68,7 +68,7 @@ static void pdl_setObjectAtIndex(__unsafe_unretained NSMutableArray *self, SEL _
     ((typeof(&pdl_setObjectAtIndex))_imp)(self, _cmd, obj, idx);
 }
 
-+ (void)load {
++ (void)pdl_safeOperationEnable {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         {

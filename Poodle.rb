@@ -575,6 +575,15 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/PDLViewController'
         end
 
+        s.subspec 'PDLInitialization' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLInitialization/' + source_files
+            ss.vendored_library = base + 'PDLInitialization/' + librariy_files
+            ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+        end
+
         s.subspec 'PDLKeyboardNotificationObserver' do |ss|
             ss.platform = platform_ios
             ss.ios.deployment_target  = '9.0'
