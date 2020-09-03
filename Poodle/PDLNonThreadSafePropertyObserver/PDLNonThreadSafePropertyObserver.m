@@ -137,21 +137,9 @@ static Class _checker = nil;
         SEL setter = NSSelectorFromString(setterString);
         assert(getter && setter);
 
-        BOOL ret = pdl_interceptSelector2(aClass, getter, nil, ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
-            if (!exists) {
-                return NULL;
-            }
-            *data = (void *)name;
-            return (IMP)&pdl_nonThreadSafePropertyGetter;
-        });
+        BOOL ret = pdl_interceptSelector(aClass, getter, (IMP)&pdl_nonThreadSafePropertyGetter, nil, NO, (void *)name);
         if (ret) {
-            ret = pdl_interceptSelector2(aClass, setter, nil, ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
-                if (!exists) {
-                    return NULL;
-                }
-                *data = (void *)name;
-                return (IMP)&pdl_nonThreadSafePropertySetter;
-            });
+            ret = pdl_interceptSelector(aClass, setter, (IMP)&pdl_nonThreadSafePropertySetter, nil, NO, (void *)name);
             if (!ret) {
                 NSLog(@"%@.%@ does not exist", aClass, setterString);
             } else {
@@ -164,9 +152,7 @@ static Class _checker = nil;
     free(propertyList);
 
     if (classObserved) {
-        pdl_interceptSelector2(object_getClass(aClass), @selector(allocWithZone:), @(NO), ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
-            return (IMP)&pdl_observeNonThreadSafePropertiesAllocWithZone;
-        });
+        pdl_interceptSelector(object_getClass(aClass), @selector(allocWithZone:), (IMP)&pdl_observeNonThreadSafePropertiesAllocWithZone, nil, YES, NULL);
     }
 }
 

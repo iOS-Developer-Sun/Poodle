@@ -12,8 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSObject (PDLMethod)
 
+#ifndef __i386__
+
 + (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP _Nullable)beforeAction afterAction:(IMP _Nullable)afterAction;
 + (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP _Nullable)beforeAction afterAction:(IMP _Nullable)afterAction methodFilter:(BOOL(^_Nullable)(SEL selector))methodFilter;
+
+#endif
 
 @end
 

@@ -116,7 +116,6 @@ void *PDLMethodFullAfter(void) {
 
 + (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
     NSUInteger ret = -1;
-#ifndef __i386__
     pdl_thread_storage_register(_pdl_storage_key, &pdl_methods_list_destroy);
     if (!pdl_thread_storage_enabled()) {
         return -1;
@@ -151,7 +150,7 @@ void *PDLMethodFullAfter(void) {
             continue;
         }
 
-        BOOL result = pdl_interceptSelector2(self, selector, nil, ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
+        BOOL result = pdl_intercept(self, selector, nil, ^IMP(BOOL exists, NSNumber *isStructRetNumber, Method method, void **data) {
             if (!exists) {
                 return NULL;
             }
@@ -175,7 +174,6 @@ void *PDLMethodFullAfter(void) {
     if (ret == 0) {
         free(actions);
     }
-#endif
     return ret;
 }
 
