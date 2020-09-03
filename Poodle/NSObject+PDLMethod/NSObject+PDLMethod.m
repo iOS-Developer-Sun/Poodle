@@ -103,14 +103,7 @@ void *PDLMethodFullAfter(void) {
     PDLMethodActions *actions = _data;
     void(*afterAction)(id, SEL) = (typeof(afterAction))actions->afterAction;
     if (afterAction) {
-//        volatile void *originalLinkRegister = NULL;
-//        __asm__ volatile("nop");
-//        __asm__ volatile("mov %0, lr" : "=r"(originalLinkRegister));
-//        __asm__ volatile("nop");
         afterAction(self, _cmd);
-//        __asm__ volatile("nop");
-//        __asm__ volatile("mov lr, %0" :: "r"(originalLinkRegister));
-//        __asm__ volatile("nop");
     }
     return lr;
 }
@@ -123,7 +116,7 @@ void *PDLMethodFullAfter(void) {
 
 + (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
     NSUInteger ret = -1;
-
+#ifndef __i386__
     pdl_thread_storage_register(_pdl_storage_key, &pdl_methods_list_destroy);
     if (!pdl_thread_storage_enabled()) {
         return -1;
@@ -182,7 +175,7 @@ void *PDLMethodFullAfter(void) {
     if (ret == 0) {
         free(actions);
     }
-
+#endif
     return ret;
 }
 

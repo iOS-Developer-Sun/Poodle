@@ -18,15 +18,15 @@
 
 _pdl_thread_fake:
 
-pushl   %ebp                // store fp
-movl    0x8(%esp), %ebp     // fake frames
-subl    $0x8, %esp
-movl    0x18(%esp), %eax
-movl    %eax, (%esp)
-call   *0x14(%esp)
-addl    $0x8, %esp
-popl    %ebp
-retl
-nop
+    pushl   %ebp                // store fp
+    movl    0x8(%esp), %ebp     // fake frames
+    subl    $0x8, %esp
+    movl    0x18(%esp), %eax
+    movl    %eax, (%esp)
+    call   *0x14(%esp)
+    addl    $0x8, %esp
+    popl    %ebp
+    retl
+    nop
 
 #endif

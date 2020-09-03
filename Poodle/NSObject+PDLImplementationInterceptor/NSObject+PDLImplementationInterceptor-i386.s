@@ -15,36 +15,22 @@
 
 _PDLImplementationInterceptorEntry:
 
-// arg0 0x4(%esp)
-// arg1 0x8(%esp)
-// arg2 0xc(%esp)
-// arg3 0x10(%esp)
-// ...
-// ret %eax
-
-movl    0x4(%esp), %eax     // load arg0(block) to eax
-movl    0x8(%esp), %ecx     // load arg1(self) to ecx
-movl    0x14(%eax), %edx    // load block->interceptorImplementation to edx
-addl    $0x18, %eax         // set eax from block to &(block->method)
-movl    %ecx, 0x4(%esp)     // save self to arg0
-movl    %eax, 0x8(%esp)     // save &(block->method) to arg1
-jmp     *%edx               // call block->interceptorImplementation
+    movl    0x4(%esp), %eax     // load arg0(block) to eax
+    movl    0x8(%esp), %ecx     // load arg1(self) to ecx
+    movl    0x14(%eax), %edx    // load block->interceptorImplementation to edx
+    addl    $0x18, %eax         // set eax from block to &(block->method)
+    movl    %ecx, 0x4(%esp)     // save self to arg0
+    movl    %eax, 0x8(%esp)     // save &(block->method) to arg1
+    jmp     *%edx               // call block->interceptorImplementation
 
 _PDLImplementationInterceptorEntry_stret:
 
-// arg0 0x8(%esp)
-// arg1 0xc(%esp)
-// arg2 0x10(%esp)
-// arg3 0x14(%esp)
-// ...
-// ret %eax / %eax %edx / %esp (+) ...
-
-movl    0x8(%esp), %eax     // load arg0(block) to eax
-movl    0xc(%esp), %ecx     // load arg1(self) to ecx
-movl    0x14(%eax), %edx    // load block->interceptorImplementation to edx
-addl    $0x18, %eax         // set eax from block to &(block->method)
-movl    %ecx, 0x8(%esp)     // save self to arg0
-movl    %eax, 0xc(%esp)     // save &(block->method) to arg1
-jmp     *%edx               // call block->interceptorImplementation
+    movl    0x8(%esp), %eax     // load arg0(block) to eax
+    movl    0xc(%esp), %ecx     // load arg1(self) to ecx
+    movl    0x14(%eax), %edx    // load block->interceptorImplementation to edx
+    addl    $0x18, %eax         // set eax from block to &(block->method)
+    movl    %ecx, 0x8(%esp)     // save self to arg0
+    movl    %eax, 0xc(%esp)     // save &(block->method) to arg1
+    jmp     *%edx               // call block->interceptorImplementation
 
 #endif

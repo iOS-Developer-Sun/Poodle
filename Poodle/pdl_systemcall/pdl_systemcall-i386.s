@@ -14,18 +14,18 @@
 
 _pdl_systemcall:
 
-popl   %ecx
-popl   %eax
-pushl  %ecx
-int    $0x80
-movl   (%esp), %edx
-pushl  %ecx
-jae    LReturn
-call  L1
-L1:
-popl   %edx
-jmp    tramp_cerror
+    popl   %ecx
+    popl   %eax
+    pushl  %ecx
+    int    $0x80
+    movl   (%esp), %edx
+    pushl  %ecx
+    jae    LReturn
+    call  L1
+    L1:
+    popl   %edx
+    jmp    tramp_cerror
 LReturn:
-retl
+    retl
 
 #endif

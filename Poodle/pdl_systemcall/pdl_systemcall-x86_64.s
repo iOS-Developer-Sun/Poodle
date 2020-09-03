@@ -14,13 +14,13 @@
 
 _pdl_systemcall:
 
-movl   $0x2000000, %eax
-movq   %rcx, %r10
-syscall
-jae    LReturn
-movq   %rax, %rdi
-jmp    _cerror
+    movl   $0x2000000, %eax
+    movq   %rcx, %r10
+    syscall
+    jae    LReturn
+    movq   %rax, %rdi
+    jmp    _cerror
 LReturn:
-retq
+    retq
 
 #endif
