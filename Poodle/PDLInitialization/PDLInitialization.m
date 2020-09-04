@@ -118,7 +118,7 @@ static void pdl_initializeLoad(id self, SEL _cmd) {
     return [_loaders sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         PDLInitialization *i1 = obj1;
         PDLInitialization *i2 = obj2;
-        return [@(i1.duration) compare:@(i2.duration)];
+        return [@(i2.duration) compare:@(i1.duration)];
     }];
 }
 
