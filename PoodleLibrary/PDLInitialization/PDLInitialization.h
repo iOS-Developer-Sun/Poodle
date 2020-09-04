@@ -17,8 +17,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign, readonly) IMP imp;
 
 + (NSUInteger)count;
-+ (NSUInteger)preload:(BOOL(^)(Class aClass, IMP imp))filter;
++ (NSUInteger)preload:(BOOL(^_Nullable)(Class aClass, IMP imp))filter;
 + (NSArray *)loaders;
++ (NSArray *)topLoaders;
 
 @end
 
