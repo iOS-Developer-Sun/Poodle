@@ -21,14 +21,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)defaultStatusBar;
 
-+ (NSUInteger)enableClass:(Class)aClass;
-+ (NSUInteger)enableBaseClasses; // UIViewController UINavigationController UITabBarController
++ (NSUInteger)enableViewController;
++ (NSUInteger)enableNavigationController;
++ (NSUInteger)enableTabBarController;
++ (NSUInteger)enableBaseClasses;
 
 @end
 
 @interface UIViewController (PDLStatusBar)
 
 @property (nonatomic, strong, readonly) PDLViewControllerStatusBar *pdl_statusBar;
+@property (nonatomic, strong, readonly, class) Class pdl_statusBarClass;
 
 @end
 

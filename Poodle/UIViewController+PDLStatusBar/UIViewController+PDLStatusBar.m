@@ -10,15 +10,11 @@
 #import <objc/runtime.h>
 #import "NSObject+PDLImplementationInterceptor.h"
 
-@implementation PDLViewControllerStatusBar
+@interface PDLViewControllerStatusBar ()
 
-+ (instancetype)defaultStatusBar {
-    static id defaultStatusBar = nil;
-    if (!defaultStatusBar) {
-        defaultStatusBar = [[self alloc] init];
-    }
-    return defaultStatusBar;
-}
+@end
+
+@implementation PDLViewControllerStatusBar
 
 - (instancetype)init {
     self = [super init];
@@ -106,6 +102,14 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
     return ret;
 }
 
++ (instancetype)defaultStatusBar {
+    static id defaultStatusBar = nil;
+    if (!defaultStatusBar) {
+        defaultStatusBar = [[self alloc] init];
+    }
+    return defaultStatusBar;
+}
+
 + (NSUInteger)enableClass:(Class)aClass {
     __unused NSUInteger count = 0;
     BOOL ret = NO;
@@ -127,15 +131,30 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
 }
 
 + (NSUInteger)enableViewController {
-    return [self enableClass:[UIViewController class]];
+    __block NSUInteger ret = 0;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        ret = [self enableClass:[UIViewController class]];
+    });
+    return ret;
 }
 
 + (NSUInteger)enableNavigationController {
-    return [self enableClass:[UINavigationController class]];
+    __block NSUInteger ret = 0;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        ret = [self enableClass:[UINavigationController class]];
+    });
+    return ret;
 }
 
 + (NSUInteger)enableTabBarController {
-    return [self enableClass:[UITabBarController class]];
+    __block NSUInteger ret = 0;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        ret = [self enableClass:[UITabBarController class]];
+    });
+    return ret;
 }
 
 + (NSUInteger)enableBaseClasses {
@@ -147,6 +166,8 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
 }
 
 @end
+
+#pragma mark - Subclasses
 
 @interface PDLNavigationControllerStatusBar : PDLViewControllerStatusBar
 
@@ -184,15 +205,16 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
 
 @end
 
+#pragma mark - Categories
+
 @implementation UIViewController (PDLStatusBar)
 
-static void *PDLViewControllerStatusBarKey = &PDLViewControllerStatusBarKey;
-
-+ (Class) pdl_statusBarClass {
++ (Class)pdl_statusBarClass {
     return [PDLViewControllerStatusBar class];
 }
 
 - (PDLViewControllerStatusBar *)pdl_statusBar {
+    static void *PDLViewControllerStatusBarKey = &PDLViewControllerStatusBarKey;
     PDLViewControllerStatusBar *statusBar = objc_getAssociatedObject(self, PDLViewControllerStatusBarKey);
     if (!statusBar) {
         statusBar = [[[self.class pdl_statusBarClass] alloc] init];
@@ -205,8 +227,16 @@ static void *PDLViewControllerStatusBarKey = &PDLViewControllerStatusBarKey;
 
 @implementation UINavigationController (PDLStatusBar)
 
-+ (Class) pdl_statusBarClass {
++ (Class)pdl_statusBarClass {
     return [PDLNavigationControllerStatusBar class];
+}
+
+@end
+
+@implementation UITabBarController (PDLStatusBar)
+
++ (Class)pdl_statusBarClass {
+    return [PDLTabBarControllerStatusBar class];
 }
 
 @end
