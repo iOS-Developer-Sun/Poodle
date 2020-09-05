@@ -21,6 +21,9 @@
 		B83CAA78248B487E009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA82248B49C9009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA83248B49D1009C784A /* pdl_security.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83CAA74248B4830009C784A /* pdl_security.h */; };
+		B83EFADC2503408300FDBA43 /* UIViewController+PDLRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFADB2503408300FDBA43 /* UIViewController+PDLRotation.m */; };
+		B83EFADD2503409400FDBA43 /* UIViewController+PDLRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFADB2503408300FDBA43 /* UIViewController+PDLRotation.m */; };
+		B83EFADE2503409A00FDBA43 /* UIViewController+PDLRotation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83EFADA2503408300FDBA43 /* UIViewController+PDLRotation.h */; };
 		B858422C246B963E00AC3717 /* pdl_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.m */; };
 		B85842AF246B96AE00AC3717 /* pdl_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.m */; };
 		B85842B0246B96B400AC3717 /* pdl_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8584229246B961400AC3717 /* pdl_backtrace.h */; };
@@ -425,6 +428,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = B83CAA79248B49B4009C784A;
 			remoteInfo = pdl_security;
+		};
+		B83EFAE1250340B200FDBA43 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8FC6C0322EF0540005B91DE;
+			remoteInfo = PoodleLibraryTemplate;
+		};
+		B83EFAE3250340B200FDBA43 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B83EFACE2503405A00FDBA43;
+			remoteInfo = "UIViewController+PDLRotation";
 		};
 		B85842B1246B96CB00AC3717 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -961,6 +978,16 @@
 			dstSubfolderSpec = 16;
 			files = (
 				B83CAA83248B49D1009C784A /* pdl_security.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B83EFAD12503405A00FDBA43 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B83EFADE2503409A00FDBA43 /* UIViewController+PDLRotation.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1647,6 +1674,9 @@
 		B83CAA77248B487E009C784A /* pdl_security.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_security.c; sourceTree = "<group>"; };
 		B83CAA81248B49B4009C784A /* libpdl_security.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_security.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B83CAA8B248BA622009C784A /* pdl_thread_define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_thread_define.h; sourceTree = "<group>"; };
+		B83EFAD62503405A00FDBA43 /* libUIViewController+PDLRotation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUIViewController+PDLRotation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B83EFADA2503408300FDBA43 /* UIViewController+PDLRotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLRotation.h"; sourceTree = "<group>"; };
+		B83EFADB2503408300FDBA43 /* UIViewController+PDLRotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLRotation.m"; sourceTree = "<group>"; };
 		B85068EE250121690028E642 /* NSArray+PDLSafeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PDLSafeOperation.h"; sourceTree = "<group>"; };
 		B85068EF250121690028E642 /* NSDictionary+PDLSafeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+PDLSafeOperation.h"; sourceTree = "<group>"; };
 		B8584229246B961400AC3717 /* pdl_backtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_backtrace.h; sourceTree = "<group>"; };
@@ -2041,6 +2071,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B83CAA7B248B49B4009C784A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B83EFAD02503405A00FDBA43 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2530,6 +2567,15 @@
 			path = pdl_security;
 			sourceTree = "<group>";
 		};
+		B83EFAD92503408300FDBA43 /* UIViewController+PDLRotation */ = {
+			isa = PBXGroup;
+			children = (
+				B83EFADA2503408300FDBA43 /* UIViewController+PDLRotation.h */,
+				B83EFADB2503408300FDBA43 /* UIViewController+PDLRotation.m */,
+			);
+			path = "UIViewController+PDLRotation";
+			sourceTree = "<group>";
+		};
 		B8584227246B961400AC3717 /* pdl_backtrace */ = {
 			isa = PBXGroup;
 			children = (
@@ -2727,6 +2773,7 @@
 				B88865EA24C02AA600D58BC7 /* libpdl_pthread_key.a */,
 				B888660924C0436A00D58BC7 /* libNSObject+PDLThreadSafetifyMethod.a */,
 				B81E710A250117A300399E4B /* libPDLInitialization.a */,
+				B83EFAD62503405A00FDBA43 /* libUIViewController+PDLRotation.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3529,6 +3576,7 @@
 				B8E56EDE23D7001A008D2DA1 /* UINavigationController+PDLLongPressPop */,
 				B8E56EF423D7001A008D2DA1 /* UIScreen+PDLExtension */,
 				B8E56DFB23D70016008D2DA1 /* UIViewController+PDLNavigationBar */,
+				B83EFAD92503408300FDBA43 /* UIViewController+PDLRotation */,
 				B8E56EFA23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation */,
 			);
 			path = Poodle;
@@ -3679,6 +3727,24 @@
 			name = pdl_security;
 			productName = "CAAnimation+PDLExtension";
 			productReference = B83CAA81248B49B4009C784A /* libpdl_security.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B83EFACE2503405A00FDBA43 /* UIViewController+PDLRotation */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B83EFAD32503405A00FDBA43 /* Build configuration list for PBXNativeTarget "UIViewController+PDLRotation" */;
+			buildPhases = (
+				B83EFACF2503405A00FDBA43 /* Sources */,
+				B83EFAD02503405A00FDBA43 /* Frameworks */,
+				B83EFAD12503405A00FDBA43 /* CopyFiles */,
+				B83EFAD22503405A00FDBA43 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "UIViewController+PDLRotation";
+			productName = "CAAnimation+PDLExtension";
+			productReference = B83EFAD62503405A00FDBA43 /* libUIViewController+PDLRotation.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		B85842A6246B968D00AC3717 /* pdl_backtrace */ = {
@@ -3977,41 +4043,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B81E71112501189800399E4B /* PBXTargetDependency */,
-				B888661124C043AF00D58BC7 /* PBXTargetDependency */,
-				B88865F124C02B5A00D58BC7 /* PBXTargetDependency */,
-				B88865DD24BF222800D58BC7 /* PBXTargetDependency */,
-				B8B3AA0E24B71F7F008EFBE0 /* PBXTargetDependency */,
-				B890852A24AF494900DAC261 /* PBXTargetDependency */,
-				B8B7B5C4249B934D008D4604 /* PBXTargetDependency */,
-				B8B7B5B0249B6272008D4604 /* PBXTargetDependency */,
-				B83CAA85248B49FE009C784A /* PBXTargetDependency */,
-				B8DEC4D12487808A00DB3D0E /* PBXTargetDependency */,
-				B879534B2487456E00798005 /* PBXTargetDependency */,
-				B879532C2486865D00798005 /* PBXTargetDependency */,
-				B802AC9622F3377900BF028E /* PBXTargetDependency */,
-				B8FC6D7D22EF0BC7005B91DE /* PBXTargetDependency */,
-				B8FC6D7F22EF0BC7005B91DE /* PBXTargetDependency */,
-				B8FC6D8122EF0BC7005B91DE /* PBXTargetDependency */,
-				B8FC6DAB22EFD9B0005B91DE /* PBXTargetDependency */,
-				B85842B2246B96CB00AC3717 /* PBXTargetDependency */,
-				B8FC6D0422EF08B5005B91DE /* PBXTargetDependency */,
-				B8FC6DAD22EFD9B0005B91DE /* PBXTargetDependency */,
-				B8724BBC23AB9F25003A4D2A /* PBXTargetDependency */,
-				B8FC6D0622EF08B5005B91DE /* PBXTargetDependency */,
-				B80FCBB923A9D4130028844B /* PBXTargetDependency */,
-				B80FCBCA23A9D4CC0028844B /* PBXTargetDependency */,
-				B8FC6D0822EF08B5005B91DE /* PBXTargetDependency */,
-				B8FC6D0A22EF08B5005B91DE /* PBXTargetDependency */,
-				B8FC6D0C22EF08B5005B91DE /* PBXTargetDependency */,
-				B8FC6ADD22EEFD2E005B91DE /* PBXTargetDependency */,
-				B8FC6D0E22EF08B5005B91DE /* PBXTargetDependency */,
-				B8FC6AF022EEFE8E005B91DE /* PBXTargetDependency */,
-				B8FC6D1022EF08B5005B91DE /* PBXTargetDependency */,
-				B8FC6BBE22EF02FC005B91DE /* PBXTargetDependency */,
-				B8FC6D1222EF08B5005B91DE /* PBXTargetDependency */,
-				B8FC6D1422EF08B5005B91DE /* PBXTargetDependency */,
-				B8FC6D8322EF0BC7005B91DE /* PBXTargetDependency */,
 				B8FC6AC422EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC622EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC822EEF563005B91DE /* PBXTargetDependency */,
@@ -4021,10 +4052,13 @@
 				B8FC6BFE22EF0536005B91DE /* PBXTargetDependency */,
 				B8FC6C8422EF06D9005B91DE /* PBXTargetDependency */,
 				B8FC6C8622EF06D9005B91DE /* PBXTargetDependency */,
+				B8B3AA0E24B71F7F008EFBE0 /* PBXTargetDependency */,
 				B8FC6C8822EF06D9005B91DE /* PBXTargetDependency */,
 				B8FC6C8A22EF06D9005B91DE /* PBXTargetDependency */,
 				B8FC6BD122EF041B005B91DE /* PBXTargetDependency */,
+				B88865DD24BF222800D58BC7 /* PBXTargetDependency */,
 				B82334B723BC988E00B1B15B /* PBXTargetDependency */,
+				B888661124C043AF00D58BC7 /* PBXTargetDependency */,
 				B8AD196823D1B4AC005A7363 /* PBXTargetDependency */,
 				B8FC6C8C22EF06D9005B91DE /* PBXTargetDependency */,
 				B8FC6C8E22EF06D9005B91DE /* PBXTargetDependency */,
@@ -4037,6 +4071,7 @@
 				B85ECC2B22F5953D0063BB7C /* PBXTargetDependency */,
 				B85ECB8E22F28C800063BB7C /* PBXTargetDependency */,
 				B802ACE122F33AC500BF028E /* PBXTargetDependency */,
+				B81E71112501189800399E4B /* PBXTargetDependency */,
 				B8FC6D7722EF0BC7005B91DE /* PBXTargetDependency */,
 				B85ECC0A22F578B10063BB7C /* PBXTargetDependency */,
 				B8AD195423D15D1D005A7363 /* PBXTargetDependency */,
@@ -4049,6 +4084,39 @@
 				B8FC6C9222EF06D9005B91DE /* PBXTargetDependency */,
 				B86A6BAF23BB560E00715650 /* PBXTargetDependency */,
 				B899F9FC24506A5D00EFBB39 /* PBXTargetDependency */,
+				B83EFAE2250340B200FDBA43 /* PBXTargetDependency */,
+				B802AC9622F3377900BF028E /* PBXTargetDependency */,
+				B8FC6D7D22EF0BC7005B91DE /* PBXTargetDependency */,
+				B8FC6D7F22EF0BC7005B91DE /* PBXTargetDependency */,
+				B83EFAE4250340B200FDBA43 /* PBXTargetDependency */,
+				B8FC6D8122EF0BC7005B91DE /* PBXTargetDependency */,
+				B8B7B5C4249B934D008D4604 /* PBXTargetDependency */,
+				B8FC6DAB22EFD9B0005B91DE /* PBXTargetDependency */,
+				B85842B2246B96CB00AC3717 /* PBXTargetDependency */,
+				B8FC6D0422EF08B5005B91DE /* PBXTargetDependency */,
+				B890852A24AF494900DAC261 /* PBXTargetDependency */,
+				B8DEC4D12487808A00DB3D0E /* PBXTargetDependency */,
+				B8FC6DAD22EFD9B0005B91DE /* PBXTargetDependency */,
+				B8724BBC23AB9F25003A4D2A /* PBXTargetDependency */,
+				B8FC6D0622EF08B5005B91DE /* PBXTargetDependency */,
+				B80FCBB923A9D4130028844B /* PBXTargetDependency */,
+				B80FCBCA23A9D4CC0028844B /* PBXTargetDependency */,
+				B8FC6D0822EF08B5005B91DE /* PBXTargetDependency */,
+				B8FC6D0A22EF08B5005B91DE /* PBXTargetDependency */,
+				B8FC6D0C22EF08B5005B91DE /* PBXTargetDependency */,
+				B8FC6ADD22EEFD2E005B91DE /* PBXTargetDependency */,
+				B8B7B5B0249B6272008D4604 /* PBXTargetDependency */,
+				B8FC6D0E22EF08B5005B91DE /* PBXTargetDependency */,
+				B8FC6AF022EEFE8E005B91DE /* PBXTargetDependency */,
+				B8FC6D1022EF08B5005B91DE /* PBXTargetDependency */,
+				B879534B2487456E00798005 /* PBXTargetDependency */,
+				B8FC6BBE22EF02FC005B91DE /* PBXTargetDependency */,
+				B83CAA85248B49FE009C784A /* PBXTargetDependency */,
+				B8FC6D1222EF08B5005B91DE /* PBXTargetDependency */,
+				B8FC6D1422EF08B5005B91DE /* PBXTargetDependency */,
+				B879532C2486865D00798005 /* PBXTargetDependency */,
+				B88865F124C02B5A00D58BC7 /* PBXTargetDependency */,
+				B8FC6D8322EF0BC7005B91DE /* PBXTargetDependency */,
 			);
 			name = PoodleLibrary;
 			productName = PoodleLibrary;
@@ -5062,6 +5130,7 @@
 				B802AC8A22F3372C00BF028E /* UINavigationController+PDLLongPressPop */,
 				B8FC6D3922EF0A99005B91DE /* UIScreen+PDLExtension */,
 				B8FC6D4222EF0A9A005B91DE /* UIViewController+PDLNavigationBar */,
+				B83EFACE2503405A00FDBA43 /* UIViewController+PDLRotation */,
 				B8FC6D4B22EF0A9A005B91DE /* UIViewController+PDLTransitionAnimation */,
 			);
 		};
@@ -5202,6 +5271,23 @@
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
 		B83CAA7D248B49B4009C784A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B83EFAD22503405A00FDBA43 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -6426,6 +6512,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B83EFACF2503405A00FDBA43 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B83EFADD2503409400FDBA43 /* UIViewController+PDLRotation.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B85842A7246B968D00AC3717 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -6545,6 +6639,7 @@
 				B85D45F0240E859000CBF758 /* PDLPageControl.m in Sources */,
 				B85D45F1240E859000CBF758 /* NSObject+PDLPrivate.m in Sources */,
 				B85D45F2240E859000CBF758 /* PDLResizableImageView.m in Sources */,
+				B83EFADC2503408300FDBA43 /* UIViewController+PDLRotation.m in Sources */,
 				B85D45F3240E859000CBF758 /* NSArray+PDLSafeOperation.m in Sources */,
 				B879531F248685B000798005 /* pdl_thread.c in Sources */,
 				B85D45F4240E859000CBF758 /* NSDictionary+PDLSafeOperation.m in Sources */,
@@ -7170,6 +7265,16 @@
 			target = B83CAA79248B49B4009C784A /* pdl_security */;
 			targetProxy = B83CAA84248B49FE009C784A /* PBXContainerItemProxy */;
 		};
+		B83EFAE2250340B200FDBA43 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8FC6C0322EF0540005B91DE /* PoodleLibraryTemplate */;
+			targetProxy = B83EFAE1250340B200FDBA43 /* PBXContainerItemProxy */;
+		};
+		B83EFAE4250340B200FDBA43 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B83EFACE2503405A00FDBA43 /* UIViewController+PDLRotation */;
+			targetProxy = B83EFAE3250340B200FDBA43 /* PBXContainerItemProxy */;
+		};
 		B85842B2246B96CB00AC3717 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B85842A6246B968D00AC3717 /* pdl_backtrace */;
@@ -7678,6 +7783,28 @@
 			name = Debug;
 		};
 		B83CAA80248B49B4009C784A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B83EFAD42503405A00FDBA43 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B83EFAD52503405A00FDBA43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -9378,6 +9505,15 @@
 			buildConfigurations = (
 				B83CAA7F248B49B4009C784A /* Debug */,
 				B83CAA80248B49B4009C784A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B83EFAD32503405A00FDBA43 /* Build configuration list for PBXNativeTarget "UIViewController+PDLRotation" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B83EFAD42503405A00FDBA43 /* Debug */,
+				B83EFAD52503405A00FDBA43 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

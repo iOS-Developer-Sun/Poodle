@@ -15,12 +15,12 @@
 
 @implementation NSObject (PDLDebug)
 
-- (NSString *)propertiesDescription {
+- (NSString *)propertiesDescriptionForClass:(Class)aClass {
     NSMutableDictionary *propertiesDescriptionDictionary = [NSMutableDictionary dictionary];
     NSString *debugDescription = [NSString stringWithFormat:@"<%@>: %p", NSStringFromClass(self.class), self];
     propertiesDescriptionDictionary[@"__Object"] = debugDescription;
     unsigned int propertiesCount = 0;
-    objc_property_t *properties = class_copyPropertyList([self class], &propertiesCount);
+    objc_property_t *properties = class_copyPropertyList(aClass, &propertiesCount);
     for (unsigned int i = 0; i < propertiesCount; i++) {
         objc_property_t property = properties[i];
         NSString *key = @(property_getName(property));
@@ -33,6 +33,10 @@
     free(properties);
 
     return propertiesDescriptionDictionary.description;
+}
+
+- (NSString *)propertiesDescription {
+    return [self propertiesDescriptionForClass:self.class];
 }
 
 + (NSArray *)object_subclasses {

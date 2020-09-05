@@ -21,6 +21,8 @@
 
 @property (class, readonly) Class metaClass;
 
+- (NSString *)propertiesDescriptionForClass:(Class)aClass;
+
 - (instancetype)objectRetain;
 - (oneway void)objectRelease;
 - (instancetype)objectAutorelease;
