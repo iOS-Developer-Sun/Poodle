@@ -12,13 +12,33 @@
 
 @implementation PDLViewControllerRotation
 
-static BOOL _enabled = NO;
++ (instancetype)defaultRotation {
+    static id defaultRotation = nil;
+    if (!defaultRotation) {
+        defaultRotation = [[self alloc] init];
+    }
+    return defaultRotation;
+}
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        PDLViewControllerRotation *defaultRotation = [self.class defaultRotation];
+        _shouldAutorotate = defaultRotation.shouldAutorotate;
+        _supportedInterfaceOrientations = defaultRotation.supportedInterfaceOrientations;
+        _preferredInterfaceOrientationForPresentation = defaultRotation.preferredInterfaceOrientationForPresentation;
+    }
+    return self;
+}
 
 static UIViewController *PDLViewControllerRotationDelegate(PDLViewControllerRotation *rotation, UIViewController *viewController) {
     UIViewController *delegate = nil;
     typeof(rotation.delegateProvider) delegateProvider = rotation.delegateProvider;
     if (delegateProvider) {
         delegate = delegateProvider(viewController);
+    }
+    if (!delegate) {
+        delegate = rotation.delegate;
     }
     return delegate;
 }
@@ -86,22 +106,38 @@ static UIInterfaceOrientation PDLViewControllerRotationPreferredInterfaceOrienta
     return ret;
 }
 
-+ (BOOL)enabled {
-    return _enabled;
++ (NSUInteger)enableClass:(Class)aClass {
+    __unused NSUInteger count = 0;
+    BOOL ret = NO;
+    ret = [aClass pdl_interceptSelector:@selector(shouldAutorotate) withInterceptorImplementation:(IMP)&PDLViewControllerRotationShouldAutorotate];
+    if (ret) {
+        count++;
+    }
+
+    ret = [aClass pdl_interceptSelector:@selector(supportedInterfaceOrientations) withInterceptorImplementation:(IMP)&PDLViewControllerRotationSupportedInterfaceOrientations];
+    if (ret) {
+        count++;
+    }
+
+    ret = [aClass pdl_interceptSelector:@selector(preferredInterfaceOrientationForPresentation) withInterceptorImplementation:(IMP)&PDLViewControllerRotationPreferredInterfaceOrientationForPresentation];
+    if (ret) {
+        count++;
+    }
+    return count;
 }
 
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        Class aClass = [UIViewController class];
-        __unused BOOL ret = [aClass pdl_interceptSelector:@selector(shouldAutorotate) withInterceptorImplementation:(IMP)&PDLViewControllerRotationShouldAutorotate];
-        ret &= [aClass pdl_interceptSelector:@selector(supportedInterfaceOrientations) withInterceptorImplementation:(IMP)&PDLViewControllerRotationSupportedInterfaceOrientations];
-        ret &= [aClass pdl_interceptSelector:@selector(preferredInterfaceOrientationForPresentation) withInterceptorImplementation:(IMP)&PDLViewControllerRotationPreferredInterfaceOrientationForPresentation];
-#ifdef DEBUG
-        assert(ret);
-#endif
-        _enabled = ret;
-    });
++ (NSUInteger)enableBaseClasses {
+    NSArray *classes = @[
+        [UIViewController class],
+        [UINavigationController class],
+        [UITabBarController class],
+    ];
+
+    NSUInteger ret = 0;
+    for (Class aClass in classes) {
+        ret += [self enableClass:aClass];
+    }
+    return ret;
 }
 
 @end
@@ -111,10 +147,6 @@ static UIInterfaceOrientation PDLViewControllerRotationPreferredInterfaceOrienta
 static void *PDLViewControllerRotationKey = &PDLViewControllerRotationKey;
 
 - (PDLViewControllerRotation *)pdl_rotation {
-    if (!_enabled) {
-        return nil;
-    }
-
     PDLViewControllerRotation *rotation = objc_getAssociatedObject(self, PDLViewControllerRotationKey);
     if (!rotation) {
         rotation = [[PDLViewControllerRotation alloc] init];
