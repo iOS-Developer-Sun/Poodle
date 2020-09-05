@@ -727,6 +727,15 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
 
+        s.subspec 'UIViewController+PDLStatusBar' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'UIViewController+PDLStatusBar/' + source_files
+            ss.vendored_library = base + 'UIViewController+PDLStatusBar/' + librariy_files
+            ss.frameworks = 'UIKit'
+            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+        end
+
         s.subspec 'UIViewController+PDLTransitionAnimation' do |ss|
             ss.platform = platform_ios
             ss.ios.deployment_target  = '9.0'
