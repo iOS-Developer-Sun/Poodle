@@ -1,5 +1,5 @@
 //
-//  UIViewController+PDLStatusBar.h
+//  UIViewController+PDLManager.h
 //  Poodle
 //
 //  Created by Poodle on 9/5/20.
