@@ -10,15 +10,11 @@
 #import <objc/runtime.h>
 #import "NSObject+PDLImplementationInterceptor.h"
 
-@implementation PDLViewControllerRotation
+@interface PDLViewControllerRotation ()
 
-+ (instancetype)defaultRotation {
-    static id defaultRotation = nil;
-    if (!defaultRotation) {
-        defaultRotation = [[self alloc] init];
-    }
-    return defaultRotation;
-}
+@end
+
+@implementation PDLViewControllerRotation
 
 - (instancetype)init {
     self = [super init];
@@ -106,6 +102,14 @@ static UIInterfaceOrientation PDLViewControllerRotationPreferredInterfaceOrienta
     return ret;
 }
 
++ (instancetype)defaultRotation {
+    static id defaultRotation = nil;
+    if (!defaultRotation) {
+        defaultRotation = [[self alloc] init];
+    }
+    return defaultRotation;
+}
+
 + (NSUInteger)enableClass:(Class)aClass {
     __unused NSUInteger count = 0;
     BOOL ret = NO;
@@ -126,33 +130,113 @@ static UIInterfaceOrientation PDLViewControllerRotationPreferredInterfaceOrienta
     return count;
 }
 
-+ (NSUInteger)enableBaseClasses {
-    NSArray *classes = @[
-        [UIViewController class],
-        [UINavigationController class],
-        [UITabBarController class],
-    ];
++ (NSUInteger)enableViewController {
+    __block NSUInteger ret = 0;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        ret = [self enableClass:[UIViewController class]];
+    });
+    return ret;
+}
 
++ (NSUInteger)enableNavigationController {
+    __block NSUInteger ret = 0;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        ret = [self enableClass:[UINavigationController class]];
+    });
+    return ret;
+}
+
++ (NSUInteger)enableTabBarController {
+    __block NSUInteger ret = 0;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        ret = [self enableClass:[UITabBarController class]];
+    });
+    return ret;
+}
+
++ (NSUInteger)enableBaseClasses {
     NSUInteger ret = 0;
-    for (Class aClass in classes) {
-        ret += [self enableClass:aClass];
-    }
+    ret += [self enableViewController];
+    ret += [self enableNavigationController];
+    ret += [self enableTabBarController];
     return ret;
 }
 
 @end
 
+#pragma mark - Subclasses
+
+@interface PDLNavigationControllerRotation : PDLViewControllerRotation
+
+@end
+
+@implementation PDLNavigationControllerRotation
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.delegateProvider = ^UIViewController * _Nonnull(UIViewController * _Nonnull viewController) {
+            return ((UINavigationController *)viewController).topViewController;
+        };
+    }
+    return self;
+}
+
+@end
+
+@interface PDLTabBarControllerRotation : PDLViewControllerRotation
+
+@end
+
+@implementation PDLTabBarControllerRotation
+
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.delegateProvider = ^UIViewController * _Nonnull(UIViewController * _Nonnull viewController) {
+            return ((UITabBarController *)viewController).selectedViewController;
+        };
+    }
+    return self;
+}
+
+@end
+
+#pragma mark - Categories
+
 @implementation UIViewController (PDLRotation)
 
-static void *PDLViewControllerRotationKey = &PDLViewControllerRotationKey;
++ (Class)pdl_rotationBarClass {
+    return [PDLViewControllerRotation class];
+}
 
 - (PDLViewControllerRotation *)pdl_rotation {
+    static void *PDLViewControllerRotationKey = &PDLViewControllerRotationKey;
     PDLViewControllerRotation *rotation = objc_getAssociatedObject(self, PDLViewControllerRotationKey);
     if (!rotation) {
         rotation = [[PDLViewControllerRotation alloc] init];
         objc_setAssociatedObject(self, PDLViewControllerRotationKey, rotation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return rotation;
+}
+
+@end
+
+@implementation UINavigationController (PDLRotation)
+
++ (Class)pdl_rotationBarClass {
+    return [PDLNavigationControllerRotation class];
+}
+
+@end
+
+@implementation UITabBarController (PDLRotation)
+
++ (Class)pdl_rotationBarClass {
+    return [PDLTabBarControllerRotation class];
 }
 
 @end

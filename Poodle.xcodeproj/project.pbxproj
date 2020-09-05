@@ -27,7 +27,6 @@
 		B83EFAE8250369CC00FDBA43 /* UIViewController+PDLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */; };
 		B83EFAF425036CDE00FDBA43 /* UIViewController+PDLStatusBar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83EFAE7250369CC00FDBA43 /* UIViewController+PDLStatusBar.h */; };
 		B83EFAF525036CE200FDBA43 /* UIViewController+PDLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */; };
-		B83EFAFD2503B1CB00FDBA43 /* UIViewController+PDLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFAFC2503B1CA00FDBA43 /* UIViewController+PDLManager.m */; };
 		B858422C246B963E00AC3717 /* pdl_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.m */; };
 		B85842AF246B96AE00AC3717 /* pdl_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.m */; };
 		B85842B0246B96B400AC3717 /* pdl_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8584229246B961400AC3717 /* pdl_backtrace.h */; };
@@ -1701,8 +1700,6 @@
 		B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLStatusBar.m"; sourceTree = "<group>"; };
 		B83EFAE7250369CC00FDBA43 /* UIViewController+PDLStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLStatusBar.h"; sourceTree = "<group>"; };
 		B83EFAF125036CC500FDBA43 /* libUIViewController+PDLStatusBar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUIViewController+PDLStatusBar.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B83EFAFB2503B1CA00FDBA43 /* UIViewController+PDLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLManager.h"; sourceTree = "<group>"; };
-		B83EFAFC2503B1CA00FDBA43 /* UIViewController+PDLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLManager.m"; sourceTree = "<group>"; };
 		B85068EE250121690028E642 /* NSArray+PDLSafeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PDLSafeOperation.h"; sourceTree = "<group>"; };
 		B85068EF250121690028E642 /* NSDictionary+PDLSafeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+PDLSafeOperation.h"; sourceTree = "<group>"; };
 		B8584229246B961400AC3717 /* pdl_backtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_backtrace.h; sourceTree = "<group>"; };
@@ -2616,15 +2613,6 @@
 				B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */,
 			);
 			path = "UIViewController+PDLStatusBar";
-			sourceTree = "<group>";
-		};
-		B83EFAFA2503B19400FDBA43 /* UIViewController+PDLManager */ = {
-			isa = PBXGroup;
-			children = (
-				B83EFAFB2503B1CA00FDBA43 /* UIViewController+PDLManager.h */,
-				B83EFAFC2503B1CA00FDBA43 /* UIViewController+PDLManager.m */,
-			);
-			path = "UIViewController+PDLManager";
 			sourceTree = "<group>";
 		};
 		B8584227246B961400AC3717 /* pdl_backtrace */ = {
@@ -3627,7 +3615,6 @@
 				B899F9EC245065DA00EFBB39 /* PDLViewControllerListViewController */,
 				B8E56EDE23D7001A008D2DA1 /* UINavigationController+PDLLongPressPop */,
 				B8E56EF423D7001A008D2DA1 /* UIScreen+PDLExtension */,
-				B83EFAFA2503B19400FDBA43 /* UIViewController+PDLManager */,
 				B8E56DFB23D70016008D2DA1 /* UIViewController+PDLNavigationBar */,
 				B83EFAD92503408300FDBA43 /* UIViewController+PDLRotation */,
 				B83EFAE5250369CC00FDBA43 /* UIViewController+PDLStatusBar */,
@@ -6659,7 +6646,6 @@
 				B85D460D240E85A600CBF758 /* pdl_die-arm.s in Sources */,
 				B890851D24AF48C700DAC261 /* pdl_dispatch.m in Sources */,
 				B85D460E240E85A600CBF758 /* pdl_die-arm64.s in Sources */,
-				B83EFAFD2503B1CB00FDBA43 /* UIViewController+PDLManager.m in Sources */,
 				B85D460F240E85A600CBF758 /* pdl_die-i386.s in Sources */,
 				B85D4610240E85A600CBF758 /* pdl_die-x86_64.s in Sources */,
 				B85D4611240E85A600CBF758 /* pdl_objc_message-arm.s in Sources */,

@@ -21,14 +21,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (instancetype)defaultRotation;
 
-+ (NSUInteger)enableClass:(Class)aClass;
-+ (NSUInteger)enableBaseClasses; // UIViewController UINavigationController UITabBarController
++ (NSUInteger)enableViewController;
++ (NSUInteger)enableNavigationController;
++ (NSUInteger)enableTabBarController;
++ (NSUInteger)enableBaseClasses;
 
 @end
 
 @interface UIViewController (PDLRotation)
 
 @property (nonatomic, strong, readonly) PDLViewControllerRotation *pdl_rotation;
+@property (nonatomic, strong, readonly, class) Class pdl_rotationBarClass;
 
 @end
 
