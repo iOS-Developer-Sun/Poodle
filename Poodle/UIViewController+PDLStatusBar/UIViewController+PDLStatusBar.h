@@ -13,12 +13,16 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLViewControllerStatusBar : NSObject
 
 @property (nonatomic, copy) UIViewController *(^_Nullable delegateProvider)(UIViewController *viewController);
+@property (nonatomic, weak) UIViewController *delegate;
 
 @property (nonatomic, strong) NSNumber *preferredStatusBarStyle; // UIStatusBarStyle
 @property (nonatomic, strong) NSNumber *prefersStatusBarHidden; // BOOL
 @property (nonatomic, strong) NSNumber *preferredStatusBarUpdateAnimation; // UIStatusBarAnimation
 
-+ (BOOL)enabled;
++ (instancetype)defaultStatusBar;
+
++ (NSUInteger)enableClass:(Class)aClass;
++ (NSUInteger)enableBaseClasses; // UIViewController UINavigationController UITabBarController
 
 @end
 
