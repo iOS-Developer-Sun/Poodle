@@ -97,6 +97,10 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
         __unused BOOL ret = [aClass pdl_interceptSelector:@selector(preferredStatusBarStyle) withInterceptorImplementation:(IMP)&PDLViewControllerStatusBarPreferredStatusBarStyle];
         ret &= [aClass pdl_interceptSelector:@selector(prefersStatusBarHidden) withInterceptorImplementation:(IMP)&PDLViewControllerStatusBarPrefersStatusBarHidden];
         ret &= [aClass pdl_interceptSelector:@selector(preferredStatusBarUpdateAnimation) withInterceptorImplementation:(IMP)&PDLViewControllerStatusBarPreferredStatusBarUpdateAnimation];
+
+        aClass = [UINavigationController class];
+        ret &= [aClass pdl_interceptSelector:@selector(preferredStatusBarStyle) withInterceptorImplementation:(IMP)&PDLViewControllerStatusBarPreferredStatusBarStyle];
+
 #ifdef DEBUG
         assert(ret);
 #endif
