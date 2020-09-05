@@ -94,9 +94,9 @@ static UIInterfaceOrientation PDLViewControllerRotationPreferredInterfaceOrienta
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         Class aClass = [UIViewController class];
-        __unused BOOL ret = [aClass pdl_interceptSelector:@selector(shouldAutorotate) withInterceptorImplementation:(IMP)&PDLViewControllerRotationShouldAutorotate isStructRet:@(NO) addIfNotExistent:NO data:NULL];
-        ret &= [aClass pdl_interceptSelector:@selector(supportedInterfaceOrientations) withInterceptorImplementation:(IMP)&PDLViewControllerRotationSupportedInterfaceOrientations isStructRet:@(NO) addIfNotExistent:NO data:NULL];
-        ret &= [aClass pdl_interceptSelector:@selector(preferredPresentationStyle) withInterceptorImplementation:(IMP)&PDLViewControllerRotationPreferredInterfaceOrientationForPresentation isStructRet:@(NO) addIfNotExistent:NO data:NULL];
+        __unused BOOL ret = [aClass pdl_interceptSelector:@selector(shouldAutorotate) withInterceptorImplementation:(IMP)&PDLViewControllerRotationShouldAutorotate];
+        ret &= [aClass pdl_interceptSelector:@selector(supportedInterfaceOrientations) withInterceptorImplementation:(IMP)&PDLViewControllerRotationSupportedInterfaceOrientations];
+        ret &= [aClass pdl_interceptSelector:@selector(preferredInterfaceOrientationForPresentation) withInterceptorImplementation:(IMP)&PDLViewControllerRotationPreferredInterfaceOrientationForPresentation];
 #ifdef DEBUG
         assert(ret);
 #endif
