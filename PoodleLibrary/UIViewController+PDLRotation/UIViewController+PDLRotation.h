@@ -13,11 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLViewControllerRotation : NSObject
 
 @property (nonatomic, copy) UIViewController *(^_Nullable delegateProvider)(UIViewController *viewController);
-@property (nonatomic, weak) UIViewController *delegate;
+@property (nonatomic, weak) UIViewController *_Nullable delegate;
 
-@property (nonatomic, strong) NSNumber *shouldAutorotate; // BOOL
-@property (nonatomic, strong) NSNumber *supportedInterfaceOrientations; // UIInterfaceOrientationMask
-@property (nonatomic, strong) NSNumber *preferredInterfaceOrientationForPresentation; // UIInterfaceOrientation
+@property (nonatomic, strong) NSNumber *_Nullable shouldAutorotate; // BOOL
+@property (nonatomic, strong) NSNumber *_Nullable supportedInterfaceOrientations; // UIInterfaceOrientationMask
+@property (nonatomic, strong) NSNumber *_Nullable preferredInterfaceOrientationForPresentation; // UIInterfaceOrientation
 
 + (instancetype)defaultRotation;
 
