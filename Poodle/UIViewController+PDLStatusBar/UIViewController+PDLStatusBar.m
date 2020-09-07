@@ -16,6 +16,14 @@
 
 @implementation PDLViewControllerStatusBar
 
+- (instancetype)initDefault {
+    self = [super init];
+    if (self) {
+        ;
+    }
+    return self;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -105,7 +113,7 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
 + (instancetype)defaultStatusBar {
     static id defaultStatusBar = nil;
     if (!defaultStatusBar) {
-        defaultStatusBar = [[self alloc] init];
+        defaultStatusBar = [[self alloc] initDefault];
     }
     return defaultStatusBar;
 }
@@ -217,7 +225,7 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
     static void *PDLViewControllerStatusBarKey = &PDLViewControllerStatusBarKey;
     PDLViewControllerStatusBar *statusBar = objc_getAssociatedObject(self, PDLViewControllerStatusBarKey);
     if (!statusBar) {
-        statusBar = [[[self.class pdl_statusBarClass] alloc] init];
+        statusBar = [[self.class.pdl_statusBarClass alloc] init];
         objc_setAssociatedObject(self, PDLViewControllerStatusBarKey, statusBar, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return statusBar;
