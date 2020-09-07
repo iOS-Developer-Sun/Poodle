@@ -16,6 +16,14 @@
 
 @implementation PDLViewControllerRotation
 
+- (instancetype)initDefault {
+    self = [super init];
+    if (self) {
+        ;
+    }
+    return self;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
@@ -105,7 +113,7 @@ static UIInterfaceOrientation PDLViewControllerRotationPreferredInterfaceOrienta
 + (instancetype)defaultRotation {
     static id defaultRotation = nil;
     if (!defaultRotation) {
-        defaultRotation = [[self alloc] init];
+        defaultRotation = [[self alloc] initDefault];
     }
     return defaultRotation;
 }
@@ -209,7 +217,7 @@ static UIInterfaceOrientation PDLViewControllerRotationPreferredInterfaceOrienta
 
 @implementation UIViewController (PDLRotation)
 
-+ (Class)pdl_rotationBarClass {
++ (Class)pdl_rotationClass {
     return [PDLViewControllerRotation class];
 }
 
@@ -217,7 +225,7 @@ static UIInterfaceOrientation PDLViewControllerRotationPreferredInterfaceOrienta
     static void *PDLViewControllerRotationKey = &PDLViewControllerRotationKey;
     PDLViewControllerRotation *rotation = objc_getAssociatedObject(self, PDLViewControllerRotationKey);
     if (!rotation) {
-        rotation = [[PDLViewControllerRotation alloc] init];
+        rotation = [[self.class.pdl_rotationClass alloc] init];
         objc_setAssociatedObject(self, PDLViewControllerRotationKey, rotation, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return rotation;
@@ -227,7 +235,7 @@ static UIInterfaceOrientation PDLViewControllerRotationPreferredInterfaceOrienta
 
 @implementation UINavigationController (PDLRotation)
 
-+ (Class)pdl_rotationBarClass {
++ (Class)pdl_rotationClass {
     return [PDLNavigationControllerRotation class];
 }
 
@@ -235,7 +243,7 @@ static UIInterfaceOrientation PDLViewControllerRotationPreferredInterfaceOrienta
 
 @implementation UITabBarController (PDLRotation)
 
-+ (Class)pdl_rotationBarClass {
++ (Class)pdl_rotationClass {
     return [PDLTabBarControllerRotation class];
 }
 
