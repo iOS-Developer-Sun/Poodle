@@ -35,6 +35,26 @@ extern void pdl_objc_msgSendSuper2_stret(void);
 
 #endif
 
+#ifndef __i386__
+
+extern void(*pdl_objc_message_msgSend_after_action(void))(__unsafe_unretained id self, SEL _cmd);
+extern void pdl_objc_message_set_msgSend_after_action(void(*pdl_objc_msgSend_after_action)(__unsafe_unretained id self, SEL _cmd));
+
+extern void(*pdl_objc_message_msgSendSuper_after_action(void))(struct objc_super *super, SEL _cmd);
+extern void pdl_objc_message_set_msgSendSuper_after_action(void(*pdl_objc_msgSendSuper_before_action)(struct objc_super *super, SEL _cmd));
+
+extern void pdl_objc_msgSendFull(void);
+extern void pdl_objc_msgSendSuper2Full(void);
+
+#ifndef __arm64__
+
+extern void pdl_objc_msgSend_stretFull(void);
+extern void pdl_objc_msgSendSuper2_stretFull(void);
+
+#endif
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif
