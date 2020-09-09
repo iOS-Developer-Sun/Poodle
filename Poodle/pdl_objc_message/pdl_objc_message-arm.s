@@ -32,7 +32,7 @@ _pdl_objc_msgSend:
 _pdl_objc_msgSendFull:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
     mov     r2, lr
-    bl      _pdl_objc_msgSend_before
+    bl      _pdl_objc_msgSendFull_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     ldr     ip, =_pdl_objc_msgSend_original
     ldr     ip, [ip]
@@ -55,7 +55,7 @@ _pdl_objc_msgSend_stret:
 _pdl_objc_msgSend_stretFull:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
     mov     r2, lr
-    bl      _pdl_objc_msgSend_before
+    bl      _pdl_objc_msgSendFull_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     ldr     ip, =_pdl_objc_msgSend_stret_original
     ldr     ip, [ip]
@@ -79,7 +79,7 @@ _pdl_objc_msgSendSuper2:
 _pdl_objc_msgSendSuper2Full:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
     mov     r2, lr
-    bl      _pdl_objc_msgSendSuper_before
+    bl      _pdl_objc_msgSendSuperFull_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     ldr     ip, =_pdl_objc_msgSendSuper2_original
     ldr     ip, [ip]
@@ -102,7 +102,7 @@ _pdl_objc_msgSendSuper2_stret:
 _pdl_objc_msgSendSuper2_stretFull:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
     mov     r2, lr
-    bl      _pdl_objc_msgSendSuper_before
+    bl      _pdl_objc_msgSendSuperFull_before
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     ldr     ip, =_pdl_objc_msgSendSuper2_stret_original
     ldr     ip, [ip]
