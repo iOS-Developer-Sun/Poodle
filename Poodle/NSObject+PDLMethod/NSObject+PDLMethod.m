@@ -121,13 +121,13 @@ void *PDLMethodFullAfter(void) {
         return -1;
     }
 
+    if (!beforeAction && !afterAction) {
+        return 0;
+    }
+
     PDLMethodActions *actions = malloc(sizeof(PDLMethodActions));
     if (!actions) {
         return -1;
-    }
-
-    if (!beforeAction && !afterAction) {
-        return 0;
     }
 
     actions->beforeAction = beforeAction;

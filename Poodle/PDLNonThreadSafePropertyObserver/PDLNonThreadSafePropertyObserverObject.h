@@ -17,7 +17,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)recordClass:(Class)aClass propertyName:(NSString *)propertyName isSetter:(BOOL)isSetter;
 
 + (void)registerObject:(id)object;
-+ (instancetype)observerObjectForObject:(id)object;
++ (instancetype _Nullable)observerObjectForObject:(id)object;
 
 @end
 
