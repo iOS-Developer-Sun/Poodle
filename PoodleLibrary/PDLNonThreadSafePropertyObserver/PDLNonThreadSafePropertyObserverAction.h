@@ -16,8 +16,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isInitializing;
 @property (nonatomic, assign) BOOL isSetter;
 @property (nonatomic, assign) mach_port_t thread;
-@property (nonatomic, copy) NSString *queueIdentifier;
-@property (nonatomic, copy) NSString *queueLabel;
+@property (nonatomic, copy) NSString *_Nullable queueIdentifier;
+@property (nonatomic, copy) NSString *_Nullable queueLabel;
 @property (nonatomic, assign) BOOL isSerialQueue;
 
 @end

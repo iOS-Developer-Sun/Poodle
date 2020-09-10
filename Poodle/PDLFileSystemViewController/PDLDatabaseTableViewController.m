@@ -66,7 +66,7 @@
 
 - (CGSize)formView:(PDLFormView *)formView sizeForColumn:(NSInteger)column row:(NSInteger)row {
     NSString *text = nil;
-    CGFloat fontSize = [UIFont systemFontSize];
+    CGFloat fontSize = 0;
     if (row == 0) {
         fontSize = 14;
         text = self.fields[column];
