@@ -8,6 +8,10 @@
 
 #import <objc/runtime.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern __attribute__((ns_returns_retained))
 id pdl_class_createInstance(__unsafe_unretained Class cls, size_t extraBytes, __attribute__((ns_returns_retained)) id(*class_createInstance_original)(__unsafe_unretained Class cls, size_t extraBytes));
 
@@ -16,3 +20,7 @@ id pdl_objc_rootAllocWithZone(__unsafe_unretained Class cls, struct _NSZone *zon
 
 extern
 void pdl_objc_rootDealloc(__unsafe_unretained id object, void(*_objc_rootDealloc_original)(__unsafe_unretained id object));
+
+#ifdef __cplusplus
+}
+#endif

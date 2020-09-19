@@ -6,16 +6,16 @@
 //  
 //
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
 #include <mach/machine.h>
 #include <mach-o/loader.h>
 #include <mach-o/nlist.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct pdl_mach_o_symbol {
     // nlist
