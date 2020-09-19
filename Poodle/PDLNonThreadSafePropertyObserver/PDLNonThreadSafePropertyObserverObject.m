@@ -45,7 +45,7 @@
     if (self) {
         _object = object;
         _properties = [NSMutableDictionary dictionary];
-        PDLNonThreadSafePropertyObserverInitializing *initializing = [[[PDLNonThreadSafePropertyObserverInitializing alloc] init] objectAutoreleaseRetained];
+        PDLNonThreadSafePropertyObserverInitializing *initializing = [[[PDLNonThreadSafePropertyObserverInitializing alloc] init] pdl_autoreleaseRetained];
         initializing.thread = mach_thread_self();
         _initializing = initializing;
     }

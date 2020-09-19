@@ -209,8 +209,8 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
             return nil;
         }
 
-        _filePath = filePath.copy;
-        _filename = filePath.lastPathComponent.copy;
+        _filePath = [filePath copy];
+        _filename = [filePath.lastPathComponent copy];
         _isDirectory = isDirectory;
         if (isDirectory) {
             __weak __typeof(self) weakSelf = self;
@@ -393,7 +393,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 - (instancetype)initWithDirectory:(NSString *)directory {
     self = [super init];
     if (self) {
-        _directory = directory.copy;
+        _directory = [directory copy];
         _selected = [NSMutableArray array];
     }
     return self;

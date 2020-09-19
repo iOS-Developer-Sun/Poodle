@@ -604,7 +604,7 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
     [self.view endEditing:YES];
 
     @try {
-        PDLMemoryQueryResult *result = [self.class execute:self.arguments.copy];
+        PDLMemoryQueryResult *result = [self.class execute:[self.arguments copy]];
         [self showResult:result];
         if (result) {
             [self.results addObject:result];

@@ -34,7 +34,7 @@
     self = [super init];
     if (self) {
         _observer = observer;
-        _identifier = identifier.copy;
+        _identifier = [identifier copy];
 
         _actions = [NSMutableArray array];
         _checker = [[[PDLNonThreadSafePropertyObserver checkerClass] alloc] initWithObserverProperty:self];
@@ -88,7 +88,7 @@
 
 - (NSArray *)actions {
     @synchronized (self) {
-        return _actions.copy;
+        return [_actions copy];
     }
 }
 

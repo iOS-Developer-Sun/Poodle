@@ -89,7 +89,7 @@
 }
 
 - (void)setPropertyDebuggers:(NSArray *)propertyDebuggers {
-    _propertyDebuggers = propertyDebuggers.copy;
+    _propertyDebuggers = [propertyDebuggers copy];
     [self.tableView reloadData];
 }
 

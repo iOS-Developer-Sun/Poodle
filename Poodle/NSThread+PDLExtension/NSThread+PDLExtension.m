@@ -70,7 +70,7 @@ PDL_MACH_O_SYMBOLS_POINTER_FUNCTION_DECLARATION(oAllThreads_pointer, "Foundation
         }
         [allThreadsDescription appendFormat:@"%@:\nmach_thread: %u, pthread: %p, pthread_id: %llu, NSThread: %@\n", @(i), machThreadId, pthread, pthreadId, thread];
     }
-    return allThreadsDescription.copy;
+    return [allThreadsDescription copy];
 }
 
 NSString *pdl_NSThreadsDescription(void) {

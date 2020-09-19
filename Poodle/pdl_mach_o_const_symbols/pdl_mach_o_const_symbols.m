@@ -337,16 +337,16 @@
                     current = current->next;
                 }
                 pdl_free_mach_o_symbol_list(symbols);
-                dictionary[symbol] = array.copy;
+                dictionary[symbol] = [array copy];
             }
 
             [[NSFileManager defaultManager] removeItemAtPath:path error:NULL];
 
-            table[imageName] = dictionary.copy;
+            table[imageName] = [dictionary copy];
         }
     }
     NSLog(@"PDLConstSymbols task finished.");
-    return table.copy;
+    return [table copy];
 }
 
 - (pdl_mach_o_symbol *)symbolsWithImageName:(NSString *)imageName symbolName:(NSString *)symbolName {

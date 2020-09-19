@@ -23,7 +23,7 @@
     if (self) {
         self.title = path;
 
-        _filePath = path.copy;
+        _filePath = [path copy];
         NSArray *classes = @[[NSArray class], [NSDictionary class], [NSString class]];
         for (Class aClass in classes) {
             NSObject <NSCopying> *plistObject = [[aClass alloc] initWithContentsOfFile:path];

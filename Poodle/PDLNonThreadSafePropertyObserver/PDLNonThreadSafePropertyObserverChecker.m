@@ -69,15 +69,15 @@
 }
 
 - (NSSet *)getters {
-    return _getters.copy;
+    return [_getters copy];
 }
 
 - (NSSet *)setters {
-    return _setters.copy;
+    return [_setters copy];
 }
 
 - (NSArray *)gettersAndSetters {
-    return _gettersAndSetters.copy;
+    return [_gettersAndSetters copy];
 }
 
 @end

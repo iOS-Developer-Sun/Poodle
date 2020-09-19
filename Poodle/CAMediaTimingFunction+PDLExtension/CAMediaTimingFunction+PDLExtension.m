@@ -43,7 +43,7 @@ static SEL pdl_solveForInputSelector(void) {
         CGPoint controlPoint = CGPointMake(value[0], value[1]);
         [controlPoints addObject:@(controlPoint)];
     }
-    return controlPoints.copy;
+    return [controlPoints copy];
 }
 
 - (float)pdl_solve:(float)input {

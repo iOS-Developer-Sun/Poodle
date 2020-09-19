@@ -27,7 +27,7 @@ static void *WebViewControllerObservingEstimatedProgressContext = NULL;
 - (instancetype)initWithUrlString:(NSString *)urlString {
     self = [super init];
     if (self) {
-        _urlString = urlString.copy;
+        _urlString = [urlString copy];
     }
     return self;
 }

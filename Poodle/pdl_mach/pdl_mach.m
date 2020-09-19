@@ -42,5 +42,5 @@ NSArray *pdl_mach_threadsArray(void) {
         [machThreads addObject:@(threads[i])];
     }
     free(threads);
-    return machThreads.copy;
+    return [machThreads copy];
 }

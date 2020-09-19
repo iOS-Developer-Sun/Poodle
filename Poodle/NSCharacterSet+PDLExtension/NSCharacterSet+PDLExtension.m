@@ -36,7 +36,7 @@
         [characterSet formIntersectionWithCharacterSet:URLQueryAllowedCharacterSet];
         [characterSet formIntersectionWithCharacterSet:URLFragmentAllowedCharacterSet];
 
-        URLAllowedCharacterSet = characterSet.copy;
+        URLAllowedCharacterSet = [characterSet copy];
     });
 
     return URLAllowedCharacterSet;
