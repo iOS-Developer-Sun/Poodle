@@ -9,6 +9,10 @@
 #import <Foundation/Foundation.h>
 #import "pdl_backtrace.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 typedef enum pdl_allocation_policy {
     pdl_allocation_policy_live_allocations,
     pdl_allocation_policy_allocation_and_free,
@@ -32,3 +36,7 @@ extern pdl_backtrace_t pdl_allocation_backtrace(__unsafe_unretained id object);
 extern pdl_backtrace_t pdl_deallocation_backtrace(__unsafe_unretained id object);
 
 extern bool pdl_allocation_enable(pdl_allocation_policy policy);
+
+#ifdef __cplusplus
+}
+#endif

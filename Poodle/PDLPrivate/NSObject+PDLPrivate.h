@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 @interface NSObject (PDLPrivate)
 
 @property (readonly) NSString *_ivarDescription;
@@ -53,3 +57,7 @@ OBJC_ARM64_UNAVAILABLE;
 #endif
 
 @end
+
+#ifdef __cplusplus
+}
+#endif

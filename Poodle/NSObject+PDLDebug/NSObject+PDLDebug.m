@@ -35,6 +35,17 @@
     return propertiesDescriptionDictionary.description;
 }
 
++ (NSArray *)object_print {
+    return @[
+        @{@"superclass" : [self superclass]},
+        @{@"ivars" : [self object_ivars]},
+        @{@"properties" : [self object_properties]},
+        @{@"classMethods" : [self object_classMethods]},
+        @{@"instanceMethods" : [self object_instanceMethods]},
+        @{@"protocols" : [self object_protocols]},
+    ];
+}
+
 - (NSString *)propertiesDescription {
     return [self propertiesDescriptionForClass:self.class];
 }

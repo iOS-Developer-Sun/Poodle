@@ -6,10 +6,6 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -17,6 +13,10 @@ extern "C" {
 #include <mach-o/loader.h>
 #include <mach-o/nlist.h>
 #include <mach-o/fat.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 typedef struct pdl_mach_object {
     bool is64;

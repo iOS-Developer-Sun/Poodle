@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 @interface NSObject (PDLDebug)
 
 @property (readonly) NSString *propertiesDescription;
@@ -22,6 +26,7 @@
 @property (class, readonly) Class metaClass;
 
 - (NSString *)propertiesDescriptionForClass:(Class)aClass;
++ (NSArray *)object_print;
 
 - (instancetype)objectRetain;
 - (oneway void)objectRelease;
@@ -50,3 +55,7 @@ extern NSUInteger objectRetainCount(id object);
 extern id objectAutoreleaseRetained(id object);
 
 @end
+
+#ifdef __cplusplus
+}
+#endif
