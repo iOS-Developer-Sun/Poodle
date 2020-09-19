@@ -14,44 +14,44 @@
 
 @implementation NSObject (PDLDebugNonArc)
 
-- (instancetype)objectRetain {
+- (instancetype)pdl_retain {
     return [self retain];
 }
 
-- (oneway void)objectRelease {
+- (oneway void)pdl_release {
     [self release];
 }
 
-- (instancetype)objectAutorelease {
+- (instancetype)pdl_autorelease {
     return [self autorelease];
 }
 
-- (NSUInteger)objectRetainCount {
+- (NSUInteger)pdl_retainCount {
     return [self retainCount];
 }
 
-- (instancetype)objectAutoreleaseRetained {
+- (instancetype)pdl_autoreleaseRetained {
     [[self retain] autorelease];
     return self;
 }
 
-id objectRetain(id object) {
+id pdl_objectRetain(id object) {
     return [object retain];
 }
 
-void objectRelease(id object) {
+void pdl_objectRelease(id object) {
     return [object release];
 }
 
-id objectAutorelease(id object) {
+id pdl_objectAutorelease(id object) {
     return [object autorelease];
 }
 
-NSUInteger objectRetainCount(id object) {
+NSUInteger pdl_objectRetainCount(id object) {
     return [object retainCount];
 }
 
-id objectAutoreleaseRetained(id object) {
+id pdl_objectAutoreleaseRetained(id object) {
     [[object retain] autorelease];
     return object;
 }

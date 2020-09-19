@@ -46,7 +46,7 @@
                 NSString *value = [row[field] description];
                 [values addObject:value ?: @""];
             }
-            [rows addObject:values.copy];
+            [rows addObject:[values copy]];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
             self.fields = fields;

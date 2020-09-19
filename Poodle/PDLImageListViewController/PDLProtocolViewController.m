@@ -24,7 +24,7 @@
 - (instancetype)initWithProtocolName:(NSString *)protocolName {
     self = [super init];
     if (self) {
-        _protocolName = protocolName.copy;
+        _protocolName = [protocolName copy];
     }
     return self;
 }
@@ -57,26 +57,26 @@
     }
 
     NSMutableArray *adoptingProtocols = [NSMutableArray array];
-    for (NSString *adoptingProtocol in protocol_adoptingProtocols(protocol)) {
+    for (NSString *adoptingProtocol in pdl_protocol_adoptingProtocols(protocol)) {
         [adoptingProtocols addObject:adoptingProtocol];
     }
     NSDictionary *adoptingProtocolsDictionary = @{@"title" : @"adopting protocols", @"data" : adoptingProtocols};
 
     NSMutableArray *adoptedProtocols = [NSMutableArray array];
-    for (NSString *adoptedProtocol in protocol_adoptedProtocols(protocol)) {
+    for (NSString *adoptedProtocol in pdl_protocol_adoptedProtocols(protocol)) {
         [adoptedProtocols addObject:adoptedProtocol];
     }
     NSDictionary *adoptedProtocolsDictionary = @{@"title" : @"adopted protocols", @"data" : adoptedProtocols};
 
     NSMutableArray *properties = [NSMutableArray array];
-    for (NSDictionary *dictionary in protocol_properties(protocol)) {
+    for (NSDictionary *dictionary in pdl_protocol_properties(protocol)) {
         NSString *string = dictionary.description;
         [properties addObject:string];
     }
     NSDictionary *propertiesDictionary = @{@"title" : @"properties", @"data" : properties};
 
     NSMutableArray *methods = [NSMutableArray array];
-    for (NSDictionary *dictionary in protocol_methods(protocol)) {
+    for (NSDictionary *dictionary in pdl_protocol_methods(protocol)) {
         NSString *string = dictionary.description;
         [methods addObject:string];
     }

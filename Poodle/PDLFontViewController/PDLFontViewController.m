@@ -71,7 +71,7 @@
 }
 
 - (void)setExampleText:(NSString *)exampleText {
-    _exampleText = exampleText.copy;
+    _exampleText = [exampleText copy];
     [self.tableView reloadData];
 }
 

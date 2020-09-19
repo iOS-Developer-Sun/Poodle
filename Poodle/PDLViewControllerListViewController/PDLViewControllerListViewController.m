@@ -85,7 +85,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
     NSMutableArray *allViewControllers = viewControllersLoaded.mutableCopy;
 
     // window rootViewControllers
-    NSArray *windows = [UIApplication sharedApplication].windows.copy;
+    NSArray *windows = [[UIApplication sharedApplication].windows copy];
     NSMutableArray *data = [NSMutableArray array];
     for (UIWindow *window in windows) {
         UIViewController *viewController = window.rootViewController;
@@ -117,7 +117,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
     }
 
     // not caught viewControllers
-    NSArray *notCaughtViewControllers = allViewControllers.copy;
+    NSArray *notCaughtViewControllers = [allViewControllers copy];
     if (allViewControllers.count > 0) {
         NSMutableArray *items = [NSMutableArray array];
         for (UIViewController *notCaughtViewController in notCaughtViewControllers) {
@@ -207,7 +207,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
             [stack addObject:childItem];
         }
     }
-    return items.copy;
+    return [items copy];
 }
 
 - (NSString *)stringOfRelationship:(PDLViewControllerRelationship)relationship {

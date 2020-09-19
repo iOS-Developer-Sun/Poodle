@@ -141,7 +141,7 @@
         }
     }];
 
-    return list.copy;
+    return [list copy];
 }
 
 - (BOOL)executeTransaction:(BOOL (^)(void))transaction {
@@ -198,7 +198,7 @@
         [rs close];
     }];
 
-    return allTables.copy;
+    return [allTables copy];
 }
 
 - (NSArray *)customTables {
@@ -215,7 +215,7 @@
         [rs close];
     }];
 
-    return customTables.copy;
+    return [customTables copy];
 }
 
 - (BOOL)isTableExistent:(NSString *)tableName {
@@ -249,7 +249,7 @@
             [rs close];
         }
     }];
-    return fields.copy;
+    return [fields copy];
 }
 
 #pragma mark - state
@@ -417,7 +417,7 @@
         }
     }];
     
-    return list.copy;
+    return [list copy];
 }
 
 @end

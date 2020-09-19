@@ -111,7 +111,7 @@ static void pdl_initializeLoad(id self, SEL _cmd) {
 }
 
 + (NSArray *)loaders {
-    return _loaders.copy;
+    return [_loaders copy];
 }
 
 + (NSArray *)topLoaders {

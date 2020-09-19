@@ -622,7 +622,7 @@
         [visibleColumns insertObject:@(column) atIndex:0];
     }
 
-    self.visibleColumns = visibleColumns.copy;
+    self.visibleColumns = [visibleColumns copy];
     self.estimatedVisibleLeftColumn = [visibleColumns.firstObject integerValue];
     self.estimatedVisibleRightColumn = [visibleColumns.lastObject integerValue];
 }
@@ -714,7 +714,7 @@
         [visibleRows insertObject:@(row) atIndex:0];
     }
 
-    self.visibleRows = visibleRows.copy;
+    self.visibleRows = [visibleRows copy];
     self.estimatedVisibleTopRow = [visibleRows.firstObject integerValue];
     self.estimatedVisibleBottomRow = [visibleRows.lastObject integerValue];
 }
@@ -725,7 +725,7 @@
 }
 
 - (void)setReuseIdentifier:(NSString *)identifier forView:(UIView *)view {
-    [self.reuseIdentifierMapTable setObject:identifier.copy forKey:view];
+    [self.reuseIdentifierMapTable setObject:[identifier copy] forKey:view];
 }
 
 - (void)enqueue:(UIView *)view {

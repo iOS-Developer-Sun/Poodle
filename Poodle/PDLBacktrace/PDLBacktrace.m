@@ -83,7 +83,7 @@
         void *frame = frames[i];
         [ret addObject:@((uintptr_t)frame)];
     }
-    return ret.copy;
+    return [ret copy];
 }
 
 - (void)show {

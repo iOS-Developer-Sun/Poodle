@@ -29,7 +29,7 @@
 - (instancetype)initWithImageName:(NSString *)imageName {
     self = [super init];
     if (self) {
-        _imageName = imageName.copy;
+        _imageName = [imageName copy];
     }
     return self;
 }

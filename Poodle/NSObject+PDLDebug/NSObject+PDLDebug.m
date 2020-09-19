@@ -15,71 +15,110 @@
 
 @implementation NSObject (PDLDebug)
 
-- (NSString *)propertiesDescriptionForClass:(Class)aClass {
-    NSMutableDictionary *propertiesDescriptionDictionary = [NSMutableDictionary dictionary];
-    NSString *debugDescription = [NSString stringWithFormat:@"<%@>: %p", NSStringFromClass(self.class), self];
-    propertiesDescriptionDictionary[@"__Object"] = debugDescription;
-    unsigned int propertiesCount = 0;
-    objc_property_t *properties = class_copyPropertyList(aClass, &propertiesCount);
-    for (unsigned int i = 0; i < propertiesCount; i++) {
-        objc_property_t property = properties[i];
-        NSString *key = @(property_getName(property));
-        if ([key isEqualToString:@"description"] || [key isEqualToString:@"debugDescription"] || [key isEqualToString:@"propertiesDescription"]) {
-            continue;
-        }
-        id value = [self valueForKey:key];
-        propertiesDescriptionDictionary[key] = value ?: @"nil";
-    }
-    free(properties);
-
-    return propertiesDescriptionDictionary.description;
++ (NSArray *)pdl_subclasses {
+    return pdl_class_subclasses(self);
 }
 
-+ (NSArray *)object_print {
++ (NSArray *)pdl_ivars {
+    return pdl_class_ivars(self);
+}
+
++ (NSArray *)pdl_classMethods {
+    return pdl_class_classMethods(self);
+}
+
++ (NSArray *)pdl_instanceMethods {
+    return pdl_class_instanceMethods(self);
+}
+
++ (NSArray *)pdl_protocols {
+    return pdl_class_protocols(self);
+}
+
++ (NSArray *)pdl_properties {
+    return pdl_class_properties(self);
+}
+
++ (NSArray *)pdl_description {
     return @[
         @{@"superclass" : [self superclass]},
-        @{@"ivars" : [self object_ivars]},
-        @{@"properties" : [self object_properties]},
-        @{@"classMethods" : [self object_classMethods]},
-        @{@"instanceMethods" : [self object_instanceMethods]},
-        @{@"protocols" : [self object_protocols]},
+        @{@"subclasses" : [self pdl_subclasses]},
+        @{@"ivars" : [self pdl_ivars]},
+        @{@"properties" : [self pdl_properties]},
+        @{@"classMethods" : [self pdl_classMethods]},
+        @{@"instanceMethods" : [self pdl_instanceMethods]},
+        @{@"protocols" : [self pdl_protocols]},
     ];
 }
 
-- (NSString *)propertiesDescription {
-    return [self propertiesDescriptionForClass:self.class];
-}
-
-+ (NSArray *)object_subclasses {
-    return object_subclasses(self);
-}
-
-+ (NSArray *)object_ivars {
-    return object_ivars(self);
-}
-
-+ (NSArray *)object_classMethods {
-    return object_classMethods(self);
-}
-
-+ (NSArray *)object_instanceMethods {
-    return object_instanceMethods(self);
-}
-
-+ (NSArray *)object_protocols {
-    return object_protocols(self);
-}
-
-+ (NSArray *)object_properties {
-    return object_properties(self);
-}
-
-+ (Class)metaClass {
++ (Class)pdl_metaClass {
     Class metaClass = object_getClass(self);
     return metaClass;
 }
 
-NSArray *object_subclasses(Class aClass) {
+NSDictionary *pdl_propertiesDescriptionForClass(id self, Class aClass) {
+    NSMutableDictionary *propertiesDescriptionDictionary = [NSMutableDictionary dictionary];
+    NSString *debugDescription = [NSString stringWithFormat:@"<%@>: %p", NSStringFromClass(object_getClass(self)), self];
+    propertiesDescriptionDictionary[@"."] = debugDescription;
+    unsigned int propertiesCount = 0;
+    objc_property_t *properties = class_copyPropertyList(aClass, &propertiesCount);
+    NSArray *keys = @[
+        @"description",
+        @"debugDescription",
+
+        @"_ivarDescription",
+        @"_shortMethodDescription",
+        @"_methodDescription",
+        @"_copyDescription",
+#if !TARGET_IPHONE_SIMULATOR
+        @"_briefDescription",
+        @"_rawBriefDescription",
+#endif
+        @"pdl_propertiesDescription",
+        @"pdl_fullPropertiesDescription",
+    ];
+
+    for (unsigned int i = 0; i < propertiesCount; i++) {
+        objc_property_t property = properties[i];
+        NSString *key = @(property_getName(property));
+        if ([keys containsObject:key]) {
+            continue;
+        }
+        id value = nil;
+        @try {
+            value = [self valueForKeyPath:key];
+        } @catch (NSException *exception) {
+            propertiesDescriptionDictionary[key] = @"UNDEFINED";
+        } @finally {
+            ;
+        }
+        propertiesDescriptionDictionary[key] = value;
+    }
+    free(properties);
+    return [propertiesDescriptionDictionary copy];
+}
+
+- (NSString *)pdl_propertiesDescriptionForClass:(Class)aClass {
+    NSDictionary *dictionary = pdl_propertiesDescriptionForClass(self, aClass);
+    return dictionary.description;
+}
+
+- (NSString *)pdl_propertiesDescription {
+    return [self pdl_propertiesDescriptionForClass:self.class];
+}
+
+- (NSString *)pdl_fullPropertiesDescription {
+    Class aClass = self.class;
+    NSMutableDictionary *ret = [NSMutableDictionary dictionary];
+    while (aClass) {
+        NSDictionary *dictionary = pdl_propertiesDescriptionForClass(self, aClass);
+        [ret addEntriesFromDictionary:dictionary];
+        aClass = [aClass superclass];
+    };
+    return [ret copy];
+}
+
+NSArray *pdl_class_subclasses(Class aClass) {
     NSMutableArray *subclasses = [NSMutableArray array];
     unsigned int outCount = 0;
     Class *classList = objc_copyClassList(&outCount);
@@ -90,10 +129,10 @@ NSArray *object_subclasses(Class aClass) {
         }
     }
     free(classList);
-    return subclasses.copy;
+    return [subclasses copy];
 }
 
-NSArray *object_ivars(Class aClass) {
+NSArray *pdl_class_ivars(Class aClass) {
     NSMutableArray *ivars = [NSMutableArray array];
     unsigned int count = 0;
     Ivar *ivarList = class_copyIvarList(aClass, &count);
@@ -102,10 +141,10 @@ NSArray *object_ivars(Class aClass) {
         [ivars addObject:@{@"name" : @(ivar_getName(ivar)), @"type" : @(ivar_getTypeEncoding(ivar)), @"offset" : @(ivar_getOffset(ivar))}];
     }
     free(ivarList);
-    return ivars.copy;
+    return [ivars copy];
 }
 
-NSArray *object_classMethods(Class aClass) {
+NSArray *pdl_class_classMethods(Class aClass) {
     NSMutableArray *classMethods = [NSMutableArray array];
     unsigned int count = 0;
     Method *methodList = class_copyMethodList(object_getClass(aClass), &count);
@@ -118,10 +157,10 @@ NSArray *object_classMethods(Class aClass) {
         }];
     }
     free(methodList);
-    return classMethods.copy;
+    return [classMethods copy];
 }
 
-NSArray *object_instanceMethods(Class aClass) {
+NSArray *pdl_class_instanceMethods(Class aClass) {
     NSMutableArray *classMethods = [NSMutableArray array];
     unsigned int count = 0;
     Method *methodList = class_copyMethodList(aClass, &count);
@@ -134,10 +173,10 @@ NSArray *object_instanceMethods(Class aClass) {
         }];
     }
     free(methodList);
-    return classMethods.copy;
+    return [classMethods copy];
 }
 
-NSArray *object_protocols(Class aClass) {
+NSArray *pdl_class_protocols(Class aClass) {
     NSMutableArray *protocols = [NSMutableArray array];
     unsigned int count = 0;
     Protocol *__unsafe_unretained *protocolList = class_copyProtocolList(aClass, &count);
@@ -146,10 +185,10 @@ NSArray *object_protocols(Class aClass) {
         [protocols addObject:@{@"name" : @(protocol_getName(protocol))}];
     }
     free(protocolList);
-    return protocols.copy;
+    return [protocols copy];
 }
 
-NSArray *object_properties(Class aClass) {
+NSArray *pdl_class_properties(Class aClass) {
     NSMutableArray *properties = [NSMutableArray array];
     unsigned int count = 0;
     objc_property_t *propertyList = class_copyPropertyList(aClass, &count);
@@ -158,10 +197,10 @@ NSArray *object_properties(Class aClass) {
         [properties addObject:@{@"name" : @(property_getName(property)), @"attributes" : @(property_getAttributes(property))}];
     }
     free(propertyList);
-    return properties.copy;
+    return [properties copy];
 }
 
-NSArray *protocol_adoptingProtocols(Protocol *protocol) {
+NSArray *pdl_protocol_adoptingProtocols(Protocol *protocol) {
     NSMutableArray *adoptingProtocols = [NSMutableArray array];
     unsigned int count = 0;
     Protocol * __unsafe_unretained _Nonnull *protocolList = protocol_copyProtocolList(protocol, &count);
@@ -170,10 +209,10 @@ NSArray *protocol_adoptingProtocols(Protocol *protocol) {
         [adoptingProtocols addObject:@(protocol_getName(protocol))];
     }
     free(protocolList);
-    return adoptingProtocols.copy;
+    return [adoptingProtocols copy];
 }
 
-NSArray *protocol_adoptedProtocols(Protocol *protocol) {
+NSArray *pdl_protocol_adoptedProtocols(Protocol *protocol) {
     NSMutableArray *adoptedProtocols = [NSMutableArray array];
     unsigned int count = 0;
     Protocol * __unsafe_unretained *protocolList = objc_copyProtocolList(&count);
@@ -200,7 +239,7 @@ NSArray *protocol_adoptedProtocols(Protocol *protocol) {
     return adoptedProtocols;
 }
 
-NSArray *protocol_properties(Protocol *protocol) {
+NSArray *pdl_protocol_properties(Protocol *protocol) {
     NSMutableArray *properties = [NSMutableArray array];
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 10) {
         NSArray *types = @[@{@"isRequiredMethod" : @(YES), @"isInstanceMethod" : @(NO)},
@@ -231,10 +270,10 @@ NSArray *protocol_properties(Protocol *protocol) {
         }
         free(propertyList);
     }
-    return properties.copy;
+    return [properties copy];
 }
 
-NSArray *protocol_methods(Protocol *protocol) {
+NSArray *pdl_protocol_methods(Protocol *protocol) {
     NSMutableArray *methods = [NSMutableArray array];
     NSArray *types = @[@{@"isRequiredMethod" : @(YES), @"isInstanceMethod" : @(NO)},
                        @{@"isRequiredMethod" : @(YES), @"isInstanceMethod" : @(YES)},
@@ -251,7 +290,7 @@ NSArray *protocol_methods(Protocol *protocol) {
         }
         free(methodList);
     }
-    return methods.copy;
+    return [methods copy];
 }
 
 @end

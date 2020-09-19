@@ -14,45 +14,47 @@ extern "C" {
 
 @interface NSObject (PDLDebug)
 
-@property (readonly) NSString *propertiesDescription;
+@property (class, readonly) NSArray *pdl_subclasses;
+@property (class, readonly) NSArray *pdl_ivars;
+@property (class, readonly) NSArray *pdl_classMethods;
+@property (class, readonly) NSArray *pdl_instanceMethods;
+@property (class, readonly) NSArray *pdl_protocols;
+@property (class, readonly) NSArray *pdl_properties;
 
-@property (class, readonly) NSArray *object_subclasses;
-@property (class, readonly) NSArray *object_ivars;
-@property (class, readonly) NSArray *object_classMethods;
-@property (class, readonly) NSArray *object_instanceMethods;
-@property (class, readonly) NSArray *object_protocols;
-@property (class, readonly) NSArray *object_properties;
+@property (class, readonly) NSArray *pdl_description;
 
-@property (class, readonly) Class metaClass;
+@property (class, readonly) Class pdl_metaClass;
 
-- (NSString *)propertiesDescriptionForClass:(Class)aClass;
-+ (NSArray *)object_print;
+@property (readonly) NSString *pdl_propertiesDescription;
+@property (readonly) NSString *pdl_fullPropertiesDescription;
 
-- (instancetype)objectRetain;
-- (oneway void)objectRelease;
-- (instancetype)objectAutorelease;
-- (NSUInteger)objectRetainCount;
+- (NSString *)pdl_propertiesDescriptionForClass:(Class)aClass;
 
-- (instancetype)objectAutoreleaseRetained;
+- (instancetype)pdl_retain;
+- (oneway void)pdl_release;
+- (instancetype)pdl_autorelease;
+- (NSUInteger)pdl_retainCount;
 
-extern NSArray *object_subclasses(Class aClass);
-extern NSArray *object_ivars(Class aClass);
-extern NSArray *object_classMethods(Class aClass);
-extern NSArray *object_instanceMethods(Class aClass);
-extern NSArray *object_protocols(Class aClass);
-extern NSArray *object_properties(Class aClass);
+- (instancetype)pdl_autoreleaseRetained;
 
-extern NSArray *protocol_adoptingProtocols(Protocol *protocol);
-extern NSArray *protocol_adoptedProtocols(Protocol *protocol);
-extern NSArray *protocol_properties(Protocol *protocol);
-extern NSArray *protocol_methods(Protocol *protocol);
+extern NSArray *pdl_class_subclasses(Class aClass);
+extern NSArray *pdl_class_ivars(Class aClass);
+extern NSArray *pdl_class_classMethods(Class aClass);
+extern NSArray *pdl_class_instanceMethods(Class aClass);
+extern NSArray *pdl_class_protocols(Class aClass);
+extern NSArray *pdl_class_properties(Class aClass);
 
-extern id objectRetain(id object);
-extern void objectRelease(id object);
-extern id objectAutorelease(id object);
-extern NSUInteger objectRetainCount(id object);
+extern NSArray *pdl_protocol_adoptingProtocols(Protocol *protocol);
+extern NSArray *pdl_protocol_adoptedProtocols(Protocol *protocol);
+extern NSArray *pdl_protocol_properties(Protocol *protocol);
+extern NSArray *pdl_protocol_methods(Protocol *protocol);
 
-extern id objectAutoreleaseRetained(id object);
+extern id pdl_objectRetain(id object);
+extern void pdl_objectRelease(id object);
+extern id pdl_objectAutorelease(id object);
+extern NSUInteger pdl_objectRetainCount(id object);
+
+extern id pdl_objectAutoreleaseRetained(id object);
 
 @end
 

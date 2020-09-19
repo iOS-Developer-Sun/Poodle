@@ -24,7 +24,7 @@
 - (instancetype)initWithClassName:(NSString *)className {
     self = [super init];
     if (self) {
-        _className = className.copy;
+        _className = [className copy];
     }
     return self;
 }
@@ -63,41 +63,41 @@
     NSDictionary *superclassDictionary = @{@"title" : @"superclass", @"data" : @[@(superClassName)]};
 
     NSMutableArray *subclasses = [NSMutableArray array];
-    for (NSString *subclass in object_subclasses(aClass)) {
+    for (NSString *subclass in pdl_class_subclasses(aClass)) {
         [subclasses addObject:subclass];
     }
     NSDictionary *subclassesDictionary = @{@"title" : @"subclasses", @"data" : subclasses};
 
     NSMutableArray *ivars = [NSMutableArray array];
-    for (NSDictionary *dictionary in object_ivars(aClass)) {
+    for (NSDictionary *dictionary in pdl_class_ivars(aClass)) {
         NSString *string = dictionary.description;
         [ivars addObject:string];
     }
     NSDictionary *ivarsDictionary = @{@"title" : @"ivars", @"data" : ivars};
 
     NSMutableArray *properties = [NSMutableArray array];
-    for (NSDictionary *dictionary in object_properties(aClass)) {
+    for (NSDictionary *dictionary in pdl_class_properties(aClass)) {
         NSString *string = dictionary.description;
         [properties addObject:string];
     }
     NSDictionary *propertiesDictionary = @{@"title" : @"properties", @"data" : properties};
 
     NSMutableArray *protocols = [NSMutableArray array];
-    for (NSDictionary *dictionary in object_protocols(aClass)) {
+    for (NSDictionary *dictionary in pdl_class_protocols(aClass)) {
         NSString *string = dictionary.description;
         [protocols addObject:string];
     }
     NSDictionary *protocolsDictionary = @{@"title" : @"protocols", @"data" : protocols};
 
     NSMutableArray *classMethods = [NSMutableArray array];
-    for (NSDictionary *dictionary in object_classMethods(aClass)) {
+    for (NSDictionary *dictionary in pdl_class_classMethods(aClass)) {
         NSString *string = dictionary.description;
         [classMethods addObject:string];
     }
     NSDictionary *classMethodsDictionary = @{@"title" : @"class methods", @"data" : classMethods};
 
     NSMutableArray *instanceMethods = [NSMutableArray array];
-    for (NSDictionary *dictionary in object_instanceMethods(aClass)) {
+    for (NSDictionary *dictionary in pdl_class_instanceMethods(aClass)) {
         NSString *string = dictionary.description;
         [instanceMethods addObject:string];
     }
