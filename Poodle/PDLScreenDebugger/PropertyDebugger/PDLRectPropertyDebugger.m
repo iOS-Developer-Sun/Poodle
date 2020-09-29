@@ -144,7 +144,7 @@
         } break;
         default:
             break;
-    };
+    }
 }
 
 - (void)pinch:(UIPinchGestureRecognizer *)pinchGestureRecognizer {
@@ -224,7 +224,7 @@
         } break;
         default:
             break;
-    };
+    }
 }
 
 - (void)labelDidTap:(UITapGestureRecognizer *)tapGestureRecognizer {
