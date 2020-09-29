@@ -105,7 +105,7 @@
         } break;
         default:
             break;
-    };
+    }
 }
 
 - (void)mainViewDidLoad {
