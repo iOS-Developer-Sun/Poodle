@@ -90,7 +90,6 @@ static CGFloat PDLKeyboardNotificationObserverKeyboardHeight = 0;
     self.isObserving = NO;
 }
 
-
 - (void)handleKeyboardWillShowNotification:(NSNotification *)notification {
     if ([UIApplication sharedApplication].applicationState != UIApplicationStateActive) {
         return;
