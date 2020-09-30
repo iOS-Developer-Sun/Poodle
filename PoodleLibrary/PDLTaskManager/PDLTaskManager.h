@@ -11,15 +11,26 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+typedef NS_ENUM(NSUInteger, PDLTaskManagerState) {
+    PDLTaskManagerStateNone,
+    PDLTaskManagerStateRunning,
+    PDLTaskManagerStateFinished,
+    PDLTaskManagerStateCanceled,
+    PDLTaskManagerStateTimedOut,
+};
+
 @interface PDLTaskManager : NSObject
 
 @property (nonatomic, copy, readonly) NSArray *tasks;
+@property (nonatomic, assign, readonly) PDLTaskManagerState state;
+@property (nonatomic, assign) NSTimeInterval timeoutInterval;
 @property (nonatomic, copy) void (^completion)(PDLTaskManager *taskManager, BOOL finished);
 
 - (void)addTask:(PDLTask *)task;
 
-- (void)run;
+- (void)start;
 - (void)finish;
+- (void)cancel;
 
 - (void)finishTask:(PDLTask *)task;
 - (void)cancelTask:(PDLTask *)task;

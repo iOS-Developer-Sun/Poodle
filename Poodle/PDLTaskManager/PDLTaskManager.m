@@ -22,6 +22,8 @@
 
 @property (nonatomic, strong) NSMutableArray *taskList;
 @property (nonatomic, strong) NSMutableSet *allTasks;
+@property (nonatomic, assign) PDLTaskManagerState state;
+@property (nonatomic, strong) PDLTaskManager *runningManager;
 
 @end
 
@@ -58,17 +60,71 @@
     }
 }
 
+- (void)start {
+    PDLTaskManagerState state = self.state;
+    if (state != PDLTaskManagerStateNone) {
+        return;
+    }
+
+    self.runningManager = self;
+    [self run];
+}
+
 - (void)run {
+    PDLTaskManagerState state = self.state;
+    if (state != PDLTaskManagerStateNone) {
+        return;
+    }
+
+    self.state = PDLTaskManagerStateRunning;
     for (PDLTask *task in self.taskList) {
         [task start];
     }
+
+    NSTimeInterval timeoutInterval = self.timeoutInterval;
+    if (timeoutInterval > 0) {
+        [self performSelector:@selector(timeout) withObject:nil afterDelay:timeoutInterval];
+    }
+}
+
+- (void)complete {
+    [self cancelAllTasks];
+    if (self.completion) {
+        self.completion(self, self.state == PDLTaskManagerStateFinished);
+    }
+    self.runningManager = nil;
+}
+
+- (void)timeout {
+    PDLTaskManagerState state = self.state;
+    if (state != PDLTaskManagerStateRunning) {
+        return;
+    }
+
+    self.state = PDLTaskManagerStateTimedOut;
+    [self complete];
 }
 
 - (void)finish {
-    [self cancelAllTasks];
-    if (self.completion) {
-        self.completion(self, YES);
+    PDLTaskManagerState state = self.state;
+    if (state == PDLTaskManagerStateCanceled || state == PDLTaskManagerStateTimedOut) {
+        return;
     }
+
+    self.state = PDLTaskManagerStateFinished;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(timeout) object:nil];
+    [self complete];
+}
+
+- (void)cancel {
+    PDLTaskManagerState state = self.state;
+    if (state == PDLTaskManagerStateCanceled || state != PDLTaskManagerStateTimedOut) {
+        return;
+    }
+
+    self.state = PDLTaskManagerStateCanceled;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(timeout) object:nil];
+    [self complete];
 }
 
 - (void)finishTask:(PDLTask *)task {
