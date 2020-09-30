@@ -43,21 +43,25 @@
 }
 
 - (void)addTask:(PDLTask *)task {
-    if (![self.allTasks containsObject:task]) {
-        assert(task.manager != self);
-        task.manager = self;
-        [self.taskList addObject:task];
-        [self.allTasks addObject:task];
+    if ([self.allTasks containsObject:task]) {
+        return;
     }
+
+    assert(task.manager != self);
+    task.manager = self;
+    [self.taskList addObject:task];
+    [self.allTasks addObject:task];
 }
 
 - (void)removeTask:(PDLTask *)task {
-    if ([self.allTasks containsObject:task]) {
-        assert(task.manager == self);
-        task.manager = nil;
-        [self.taskList removeObject:task];
-        [self.allTasks removeObject:task];
+    if (![self.allTasks containsObject:task]) {
+        return;
     }
+
+    assert(task.manager == self);
+    task.manager = nil;
+    [self.taskList removeObject:task];
+    [self.allTasks removeObject:task];
 }
 
 - (void)start {
@@ -107,7 +111,7 @@
 
 - (void)finish {
     PDLTaskManagerState state = self.state;
-    if (state == PDLTaskManagerStateCanceled || state == PDLTaskManagerStateTimedOut) {
+    if (state == PDLTaskManagerStateCanceled || state == PDLTaskManagerStateTimedOut || state == PDLTaskManagerStateFinished) {
         return;
     }
 
@@ -125,6 +129,11 @@
     self.state = PDLTaskManagerStateCanceled;
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(timeout) object:nil];
     [self complete];
+}
+
+- (void)startTask:(PDLTask *)task {
+    assert(task.manager == self);
+    [task start];
 }
 
 - (void)finishTask:(PDLTask *)task {

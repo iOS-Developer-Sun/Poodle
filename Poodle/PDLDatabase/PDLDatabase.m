@@ -303,7 +303,7 @@
 - (BOOL)update:(NSDictionary *)data inTable:(NSString *)table withCondition:(NSString *)condition {
     NSMutableString *update = [NSMutableString string];
     for (id key in data) {
-        if ([update length] > 0) {
+        if (update.length > 0) {
             [update appendString:@", "];
         }
         id value = [data valueForKey:key];
@@ -334,7 +334,7 @@
 
 - (NSDictionary *)findOne:(NSString *)fields fromTable:(NSString *)table withOrder:(NSString *)order withCondition:(NSString *)condition {
     NSArray *list = [self findAll:fields fromTable:table withOffset:0 withCount:1 withOrder:order withCondition:condition];
-    if ([list count] <= 0) {
+    if (list.count == 0) {
         return nil;
     }
     return list[0];

@@ -35,6 +35,23 @@
     return states[@(self.state)] ?: @"unknown";
 }
 
+- (void)setDelay:(NSTimeInterval)delay {
+    if (fabs(_delay - delay) <= DBL_EPSILON) {
+        return;
+    }
+    _delay = delay;
+    if (self.state != PDLTaskStateWaiting) {
+        return;
+    }
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(run) object:nil];
+    if (delay > 0) {
+        [self performSelector:@selector(run) withObject:nil afterDelay:delay];
+    } else {
+        [self run];
+    }
+}
+
 - (void)start {
     PDLTaskState state = self.state;
     if (state != PDLTaskStateNone) {

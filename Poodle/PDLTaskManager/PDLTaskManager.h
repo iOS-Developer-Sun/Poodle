@@ -27,11 +27,13 @@ typedef NS_ENUM(NSUInteger, PDLTaskManagerState) {
 @property (nonatomic, copy) void (^completion)(PDLTaskManager *taskManager, BOOL finished);
 
 - (void)addTask:(PDLTask *)task;
+- (void)removeTask:(PDLTask *)task;
 
 - (void)start;
 - (void)finish;
 - (void)cancel;
 
+- (void)startTask:(PDLTask *)task;
 - (void)finishTask:(PDLTask *)task;
 - (void)cancelTask:(PDLTask *)task;
 - (void)cancelLatterTasks:(PDLTask *)task;

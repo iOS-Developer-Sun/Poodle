@@ -15,6 +15,40 @@
 #import "PDLDatabaseViewController.h"
 #import "PDLWebViewController.h"
 
+static NSString *PDLDirectoryViewControllerSizeStringOfBytes(uint64_t bytes) {
+    double gigaBytes = bytes / 1024.0 / 1024.0 / 1024.0;
+    if (gigaBytes >= 1) {
+        return [NSString stringWithFormat:@"%.2fG", gigaBytes];
+    }
+
+    double megaBytes = bytes / 1024.0 / 1024.0;
+    if (megaBytes >= 1) {
+        return [NSString stringWithFormat:@"%.2fM", megaBytes];
+    }
+
+    double kiloBytes = bytes / 1024.0;
+    if (kiloBytes >= 1) {
+        return [NSString stringWithFormat:@"%.2fK", kiloBytes];
+    }
+
+    return [NSString stringWithFormat:@"%@B", @(bytes)];
+}
+
+static uint64_t PDLDirectoryViewControllerFileSizeAtPath(NSString *filePath) {
+    uint64_t totalFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
+    NSArray *subpaths = nil;
+    @autoreleasepool {
+        subpaths = [[NSFileManager defaultManager] subpathsAtPath:filePath];
+    }
+    for (NSString *subpath in subpaths) {
+        NSString *subFilePath = [filePath stringByAppendingPathComponent:subpath];
+        uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:subFilePath error:nil] fileSize];
+        totalFileSize += fileSize;
+    }
+
+    return totalFileSize;
+}
+
 static UIImage *PDLDirectoryViewControllerAspectFitImageWithImageAndSize(UIImage *image, CGSize size) {
     if (image == nil) {
         return nil;
@@ -69,40 +103,6 @@ static UIImage *PDLDirectoryViewControllerCheckboxHighlightedImage(void) {
     return image;
 }
 
-static NSString *PDLDirectoryViewControllerSizeStringOfBytes(uint64_t bytes) {
-    double gigaBytes = bytes / 1024.0 / 1024.0 / 1024.0;
-    if (gigaBytes >= 1) {
-        return [NSString stringWithFormat:@"%.2fG", gigaBytes];
-    }
-
-    double megaBytes = bytes / 1024.0 / 1024.0;
-    if (megaBytes >= 1) {
-        return [NSString stringWithFormat:@"%.2fM", megaBytes];
-    }
-
-    double kiloBytes = bytes / 1024.0;
-    if (kiloBytes >= 1) {
-        return [NSString stringWithFormat:@"%.2fK", kiloBytes];
-    }
-
-    return [NSString stringWithFormat:@"%@B", @(bytes)];
-}
-
-static uint64_t PDLDirectoryViewControllerFileSizeAtPath(NSString *filePath) {
-    uint64_t totalFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
-    NSArray *subpaths = nil;
-    @autoreleasepool {
-        subpaths = [[NSFileManager defaultManager] subpathsAtPath:filePath];
-    }
-    for (NSString *subpath in subpaths) {
-        NSString *subFilePath = [filePath stringByAppendingPathComponent:subpath];
-        uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:subFilePath error:nil] fileSize];
-        totalFileSize += fileSize;
-    }
-
-    return totalFileSize;
-}
-
 typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     PDLDirectoryContentTypeUnknown = -1,
     PDLDirectoryContentTypeDirectory,
@@ -152,7 +152,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     static dispatch_queue_t sizeCalculatingQueue;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        sizeCalculatingQueue =  dispatch_queue_create("DirectoryContentSizeCalculatingQueue", NULL);
+        sizeCalculatingQueue =  dispatch_queue_create("PDLDirectoryContentSizeCalculatingQueue", NULL);
     });
     return sizeCalculatingQueue;
 }
@@ -871,7 +871,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     NSError *error = nil;
     BOOL isRemoved = [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
     if (isRemoved) {
-        NSMutableArray *contents = self.contents.mutableCopy;
+        NSMutableArray *contents = [self.contents mutableCopy];
         [contents removeObjectAtIndex:indexPath.row];
         self.contents = contents;
         self.infoLabel.text = [NSString stringWithFormat:@"%@ %@", @(self.contents.count), (self.contents.count > 1 ? @"items" : @"item")];
