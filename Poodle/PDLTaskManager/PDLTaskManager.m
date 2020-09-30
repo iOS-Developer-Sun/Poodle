@@ -30,15 +30,14 @@
     return self;
 }
 
-- (instancetype)initWithScheduler:(PDLTaskScheduler *)scheduler {
-    self = [super init];
-    if (self) {
-        _taskList = [NSMutableArray array];
-        _allTasks = [NSMutableSet set];
-        _scheduler = scheduler;
-        scheduler.taskManager = self;
+- (void)setScheduler:(PDLTaskScheduler *)scheduler {
+    if (_scheduler == scheduler) {
+        return;
     }
-    return self;
+
+    _scheduler.taskManager = nil;
+    scheduler.taskManager = self;
+    _scheduler = scheduler;
 }
 
 - (NSArray *)tasks {

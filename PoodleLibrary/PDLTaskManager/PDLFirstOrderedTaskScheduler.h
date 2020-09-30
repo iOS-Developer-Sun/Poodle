@@ -1,5 +1,5 @@
 //
-//  PDLFirstObjectTaskScheduler.h
+//  PDLFirstOrderedTaskScheduler.h
 //  PoodleApplication
 //
 //  Created by Poodle on 2020/9/30.
@@ -10,7 +10,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PDLFirstObjectTaskScheduler : PDLTaskScheduler
+@interface PDLFirstOrderedTaskScheduler : PDLTaskScheduler
 
 @property (nonatomic, weak) PDLTask *result;
 

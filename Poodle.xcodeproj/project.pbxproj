@@ -188,10 +188,10 @@
 		B890852824AF493D00DAC261 /* pdl_dispatch.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B890851C24AF48C700DAC261 /* pdl_dispatch.h */; };
 		B893CBF9252488D000174119 /* PDLTaskScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = B893CBF7252488D000174119 /* PDLTaskScheduler.m */; };
 		B893CBFA2524896B00174119 /* PDLTaskScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = B893CBF7252488D000174119 /* PDLTaskScheduler.m */; };
-		B893CBFE2524959D00174119 /* PDLFirstObjectTaskScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = B893CBFD2524959D00174119 /* PDLFirstObjectTaskScheduler.m */; };
-		B893CBFF2524969900174119 /* PDLFirstObjectTaskScheduler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B893CBFC2524959D00174119 /* PDLFirstObjectTaskScheduler.h */; };
+		B893CBFE2524959D00174119 /* PDLFirstOrderedTaskScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = B893CBFD2524959D00174119 /* PDLFirstOrderedTaskScheduler.m */; };
+		B893CBFF2524969900174119 /* PDLFirstOrderedTaskScheduler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B893CBFC2524959D00174119 /* PDLFirstOrderedTaskScheduler.h */; };
 		B893CC002524969900174119 /* PDLTaskScheduler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B893CBF8252488D000174119 /* PDLTaskScheduler.h */; };
-		B893CC01252496A000174119 /* PDLFirstObjectTaskScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = B893CBFD2524959D00174119 /* PDLFirstObjectTaskScheduler.m */; };
+		B893CC01252496A000174119 /* PDLFirstOrderedTaskScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = B893CBFD2524959D00174119 /* PDLFirstOrderedTaskScheduler.m */; };
 		B899F9EF245065DA00EFBB39 /* PDLViewControllerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */; };
 		B899F9F924506A3A00EFBB39 /* PDLViewControllerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */; };
 		B899F9FA24506A4200EFBB39 /* PDLViewControllerListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B899F9EE245065DA00EFBB39 /* PDLViewControllerListViewController.h */; };
@@ -1106,7 +1106,7 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				B893CBFF2524969900174119 /* PDLFirstObjectTaskScheduler.h in CopyFiles */,
+				B893CBFF2524969900174119 /* PDLFirstOrderedTaskScheduler.h in CopyFiles */,
 				B893CC002524969900174119 /* PDLTaskScheduler.h in CopyFiles */,
 				B864FA262523571A00842343 /* PDLTask.h in CopyFiles */,
 				B864FA272523571A00842343 /* PDLTaskManager.h in CopyFiles */,
@@ -1798,8 +1798,8 @@
 		B890852624AF490900DAC261 /* libpdl_dispatch.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_dispatch.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B893CBF7252488D000174119 /* PDLTaskScheduler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLTaskScheduler.m; sourceTree = "<group>"; };
 		B893CBF8252488D000174119 /* PDLTaskScheduler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLTaskScheduler.h; sourceTree = "<group>"; };
-		B893CBFC2524959D00174119 /* PDLFirstObjectTaskScheduler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLFirstObjectTaskScheduler.h; sourceTree = "<group>"; };
-		B893CBFD2524959D00174119 /* PDLFirstObjectTaskScheduler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLFirstObjectTaskScheduler.m; sourceTree = "<group>"; };
+		B893CBFC2524959D00174119 /* PDLFirstOrderedTaskScheduler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLFirstOrderedTaskScheduler.h; sourceTree = "<group>"; };
+		B893CBFD2524959D00174119 /* PDLFirstOrderedTaskScheduler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLFirstOrderedTaskScheduler.m; sourceTree = "<group>"; };
 		B893CC022524997000174119 /* PDLTaskInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLTaskInternal.h; sourceTree = "<group>"; };
 		B893CC03252499F600174119 /* PDLTaskSchedulerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLTaskSchedulerInternal.h; sourceTree = "<group>"; };
 		B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLViewControllerListViewController.m; sourceTree = "<group>"; };
@@ -2693,8 +2693,8 @@
 		B864FA1F2523570300842343 /* PDLTaskManager */ = {
 			isa = PBXGroup;
 			children = (
-				B893CBFC2524959D00174119 /* PDLFirstObjectTaskScheduler.h */,
-				B893CBFD2524959D00174119 /* PDLFirstObjectTaskScheduler.m */,
+				B893CBFC2524959D00174119 /* PDLFirstOrderedTaskScheduler.h */,
+				B893CBFD2524959D00174119 /* PDLFirstOrderedTaskScheduler.m */,
 				B864FA202523570300842343 /* PDLTask.h */,
 				B864FA222523570300842343 /* PDLTask.m */,
 				B893CC022524997000174119 /* PDLTaskInternal.h */,
@@ -6753,7 +6753,7 @@
 				B890851D24AF48C700DAC261 /* pdl_dispatch.m in Sources */,
 				B85D460E240E85A600CBF758 /* pdl_die-arm64.s in Sources */,
 				B85D460F240E85A600CBF758 /* pdl_die-i386.s in Sources */,
-				B893CBFE2524959D00174119 /* PDLFirstObjectTaskScheduler.m in Sources */,
+				B893CBFE2524959D00174119 /* PDLFirstOrderedTaskScheduler.m in Sources */,
 				B85D4610240E85A600CBF758 /* pdl_die-x86_64.s in Sources */,
 				B85D4611240E85A600CBF758 /* pdl_objc_message-arm.s in Sources */,
 				B85D4612240E85A600CBF758 /* pdl_objc_message-arm64.s in Sources */,
@@ -6928,7 +6928,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B893CC01252496A000174119 /* PDLFirstObjectTaskScheduler.m in Sources */,
+				B893CC01252496A000174119 /* PDLFirstOrderedTaskScheduler.m in Sources */,
 				B893CBFA2524896B00174119 /* PDLTaskScheduler.m in Sources */,
 				B864FA282523572800842343 /* PDLTask.m in Sources */,
 				B864FA292523572800842343 /* PDLTaskManager.m in Sources */,
