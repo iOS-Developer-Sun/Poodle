@@ -7,16 +7,8 @@
 //
 
 #import "PDLTaskManager.h"
-
-@interface PDLTask ()
-
-@property (nonatomic, weak) PDLTaskManager *manager;
-
-- (void)start;
-- (void)finish;
-- (void)cancel;
-
-@end
+#import "PDLTaskInternal.h"
+#import "PDLTaskSchedulerInternal.h"
 
 @interface PDLTaskManager ()
 
@@ -34,6 +26,17 @@
     if (self) {
         _taskList = [NSMutableArray array];
         _allTasks = [NSMutableSet set];
+    }
+    return self;
+}
+
+- (instancetype)initWithScheduler:(PDLTaskScheduler *)scheduler {
+    self = [super init];
+    if (self) {
+        _taskList = [NSMutableArray array];
+        _allTasks = [NSMutableSet set];
+        _scheduler = scheduler;
+        scheduler.taskManager = self;
     }
     return self;
 }
@@ -91,6 +94,22 @@
     }
 }
 
+- (void)cancelAllTasks {
+    for (PDLTask *task in self.taskList) {
+        [task cancel];
+    }
+}
+
+- (void)schedule {
+    if (self.state != PDLTaskManagerStateRunning) {
+        return;
+    }
+
+    if (self.scheduler) {
+        [self.scheduler schedule];
+    }
+}
+
 - (void)complete {
     [self cancelAllTasks];
     if (self.completion) {
@@ -136,39 +155,42 @@
     [task start];
 }
 
-- (void)finishTask:(PDLTask *)task {
+- (void)succeedTask:(PDLTask *)task {
     assert(task.manager == self);
-    [task finish];
+    [task succeed];
+    [self schedule];
+}
+
+- (void)failTask:(PDLTask *)task {
+    assert(task.manager == self);
+    [task fail];
+    [self schedule];
 }
 
 - (void)cancelTask:(PDLTask *)task {
     assert(task.manager == self);
     [task cancel];
+    [self schedule];
 }
 
-- (void)cancelLatterTasks:(PDLTask *)task {
-    assert(task.manager == self);
-    NSInteger index = [self.taskList indexOfObject:task];
-    for (NSInteger i = index + 1; i < self.taskList.count; i++) {
-        PDLTask *each = self.taskList[i];
-        [each cancel];
-    }
-}
-
-- (void)cancelLowerTasks:(PDLTask *)task {
-    assert(task.manager == self);
-    NSInteger priority = task.priority;
-    for (PDLTask *each in self.taskList) {
-        if (each.priority < priority) {
-            [each cancel];
-        }
-    }
-}
-
-- (void)cancelAllTasks {
-    for (PDLTask *task in self.taskList) {
-        [task cancel];
-    }
-}
+//- (void)cancelLatterTasks:(PDLTask *)task {
+//    assert(task.manager == self);
+//    NSInteger index = [self.taskList indexOfObject:task];
+//    for (NSInteger i = index + 1; i < self.taskList.count; i++) {
+//        PDLTask *each = self.taskList[i];
+//        [each cancel];
+//    }
+//}
+//
+//- (void)cancelLowerTasks:(PDLTask *)task {
+//    assert(task.manager == self);
+//    NSInteger priority = task.priority;
+//    for (PDLTask *each in self.taskList) {
+//        if (each.priority < priority) {
+//            [each cancel];
+//        }
+//    }
+//}
+//
 
 @end
