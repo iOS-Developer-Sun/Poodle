@@ -82,7 +82,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
     if (self.allViewControllersLoader) {
         viewControllersLoaded = self.allViewControllersLoader(self);
     }
-    NSMutableArray *allViewControllers = viewControllersLoaded.mutableCopy;
+    NSMutableArray *allViewControllers = [viewControllersLoaded mutableCopy];
 
     // window rootViewControllers
     NSArray *windows = [[UIApplication sharedApplication].windows copy];

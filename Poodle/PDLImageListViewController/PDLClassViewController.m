@@ -118,7 +118,8 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger numbers = [self.dataSource[section][@"data"] count];
+    NSArray *data = self.dataSource[section][@"data"];
+    NSInteger numbers = data.count;
     return numbers;
 }
 

@@ -338,9 +338,9 @@
     [self calculateVisibleRows];
     NSArray *newVisibleRows = self.visibleRows;
 
-    NSMutableArray *viewColumnsToDelete = oldVisibleColumns.mutableCopy;
+    NSMutableArray *viewColumnsToDelete = [oldVisibleColumns mutableCopy];
     [viewColumnsToDelete removeObjectsInArray:newVisibleColumns];
-    NSMutableArray *viewRowsToDelete = oldVisibleRows.mutableCopy;
+    NSMutableArray *viewRowsToDelete = [oldVisibleRows mutableCopy];
     [viewRowsToDelete removeObjectsInArray:newVisibleRows];
 
     for (NSNumber *viewColumnToDelete in viewColumnsToDelete) {
@@ -354,9 +354,9 @@
         }
     }
 
-    NSMutableArray *viewColumnsToAdd = newVisibleColumns.mutableCopy;
+    NSMutableArray *viewColumnsToAdd = [newVisibleColumns mutableCopy];
     [viewColumnsToAdd removeObjectsInArray:oldVisibleColumns];
-    NSMutableArray *viewRowsToAdd = newVisibleRows.mutableCopy;
+    NSMutableArray *viewRowsToAdd = [newVisibleRows mutableCopy];
     [viewRowsToAdd removeObjectsInArray:oldVisibleRows];
 
     for (NSNumber *viewColumnToAdd in viewColumnsToAdd) {
@@ -371,9 +371,9 @@
     }
 
     if (self.needsRefreshVisible) {
-        NSMutableArray *viewColumnsBoth = oldVisibleColumns.mutableCopy;
+        NSMutableArray *viewColumnsBoth = [oldVisibleColumns mutableCopy];
         [viewColumnsBoth removeObjectsInArray:viewColumnsToDelete];
-        NSMutableArray *viewRowsBoth = oldVisibleRows.mutableCopy;
+        NSMutableArray *viewRowsBoth = [oldVisibleRows mutableCopy];
         [viewRowsBoth removeObjectsInArray:viewRowsToDelete];
         self.needsRefreshVisible = NO;
 

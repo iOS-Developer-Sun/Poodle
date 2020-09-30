@@ -29,7 +29,7 @@
         NSCharacterSet *URLQueryAllowedCharacterSet = [NSCharacterSet URLQueryAllowedCharacterSet];
         NSCharacterSet *URLFragmentAllowedCharacterSet = [NSCharacterSet URLFragmentAllowedCharacterSet];
 
-        NSMutableCharacterSet *characterSet = URLUserAllowedCharacterSet.mutableCopy;
+        NSMutableCharacterSet *characterSet = [URLUserAllowedCharacterSet mutableCopy];
         [characterSet formIntersectionWithCharacterSet:URLPasswordAllowedCharacterSet];
         [characterSet formIntersectionWithCharacterSet:URLHostAllowedCharacterSet];
         [characterSet formIntersectionWithCharacterSet:URLPathAllowedCharacterSet];
