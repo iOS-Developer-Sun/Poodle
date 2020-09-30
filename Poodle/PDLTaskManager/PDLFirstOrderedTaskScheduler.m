@@ -1,15 +1,15 @@
 //
-//  PDLFirstObjectTaskScheduler.m
+//  PDLFirstOrderedTaskScheduler.m
 //  PoodleApplication
 //
 //  Created by Poodle on 2020/9/30.
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
-#import "PDLFirstObjectTaskScheduler.h"
+#import "PDLFirstOrderedTaskScheduler.h"
 #import "PDLTaskSchedulerInternal.h"
 
-@implementation PDLFirstObjectTaskScheduler
+@implementation PDLFirstOrderedTaskScheduler
 
 - (instancetype)init{
     self = [super init];
@@ -31,10 +31,10 @@
                 }
             }
             if (shouldFinish) {
-                typeof(self) firstObjectTaskScheduler = (typeof(firstObjectTaskScheduler))scheduler;
-                firstObjectTaskScheduler.result = result;
+                typeof(self) taskScheduler = (typeof(taskScheduler))scheduler;
+                taskScheduler.result = result;
                 [taskManager finish];
-                firstObjectTaskScheduler.result = nil;
+                taskScheduler.result = nil;
             };
         };
     }

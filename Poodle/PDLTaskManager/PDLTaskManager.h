@@ -27,10 +27,8 @@ typedef NS_ENUM(NSUInteger, PDLTaskManagerState) {
 @property (nonatomic, copy, readonly) NSArray *tasks;
 @property (nonatomic, assign, readonly) PDLTaskManagerState state;
 @property (nonatomic, assign) NSTimeInterval timeoutInterval;
-@property (nonatomic, strong, readonly) PDLTaskScheduler *scheduler;
+@property (nonatomic, strong) PDLTaskScheduler *scheduler;
 @property (nonatomic, copy) void (^completion)(PDLTaskManager *taskManager, BOOL finished);
-
-- (instancetype)initWithScheduler:(PDLTaskScheduler *)scheduler;
 
 - (void)addTask:(PDLTask *)task;
 - (void)removeTask:(PDLTask *)task;
