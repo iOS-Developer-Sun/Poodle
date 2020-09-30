@@ -7,14 +7,8 @@
 //
 
 #import "PDLTask.h"
+#import "PDLTaskInternal.h"
 #import "PDLTaskManager.h"
-
-@interface PDLTask ()
-
-@property (nonatomic, assign) PDLTaskState state;
-@property (nonatomic, weak) PDLTaskManager *manager;
-
-@end
 
 @implementation PDLTask
 
@@ -28,7 +22,8 @@
         @(PDLTaskStateNone) : @"none",
         @(PDLTaskStateWaiting) : @"waiting",
         @(PDLTaskStateRunning) : @"running",
-        @(PDLTaskStateFinished) : @"finished",
+        @(PDLTaskStateSucceeded) : @"succeeded",
+        @(PDLTaskStateFailed) : @"failed",
         @(PDLTaskStateCanceled) : @"canceled",
         @(PDLTaskStateTimedOut) : @"timed out",
     };
@@ -39,6 +34,7 @@
     if (fabs(_delay - delay) <= DBL_EPSILON) {
         return;
     }
+
     _delay = delay;
     if (self.state != PDLTaskStateWaiting) {
         return;
@@ -86,7 +82,7 @@
 
 - (void)complete {
     if (self.completion) {
-        self.completion(self, self.state == PDLTaskManagerStateFinished);
+        self.completion(self, self.state == PDLTaskStateSucceeded);
     }
 }
 
@@ -100,14 +96,25 @@
     [self complete];
 }
 
-- (void)finish {
+- (void)succeed {
     PDLTaskState state = self.state;
-    if (state == PDLTaskStateCanceled || state == PDLTaskStateTimedOut) {
+    if (state != PDLTaskStateWaiting && state != PDLTaskStateRunning) {
         return;
     }
 
     [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(timeout) object:nil];
-    self.state = PDLTaskStateFinished;
+    self.state = PDLTaskStateSucceeded;
+    [self complete];
+}
+
+- (void)fail {
+    PDLTaskState state = self.state;
+    if (state != PDLTaskStateWaiting && state != PDLTaskStateRunning) {
+        return;
+    }
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(timeout) object:nil];
+    self.state = PDLTaskStateFailed;
     [self complete];
 }
 

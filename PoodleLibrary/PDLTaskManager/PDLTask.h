@@ -14,7 +14,8 @@ typedef NS_ENUM(NSUInteger, PDLTaskState) {
     PDLTaskStateNone,
     PDLTaskStateWaiting,
     PDLTaskStateRunning,
-    PDLTaskStateFinished,
+    PDLTaskStateSucceeded,
+    PDLTaskStateFailed,
     PDLTaskStateCanceled,
     PDLTaskStateTimedOut,
 };
