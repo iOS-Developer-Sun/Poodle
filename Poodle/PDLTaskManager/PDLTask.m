@@ -37,24 +37,28 @@
 
 - (void)start {
     PDLTaskState state = self.state;
-    if (state == PDLTaskStateNone) {
-        self.state = PDLTaskStateWaiting;
-        NSTimeInterval delay = self.delay;
-        if (delay > 0) {
-            [self performSelector:@selector(run) withObject:nil afterDelay:delay];
-        } else {
-            [self run];
-        }
+    if (state != PDLTaskStateNone) {
+        return;
+    }
+
+    self.state = PDLTaskStateWaiting;
+    NSTimeInterval delay = self.delay;
+    if (delay > 0) {
+        [self performSelector:@selector(run) withObject:nil afterDelay:delay];
+    } else {
+        [self run];
     }
 }
 
 - (void)run {
     PDLTaskState state = self.state;
-    if (state == PDLTaskStateWaiting) {
-        self.state = PDLTaskStateRunning;
-        if (self.action) {
-            self.action(self);
-        }
+    if (state != PDLTaskStateWaiting) {
+        return;
+    }
+
+    self.state = PDLTaskStateRunning;
+    if (self.action) {
+        self.action(self);
     }
 
     NSTimeInterval timeoutInterval = self.timeoutInterval;
@@ -63,40 +67,48 @@
     }
 }
 
+- (void)complete {
+    if (self.completion) {
+        self.completion(self, self.state == PDLTaskManagerStateFinished);
+    }
+}
+
 - (void)timeout {
     PDLTaskState state = self.state;
-    if (state == PDLTaskStateRunning) {
-        self.state = PDLTaskStateTimedOut;
-        if (self.completion) {
-            self.completion(self, NO);
-        }
+    if (state != PDLTaskStateRunning) {
+        return;
     }
+
+    self.state = PDLTaskStateTimedOut;
+    [self complete];
 }
 
 - (void)finish {
     PDLTaskState state = self.state;
-    if (state != PDLTaskStateCanceled && state != PDLTaskStateTimedOut) {
-        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(timeout) object:nil];
-        self.state = PDLTaskStateFinished;
-        if (self.completion) {
-            self.completion(self, YES);
-        }
+    if (state == PDLTaskStateCanceled || state == PDLTaskStateTimedOut) {
+        return;
     }
+
+    [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(timeout) object:nil];
+    self.state = PDLTaskStateFinished;
+    [self complete];
 }
 
 - (void)cancel {
     PDLTaskState state = self.state;
-    if (state == PDLTaskStateWaiting || state == PDLTaskStateRunning) {
-        self.state = PDLTaskStateCanceled;
-        if (state == PDLTaskStateWaiting) {
-            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(run) object:nil];
-        } else if (state == PDLTaskStateRunning) {
-            [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(timeout) object:nil];
-        }
-        if (self.completion) {
-            self.completion(self, NO);
-        }
+    if (state != PDLTaskStateWaiting && state != PDLTaskStateRunning) {
+        return;
     }
+
+    self.state = PDLTaskStateCanceled;
+    if (state == PDLTaskStateWaiting) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(run) object:nil];
+    } else if (state == PDLTaskStateRunning) {
+        [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(timeout) object:nil];
+    } else {
+        assert(0);
+    }
+    [self complete];
 }
 
 @end
