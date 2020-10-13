@@ -190,6 +190,7 @@
 		B88F1610253161F3003772AA /* pdl_dynamic_objc_message-x86_64.s in Sources */ = {isa = PBXBuildFile; fileRef = B88F160C253161F3003772AA /* pdl_dynamic_objc_message-x86_64.s */; };
 		B88F1611253161F3003772AA /* pdl_dynamic_objc_message-arm.s in Sources */ = {isa = PBXBuildFile; fileRef = B88F160D253161F3003772AA /* pdl_dynamic_objc_message-arm.s */; };
 		B88F161E25319131003772AA /* pdl_dynamic_bridge_objc_message.m in Sources */ = {isa = PBXBuildFile; fileRef = B88F161325319044003772AA /* pdl_dynamic_bridge_objc_message.m */; };
+		B88F16402535B72F003772AA /* pdl_dynamic_bridge_objc_message.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B88F161425319044003772AA /* pdl_dynamic_bridge_objc_message.h */; };
 		B890851D24AF48C700DAC261 /* pdl_dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = B890851B24AF48C700DAC261 /* pdl_dispatch.m */; };
 		B890852724AF493400DAC261 /* pdl_dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = B890851B24AF48C700DAC261 /* pdl_dispatch.m */; };
 		B890852824AF493D00DAC261 /* pdl_dispatch.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B890851C24AF48C700DAC261 /* pdl_dispatch.h */; };
@@ -1230,6 +1231,7 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				B88F16402535B72F003772AA /* pdl_dynamic_bridge_objc_message.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4279,10 +4281,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B88F162025319185003772AA /* PBXTargetDependency */,
-				B88F1609253160AD003772AA /* PBXTargetDependency */,
-				B864FA2B2523573400842343 /* PBXTargetDependency */,
-				B83EFAF325036CD400FDBA43 /* PBXTargetDependency */,
 				B8FC6AC422EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC622EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC822EEF563005B91DE /* PBXTargetDependency */,
@@ -4322,13 +4320,14 @@
 				B8FC6C9422EF06D9005B91DE /* PBXTargetDependency */,
 				B85ECB7B22F27C2E0063BB7C /* PBXTargetDependency */,
 				B8FC6C9222EF06D9005B91DE /* PBXTargetDependency */,
+				B864FA2B2523573400842343 /* PBXTargetDependency */,
 				B86A6BAF23BB560E00715650 /* PBXTargetDependency */,
 				B899F9FC24506A5D00EFBB39 /* PBXTargetDependency */,
-				B83EFAE2250340B200FDBA43 /* PBXTargetDependency */,
 				B802AC9622F3377900BF028E /* PBXTargetDependency */,
 				B8FC6D7D22EF0BC7005B91DE /* PBXTargetDependency */,
 				B8FC6D7F22EF0BC7005B91DE /* PBXTargetDependency */,
 				B83EFAE4250340B200FDBA43 /* PBXTargetDependency */,
+				B83EFAF325036CD400FDBA43 /* PBXTargetDependency */,
 				B8FC6D8122EF0BC7005B91DE /* PBXTargetDependency */,
 				B8B7B5C4249B934D008D4604 /* PBXTargetDependency */,
 				B8FC6DAB22EFD9B0005B91DE /* PBXTargetDependency */,
@@ -4337,6 +4336,8 @@
 				B890852A24AF494900DAC261 /* PBXTargetDependency */,
 				B8DEC4D12487808A00DB3D0E /* PBXTargetDependency */,
 				B8FC6DAD22EFD9B0005B91DE /* PBXTargetDependency */,
+				B88F162025319185003772AA /* PBXTargetDependency */,
+				B88F1609253160AD003772AA /* PBXTargetDependency */,
 				B8724BBC23AB9F25003A4D2A /* PBXTargetDependency */,
 				B8FC6D0622EF08B5005B91DE /* PBXTargetDependency */,
 				B80FCBB923A9D4130028844B /* PBXTargetDependency */,
@@ -4357,6 +4358,7 @@
 				B879532C2486865D00798005 /* PBXTargetDependency */,
 				B88865F124C02B5A00D58BC7 /* PBXTargetDependency */,
 				B8FC6D8322EF0BC7005B91DE /* PBXTargetDependency */,
+				B83EFAE2250340B200FDBA43 /* PBXTargetDependency */,
 			);
 			name = PoodleLibrary;
 			productName = PoodleLibrary;
