@@ -10,12 +10,12 @@
 
 .text
 .align 4
-.private_extern __pdl_dynamic_objc_msgSend
-.private_extern __pdl_dynamic_objc_msgSend_stret
-.private_extern __pdl_dynamic_objc_msgSendSuper
-.private_extern __pdl_dynamic_objc_msgSendSuper_stret
+.private_extern _pdl_dynamic_dyld_objc_msgSend
+.private_extern _pdl_dynamic_dyld_objc_msgSend_stret
+.private_extern _pdl_dynamic_dyld_objc_msgSendSuper
+.private_extern _pdl_dynamic_dyld_objc_msgSendSuper_stret
 
-__pdl_dynamic_objc_msgSend:
+_pdl_dynamic_dyld_objc_msgSend:
     movq    _pdl_dynamic_objc_message_pointer_objc_msgSend(%rip), %r11
     cmpq    $0, %r11
     je      LOriginal
@@ -23,7 +23,7 @@ __pdl_dynamic_objc_msgSend:
 LOriginal:
     jmp     _objc_msgSend
 
-__pdl_dynamic_objc_msgSend_stret:
+_pdl_dynamic_dyld_objc_msgSend_stret:
     movq    _pdl_dynamic_objc_message_pointer_objc_msgSend_stret(%rip), %r11
     cmpq    $0, %r11
     je      LOriginal_stret
@@ -31,7 +31,7 @@ __pdl_dynamic_objc_msgSend_stret:
 LOriginal_stret:
     jmp     _objc_msgSend_stret
 
-__pdl_dynamic_objc_msgSendSuper:
+_pdl_dynamic_dyld_objc_msgSendSuper:
     movq    _pdl_dynamic_objc_message_pointer_objc_msgSendSuper2(%rip), %r11
     cmpq    $0, %r11
     je      LOriginalSuper
@@ -39,7 +39,7 @@ __pdl_dynamic_objc_msgSendSuper:
 LOriginalSuper:
     jmp     _objc_msgSendSuper2
 
-__pdl_dynamic_objc_msgSendSuper_stret:
+_pdl_dynamic_dyld_objc_msgSendSuper_stret:
     movq    _pdl_dynamic_objc_message_pointer_objc_msgSendSuper2_stret(%rip), %r11
     cmpq    $0, %r11
     je      LOriginalSuper_stret

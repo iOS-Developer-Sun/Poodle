@@ -1,6 +1,6 @@
 //
 //  pdl_dynamic_objc_message.m
-//  pdl_dynamic_objc_message
+//  Poodle
 //
 //  Created by Poodle on 2020/10/10.
 //  Copyright © 2020 Poodle. All rights reserved.
@@ -21,19 +21,19 @@ void *pdl_dynamic_objc_message_pointer_objc_msgSend_stret = NULL;
 __attribute__((visibility("hidden")))
 void *pdl_dynamic_objc_message_pointer_objc_msgSendSuper2_stret = NULL;
 
-extern void _pdl_dynamic_objc_msgSend(void);
-extern void _pdl_dynamic_objc_msgSendSuper(void);
+extern void pdl_dynamic_dyld_objc_msgSend(void);
+extern void pdl_dynamic_dyld_objc_msgSendSuper(void);
 
-PDL_DYLD_INTERPOSE(_pdl_dynamic_objc_msgSend, objc_msgSend);
-PDL_DYLD_INTERPOSE(_pdl_dynamic_objc_msgSendSuper, objc_msgSendSuper2);
+PDL_DYLD_INTERPOSE(pdl_dynamic_dyld_objc_msgSend, objc_msgSend);
+PDL_DYLD_INTERPOSE(pdl_dynamic_dyld_objc_msgSendSuper, objc_msgSendSuper2);
 
 #ifndef __arm64__
 
-extern void _pdl_dynamic_objc_msgSend_stret(void);
-extern void _pdl_dynamic_objc_msgSendSuper_stret(void);
+extern void pdl_dynamic_dyld_objc_msgSend_stret(void);
+extern void pdl_dynamic_dyld_objc_msgSendSuper_stret(void);
 
-PDL_DYLD_INTERPOSE(_pdl_dynamic_objc_msgSend_stret, objc_msgSend_stret);
-PDL_DYLD_INTERPOSE(_pdl_dynamic_objc_msgSendSuper_stret, objc_msgSendSuper2_stret);
+PDL_DYLD_INTERPOSE(pdl_dynamic_dyld_objc_msgSend_stret, objc_msgSend_stret);
+PDL_DYLD_INTERPOSE(pdl_dynamic_dyld_objc_msgSendSuper_stret, objc_msgSendSuper2_stret);
 
 #endif
 

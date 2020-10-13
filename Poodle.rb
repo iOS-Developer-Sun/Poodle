@@ -775,12 +775,12 @@ def PoodleDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, de
             source_files = header_files
         end
 
-        if base_pod_name == nil
-            base_pod_name = name
-        end
-
         if default_subspec
             s.default_subspec = default_subspec
+        end
+
+        if base_pod_name == nil
+            base_pod_name = name
         end
 
         base = path + '/'
