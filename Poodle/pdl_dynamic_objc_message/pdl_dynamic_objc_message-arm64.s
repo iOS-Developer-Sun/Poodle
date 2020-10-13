@@ -10,10 +10,10 @@
 
 .text
 .align 4
-.private_extern __pdl_dynamic_objc_msgSend
-.private_extern __pdl_dynamic_objc_msgSendSuper
+.private_extern _pdl_dynamic_dyld_objc_msgSend
+.private_extern _pdl_dynamic_dyld_objc_msgSendSuper
 
-__pdl_dynamic_objc_msgSend:
+_pdl_dynamic_dyld_objc_msgSend:
     adrp x9, _pdl_dynamic_objc_message_pointer_objc_msgSend@PAGE
     ldr x9, [x9, _pdl_dynamic_objc_message_pointer_objc_msgSend@PAGEOFF]
     cbz x9, LOriginal
@@ -21,7 +21,7 @@ __pdl_dynamic_objc_msgSend:
 LOriginal:
     b _objc_msgSend
 
-__pdl_dynamic_objc_msgSendSuper:
+_pdl_dynamic_dyld_objc_msgSendSuper:
     adrp x9, _pdl_dynamic_objc_message_pointer_objc_msgSendSuper2@PAGE
     ldr x9, [x9, _pdl_dynamic_objc_message_pointer_objc_msgSendSuper2@PAGEOFF]
     cbz x9, LOriginalSuper
