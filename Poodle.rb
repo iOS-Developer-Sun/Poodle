@@ -389,6 +389,18 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/PDLPrivate'
         end
 
+        s.subspec 'pdl_objc_message_hook' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'pdl_objc_message_hook/' + source_files
+            ss.vendored_library = base + 'pdl_objc_message_hook/' + librariy_files
+            ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/pdl_asm'
+            ss.dependency pod_name + '/pdl_objc_message'
+            ss.dependency pod_name + '/PDLPrivate'
+        end
+
         s.subspec 'pdl_objc_runtime' do |ss|
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'

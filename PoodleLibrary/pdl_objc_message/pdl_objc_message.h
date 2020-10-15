@@ -22,6 +22,9 @@ extern void pdl_objc_message_set_msgSendSuper_before_action(void(*pdl_objc_msgSe
 extern void(*pdl_objc_msgSend_original)(void);
 extern void pdl_objc_msgSend(void);
 
+extern void(*pdl_objc_msgSendSuper_original)(void);
+extern void pdl_objc_msgSendSuper(void);
+
 extern void(*pdl_objc_msgSendSuper2_original)(void);
 extern void pdl_objc_msgSendSuper2(void);
 
@@ -29,6 +32,9 @@ extern void pdl_objc_msgSendSuper2(void);
 
 extern void(*pdl_objc_msgSend_stret_original)(void);
 extern void pdl_objc_msgSend_stret(void);
+
+extern void(*pdl_objc_msgSendSuper_stret_original)(void);
+extern void pdl_objc_msgSendSuper_stret(void);
 
 extern void(*pdl_objc_msgSendSuper2_stret_original)(void);
 extern void pdl_objc_msgSendSuper2_stret(void);

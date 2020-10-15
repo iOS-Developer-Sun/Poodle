@@ -216,6 +216,11 @@
 		B8DEC4CE2487807900DB3D0E /* pdl_dispatch_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */; };
 		B8DEC4CF2487807E00DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
 		B8DFB0A4248CC1E300880B66 /* pdl_thread_funtion_size.sh in Resources */ = {isa = PBXBuildFile; fileRef = B8DFB0A3248CC1E300880B66 /* pdl_thread_funtion_size.sh */; };
+		B8E54554253823EB004C1033 /* pdl_objc_message_hook.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E54553253823EB004C1033 /* pdl_objc_message_hook.m */; };
+		B8E5455E25382423004C1033 /* pdl_objc_message_hook.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E54553253823EB004C1033 /* pdl_objc_message_hook.m */; };
+		B8E5455F2538242A004C1033 /* pdl_objc_message_hook.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E54552253823EB004C1033 /* pdl_objc_message_hook.h */; };
+		B8E545632538289F004C1033 /* pdl_objc_message_hook_dynamic.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E545622538288A004C1033 /* pdl_objc_message_hook_dynamic.h */; };
+		B8E5456525382BEB004C1033 /* pdl_objc_message_hook_dynamic_source.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E5456425382BDA004C1033 /* pdl_objc_message_hook_dynamic_source.h */; };
 		B8E56EFE23D70136008D2DA1 /* CAAnimation+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EDA23D7001A008D2DA1 /* CAAnimation+PDLExtension.m */; };
 		B8E56EFF23D7013F008D2DA1 /* CAAnimation+PDLExtension.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56ED923D7001A008D2DA1 /* CAAnimation+PDLExtension.h */; };
 		B8E56F0023D7014D008D2DA1 /* CADisplayLink+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E6923D70018008D2DA1 /* CADisplayLink+PDLExtension.m */; };
@@ -661,6 +666,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B8DEC4C52487805B00DB3D0E;
 			remoteInfo = pdl_dispatch_backtrace;
+		};
+		B8E54560253824AE004C1033 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8E5455525382417004C1033;
+			remoteInfo = pdl_objc_message_hook;
 		};
 		B8FC6AC322EEF563005B91DE /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1328,6 +1340,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B8E5455825382417004C1033 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B8E5456525382BEB004C1033 /* pdl_objc_message_hook_dynamic_source.h in CopyFiles */,
+				B8E545632538289F004C1033 /* pdl_objc_message_hook_dynamic.h in CopyFiles */,
+				B8E5455F2538242A004C1033 /* pdl_objc_message_hook.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B8FC6A9622EEEB3D005B91DE /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1874,6 +1898,11 @@
 		B8DEC4CD2487805B00DB3D0E /* libpdl_dispatch_backtrace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_dispatch_backtrace.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8DFB0A1248CBBFB00880B66 /* pdl_thread_funtion_size */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pdl_thread_funtion_size; sourceTree = "<group>"; };
 		B8DFB0A3248CC1E300880B66 /* pdl_thread_funtion_size.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = pdl_thread_funtion_size.sh; sourceTree = "<group>"; };
+		B8E54552253823EB004C1033 /* pdl_objc_message_hook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_objc_message_hook.h; sourceTree = "<group>"; };
+		B8E54553253823EB004C1033 /* pdl_objc_message_hook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_objc_message_hook.m; sourceTree = "<group>"; };
+		B8E5455D25382417004C1033 /* libpdl_objc_message_hook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_objc_message_hook.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8E545622538288A004C1033 /* pdl_objc_message_hook_dynamic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_objc_message_hook_dynamic.h; sourceTree = "<group>"; };
+		B8E5456425382BDA004C1033 /* pdl_objc_message_hook_dynamic_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_objc_message_hook_dynamic_source.h; sourceTree = "<group>"; };
 		B8E56DDF23D6F651008D2DA1 /* Poodle.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = Poodle.podspec; sourceTree = SOURCE_ROOT; };
 		B8E56DE123D70016008D2DA1 /* NSObject+PDLSelectorProxy-i386.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "NSObject+PDLSelectorProxy-i386.s"; sourceTree = "<group>"; };
 		B8E56DE223D70016008D2DA1 /* NSObject+PDLSelectorProxy-x86_64.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "NSObject+PDLSelectorProxy-x86_64.s"; sourceTree = "<group>"; };
@@ -2399,6 +2428,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B8DEC4C72487805B00DB3D0E /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8E5455725382417004C1033 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2950,6 +2986,7 @@
 				B864FA1E252356BB00842343 /* libPDLTaskManager.a */,
 				B88F160225315FAC003772AA /* libpdl_dynamic_objc_message.a */,
 				B88F161D25319100003772AA /* libpdl_dynamic_bridge_objc_message.a */,
+				B8E5455D25382417004C1033 /* libpdl_objc_message_hook.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3039,6 +3076,17 @@
 				B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */,
 			);
 			path = pdl_dispatch_backtrace;
+			sourceTree = "<group>";
+		};
+		B8E54551253823EB004C1033 /* pdl_objc_message_hook */ = {
+			isa = PBXGroup;
+			children = (
+				B8E5456425382BDA004C1033 /* pdl_objc_message_hook_dynamic_source.h */,
+				B8E545622538288A004C1033 /* pdl_objc_message_hook_dynamic.h */,
+				B8E54552253823EB004C1033 /* pdl_objc_message_hook.h */,
+				B8E54553253823EB004C1033 /* pdl_objc_message_hook.m */,
+			);
+			path = pdl_objc_message_hook;
 			sourceTree = "<group>";
 		};
 		B8E56DE023D70016008D2DA1 /* NSObject+PDLSelectorProxy */ = {
@@ -3740,6 +3788,7 @@
 				B8E56E3C23D70017008D2DA1 /* pdl_mach_object */,
 				B8E56E2F23D70017008D2DA1 /* pdl_malloc */,
 				B8E56E5123D70017008D2DA1 /* pdl_objc_message */,
+				B8E54551253823EB004C1033 /* pdl_objc_message_hook */,
 				B8B7B5A0249B61B4008D4604 /* pdl_objc_runtime */,
 				B8E56E4823D70017008D2DA1 /* pdl_os */,
 				B8E56E3923D70017008D2DA1 /* pdl_os_unfair_lock_tracer */,
@@ -4281,6 +4330,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B8E54561253824AE004C1033 /* PBXTargetDependency */,
 				B8FC6AC422EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC622EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC822EEF563005B91DE /* PBXTargetDependency */,
@@ -4561,6 +4611,24 @@
 			name = pdl_dispatch_backtrace;
 			productName = "CAAnimation+PDLExtension";
 			productReference = B8DEC4CD2487805B00DB3D0E /* libpdl_dispatch_backtrace.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B8E5455525382417004C1033 /* pdl_objc_message_hook */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8E5455A25382417004C1033 /* Build configuration list for PBXNativeTarget "pdl_objc_message_hook" */;
+			buildPhases = (
+				B8E5455625382417004C1033 /* Sources */,
+				B8E5455725382417004C1033 /* Frameworks */,
+				B8E5455825382417004C1033 /* CopyFiles */,
+				B8E5455925382417004C1033 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pdl_objc_message_hook;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B8E5455D25382417004C1033 /* libpdl_objc_message_hook.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		B8FC6A9722EEEB3D005B91DE /* CAAnimation+PDLExtension */ = {
@@ -5374,6 +5442,7 @@
 				B8FC6CB022EF071E005B91DE /* pdl_mach_object */,
 				B8FC6CB922EF071F005B91DE /* pdl_malloc */,
 				B8FC6ACB22EEFCF3005B91DE /* pdl_objc_message */,
+				B8E5455525382417004C1033 /* pdl_objc_message_hook */,
 				B8B7B5A4249B6240008D4604 /* pdl_objc_runtime */,
 				B8FC6CC222EF0720005B91DE /* pdl_os */,
 				B8FC6ADE22EEFE6A005B91DE /* pdl_os_unfair_lock_tracer */,
@@ -6079,6 +6148,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "sh \"${PROJECT_DIR}/Poodle/pdl_thread/pdl_thread_funtion_size.sh\"\n";
+		};
+		B8E5455925382417004C1033 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
 		B8FC6AA422EEECD6005B91DE /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -6896,6 +6982,7 @@
 				B8795335248688D800798005 /* pdl_thread-x86_64.s in Sources */,
 				B85D461D240E861A00CBF758 /* pdl_mach_object.c in Sources */,
 				B85D461E240E861A00CBF758 /* pdl_os_unfair_lock_tracer.c in Sources */,
+				B8E54554253823EB004C1033 /* pdl_objc_message_hook.m in Sources */,
 				B85D461F240E861A00CBF758 /* pdl_pthread_lock_tracer.c in Sources */,
 				B85D4620240E861A00CBF758 /* pdl_systemcall.c in Sources */,
 				B85D4621240E861A00CBF758 /* pdl_array.c in Sources */,
@@ -7266,6 +7353,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8DEC4CF2487807E00DB3D0E /* pdl_dispatch_backtrace.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8E5455625382417004C1033 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8E5455E25382423004C1033 /* pdl_objc_message_hook.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7808,6 +7903,11 @@
 			isa = PBXTargetDependency;
 			target = B8DEC4C52487805B00DB3D0E /* pdl_dispatch_backtrace */;
 			targetProxy = B8DEC4D02487808A00DB3D0E /* PBXContainerItemProxy */;
+		};
+		B8E54561253824AE004C1033 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8E5455525382417004C1033 /* pdl_objc_message_hook */;
+			targetProxy = B8E54560253824AE004C1033 /* PBXContainerItemProxy */;
 		};
 		B8FC6AC422EEF563005B91DE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9024,6 +9124,28 @@
 			name = Debug;
 		};
 		B8DEC4CC2487805B00DB3D0E /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B8E5455B25382417004C1033 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B8E5455C25382417004C1033 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -10295,6 +10417,15 @@
 			buildConfigurations = (
 				B8DEC4CB2487805B00DB3D0E /* Debug */,
 				B8DEC4CC2487805B00DB3D0E /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B8E5455A25382417004C1033 /* Build configuration list for PBXNativeTarget "pdl_objc_message_hook" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8E5455B25382417004C1033 /* Debug */,
+				B8E5455C25382417004C1033 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
