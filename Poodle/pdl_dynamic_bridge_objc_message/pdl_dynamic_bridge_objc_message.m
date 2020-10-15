@@ -20,6 +20,11 @@ void pdl_dynamic_bridge_objc_msgSendFull(void) {
 }
 
 __attribute__((naked))
+void pdl_dynamic_bridge_objc_msgSendSuper(void) {
+    PDL_ASM_GOTO(pdl_objc_msgSendSuper);
+}
+
+__attribute__((naked))
 void pdl_dynamic_bridge_objc_msgSendSuper2(void) {
     PDL_ASM_GOTO(pdl_objc_msgSendSuper2);
 }

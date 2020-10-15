@@ -181,11 +181,13 @@ void *pdl_objc_msgSendSuperFull_after(void) {
 #pragma mark - originals
 
 void(*pdl_objc_msgSend_original)(void) = &objc_msgSend;
+void(*pdl_objc_msgSendSuper_original)(void) = &objc_msgSendSuper;
 void(*pdl_objc_msgSendSuper2_original)(void) = &objc_msgSendSuper2;
 
 #ifndef __arm64__
 
 void(*pdl_objc_msgSend_stret_original)(void) = &objc_msgSend_stret;
+void(*pdl_objc_msgSendSuper_stret_original)(void) = &objc_msgSendSuper_stret;
 void(*pdl_objc_msgSendSuper2_stret_original)(void) = &objc_msgSendSuper2_stret;
 
 #endif
