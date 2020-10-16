@@ -170,12 +170,15 @@ void pdl_objc_message_hook_dynamic_objc_msgSendSuper2_stret(void) {
 struct pdl_objc_message_functions pdl_objc_message_hook_dynamic_init(BOOL full) {
     struct pdl_objc_message_functions functions = {NULL};
 #ifdef __LP64__
+
     functions.objc_msgSend = pdl_objc_message_hook_dynamic_objc_msgSend;
     functions.objc_msgSendSuper = pdl_objc_message_hook_dynamic_objc_msgSendSuper;
     functions.objc_msgSendSuper2 = pdl_objc_message_hook_dynamic_objc_msgSendSuper2;
+#ifndef __arm64__
     functions.objc_msgSend_stret = pdl_objc_message_hook_dynamic_objc_msgSend_stret;
     functions.objc_msgSendSuper_stret = pdl_objc_message_hook_dynamic_objc_msgSendSuper_stret;
     functions.objc_msgSendSuper2_stret = pdl_objc_message_hook_dynamic_objc_msgSendSuper2_stret;
+#endif
 
     void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
     if (handle) {
