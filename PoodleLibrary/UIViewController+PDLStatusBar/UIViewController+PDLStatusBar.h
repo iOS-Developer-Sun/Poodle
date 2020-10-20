@@ -19,19 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, strong) NSNumber *_Nullable prefersStatusBarHidden; // BOOL
 @property (nonatomic, strong) NSNumber *_Nullable preferredStatusBarUpdateAnimation; // UIStatusBarAnimation
 
-+ (instancetype)defaultStatusBar;
-
-+ (NSUInteger)enableViewController;
-+ (NSUInteger)enableNavigationController;
-+ (NSUInteger)enableTabBarController;
-+ (NSUInteger)enableBaseClasses;
-
 @end
 
 @interface UIViewController (PDLStatusBar)
 
 @property (nonatomic, strong, readonly) PDLViewControllerStatusBar *pdl_statusBar;
 @property (nonatomic, strong, readonly, class) Class pdl_statusBarClass;
+
++ (NSUInteger)pdl_statusBarEnable;
 
 @end
 

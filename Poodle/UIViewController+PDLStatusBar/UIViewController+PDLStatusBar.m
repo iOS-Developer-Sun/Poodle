@@ -16,25 +16,6 @@
 
 @implementation PDLViewControllerStatusBar
 
-- (instancetype)initDefault {
-    self = [super init];
-    if (self) {
-        ;
-    }
-    return self;
-}
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        PDLViewControllerStatusBar *defaultStatusBar = [self.class defaultStatusBar];
-        _preferredStatusBarStyle = defaultStatusBar.preferredStatusBarStyle;
-        _prefersStatusBarHidden = defaultStatusBar.prefersStatusBarHidden;
-        _preferredStatusBarUpdateAnimation = defaultStatusBar.preferredStatusBarUpdateAnimation;
-    }
-    return self;
-}
-
 static UIViewController *PDLViewControllerStatusBarDelegate(PDLViewControllerStatusBar *statusBar, UIViewController *viewController) {
     UIViewController *delegate = nil;
     typeof(statusBar.delegateProvider) delegateProvider = statusBar.delegateProvider;
@@ -64,7 +45,12 @@ static UIStatusBarStyle PDLViewControllerStatusBarPreferredStatusBarStyle(__unsa
         return ret;
     }
 
-    ret = ((typeof(&PDLViewControllerStatusBarPreferredStatusBarStyle))_imp)(self, _cmd);
+    if (_imp) {
+        ret = ((typeof(&PDLViewControllerStatusBarPreferredStatusBarStyle))_imp)(self, _cmd);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        ret = ((UIStatusBarStyle(*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);
+    }
     return ret;
 }
 
@@ -85,7 +71,12 @@ static BOOL PDLViewControllerStatusBarPrefersStatusBarHidden(__unsafe_unretained
         return ret;
     }
 
-    ret = ((typeof(&PDLViewControllerStatusBarPrefersStatusBarHidden))_imp)(self, _cmd);
+    if (_imp) {
+        ret = ((typeof(&PDLViewControllerStatusBarPrefersStatusBarHidden))_imp)(self, _cmd);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        ret = ((BOOL(*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);
+    }
     return ret;
 }
 
@@ -106,70 +97,13 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
         return ret;
     }
 
-    ret = ((typeof(&PDLViewControllerStatusBarPreferredStatusBarUpdateAnimation))_imp)(self, _cmd);
-    return ret;
-}
+    if (_imp) {
+        ret = ((typeof(&PDLViewControllerStatusBarPreferredStatusBarUpdateAnimation))_imp)(self, _cmd);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        ret = ((UIStatusBarAnimation(*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);
 
-+ (instancetype)defaultStatusBar {
-    static id defaultStatusBar = nil;
-    if (!defaultStatusBar) {
-        defaultStatusBar = [[self alloc] initDefault];
     }
-    return defaultStatusBar;
-}
-
-+ (NSUInteger)enableClass:(Class)aClass {
-    __unused NSUInteger count = 0;
-    BOOL ret = NO;
-    ret = [aClass pdl_interceptSelector:@selector(preferredStatusBarStyle) withInterceptorImplementation:(IMP)&PDLViewControllerStatusBarPreferredStatusBarStyle];
-    if (ret) {
-        count++;
-    }
-
-    ret = [aClass pdl_interceptSelector:@selector(prefersStatusBarHidden) withInterceptorImplementation:(IMP)&PDLViewControllerStatusBarPrefersStatusBarHidden];
-    if (ret) {
-        count++;
-    }
-
-    ret = [aClass pdl_interceptSelector:@selector(preferredStatusBarUpdateAnimation) withInterceptorImplementation:(IMP)&PDLViewControllerStatusBarPreferredStatusBarUpdateAnimation];
-    if (ret) {
-        count++;
-    }
-    return count;
-}
-
-+ (NSUInteger)enableViewController {
-    __block NSUInteger ret = 0;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        ret = [self enableClass:[UIViewController class]];
-    });
-    return ret;
-}
-
-+ (NSUInteger)enableNavigationController {
-    __block NSUInteger ret = 0;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        ret = [self enableClass:[UINavigationController class]];
-    });
-    return ret;
-}
-
-+ (NSUInteger)enableTabBarController {
-    __block NSUInteger ret = 0;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        ret = [self enableClass:[UITabBarController class]];
-    });
-    return ret;
-}
-
-+ (NSUInteger)enableBaseClasses {
-    NSUInteger ret = 0;
-    ret += [self enableViewController];
-    ret += [self enableNavigationController];
-    ret += [self enableTabBarController];
     return ret;
 }
 
@@ -216,6 +150,27 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
 #pragma mark - Categories
 
 @implementation UIViewController (PDLStatusBar)
+
++ (NSUInteger)pdl_statusBarEnable {
+    __unused NSUInteger count = 0;
+    Class aClass = self;
+    BOOL ret = NO;
+    ret = [aClass pdl_interceptSelector:@selector(preferredStatusBarStyle) withInterceptorImplementation:(IMP)&PDLViewControllerStatusBarPreferredStatusBarStyle isStructRet:@(NO) addIfNotExistent:YES data:NULL];
+    if (ret) {
+        count++;
+    }
+
+    ret = [aClass pdl_interceptSelector:@selector(prefersStatusBarHidden) withInterceptorImplementation:(IMP)&PDLViewControllerStatusBarPrefersStatusBarHidden isStructRet:@(NO) addIfNotExistent:YES data:NULL];
+    if (ret) {
+        count++;
+    }
+
+    ret = [aClass pdl_interceptSelector:@selector(preferredStatusBarUpdateAnimation) withInterceptorImplementation:(IMP)&PDLViewControllerStatusBarPreferredStatusBarUpdateAnimation  isStructRet:@(NO) addIfNotExistent:YES data:NULL];
+    if (ret) {
+        count++;
+    }
+    return count;
+}
 
 + (Class)pdl_statusBarClass {
     return [PDLViewControllerStatusBar class];
