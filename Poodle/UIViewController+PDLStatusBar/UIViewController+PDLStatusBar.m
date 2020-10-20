@@ -12,6 +12,8 @@
 
 @interface PDLViewControllerStatusBar ()
 
+@property (nonatomic, weak) UIViewController *viewController;
+
 @end
 
 @implementation PDLViewControllerStatusBar
@@ -107,6 +109,30 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
     return ret;
 }
 
+- (void)setPreferredStatusBarStyle:(NSNumber *)preferredStatusBarStyle {
+    if (_prefersStatusBarHidden == preferredStatusBarStyle) {
+        return;
+    }
+
+    _preferredStatusBarStyle = preferredStatusBarStyle;
+
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (void)setPrefersStatusBarHidden:(NSNumber *)prefersStatusBarHidden {
+    if (_prefersStatusBarHidden == prefersStatusBarHidden) {
+        return;
+    }
+
+    _prefersStatusBarHidden = prefersStatusBarHidden;
+
+    [self setNeedsStatusBarAppearanceUpdate];
+}
+
+- (void)setNeedsStatusBarAppearanceUpdate {
+    [self.viewController setNeedsStatusBarAppearanceUpdate];
+}
+
 @end
 
 #pragma mark - Subclasses
@@ -181,6 +207,7 @@ static UIStatusBarAnimation PDLViewControllerStatusBarPreferredStatusBarUpdateAn
     PDLViewControllerStatusBar *statusBar = objc_getAssociatedObject(self, PDLViewControllerStatusBarKey);
     if (!statusBar) {
         statusBar = [[self.class.pdl_statusBarClass alloc] init];
+        statusBar.viewController = self;
         objc_setAssociatedObject(self, PDLViewControllerStatusBarKey, statusBar, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return statusBar;
