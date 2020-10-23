@@ -28,6 +28,7 @@
     PDLFormView *formView = [[PDLFormView alloc] initWithFrame:self.view.bounds];
     formView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     formView.delegate = self;
+    formView.separatorColor = [UIColor grayColor];
     formView.columnWidth = formView.frame.size.width / 2;
     [self.view addSubview:formView];
     self.formView = formView;

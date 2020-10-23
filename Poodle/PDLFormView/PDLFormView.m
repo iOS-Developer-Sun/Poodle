@@ -7,124 +7,17 @@
 //
 
 #import "PDLFormView.h"
+#import "PDLFormViewCell.h"
 
-@interface PDLFormViewCell : UIView
-
-@property (nonatomic, weak, readonly) UIView *contentView;
-
-@end
-
-@interface PDLFormViewCell ()
-
-@property (nonatomic, weak) UIView *leftSeparatorLine;
-@property (nonatomic, weak) UIView *rightSeparatorLine;
-@property (nonatomic, weak) UIView *topSeparatorLine;
-@property (nonatomic, weak) UIView *bottomSeparatorLine;
-
-@property (nonatomic, weak) UIView *contentView;
-@property (nonatomic, weak) UIView *view;
-
-@end
-
-@implementation PDLFormViewCell
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    self = [super initWithFrame:frame];
-    if (self) {
-        UIView *contentView = [[UIView alloc] initWithFrame:self.bounds];
-        [self addSubview:contentView];
-        _contentView = contentView;
-
-        UIView *leftSeparatorLine = [[UIView alloc] init];
-        [self addSubview:leftSeparatorLine];
-        _leftSeparatorLine = leftSeparatorLine;
-
-        UIView *rightSeparatorLine = [[UIView alloc] init];
-        [self addSubview:rightSeparatorLine];
-        _rightSeparatorLine = rightSeparatorLine;
-
-        UIView *topSeparatorLine = [[UIView alloc] init];
-        [self addSubview:topSeparatorLine];
-        _topSeparatorLine = topSeparatorLine;
-
-        UIView *bottomSeparatorLine = [[UIView alloc] init];
-        [self addSubview:bottomSeparatorLine];
-        _bottomSeparatorLine = bottomSeparatorLine;
-    }
-    return self;
+@interface PDLFormView () {
+    BOOL _delegateRespondsViewForColumnRow;
+    BOOL _delegateRespondsNumberOfColumns;
+    BOOL _delegateRespondsNumberOfRows;
+    BOOL _delegateRespondsSizeForColumnRow;
+    BOOL _delegateRespondsWidthForColumn;
+    BOOL _delegateRespondsHeightForRow;
+    BOOL _delegateRespondsDestinationForColumnRow;
 }
-
-- (void)layoutSubviews {
-    [super layoutSubviews];
-
-    CGFloat x = 0;
-    CGFloat y = 0;
-    CGFloat width = self.bounds.size.width;
-    CGFloat height = self.bounds.size.height;
-
-    CGFloat lineWidth = 1 / [UIScreen mainScreen].scale;
-
-    self.leftSeparatorLine.frame = CGRectMake(0, 0, lineWidth, self.bounds.size.height);
-    if (self.leftSeparatorLine.hidden == NO) {
-        x += lineWidth;
-        width -= lineWidth;
-    }
-
-    self.rightSeparatorLine.frame = CGRectMake(self.bounds.size.width - lineWidth, 0, lineWidth, self.bounds.size.height);
-    if (self.rightSeparatorLine.hidden == NO) {
-        width -= lineWidth;
-    }
-
-    self.topSeparatorLine.frame = CGRectMake(0, 0, self.bounds.size.width, lineWidth);
-    if (self.topSeparatorLine.hidden == NO) {
-        y += lineWidth;
-        height -= lineWidth;
-    }
-
-    self.bottomSeparatorLine.frame = CGRectMake(0, self.bounds.size.height - lineWidth, self.bounds.size.width, lineWidth);
-    if (self.bottomSeparatorLine.hidden == NO) {
-        height -= lineWidth;
-    }
-
-    self.contentView.frame = CGRectMake(x, y, width, height);
-    if (self.view.superview == self.contentView) {
-        self.view.frame = self.contentView.bounds;
-    }
-}
-
-- (void)setIsLeft:(BOOL)isLeft isRight:(BOOL)isRight isTop:(BOOL)isTop isBottom:(BOOL)isBottom {
-    self.leftSeparatorLine.hidden = !isLeft;
-    if (isLeft) {
-        [self.leftSeparatorLine.superview bringSubviewToFront:self.leftSeparatorLine];
-    } else {
-        [self.leftSeparatorLine.superview sendSubviewToBack:self.leftSeparatorLine];
-    }
-
-    self.rightSeparatorLine.hidden = NO;
-    if (isRight) {
-        [self.rightSeparatorLine.superview bringSubviewToFront:self.rightSeparatorLine];
-    } else {
-        [self.rightSeparatorLine.superview sendSubviewToBack:self.rightSeparatorLine];
-    }
-
-    self.topSeparatorLine.hidden = !isTop;
-    if (isTop) {
-        [self.topSeparatorLine.superview bringSubviewToFront:self.topSeparatorLine];
-    } else {
-        [self.topSeparatorLine.superview sendSubviewToBack:self.topSeparatorLine];
-    }
-
-    self.bottomSeparatorLine.hidden = NO;
-    if (isBottom) {
-        [self.bottomSeparatorLine.superview bringSubviewToFront:self.bottomSeparatorLine];
-    } else {
-        [self.bottomSeparatorLine.superview sendSubviewToBack:self.bottomSeparatorLine];
-    }
-}
-
-@end
-
-@interface PDLFormView ()
 
 @property (nonatomic, strong) NSMutableDictionary *cacheViews;
 @property (nonatomic, strong) NSMutableDictionary *visibleViews;
@@ -152,9 +45,6 @@
 
 @implementation PDLFormView
 
-@synthesize separatorColor = _separatorColor;
-@dynamic delegate;
-
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -169,143 +59,6 @@
         _positionMappedDictionary = [NSMutableDictionary dictionary];
     }
     return self;
-}
-
-- (void)setIsScrollHorizontallyForcedEnabled:(BOOL)isScrollHorizontallyForcedEnabled {
-    if (_isScrollHorizontallyForcedEnabled == isScrollHorizontallyForcedEnabled) {
-        return;
-    }
-    _isScrollHorizontallyForcedEnabled = isScrollHorizontallyForcedEnabled;
-    [self setNeedsLayout];
-}
-
-- (void)setIsScrollVerticallyForcedEnabled:(BOOL)isScrollVerticallyForcedEnabled {
-    if (_isScrollVerticallyForcedEnabled == isScrollVerticallyForcedEnabled) {
-        return;
-    }
-    _isScrollVerticallyForcedEnabled = isScrollVerticallyForcedEnabled;
-    [self setNeedsLayout];
-}
-
-- (void)reloadData {
-    [self reloadSizes];
-    [self setNeedsLayout];
-}
-
-- (void)setNeedsRefreshVisible {
-    self.needsRefreshVisible = YES;
-    [self setNeedsLayout];
-}
-
-- (void)reloadSizes {
-    id <PDLFormViewDelegate> delegate = self.delegate;
-    NSArray *visibleViewColoums = self.visibleColumns;
-    NSArray *visibleViewRows = self.visibleRows;
-    for (NSInteger visibleViewColoumIndex = visibleViewColoums.count - 1; visibleViewColoumIndex >= 0; visibleViewColoumIndex--) {
-        for (NSInteger visibleViewRowIndex = visibleViewRows.count - 1; visibleViewRowIndex >= 0; visibleViewRowIndex--) {
-            NSNumber *visibleViewColoumNumber = visibleViewColoums[visibleViewColoumIndex];
-            NSNumber *visibleViewRowNumber = visibleViewRows[visibleViewRowIndex];
-            [self removeVisibleViewAtColumn:visibleViewColoumNumber.integerValue row:visibleViewRowNumber.integerValue forced:YES];
-        }
-    }
-    self.visibleColumns = nil;
-    self.visibleRows = nil;
-    [self.positionMappingDictionary removeAllObjects];
-    [self.positionMappedDictionary removeAllObjects];
-
-    NSInteger numberOfColumns = 0;
-    if ([delegate respondsToSelector:@selector(numberOfColumnsInFormView:)]) {
-        numberOfColumns = [delegate numberOfColumnsInFormView:self];
-        if (numberOfColumns < 0) {
-            numberOfColumns = 0;
-        }
-    }
-
-    NSInteger numberOfRows = 0;
-    if ([delegate respondsToSelector:@selector(numberOfRowsInFormView:)]) {
-        numberOfRows = [delegate numberOfRowsInFormView:self];
-        if (numberOfRows < 0) {
-            numberOfRows = 0;
-        }
-    }
-
-
-    if ([delegate respondsToSelector:@selector(formView:destinationForColumn:row:)]) {
-        for (NSInteger column = 0; column < numberOfColumns; column++) {
-            for (NSInteger row = 0; row < numberOfRows; row++) {
-                NSInteger destinationColumn = column;
-                NSInteger destinationRow = row;
-                [delegate formView:self destinationForColumn:&destinationColumn row:&destinationRow];
-                if (destinationColumn == column && destinationRow == row) {
-                    continue;
-                }
-                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:column];
-                NSIndexPath *destinationIndexPath = [NSIndexPath indexPathForRow:destinationRow inSection:destinationColumn];
-                self.positionMappingDictionary[indexPath] = destinationIndexPath;
-                NSMutableArray *positions = self.positionMappedDictionary[destinationIndexPath];
-                if (positions == nil) {
-                    positions = [NSMutableArray array];
-                    self.positionMappedDictionary[destinationIndexPath] = positions;
-                }
-                [positions addObject:indexPath];
-            }
-        }
-    }
-
-    CGFloat totalWidth = 0;
-    CGFloat totalHeight = 0;
-    NSMutableArray *columnWidths = [NSMutableArray array];
-    NSMutableArray *rowHeights = [NSMutableArray array];
-
-    if ([delegate respondsToSelector:@selector(formView:sizeForColumn:row:)]) {
-        // faster
-        CGFloat *rowHeightArray = malloc(sizeof(CGFloat) * numberOfRows);
-        for (NSInteger column = 0; column < numberOfColumns; column++) {
-            CGFloat columnWidth = 0;
-            for (NSInteger row = 0; row < numberOfRows; row++) {
-                if (column == 0) {
-                    rowHeightArray[row] = 0;
-                }
-                CGSize size = [delegate formView:self sizeForColumn:column row:row];
-                if (size.width > columnWidth) {
-                    columnWidth = size.width;
-                }
-                CGFloat rowHeight = rowHeightArray[row];
-                if (size.height > rowHeight) {
-                    rowHeight = size.height;
-                    rowHeightArray[row] = rowHeight;
-                }
-                if (column == numberOfColumns - 1) {
-                    totalHeight += rowHeight;
-                    [rowHeights addObject:@(totalHeight)];
-                }
-            }
-            totalWidth += columnWidth;
-            [columnWidths addObject:@(totalWidth)];
-        }
-        free(rowHeightArray);
-    } else {
-        for (NSInteger column = 0; column < numberOfColumns; column++) {
-            CGFloat columnWidth = self.columnWidth;
-            if ([delegate respondsToSelector:@selector(formView:widthForColumn:)]) {
-                columnWidth = [delegate formView:self widthForColumn:column];
-            }
-            totalWidth += columnWidth;
-            [columnWidths addObject:@(totalWidth)];
-        }
-
-        for (NSInteger row = 0; row < numberOfRows; row++) {
-            CGFloat rowHeight = self.rowHeight;
-            if ([delegate respondsToSelector:@selector(formView:heightForRow:)]) {
-                rowHeight = [delegate formView:self heightForRow:row];
-            }
-            totalHeight += rowHeight;
-            [rowHeights addObject:@(totalHeight)];
-        }
-    }
-
-    self.columnWidths = columnWidths;
-    self.rowHeights = rowHeights;
 }
 
 - (void)layoutSubviews {
@@ -385,6 +138,164 @@
     }
 }
 
+- (id<PDLFormViewDelegate>)delegate {
+    id<PDLFormViewDelegate> delegate =  (typeof(delegate))[super delegate];
+    return delegate;
+}
+
+- (void)setDelegate:(id<PDLFormViewDelegate>)delegate {
+    [super setDelegate:delegate];
+
+    _delegateRespondsViewForColumnRow = [delegate respondsToSelector:@selector(formView:viewForColumn:row:)];
+    _delegateRespondsNumberOfColumns = [delegate respondsToSelector:@selector(numberOfColumnsInFormView:)];
+    _delegateRespondsNumberOfRows = [delegate respondsToSelector:@selector(numberOfRowsInFormView:)];
+    _delegateRespondsSizeForColumnRow = [delegate respondsToSelector:@selector(formView:sizeForColumn:row:)];
+    _delegateRespondsWidthForColumn = [delegate respondsToSelector:@selector(formView:widthForColumn:)];
+    _delegateRespondsHeightForRow = [delegate respondsToSelector:@selector(formView:heightForRow:)];
+    _delegateRespondsDestinationForColumnRow = [delegate respondsToSelector:@selector(formView:destinationForColumn:row:)];
+}
+
+- (void)setIsScrollHorizontallyForcedEnabled:(BOOL)isScrollHorizontallyForcedEnabled {
+    if (_isScrollHorizontallyForcedEnabled == isScrollHorizontallyForcedEnabled) {
+        return;
+    }
+    
+    _isScrollHorizontallyForcedEnabled = isScrollHorizontallyForcedEnabled;
+    [self setNeedsLayout];
+}
+
+- (void)setIsScrollVerticallyForcedEnabled:(BOOL)isScrollVerticallyForcedEnabled {
+    if (_isScrollVerticallyForcedEnabled == isScrollVerticallyForcedEnabled) {
+        return;
+    }
+
+    _isScrollVerticallyForcedEnabled = isScrollVerticallyForcedEnabled;
+    [self setNeedsLayout];
+}
+
+- (void)reloadData {
+    [self reloadSizes];
+    [self setNeedsLayout];
+}
+
+- (void)setNeedsRefreshVisible {
+    self.needsRefreshVisible = YES;
+    [self setNeedsLayout];
+}
+
+- (void)reloadSizes {
+    id <PDLFormViewDelegate> delegate = self.delegate;
+    NSArray *visibleViewColoums = self.visibleColumns;
+    NSArray *visibleViewRows = self.visibleRows;
+    for (NSInteger visibleViewColoumIndex = visibleViewColoums.count - 1; visibleViewColoumIndex >= 0; visibleViewColoumIndex--) {
+        for (NSInteger visibleViewRowIndex = visibleViewRows.count - 1; visibleViewRowIndex >= 0; visibleViewRowIndex--) {
+            NSNumber *visibleViewColoumNumber = visibleViewColoums[visibleViewColoumIndex];
+            NSNumber *visibleViewRowNumber = visibleViewRows[visibleViewRowIndex];
+            [self removeVisibleViewAtColumn:visibleViewColoumNumber.integerValue row:visibleViewRowNumber.integerValue forced:YES];
+        }
+    }
+    self.visibleColumns = nil;
+    self.visibleRows = nil;
+    [self.positionMappingDictionary removeAllObjects];
+    [self.positionMappedDictionary removeAllObjects];
+
+    NSInteger numberOfColumns = 0;
+    if (_delegateRespondsNumberOfColumns) {
+        numberOfColumns = [delegate numberOfColumnsInFormView:self];
+        if (numberOfColumns < 0) {
+            numberOfColumns = 0;
+        }
+    }
+
+    NSInteger numberOfRows = 0;
+    if (_delegateRespondsNumberOfRows) {
+        numberOfRows = [delegate numberOfRowsInFormView:self];
+        if (numberOfRows < 0) {
+            numberOfRows = 0;
+        }
+    }
+
+
+    if (_delegateRespondsDestinationForColumnRow) {
+        for (NSInteger column = 0; column < numberOfColumns; column++) {
+            for (NSInteger row = 0; row < numberOfRows; row++) {
+                NSInteger destinationColumn = column;
+                NSInteger destinationRow = row;
+                [delegate formView:self destinationForColumn:&destinationColumn row:&destinationRow];
+                if (destinationColumn == column && destinationRow == row) {
+                    continue;
+                }
+                NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:column];
+                NSIndexPath *destinationIndexPath = [NSIndexPath indexPathForRow:destinationRow inSection:destinationColumn];
+                self.positionMappingDictionary[indexPath] = destinationIndexPath;
+                NSMutableArray *positions = self.positionMappedDictionary[destinationIndexPath];
+                if (positions == nil) {
+                    positions = [NSMutableArray array];
+                    self.positionMappedDictionary[destinationIndexPath] = positions;
+                }
+                [positions addObject:indexPath];
+            }
+        }
+    }
+
+    CGFloat totalWidth = 0;
+    CGFloat totalHeight = 0;
+    NSMutableArray *columnWidths = [NSMutableArray array];
+    NSMutableArray *rowHeights = [NSMutableArray array];
+
+    if (_delegateRespondsSizeForColumnRow) {
+        // faster
+        CGFloat *rowHeightArray = malloc(sizeof(CGFloat) * numberOfRows);
+        for (NSInteger column = 0; column < numberOfColumns; column++) {
+            CGFloat columnWidth = 0;
+            for (NSInteger row = 0; row < numberOfRows; row++) {
+                if (column == 0) {
+                    rowHeightArray[row] = 0;
+                }
+                CGSize size = [delegate formView:self sizeForColumn:column row:row];
+                if (size.width > columnWidth) {
+                    columnWidth = size.width;
+                }
+                CGFloat rowHeight = rowHeightArray[row];
+                if (size.height > rowHeight) {
+                    rowHeight = size.height;
+                    rowHeightArray[row] = rowHeight;
+                }
+                if (column == numberOfColumns - 1) {
+                    totalHeight += rowHeight;
+                    [rowHeights addObject:@(totalHeight)];
+                }
+            }
+            totalWidth += columnWidth;
+            [columnWidths addObject:@(totalWidth)];
+        }
+        free(rowHeightArray);
+    } else {
+        BOOL delegateRespondsWidthForColumn = _delegateRespondsWidthForColumn;
+        for (NSInteger column = 0; column < numberOfColumns; column++) {
+            CGFloat columnWidth = self.columnWidth;
+            if (delegateRespondsWidthForColumn) {
+                columnWidth = [delegate formView:self widthForColumn:column];
+            }
+            totalWidth += columnWidth;
+            [columnWidths addObject:@(totalWidth)];
+        }
+
+        BOOL delegateRespondsHeightForRow = _delegateRespondsHeightForRow;
+        for (NSInteger row = 0; row < numberOfRows; row++) {
+            CGFloat rowHeight = self.rowHeight;
+            if (delegateRespondsHeightForRow) {
+                rowHeight = [delegate formView:self heightForRow:row];
+            }
+            totalHeight += rowHeight;
+            [rowHeights addObject:@(totalHeight)];
+        }
+    }
+
+    self.columnWidths = columnWidths;
+    self.rowHeights = rowHeights;
+}
+
 - (void)removeVisibleViewAtColumn:(NSInteger)column row:(NSInteger)row forced:(BOOL)forced {
     NSIndexPath *destinationIndexPath = [self destinationIndexPathWithIndexPath:[NSIndexPath indexPathForRow:row inSection:column]];
     UIView *view = self.visibleViews[destinationIndexPath];
@@ -402,7 +313,7 @@
 }
 
 - (void)addVisibleViewAtColumn:(NSInteger)column row:(NSInteger)row {
-    if (![self.delegate respondsToSelector:@selector(formView:viewForColumn:row:)]) {
+    if (!_delegateRespondsViewForColumnRow) {
         return;
     }
 
@@ -449,7 +360,7 @@
     } else {
         leftSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
-    cell.leftSeparatorLine.backgroundColor = leftSeparatorLineColor;
+    cell.leftSeparatorLineColor = leftSeparatorLineColor;
 
     UIColor *rightSeparatorLineColor = nil;
     if (isRight) {
@@ -457,7 +368,7 @@
     } else {
         rightSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
-    cell.rightSeparatorLine.backgroundColor = rightSeparatorLineColor;
+    cell.rightSeparatorLineColor = rightSeparatorLineColor;
 
     UIColor *topSeparatorLineColor = nil;
     if (isTop) {
@@ -465,7 +376,7 @@
     } else {
         topSeparatorLineColor = (self.horizontalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
-    cell.topSeparatorLine.backgroundColor = topSeparatorLineColor;
+    cell.topSeparatorLineColor = topSeparatorLineColor;
 
     UIColor *bottomSeparatorLineColor = nil;
     if (isBottom) {
@@ -473,7 +384,7 @@
     } else {
         bottomSeparatorLineColor = (self.horizontalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
-    cell.bottomSeparatorLine.backgroundColor = bottomSeparatorLineColor;
+    cell.bottomSeparatorLineColor = bottomSeparatorLineColor;
 }
 
 - (void)refreshVisibleViewAtColumn:(NSInteger)column row:(NSInteger)row {
@@ -482,6 +393,7 @@
     if (view == nil) {
         return;
     }
+
     PDLFormViewCell *cell = [self.viewCellMapTable objectForKey:view];
     if (cell == nil) {
         return;
@@ -508,7 +420,7 @@
     } else {
         leftSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
-    cell.leftSeparatorLine.backgroundColor = leftSeparatorLineColor;
+    cell.leftSeparatorLineColor = leftSeparatorLineColor;
 
     UIColor *rightSeparatorLineColor = nil;
     if (isRight) {
@@ -516,7 +428,7 @@
     } else {
         rightSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
-    cell.rightSeparatorLine.backgroundColor = rightSeparatorLineColor;
+    cell.rightSeparatorLineColor = rightSeparatorLineColor;
 
     UIColor *topSeparatorLineColor = nil;
     if (isTop) {
@@ -524,7 +436,7 @@
     } else {
         topSeparatorLineColor = (self.horizontalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
-    cell.topSeparatorLine.backgroundColor = topSeparatorLineColor;
+    cell.topSeparatorLineColor = topSeparatorLineColor;
 
     UIColor *bottomSeparatorLineColor = nil;
     if (isBottom) {
@@ -532,7 +444,7 @@
     } else {
         bottomSeparatorLineColor = (self.horizontalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
     }
-    cell.bottomSeparatorLine.backgroundColor = bottomSeparatorLineColor;
+    cell.bottomSeparatorLineColor = bottomSeparatorLineColor;
 }
 
 - (CGFloat)viewWidthInColumn:(NSInteger)column {
@@ -602,10 +514,10 @@
     for (NSInteger column = estimatedVisibleColumn; column < self.columnWidths.count; column++) {
         CGFloat viewLeft = [self viewLeftInColumn:column];
         CGFloat viewRight = [self viewRightInColumn:column];
-        if (visibleRight < viewLeft) {
+        if (visibleRight <= viewLeft) {
             break;
         }
-        if (viewRight < visibleLeft) {
+        if (viewRight <= visibleLeft) {
             continue;
         }
         [visibleColumns addObject:@(column)];
@@ -613,10 +525,10 @@
     for (NSInteger column = estimatedVisibleColumn - 1; column >= 0; column--) {
         CGFloat viewLeft = [self viewLeftInColumn:column];
         CGFloat viewRight = [self viewRightInColumn:column];
-        if (viewRight < visibleLeft) {
+        if (viewRight <= visibleLeft) {
             break;
         }
-        if (visibleRight < viewLeft) {
+        if (visibleRight <= viewLeft) {
             continue;
         }
         [visibleColumns insertObject:@(column) atIndex:0];
@@ -694,10 +606,10 @@
     for (NSInteger row = estimatedVisibleRow; row < self.rowHeights.count; row++) {
         CGFloat viewTop = [self viewTopInRow:row];
         CGFloat viewBottom = [self viewBottomInRow:row];
-        if (visibleBottom < viewTop) {
+        if (visibleBottom <= viewTop) {
             break;
         }
-        if (viewBottom < visibleTop) {
+        if (viewBottom <= visibleTop) {
             continue;
         }
         [visibleRows addObject:@(row)];
@@ -705,10 +617,10 @@
     for (NSInteger row = estimatedVisibleRow - 1; row >= 0; row--) {
         CGFloat viewTop = [self viewTopInRow:row];
         CGFloat viewBottom = [self viewBottomInRow:row];
-        if (viewBottom < visibleTop) {
+        if (viewBottom <= visibleTop) {
             break;
         }
-        if (visibleBottom < viewTop) {
+        if (visibleBottom <= viewTop) {
             continue;
         }
         [visibleRows insertObject:@(row) atIndex:0];
@@ -751,6 +663,7 @@
     if (views == nil) {
         return nil;
     }
+
     UIView *view = views.lastObject;
     [views removeLastObject];
     return view;
@@ -941,14 +854,11 @@
     [self setContentOffset:CGPointMake(x, y) animated:animated];
 }
 
-- (UIColor *)separatorColor {
-    return _separatorColor ?: [UIColor grayColor];
-}
-
 - (void)setSeparatorColor:(UIColor *)separatorColor {
     if (_separatorColor == separatorColor) {
         return;
     }
+
     _separatorColor = separatorColor;
     [self setNeedsRefreshVisible];
 }
@@ -957,6 +867,7 @@
     if (_innerSeparatorColor == innerSeparatorColor) {
         return;
     }
+
     _innerSeparatorColor = innerSeparatorColor;
     [self setNeedsRefreshVisible];
 }
@@ -965,6 +876,7 @@
     if (_horizontalSeparatorColor == horizontalSeparatorColor) {
         return;
     }
+
     _horizontalSeparatorColor = horizontalSeparatorColor;
     [self setNeedsRefreshVisible];
 }
@@ -973,6 +885,7 @@
     if (_verticalSeparatorColor == verticalSeparatorColor) {
         return;
     }
+
     _verticalSeparatorColor = verticalSeparatorColor;
     [self setNeedsRefreshVisible];
 }
@@ -981,6 +894,7 @@
     if (_outerSeparatorColor == outerSeparatorColor) {
         return;
     }
+
     _outerSeparatorColor = outerSeparatorColor;
     [self setNeedsRefreshVisible];
 }
