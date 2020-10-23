@@ -195,6 +195,8 @@
 		B899F9EF245065DA00EFBB39 /* PDLViewControllerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */; };
 		B899F9F924506A3A00EFBB39 /* PDLViewControllerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */; };
 		B899F9FA24506A4200EFBB39 /* PDLViewControllerListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B899F9EE245065DA00EFBB39 /* PDLViewControllerListViewController.h */; };
+		B8A6F4F025428B7400426AD1 /* PDLFormViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */; };
+		B8A6F4F125428B7400426AD1 /* PDLFormViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */; };
 		B8B3AA0124B71E2B008EFBE0 /* NSObject+PDLAssociation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B3A9FF24B71E2B008EFBE0 /* NSObject+PDLAssociation.m */; };
 		B8B3AA0B24B71F6D008EFBE0 /* NSObject+PDLAssociation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B3A9FF24B71E2B008EFBE0 /* NSObject+PDLAssociation.m */; };
 		B8B3AA0C24B71F76008EFBE0 /* NSObject+PDLAssociation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B3AA0024B71E2B008EFBE0 /* NSObject+PDLAssociation.h */; };
@@ -1829,6 +1831,8 @@
 		B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLViewControllerListViewController.m; sourceTree = "<group>"; };
 		B899F9EE245065DA00EFBB39 /* PDLViewControllerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLViewControllerListViewController.h; sourceTree = "<group>"; };
 		B899F9F824506A2900EFBB39 /* libPDLViewControllerListViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLViewControllerListViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLFormViewCell.m; sourceTree = "<group>"; };
+		B8A6F4EF25428B7400426AD1 /* PDLFormViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLFormViewCell.h; sourceTree = "<group>"; };
 		B8AD194923D15CD7005A7363 /* libPDLNonThreadSafePropertyObserver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLNonThreadSafePropertyObserver.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AD196423D1B433005A7363 /* libNSObject+PDLThreadSafetifyProperty.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLThreadSafetifyProperty.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8B3A9FF24B71E2B008EFBE0 /* NSObject+PDLAssociation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLAssociation.m"; sourceTree = "<group>"; };
@@ -3586,6 +3590,8 @@
 			children = (
 				B8E56EDD23D7001A008D2DA1 /* PDLFormView.h */,
 				B8E56EDC23D7001A008D2DA1 /* PDLFormView.m */,
+				B8A6F4EF25428B7400426AD1 /* PDLFormViewCell.h */,
+				B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */,
 			);
 			path = PDLFormView;
 			sourceTree = "<group>";
@@ -6897,6 +6903,7 @@
 				B85D45DF240E859000CBF758 /* PDLTextViewController.m in Sources */,
 				B888660D24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.m in Sources */,
 				B85D45E0240E859000CBF758 /* PDLWebViewController.m in Sources */,
+				B8A6F4F025428B7400426AD1 /* PDLFormViewCell.m in Sources */,
 				B85D45E1240E859000CBF758 /* PDLFontViewController.m in Sources */,
 				B85D45E2240E859000CBF758 /* PDLFormView.m in Sources */,
 				B85D45E3240E859000CBF758 /* PDLClassListViewController.m in Sources */,
@@ -6976,6 +6983,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8E56F7D23D70479008D2DA1 /* PDLFormView.m in Sources */,
+				B8A6F4F125428B7400426AD1 /* PDLFormViewCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

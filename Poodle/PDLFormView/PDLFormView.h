@@ -24,11 +24,9 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
 
 @protocol PDLFormViewDelegate <UIScrollViewDelegate>
 
-@required
+@optional
 
 - (UIView *)formView:(PDLFormView *)formView viewForColumn:(NSInteger)column row:(NSInteger)row;
-
-@optional
 
 - (NSInteger)numberOfColumnsInFormView:(PDLFormView *)formView;
 - (NSInteger)numberOfRowsInFormView:(PDLFormView *)formView;
@@ -57,6 +55,7 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
 @property (nonatomic, copy) UIColor *outerSeparatorColor; // highest priority
 
 - (void)reloadData;
+- (NSString *)reuseIdentifierForView:(UIView *)view;
 - (void)setReuseIdentifier:(NSString *)identifier forView:(UIView *)view;
 - (UIView *)dequeueReusableViewWithIdentifier:(NSString *)identifier;
 - (UIView *)viewForColumn:(NSInteger)column row:(NSInteger)row;
