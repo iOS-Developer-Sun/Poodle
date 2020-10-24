@@ -12,11 +12,11 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
     PDLFormViewScrollPositionNone = 0,
 
     PDLFormViewScrollPositionTop = 1 << 0,
-    PDLFormViewScrollPositionCenteredVertically = 1 << 1,
+    PDLFormViewScrollPositionVerticallyCentered = 1 << 1,
     PDLFormViewScrollPositionBottom = 1 << 2,
 
     PDLFormViewScrollPositionLeft = 1 << 3,
-    PDLFormViewScrollPositionCenteredHorizontally = 1 << 4,
+    PDLFormViewScrollPositionHorizontallyCentered = 1 << 4,
     PDLFormViewScrollPositionRight = 1 << 5
 };
 
@@ -38,6 +38,13 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
 
 - (void)formView:(PDLFormView *)formView destinationForColumn:(NSInteger *)column row:(NSInteger *)row;
 
+- (void)visibleColumnsRowsDidChange:(PDLFormView *)formView;
+
+- (void)formView:(PDLFormView *)formView willDisplayView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row;
+- (void)formView:(PDLFormView *)formView didDisplayView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row;
+- (void)formView:(PDLFormView *)formView willEndDisplayingView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row;
+- (void)formView:(PDLFormView *)formView didEndDisplayingView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row;
+
 @end
 
 @interface PDLFormView : UIScrollView
@@ -53,6 +60,9 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
 @property (nonatomic, copy) UIColor *horizontalSeparatorColor; // high priority
 @property (nonatomic, copy) UIColor *verticalSeparatorColor; // high priority
 @property (nonatomic, copy) UIColor *outerSeparatorColor; // highest priority
+
+@property (nonatomic, copy, readonly) NSArray <NSNumber *> *visibleColumns;
+@property (nonatomic, copy, readonly) NSArray <NSNumber *> *visibleRows;
 
 - (void)reloadData;
 - (NSString *)reuseIdentifierForView:(UIView *)view;

@@ -17,6 +17,11 @@
     BOOL _delegateRespondsWidthForColumn;
     BOOL _delegateRespondsHeightForRow;
     BOOL _delegateRespondsDestinationForColumnRow;
+    BOOL _delegateRespondsVisibleColumnsRowsDidChange;
+    BOOL _delegateRespondsWillDisplayForColumnRow;
+    BOOL _delegateRespondsDidDisplayForColumnRow;
+    BOOL _delegateRespondsWillEndDisplayingForColumnRow;
+    BOOL _delegateRespondsDidEndDisplayingForColumnRow;
 }
 
 @property (nonatomic, strong) NSMutableDictionary *cacheViews;
@@ -91,6 +96,13 @@
     [self calculateVisibleRows];
     NSArray *newVisibleRows = self.visibleRows;
 
+    BOOL changed = !([oldVisibleColumns ?: @[] isEqualToArray:newVisibleColumns] && [oldVisibleRows ?: @[] isEqualToArray:newVisibleRows]);
+    if (changed) {
+        if (_delegateRespondsVisibleColumnsRowsDidChange) {
+            [self.delegate visibleColumnsRowsDidChange:self];
+        }
+    }
+
     NSMutableArray *viewColumnsToDelete = [oldVisibleColumns mutableCopy];
     [viewColumnsToDelete removeObjectsInArray:newVisibleColumns];
     NSMutableArray *viewRowsToDelete = [oldVisibleRows mutableCopy];
@@ -153,6 +165,11 @@
     _delegateRespondsWidthForColumn = [delegate respondsToSelector:@selector(formView:widthForColumn:)];
     _delegateRespondsHeightForRow = [delegate respondsToSelector:@selector(formView:heightForRow:)];
     _delegateRespondsDestinationForColumnRow = [delegate respondsToSelector:@selector(formView:destinationForColumn:row:)];
+    _delegateRespondsVisibleColumnsRowsDidChange = [delegate respondsToSelector:@selector(visibleColumnsRowsDidChange:)];
+    _delegateRespondsWillDisplayForColumnRow = [delegate respondsToSelector:@selector(formView:willDisplayView:forColumn:row:)];
+    _delegateRespondsDidDisplayForColumnRow = [delegate respondsToSelector:@selector(formView:didDisplayView:forColumn:row:)];
+    _delegateRespondsWillEndDisplayingForColumnRow = [delegate respondsToSelector:@selector(formView:willEndDisplayingView:forColumn:row:)];
+    _delegateRespondsDidEndDisplayingForColumnRow = [delegate respondsToSelector:@selector(formView:didEndDisplayingView:forColumn:row:)];
 }
 
 - (void)setIsScrollHorizontallyForcedEnabled:(BOOL)isScrollHorizontallyForcedEnabled {
@@ -307,7 +324,14 @@
         }
     }
 
+    if (_delegateRespondsWillEndDisplayingForColumnRow) {
+        [self.delegate formView:self willEndDisplayingView:view forColumn:column row:row];
+    }
     [cell removeFromSuperview];
+    if (_delegateRespondsDidEndDisplayingForColumnRow) {
+        [self.delegate formView:self didEndDisplayingView:view forColumn:column row:row];
+    }
+
     [self enqueue:view];
     self.visibleViews[destinationIndexPath] = nil;
 }
@@ -339,7 +363,14 @@
         cell.frame = frame;
     }
     view.frame = cell.contentView.bounds;
+
+    if (_delegateRespondsWillDisplayForColumnRow) {
+        [self.delegate formView:self willDisplayView:view forColumn:column row:row];
+    }
     [self addSubview:cell];
+    if (_delegateRespondsDidDisplayForColumnRow) {
+        [self.delegate formView:self didDisplayView:view forColumn:column row:row];
+    }
 
     NSInteger leftColumn = destinationColumn;
     NSInteger rightColumn = destinationColumn;
@@ -800,7 +831,7 @@
     CGFloat x = 0;
     if (scrollPosition & PDLFormViewScrollPositionLeft) {
         x = frame.origin.x;
-    } else if (scrollPosition & PDLFormViewScrollPositionCenteredHorizontally) {
+    } else if (scrollPosition & PDLFormViewScrollPositionHorizontallyCentered) {
         x = frame.origin.x + (frame.size.width - self.bounds.size.width) / 2;
     } else if (scrollPosition & PDLFormViewScrollPositionRight) {
         x = frame.origin.x + frame.size.width - self.bounds.size.width;
@@ -819,7 +850,7 @@
     CGFloat y = 0;
     if (scrollPosition & PDLFormViewScrollPositionTop) {
         y = frame.origin.y;
-    } else if (scrollPosition & PDLFormViewScrollPositionCenteredVertically) {
+    } else if (scrollPosition & PDLFormViewScrollPositionVerticallyCentered) {
         y = frame.origin.y + (frame.size.height - self.bounds.size.height) / 2;
     } else if (scrollPosition & PDLFormViewScrollPositionBottom) {
         y = frame.origin.y + frame.size.height - self.bounds.size.height;
