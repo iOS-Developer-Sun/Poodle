@@ -68,6 +68,7 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
 - (NSString *)reuseIdentifierForView:(UIView *)view;
 - (void)setReuseIdentifier:(NSString *)identifier forView:(UIView *)view;
 - (UIView *)dequeueReusableViewWithIdentifier:(NSString *)identifier;
+- (NSDictionary <NSString *, NSMutableArray <UIView *>*>*)dequeueAllReusableViews;
 - (UIView *)viewForColumn:(NSInteger)column row:(NSInteger)row;
 - (NSInteger)columnForView:(UIView *)view;
 - (NSInteger)rowForView:(UIView *)view;

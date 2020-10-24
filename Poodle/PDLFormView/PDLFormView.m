@@ -706,6 +706,12 @@
     return view;
 }
 
+- (NSDictionary *)dequeueAllReusableViews {
+    NSDictionary *cacheViews = [self.cacheViews copy];
+    [self.cacheViews removeAllObjects];
+    return cacheViews;
+}
+
 - (UIView *)viewForColumn:(NSInteger)column row:(NSInteger)row {
     NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:column];
     UIView *view = self.visibleViews[indexPath];
