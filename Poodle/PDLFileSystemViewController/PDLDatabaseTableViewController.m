@@ -27,7 +27,7 @@
 
     PDLFormView *formView = [[PDLFormView alloc] initWithFrame:self.view.bounds];
     formView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    formView.delegate = self;
+    formView.formViewDelegate = self;
     formView.separatorColor = [UIColor grayColor];
     formView.columnWidth = formView.frame.size.width / 2;
     [self.view addSubview:formView];
@@ -56,6 +56,8 @@
         });
     });
 }
+
+#pragma mark - PDLFormViewDelegate
 
 - (NSInteger)numberOfColumnsInFormView:(PDLFormView *)formView {
     return self.fields.count;

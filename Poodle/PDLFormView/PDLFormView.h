@@ -22,7 +22,7 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
 
 @class PDLFormView;
 
-@protocol PDLFormViewDelegate <UIScrollViewDelegate>
+@protocol PDLFormViewDelegate <NSObject>
 
 @optional
 
@@ -51,7 +51,7 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
 
 @property (nonatomic, assign) CGFloat columnWidth; // default is 100
 @property (nonatomic, assign) CGFloat rowHeight; //  default is 44
-@property (nonatomic, weak) id <PDLFormViewDelegate> delegate;
+@property (nonatomic, weak) id <PDLFormViewDelegate> formViewDelegate;
 @property (nonatomic, assign) BOOL isScrollHorizontallyForcedEnabled;
 @property (nonatomic, assign) BOOL isScrollVerticallyForcedEnabled;
 

@@ -99,7 +99,7 @@
     BOOL changed = !([oldVisibleColumns ?: @[] isEqualToArray:newVisibleColumns] && [oldVisibleRows ?: @[] isEqualToArray:newVisibleRows]);
     if (changed) {
         if (_delegateRespondsVisibleColumnsRowsDidChange) {
-            [self.delegate visibleColumnsRowsDidChange:self];
+            [_formViewDelegate visibleColumnsRowsDidChange:self];
         }
     }
 
@@ -150,26 +150,25 @@
     }
 }
 
-- (id<PDLFormViewDelegate>)delegate {
-    id<PDLFormViewDelegate> delegate =  (typeof(delegate))[super delegate];
-    return delegate;
-}
+- (void)setFormViewDelegate:(id<PDLFormViewDelegate>)formViewDelegate {
+    if (_formViewDelegate == formViewDelegate) {
+        return;
+    }
 
-- (void)setDelegate:(id<PDLFormViewDelegate>)delegate {
-    [super setDelegate:delegate];
+    _formViewDelegate = formViewDelegate;
 
-    _delegateRespondsViewForColumnRow = [delegate respondsToSelector:@selector(formView:viewForColumn:row:)];
-    _delegateRespondsNumberOfColumns = [delegate respondsToSelector:@selector(numberOfColumnsInFormView:)];
-    _delegateRespondsNumberOfRows = [delegate respondsToSelector:@selector(numberOfRowsInFormView:)];
-    _delegateRespondsSizeForColumnRow = [delegate respondsToSelector:@selector(formView:sizeForColumn:row:)];
-    _delegateRespondsWidthForColumn = [delegate respondsToSelector:@selector(formView:widthForColumn:)];
-    _delegateRespondsHeightForRow = [delegate respondsToSelector:@selector(formView:heightForRow:)];
-    _delegateRespondsDestinationForColumnRow = [delegate respondsToSelector:@selector(formView:destinationForColumn:row:)];
-    _delegateRespondsVisibleColumnsRowsDidChange = [delegate respondsToSelector:@selector(visibleColumnsRowsDidChange:)];
-    _delegateRespondsWillDisplayForColumnRow = [delegate respondsToSelector:@selector(formView:willDisplayView:forColumn:row:)];
-    _delegateRespondsDidDisplayForColumnRow = [delegate respondsToSelector:@selector(formView:didDisplayView:forColumn:row:)];
-    _delegateRespondsWillEndDisplayingForColumnRow = [delegate respondsToSelector:@selector(formView:willEndDisplayingView:forColumn:row:)];
-    _delegateRespondsDidEndDisplayingForColumnRow = [delegate respondsToSelector:@selector(formView:didEndDisplayingView:forColumn:row:)];
+    _delegateRespondsViewForColumnRow = [formViewDelegate respondsToSelector:@selector(formView:viewForColumn:row:)];
+    _delegateRespondsNumberOfColumns = [formViewDelegate respondsToSelector:@selector(numberOfColumnsInFormView:)];
+    _delegateRespondsNumberOfRows = [formViewDelegate respondsToSelector:@selector(numberOfRowsInFormView:)];
+    _delegateRespondsSizeForColumnRow = [formViewDelegate respondsToSelector:@selector(formView:sizeForColumn:row:)];
+    _delegateRespondsWidthForColumn = [formViewDelegate respondsToSelector:@selector(formView:widthForColumn:)];
+    _delegateRespondsHeightForRow = [formViewDelegate respondsToSelector:@selector(formView:heightForRow:)];
+    _delegateRespondsDestinationForColumnRow = [formViewDelegate respondsToSelector:@selector(formView:destinationForColumn:row:)];
+    _delegateRespondsVisibleColumnsRowsDidChange = [formViewDelegate respondsToSelector:@selector(visibleColumnsRowsDidChange:)];
+    _delegateRespondsWillDisplayForColumnRow = [formViewDelegate respondsToSelector:@selector(formView:willDisplayView:forColumn:row:)];
+    _delegateRespondsDidDisplayForColumnRow = [formViewDelegate respondsToSelector:@selector(formView:didDisplayView:forColumn:row:)];
+    _delegateRespondsWillEndDisplayingForColumnRow = [formViewDelegate respondsToSelector:@selector(formView:willEndDisplayingView:forColumn:row:)];
+    _delegateRespondsDidEndDisplayingForColumnRow = [formViewDelegate respondsToSelector:@selector(formView:didEndDisplayingView:forColumn:row:)];
 }
 
 - (void)setIsScrollHorizontallyForcedEnabled:(BOOL)isScrollHorizontallyForcedEnabled {
@@ -201,7 +200,7 @@
 }
 
 - (void)reloadSizes {
-    id <PDLFormViewDelegate> delegate = self.delegate;
+    id <PDLFormViewDelegate> formViewDelegate = _formViewDelegate;
     NSArray *visibleViewColoums = self.visibleColumns;
     NSArray *visibleViewRows = self.visibleRows;
     for (NSInteger visibleViewColoumIndex = visibleViewColoums.count - 1; visibleViewColoumIndex >= 0; visibleViewColoumIndex--) {
@@ -218,7 +217,7 @@
 
     NSInteger numberOfColumns = 0;
     if (_delegateRespondsNumberOfColumns) {
-        numberOfColumns = [delegate numberOfColumnsInFormView:self];
+        numberOfColumns = [formViewDelegate numberOfColumnsInFormView:self];
         if (numberOfColumns < 0) {
             numberOfColumns = 0;
         }
@@ -226,7 +225,7 @@
 
     NSInteger numberOfRows = 0;
     if (_delegateRespondsNumberOfRows) {
-        numberOfRows = [delegate numberOfRowsInFormView:self];
+        numberOfRows = [formViewDelegate numberOfRowsInFormView:self];
         if (numberOfRows < 0) {
             numberOfRows = 0;
         }
@@ -238,7 +237,7 @@
             for (NSInteger row = 0; row < numberOfRows; row++) {
                 NSInteger destinationColumn = column;
                 NSInteger destinationRow = row;
-                [delegate formView:self destinationForColumn:&destinationColumn row:&destinationRow];
+                [formViewDelegate formView:self destinationForColumn:&destinationColumn row:&destinationRow];
                 if (destinationColumn == column && destinationRow == row) {
                     continue;
                 }
@@ -269,7 +268,7 @@
                 if (column == 0) {
                     rowHeightArray[row] = 0;
                 }
-                CGSize size = [delegate formView:self sizeForColumn:column row:row];
+                CGSize size = [formViewDelegate formView:self sizeForColumn:column row:row];
                 if (size.width > columnWidth) {
                     columnWidth = size.width;
                 }
@@ -292,7 +291,7 @@
         for (NSInteger column = 0; column < numberOfColumns; column++) {
             CGFloat columnWidth = self.columnWidth;
             if (delegateRespondsWidthForColumn) {
-                columnWidth = [delegate formView:self widthForColumn:column];
+                columnWidth = [formViewDelegate formView:self widthForColumn:column];
             }
             totalWidth += columnWidth;
             [columnWidths addObject:@(totalWidth)];
@@ -302,7 +301,7 @@
         for (NSInteger row = 0; row < numberOfRows; row++) {
             CGFloat rowHeight = self.rowHeight;
             if (delegateRespondsHeightForRow) {
-                rowHeight = [delegate formView:self heightForRow:row];
+                rowHeight = [formViewDelegate formView:self heightForRow:row];
             }
             totalHeight += rowHeight;
             [rowHeights addObject:@(totalHeight)];
@@ -324,12 +323,13 @@
         }
     }
 
+    id <PDLFormViewDelegate> formViewDelegate = _formViewDelegate;
     if (_delegateRespondsWillEndDisplayingForColumnRow) {
-        [self.delegate formView:self willEndDisplayingView:view forColumn:column row:row];
+        [formViewDelegate formView:self willEndDisplayingView:view forColumn:column row:row];
     }
     [cell removeFromSuperview];
     if (_delegateRespondsDidEndDisplayingForColumnRow) {
-        [self.delegate formView:self didEndDisplayingView:view forColumn:column row:row];
+        [formViewDelegate formView:self didEndDisplayingView:view forColumn:column row:row];
     }
 
     [self enqueue:view];
@@ -349,7 +349,7 @@
     NSInteger destinationColumn = destinationIndexPath.section;
     NSInteger destinationRow = destinationIndexPath.row;
 
-    UIView *view = [self.delegate formView:self viewForColumn:destinationColumn row:destinationRow];
+    UIView *view = [_formViewDelegate formView:self viewForColumn:destinationColumn row:destinationRow];
     self.visibleViews[destinationIndexPath] = view;
 
     CGRect frame = [self viewFrameInColumn:column row:row];
@@ -364,12 +364,13 @@
     }
     view.frame = cell.contentView.bounds;
 
+    id <PDLFormViewDelegate> formViewDelegate = _formViewDelegate;
     if (_delegateRespondsWillDisplayForColumnRow) {
-        [self.delegate formView:self willDisplayView:view forColumn:column row:row];
+        [formViewDelegate formView:self willDisplayView:view forColumn:column row:row];
     }
     [self addSubview:cell];
     if (_delegateRespondsDidDisplayForColumnRow) {
-        [self.delegate formView:self didDisplayView:view forColumn:column row:row];
+        [formViewDelegate formView:self didDisplayView:view forColumn:column row:row];
     }
 
     NSInteger leftColumn = destinationColumn;
