@@ -644,6 +644,33 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'UIKit'
         end
 
+        s.subspec 'PDLPageController' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLPageController/' + source_files
+            ss.vendored_library = base + 'PDLPageController/' + librariy_files
+            ss.frameworks = 'UIKit'
+            ss.dependency pod_name + '/PDLFormView'
+        end
+
+        s.subspec 'PDLPageView' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLPageView/' + source_files
+            ss.vendored_library = base + 'PDLPageView/' + librariy_files
+            ss.frameworks = 'UIKit'
+            ss.dependency pod_name + '/PDLPageController'
+        end
+
+        s.subspec 'PDLPageViewController' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLPageViewController/' + source_files
+            ss.vendored_library = base + 'PDLPageViewController/' + librariy_files
+            ss.frameworks = 'UIKit'
+            ss.dependency pod_name + '/PDLPageController'
+        end
+
         s.subspec 'PDLPrivate' do |ss|
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'

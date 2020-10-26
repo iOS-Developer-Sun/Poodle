@@ -197,6 +197,15 @@
 		B899F9FA24506A4200EFBB39 /* PDLViewControllerListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B899F9EE245065DA00EFBB39 /* PDLViewControllerListViewController.h */; };
 		B8A6F4F025428B7400426AD1 /* PDLFormViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */; };
 		B8A6F4F125428B7400426AD1 /* PDLFormViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */; };
+		B8A6F5042546CA4000426AD1 /* PDLPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F4FD2546CA4000426AD1 /* PDLPageController.m */; };
+		B8A6F5052546CA4000426AD1 /* PDLPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F4FF2546CA4000426AD1 /* PDLPageViewController.m */; };
+		B8A6F5062546CA4000426AD1 /* PDLPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F5022546CA4000426AD1 /* PDLPageView.m */; };
+		B8A6F5232546CB0A00426AD1 /* PDLPageController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8A6F4FC2546CA4000426AD1 /* PDLPageController.h */; };
+		B8A6F5242546CB1300426AD1 /* PDLPageController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F4FD2546CA4000426AD1 /* PDLPageController.m */; };
+		B8A6F5252546CB1C00426AD1 /* PDLPageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F5022546CA4000426AD1 /* PDLPageView.m */; };
+		B8A6F5262546CB2100426AD1 /* PDLPageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8A6F5032546CA4000426AD1 /* PDLPageView.h */; };
+		B8A6F5272546CB2900426AD1 /* PDLPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F4FF2546CA4000426AD1 /* PDLPageViewController.m */; };
+		B8A6F5282546CB2E00426AD1 /* PDLPageViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8A6F5002546CA4000426AD1 /* PDLPageViewController.h */; };
 		B8B3AA0124B71E2B008EFBE0 /* NSObject+PDLAssociation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B3A9FF24B71E2B008EFBE0 /* NSObject+PDLAssociation.m */; };
 		B8B3AA0B24B71F6D008EFBE0 /* NSObject+PDLAssociation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B3A9FF24B71E2B008EFBE0 /* NSObject+PDLAssociation.m */; };
 		B8B3AA0C24B71F76008EFBE0 /* NSObject+PDLAssociation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B3AA0024B71E2B008EFBE0 /* NSObject+PDLAssociation.h */; };
@@ -597,6 +606,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = B899F9F024506A2900EFBB39;
 			remoteInfo = PDLViewControllerListViewController;
+		};
+		B8A6F5292546CB4D00426AD1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8A6F5072546CAAF00426AD1;
+			remoteInfo = PDLPageController;
+		};
+		B8A6F52B2546CB4D00426AD1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8A6F5102546CAB500426AD1;
+			remoteInfo = PDLPageView;
+		};
+		B8A6F52D2546CB4D00426AD1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8A6F5192546CAB800426AD1;
+			remoteInfo = PDLPageViewController;
 		};
 		B8AD195323D15D1D005A7363 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1227,6 +1257,36 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B8A6F50A2546CAAF00426AD1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B8A6F5232546CB0A00426AD1 /* PDLPageController.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8A6F5132546CAB500426AD1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B8A6F5262546CB2100426AD1 /* PDLPageView.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8A6F51C2546CAB800426AD1 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B8A6F5282546CB2E00426AD1 /* PDLPageViewController.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B8AD194423D15CD7005A7363 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1833,6 +1893,15 @@
 		B899F9F824506A2900EFBB39 /* libPDLViewControllerListViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLViewControllerListViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLFormViewCell.m; sourceTree = "<group>"; };
 		B8A6F4EF25428B7400426AD1 /* PDLFormViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLFormViewCell.h; sourceTree = "<group>"; };
+		B8A6F4FC2546CA4000426AD1 /* PDLPageController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLPageController.h; sourceTree = "<group>"; };
+		B8A6F4FD2546CA4000426AD1 /* PDLPageController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLPageController.m; sourceTree = "<group>"; };
+		B8A6F4FF2546CA4000426AD1 /* PDLPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLPageViewController.m; sourceTree = "<group>"; };
+		B8A6F5002546CA4000426AD1 /* PDLPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLPageViewController.h; sourceTree = "<group>"; };
+		B8A6F5022546CA4000426AD1 /* PDLPageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLPageView.m; sourceTree = "<group>"; };
+		B8A6F5032546CA4000426AD1 /* PDLPageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLPageView.h; sourceTree = "<group>"; };
+		B8A6F50F2546CAAF00426AD1 /* libPDLPageController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLPageController.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8A6F5182546CAB500426AD1 /* libPDLPageView.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLPageView.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8A6F5212546CAB800426AD1 /* libPDLPageViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLPageViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AD194923D15CD7005A7363 /* libPDLNonThreadSafePropertyObserver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLNonThreadSafePropertyObserver.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AD196423D1B433005A7363 /* libNSObject+PDLThreadSafetifyProperty.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLThreadSafetifyProperty.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8B3A9FF24B71E2B008EFBE0 /* NSObject+PDLAssociation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLAssociation.m"; sourceTree = "<group>"; };
@@ -2317,6 +2386,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B899F9F224506A2900EFBB39 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8A6F5092546CAAF00426AD1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8A6F5122546CAB500426AD1 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8A6F51B2546CAB800426AD1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2923,6 +3013,9 @@
 				B83EFAF125036CC500FDBA43 /* libUIViewController+PDLStatusBar.a */,
 				B864FA1E252356BB00842343 /* libPDLTaskManager.a */,
 				B8E5455D25382417004C1033 /* libpdl_objc_message_hook.a */,
+				B8A6F50F2546CAAF00426AD1 /* libPDLPageController.a */,
+				B8A6F5182546CAB500426AD1 /* libPDLPageView.a */,
+				B8A6F5212546CAB800426AD1 /* libPDLPageViewController.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -2954,6 +3047,33 @@
 				B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */,
 			);
 			path = PDLViewControllerListViewController;
+			sourceTree = "<group>";
+		};
+		B8A6F4FB2546CA4000426AD1 /* PDLPageController */ = {
+			isa = PBXGroup;
+			children = (
+				B8A6F4FC2546CA4000426AD1 /* PDLPageController.h */,
+				B8A6F4FD2546CA4000426AD1 /* PDLPageController.m */,
+			);
+			path = PDLPageController;
+			sourceTree = "<group>";
+		};
+		B8A6F4FE2546CA4000426AD1 /* PDLPageViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B8A6F5002546CA4000426AD1 /* PDLPageViewController.h */,
+				B8A6F4FF2546CA4000426AD1 /* PDLPageViewController.m */,
+			);
+			path = PDLPageViewController;
+			sourceTree = "<group>";
+		};
+		B8A6F5012546CA4000426AD1 /* PDLPageView */ = {
+			isa = PBXGroup;
+			children = (
+				B8A6F5032546CA4000426AD1 /* PDLPageView.h */,
+				B8A6F5022546CA4000426AD1 /* PDLPageView.m */,
+			);
+			path = PDLPageView;
 			sourceTree = "<group>";
 		};
 		B8B3A9FE24B71E2B008EFBE0 /* NSObject+PDLAssociation */ = {
@@ -3729,6 +3849,9 @@
 				B8E56DEA23D70016008D2DA1 /* PDLNonThreadSafePropertyObserver */,
 				B8E56DF523D70016008D2DA1 /* PDLOpenUrlViewController */,
 				B8E56E8923D70018008D2DA1 /* PDLPageControl */,
+				B8A6F4FB2546CA4000426AD1 /* PDLPageController */,
+				B8A6F5012546CA4000426AD1 /* PDLPageView */,
+				B8A6F4FE2546CA4000426AD1 /* PDLPageViewController */,
 				B8E56E8023D70018008D2DA1 /* PDLPrivate */,
 				B8E56E4523D70017008D2DA1 /* PDLResizableImageView */,
 				B8E56EAD23D70019008D2DA1 /* PDLSafeOperation */,
@@ -4244,7 +4367,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B8E54561253824AE004C1033 /* PBXTargetDependency */,
 				B8FC6AC422EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC622EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC822EEF563005B91DE /* PBXTargetDependency */,
@@ -4279,6 +4401,9 @@
 				B8AD195423D15D1D005A7363 /* PBXTargetDependency */,
 				B861F035230A8CDB0071ADD4 /* PBXTargetDependency */,
 				B8FC6D7922EF0BC7005B91DE /* PBXTargetDependency */,
+				B8A6F52A2546CB4D00426AD1 /* PBXTargetDependency */,
+				B8A6F52C2546CB4D00426AD1 /* PBXTargetDependency */,
+				B8A6F52E2546CB4D00426AD1 /* PBXTargetDependency */,
 				B8FC6DA922EFD9B0005B91DE /* PBXTargetDependency */,
 				B8FC6D7B22EF0BC7005B91DE /* PBXTargetDependency */,
 				B8FC6C9422EF06D9005B91DE /* PBXTargetDependency */,
@@ -4308,6 +4433,7 @@
 				B8FC6D0A22EF08B5005B91DE /* PBXTargetDependency */,
 				B8FC6D0C22EF08B5005B91DE /* PBXTargetDependency */,
 				B8FC6ADD22EEFD2E005B91DE /* PBXTargetDependency */,
+				B8E54561253824AE004C1033 /* PBXTargetDependency */,
 				B8B7B5B0249B6272008D4604 /* PBXTargetDependency */,
 				B8FC6D0E22EF08B5005B91DE /* PBXTargetDependency */,
 				B8FC6AF022EEFE8E005B91DE /* PBXTargetDependency */,
@@ -4361,6 +4487,60 @@
 			name = PDLViewControllerListViewController;
 			productName = "CAAnimation+PDLExtension";
 			productReference = B899F9F824506A2900EFBB39 /* libPDLViewControllerListViewController.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B8A6F5072546CAAF00426AD1 /* PDLPageController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8A6F50C2546CAAF00426AD1 /* Build configuration list for PBXNativeTarget "PDLPageController" */;
+			buildPhases = (
+				B8A6F5082546CAAF00426AD1 /* Sources */,
+				B8A6F5092546CAAF00426AD1 /* Frameworks */,
+				B8A6F50A2546CAAF00426AD1 /* CopyFiles */,
+				B8A6F50B2546CAAF00426AD1 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLPageController;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B8A6F50F2546CAAF00426AD1 /* libPDLPageController.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B8A6F5102546CAB500426AD1 /* PDLPageView */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8A6F5152546CAB500426AD1 /* Build configuration list for PBXNativeTarget "PDLPageView" */;
+			buildPhases = (
+				B8A6F5112546CAB500426AD1 /* Sources */,
+				B8A6F5122546CAB500426AD1 /* Frameworks */,
+				B8A6F5132546CAB500426AD1 /* CopyFiles */,
+				B8A6F5142546CAB500426AD1 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLPageView;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B8A6F5182546CAB500426AD1 /* libPDLPageView.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B8A6F5192546CAB800426AD1 /* PDLPageViewController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8A6F51E2546CAB800426AD1 /* Build configuration list for PBXNativeTarget "PDLPageViewController" */;
+			buildPhases = (
+				B8A6F51A2546CAB800426AD1 /* Sources */,
+				B8A6F51B2546CAB800426AD1 /* Frameworks */,
+				B8A6F51C2546CAB800426AD1 /* CopyFiles */,
+				B8A6F51D2546CAB800426AD1 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLPageViewController;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B8A6F5212546CAB800426AD1 /* libPDLPageViewController.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		B8AD194123D15CD7005A7363 /* PDLNonThreadSafePropertyObserver */ = {
@@ -5343,6 +5523,9 @@
 				B8AD194123D15CD7005A7363 /* PDLNonThreadSafePropertyObserver */,
 				B861F029230A8C960071ADD4 /* PDLOpenUrlViewController */,
 				B8FC6D2722EF0A97005B91DE /* PDLPageControl */,
+				B8A6F5072546CAAF00426AD1 /* PDLPageController */,
+				B8A6F5102546CAB500426AD1 /* PDLPageView */,
+				B8A6F5192546CAB800426AD1 /* PDLPageViewController */,
 				B8FC6D8522EFD8F1005B91DE /* PDLPrivate */,
 				B8FC6D3022EF0A98005B91DE /* PDLResizableImageView */,
 				B8FC6C6E22EF063A005B91DE /* PDLSafeOperation */,
@@ -5836,6 +6019,57 @@
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
 		B899F9F424506A2900EFBB39 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B8A6F50B2546CAAF00426AD1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B8A6F5142546CAB500426AD1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B8A6F51D2546CAB800426AD1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -6873,6 +7107,7 @@
 				B85D45C7240E859000CBF758 /* NSObject+PDLExtension.m in Sources */,
 				B85D45C8240E859000CBF758 /* NSObject+PDLImplementationInterceptor.m in Sources */,
 				B85D45C9240E859000CBF758 /* NSObject+PDLSelectorProxy.m in Sources */,
+				B8A6F5042546CA4000426AD1 /* PDLPageController.m in Sources */,
 				B85D45CA240E859000CBF758 /* NSObject+PDLThreadSafetifyProperty.m in Sources */,
 				B85D45CB240E859000CBF758 /* NSObject+PDLWeakifyUnsafeUnretainedProperty.m in Sources */,
 				B85D45CC240E859000CBF758 /* NSThread+PDLExtension.m in Sources */,
@@ -6893,6 +7128,7 @@
 				B85D45DA240E859000CBF758 /* PDLDatabaseViewController.m in Sources */,
 				B85D45DB240E859000CBF758 /* PDLDataQueryViewController.m in Sources */,
 				B864FA242523570300842343 /* PDLTaskManager.m in Sources */,
+				B8A6F5052546CA4000426AD1 /* PDLPageViewController.m in Sources */,
 				B8B3AA0124B71E2B008EFBE0 /* NSObject+PDLAssociation.m in Sources */,
 				B80DF29824C45E6300AE1B00 /* pdl_algorithm.c in Sources */,
 				B81E710E2501185A00399E4B /* PDLInitialization.m in Sources */,
@@ -6917,6 +7153,7 @@
 				B85D45E8240E859000CBF758 /* PDLKeyboardNotificationObserver.m in Sources */,
 				B85D45E9240E859000CBF758 /* PDLMemoryQueryViewController.m in Sources */,
 				B864FA252523570300842343 /* PDLTask.m in Sources */,
+				B8A6F5062546CA4000426AD1 /* PDLPageView.m in Sources */,
 				B83CAA78248B487E009C784A /* pdl_security.c in Sources */,
 				B85D45EA240E859000CBF758 /* PDLNonThreadSafePropertyObserver.m in Sources */,
 				B85D45EB240E859000CBF758 /* PDLNonThreadSafePropertyObserverAction.m in Sources */,
@@ -7115,6 +7352,30 @@
 			buildActionMask = 2147483647;
 			files = (
 				B899F9F924506A3A00EFBB39 /* PDLViewControllerListViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8A6F5082546CAAF00426AD1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8A6F5242546CB1300426AD1 /* PDLPageController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8A6F5112546CAB500426AD1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8A6F5252546CB1C00426AD1 /* PDLPageView.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8A6F51A2546CAB800426AD1 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8A6F5272546CB2900426AD1 /* PDLPageViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7680,6 +7941,21 @@
 			isa = PBXTargetDependency;
 			target = B899F9F024506A2900EFBB39 /* PDLViewControllerListViewController */;
 			targetProxy = B899F9FB24506A5D00EFBB39 /* PBXContainerItemProxy */;
+		};
+		B8A6F52A2546CB4D00426AD1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8A6F5072546CAAF00426AD1 /* PDLPageController */;
+			targetProxy = B8A6F5292546CB4D00426AD1 /* PBXContainerItemProxy */;
+		};
+		B8A6F52C2546CB4D00426AD1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8A6F5102546CAB500426AD1 /* PDLPageView */;
+			targetProxy = B8A6F52B2546CB4D00426AD1 /* PBXContainerItemProxy */;
+		};
+		B8A6F52E2546CB4D00426AD1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8A6F5192546CAB800426AD1 /* PDLPageViewController */;
+			targetProxy = B8A6F52D2546CB4D00426AD1 /* PBXContainerItemProxy */;
 		};
 		B8AD195423D15D1D005A7363 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8738,6 +9014,72 @@
 			name = Debug;
 		};
 		B899F9F724506A2900EFBB39 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B8A6F50D2546CAAF00426AD1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B8A6F50E2546CAAF00426AD1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B8A6F5162546CAB500426AD1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B8A6F5172546CAB500426AD1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B8A6F51F2546CAB800426AD1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B8A6F5202546CAB800426AD1 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -10104,6 +10446,33 @@
 			buildConfigurations = (
 				B899F9F624506A2900EFBB39 /* Debug */,
 				B899F9F724506A2900EFBB39 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B8A6F50C2546CAAF00426AD1 /* Build configuration list for PBXNativeTarget "PDLPageController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8A6F50D2546CAAF00426AD1 /* Debug */,
+				B8A6F50E2546CAAF00426AD1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B8A6F5152546CAB500426AD1 /* Build configuration list for PBXNativeTarget "PDLPageView" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8A6F5162546CAB500426AD1 /* Debug */,
+				B8A6F5172546CAB500426AD1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B8A6F51E2546CAB800426AD1 /* Build configuration list for PBXNativeTarget "PDLPageViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8A6F51F2546CAB800426AD1 /* Debug */,
+				B8A6F5202546CAB800426AD1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
