@@ -45,6 +45,11 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
 - (void)formView:(PDLFormView *)formView willEndDisplayingView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row;
 - (void)formView:(PDLFormView *)formView didEndDisplayingView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row;
 
+- (void)formView:(PDLFormView *)formView willSetContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
+- (void)formView:(PDLFormView *)formView didSetContentOffset:(CGPoint)contentOffset animated:(BOOL)animated;
+- (void)formView:(PDLFormView *)formView willScrollRectToVisible:(CGRect)rect animated:(BOOL)animated;
+- (void)formView:(PDLFormView *)formView didScrollRectToVisible:(CGRect)rect animated:(BOOL)animated;
+
 @end
 
 @interface PDLFormView : UIScrollView
@@ -67,7 +72,7 @@ typedef NS_OPTIONS(NSUInteger, PDLFormViewScrollPosition) {
 - (void)reloadData;
 - (NSString *)reuseIdentifierForView:(UIView *)view;
 - (void)setReuseIdentifier:(NSString *)identifier forView:(UIView *)view;
-- (UIView *)dequeueReusableViewWithIdentifier:(NSString *)identifier;
+- (__kindof UIView *)dequeueReusableViewWithIdentifier:(NSString *)identifier;
 - (NSDictionary <NSString *, NSMutableArray <UIView *>*>*)dequeueAllReusableViews;
 - (UIView *)viewForColumn:(NSInteger)column row:(NSInteger)row;
 - (NSInteger)columnForView:(UIView *)view;
