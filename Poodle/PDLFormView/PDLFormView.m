@@ -22,6 +22,11 @@
     BOOL _delegateRespondsDidDisplayForColumnRow;
     BOOL _delegateRespondsWillEndDisplayingForColumnRow;
     BOOL _delegateRespondsDidEndDisplayingForColumnRow;
+    BOOL _delegateRespondsDidBeginScrollingAnimation;
+    BOOL _delegateRespondsWillSetContentOffsetAnimated;
+    BOOL _delegateRespondsDidSetContentOffsetAnimated;
+    BOOL _delegateRespondsWillScrollRectToVisibleAnimated;
+    BOOL _delegateRespondsDidScrollRectToVisibleAnimated;
 }
 
 @property (nonatomic, strong) NSMutableDictionary *cacheViews;
@@ -150,6 +155,26 @@
     }
 }
 
+- (void)setContentOffset:(CGPoint)contentOffset animated:(BOOL)animated {
+    if (_delegateRespondsWillSetContentOffsetAnimated) {
+        [_formViewDelegate formView:self willSetContentOffset:contentOffset animated:animated];
+    }
+    [super setContentOffset:contentOffset animated:animated];
+    if (_delegateRespondsDidSetContentOffsetAnimated) {
+        [_formViewDelegate formView:self didSetContentOffset:contentOffset animated:animated];
+    }
+}
+
+- (void)scrollRectToVisible:(CGRect)rect animated:(BOOL)animated {
+    if (_delegateRespondsWillScrollRectToVisibleAnimated) {
+        [_formViewDelegate formView:self willScrollRectToVisible:rect animated:animated];
+    }
+    [super scrollRectToVisible:rect animated:animated];
+    if (_delegateRespondsDidScrollRectToVisibleAnimated) {
+        [_formViewDelegate formView:self didScrollRectToVisible:rect animated:animated];
+    }
+}
+
 - (void)setFormViewDelegate:(id<PDLFormViewDelegate>)formViewDelegate {
     if (_formViewDelegate == formViewDelegate) {
         return;
@@ -169,6 +194,10 @@
     _delegateRespondsDidDisplayForColumnRow = [formViewDelegate respondsToSelector:@selector(formView:didDisplayView:forColumn:row:)];
     _delegateRespondsWillEndDisplayingForColumnRow = [formViewDelegate respondsToSelector:@selector(formView:willEndDisplayingView:forColumn:row:)];
     _delegateRespondsDidEndDisplayingForColumnRow = [formViewDelegate respondsToSelector:@selector(formView:didEndDisplayingView:forColumn:row:)];
+    _delegateRespondsWillSetContentOffsetAnimated = [formViewDelegate respondsToSelector:@selector(formView:willSetContentOffset:animated:)];
+    _delegateRespondsDidSetContentOffsetAnimated = [formViewDelegate respondsToSelector:@selector(formView:didSetContentOffset:animated:)];
+    _delegateRespondsWillScrollRectToVisibleAnimated = [formViewDelegate respondsToSelector:@selector(formView:willScrollRectToVisible:animated:)];
+    _delegateRespondsDidScrollRectToVisibleAnimated = [formViewDelegate respondsToSelector:@selector(formView:didScrollRectToVisible:animated:)];
 }
 
 - (void)setIsScrollHorizontallyForcedEnabled:(BOOL)isScrollHorizontallyForcedEnabled {
@@ -230,7 +259,6 @@
             numberOfRows = 0;
         }
     }
-
 
     if (_delegateRespondsDestinationForColumnRow) {
         for (NSInteger column = 0; column < numberOfColumns; column++) {
@@ -312,6 +340,39 @@
     self.rowHeights = rowHeights;
 }
 
+- (void)applyCell:(PDLFormViewCell *)cell isLeft:(BOOL)isLeft isRight:(BOOL)isRight isTop:(BOOL)isTop isBottom:(BOOL)isBottom {
+    UIColor *leftSeparatorLineColor = nil;
+    if (isLeft) {
+        leftSeparatorLineColor = (self.outerSeparatorColor ?: self.verticalSeparatorColor) ?: self.separatorColor;
+    }
+    cell.leftSeparatorLineColor = leftSeparatorLineColor;
+
+    UIColor *rightSeparatorLineColor = nil;
+    if (isRight) {
+        rightSeparatorLineColor = (self.outerSeparatorColor ?: self.verticalSeparatorColor) ?: self.separatorColor;
+    } else {
+        rightSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
+    }
+    cell.rightSeparatorLineColor = rightSeparatorLineColor;
+
+    UIColor *topSeparatorLineColor = nil;
+    if (isTop) {
+        topSeparatorLineColor = (self.outerSeparatorColor ?: self.horizontalSeparatorColor) ?: self.separatorColor;
+    }
+    cell.topSeparatorLineColor = topSeparatorLineColor;
+
+    UIColor *bottomSeparatorLineColor = nil;
+    if (isBottom) {
+        bottomSeparatorLineColor = (self.outerSeparatorColor ?: self.horizontalSeparatorColor) ?: self.separatorColor;
+    } else {
+        bottomSeparatorLineColor = (self.horizontalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
+    }
+    cell.bottomSeparatorLineColor = bottomSeparatorLineColor;
+
+    [cell setIsLeft:isLeft isRight:isRight isTop:isTop isBottom:isBottom];
+}
+
+
 - (void)removeVisibleViewAtColumn:(NSInteger)column row:(NSInteger)row forced:(BOOL)forced {
     NSIndexPath *destinationIndexPath = [self destinationIndexPathWithIndexPath:[NSIndexPath indexPathForRow:row inSection:column]];
     UIView *view = self.visibleViews[destinationIndexPath];
@@ -384,39 +445,7 @@
     BOOL isTop = (topRow == 0);
     BOOL isBottom = (bottomRow == self.rowHeights.count - 1);
 
-    [cell setIsLeft:isLeft isRight:isRight isTop:isTop isBottom:isBottom];
-
-    UIColor *leftSeparatorLineColor = nil;
-    if (isLeft) {
-        leftSeparatorLineColor = (self.outerSeparatorColor ?: self.verticalSeparatorColor) ?: self.separatorColor;
-    } else {
-        leftSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
-    }
-    cell.leftSeparatorLineColor = leftSeparatorLineColor;
-
-    UIColor *rightSeparatorLineColor = nil;
-    if (isRight) {
-        rightSeparatorLineColor = (self.outerSeparatorColor ?: self.verticalSeparatorColor) ?: self.separatorColor;
-    } else {
-        rightSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
-    }
-    cell.rightSeparatorLineColor = rightSeparatorLineColor;
-
-    UIColor *topSeparatorLineColor = nil;
-    if (isTop) {
-        topSeparatorLineColor = (self.outerSeparatorColor ?: self.horizontalSeparatorColor) ?: self.separatorColor;
-    } else {
-        topSeparatorLineColor = (self.horizontalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
-    }
-    cell.topSeparatorLineColor = topSeparatorLineColor;
-
-    UIColor *bottomSeparatorLineColor = nil;
-    if (isBottom) {
-        bottomSeparatorLineColor = (self.outerSeparatorColor ?: self.horizontalSeparatorColor) ?: self.separatorColor;
-    } else {
-        bottomSeparatorLineColor = (self.horizontalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
-    }
-    cell.bottomSeparatorLineColor = bottomSeparatorLineColor;
+    [self applyCell:cell isLeft:isLeft isRight:isRight isTop:isTop isBottom:isBottom];
 }
 
 - (void)refreshVisibleViewAtColumn:(NSInteger)column row:(NSInteger)row {
@@ -444,39 +473,7 @@
     BOOL isTop = (topRow == 0);
     BOOL isBottom = (bottomRow == self.rowHeights.count - 1);
 
-    [cell setIsLeft:isLeft isRight:isRight isTop:isTop isBottom:isBottom];
-
-    UIColor *leftSeparatorLineColor = nil;
-    if (isLeft) {
-        leftSeparatorLineColor = (self.outerSeparatorColor ?: self.verticalSeparatorColor) ?: self.separatorColor;
-    } else {
-        leftSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
-    }
-    cell.leftSeparatorLineColor = leftSeparatorLineColor;
-
-    UIColor *rightSeparatorLineColor = nil;
-    if (isRight) {
-        rightSeparatorLineColor = (self.outerSeparatorColor ?: self.verticalSeparatorColor) ?: self.separatorColor;
-    } else {
-        rightSeparatorLineColor = (self.verticalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
-    }
-    cell.rightSeparatorLineColor = rightSeparatorLineColor;
-
-    UIColor *topSeparatorLineColor = nil;
-    if (isTop) {
-        topSeparatorLineColor = (self.outerSeparatorColor ?: self.horizontalSeparatorColor) ?: self.separatorColor;
-    } else {
-        topSeparatorLineColor = (self.horizontalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
-    }
-    cell.topSeparatorLineColor = topSeparatorLineColor;
-
-    UIColor *bottomSeparatorLineColor = nil;
-    if (isBottom) {
-        bottomSeparatorLineColor = (self.outerSeparatorColor ?: self.horizontalSeparatorColor) ?: self.separatorColor;
-    } else {
-        bottomSeparatorLineColor = (self.horizontalSeparatorColor ?: self.innerSeparatorColor) ?: self.separatorColor;
-    }
-    cell.bottomSeparatorLineColor = bottomSeparatorLineColor;
+    [self applyCell:cell isLeft:isLeft isRight:isRight isTop:isTop isBottom:isBottom];
 }
 
 - (CGFloat)viewWidthInColumn:(NSInteger)column {
