@@ -16,7 +16,7 @@ ______PDL_THREAD_FAKE_END_____:
       17:	58	popl	%eax
       18:	8b 7d 18	movl	24(%ebp), %edi
       1b:	8b 5d 0c	movl	12(%ebp), %ebx
-      1e:	8b 88 cd 16 00 00	movl	5860-23(%eax), %ecx
+      1e:	8b 88 d7 16 00 00	movl	5870-23(%eax), %ecx
       24:	31 c0	xorl	%eax, %eax
       26:	40	incl	%eax
       27:	85 db	testl	%ebx, %ebx
