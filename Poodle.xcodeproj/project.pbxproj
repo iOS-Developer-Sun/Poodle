@@ -27,6 +27,17 @@
 		B83EFAE8250369CC00FDBA43 /* UIViewController+PDLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */; };
 		B83EFAF425036CDE00FDBA43 /* UIViewController+PDLStatusBar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83EFAE7250369CC00FDBA43 /* UIViewController+PDLStatusBar.h */; };
 		B83EFAF525036CE200FDBA43 /* UIViewController+PDLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */; };
+		B8528191255132CA00B74F87 /* PDLRunLoopObserverLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528187255132CA00B74F87 /* PDLRunLoopObserverLoop.m */; };
+		B8528192255132CA00B74F87 /* PDLRunLoopObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528188255132CA00B74F87 /* PDLRunLoopObserver.m */; };
+		B8528194255132CA00B74F87 /* PDLBacktraceRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = B852818D255132CA00B74F87 /* PDLBacktraceRecord.m */; };
+		B8528195255132CA00B74F87 /* PDLBacktraceRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = B852818E255132CA00B74F87 /* PDLBacktraceRecorder.m */; };
+		B852839B2551333700B74F87 /* PDLBacktraceRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = B852818D255132CA00B74F87 /* PDLBacktraceRecord.m */; };
+		B852839C2551333700B74F87 /* PDLBacktraceRecorder.m in Sources */ = {isa = PBXBuildFile; fileRef = B852818E255132CA00B74F87 /* PDLBacktraceRecorder.m */; };
+		B85283F22551334100B74F87 /* PDLBacktraceRecord.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8528190255132CA00B74F87 /* PDLBacktraceRecord.h */; };
+		B85283F32551334100B74F87 /* PDLBacktraceRecorder.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B852818B255132CA00B74F87 /* PDLBacktraceRecorder.h */; };
+		B852844C2551344200B74F87 /* PDLBacktraceRecordsItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B852844A2551344200B74F87 /* PDLBacktraceRecordsItem.m */; };
+		B85285A92551346400B74F87 /* PDLBacktraceRecordsItem.m in Sources */ = {isa = PBXBuildFile; fileRef = B852844A2551344200B74F87 /* PDLBacktraceRecordsItem.m */; };
+		B85285FF2551346A00B74F87 /* PDLBacktraceRecordsItem.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B852844B2551344200B74F87 /* PDLBacktraceRecordsItem.h */; };
 		B858422C246B963E00AC3717 /* pdl_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.m */; };
 		B85842AF246B96AE00AC3717 /* pdl_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B858422B246B963E00AC3717 /* pdl_backtrace.m */; };
 		B85842B0246B96B400AC3717 /* pdl_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8584229246B961400AC3717 /* pdl_backtrace.h */; };
@@ -480,6 +491,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = B83EFAE925036CC500FDBA43;
 			remoteInfo = "UIViewController+PDLStatusBar";
+		};
+		B85286552551347800B74F87 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B85284A12551345200B74F87;
+			remoteInfo = PDLBacktraceRecordsItem;
+		};
+		B85286572551348000B74F87 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8528296255132E300B74F87;
+			remoteInfo = PDLBacktraceRecorder;
+		};
+		B85286592551348700B74F87 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B852823A255132E100B74F87;
+			remoteInfo = PDLRunLoopObserver;
 		};
 		B85842B1246B96CB00AC3717 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1071,6 +1103,36 @@
 			dstSubfolderSpec = 16;
 			files = (
 				B83EFAF425036CDE00FDBA43 /* UIViewController+PDLStatusBar.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B852823D255132E100B74F87 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8528299255132E300B74F87 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B85283F22551334100B74F87 /* PDLBacktraceRecord.h in CopyFiles */,
+				B85283F32551334100B74F87 /* PDLBacktraceRecorder.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B85284A42551345200B74F87 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B85285FF2551346A00B74F87 /* PDLBacktraceRecordsItem.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1820,6 +1882,19 @@
 		B83EFAF125036CC500FDBA43 /* libUIViewController+PDLStatusBar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUIViewController+PDLStatusBar.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B85068EE250121690028E642 /* NSArray+PDLSafeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PDLSafeOperation.h"; sourceTree = "<group>"; };
 		B85068EF250121690028E642 /* NSDictionary+PDLSafeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+PDLSafeOperation.h"; sourceTree = "<group>"; };
+		B8528186255132CA00B74F87 /* PDLRunLoopObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLRunLoopObserver.h; sourceTree = "<group>"; };
+		B8528187255132CA00B74F87 /* PDLRunLoopObserverLoop.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLRunLoopObserverLoop.m; sourceTree = "<group>"; };
+		B8528188255132CA00B74F87 /* PDLRunLoopObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLRunLoopObserver.m; sourceTree = "<group>"; };
+		B8528189255132CA00B74F87 /* PDLRunLoopObserverLoop.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLRunLoopObserverLoop.h; sourceTree = "<group>"; };
+		B852818B255132CA00B74F87 /* PDLBacktraceRecorder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLBacktraceRecorder.h; sourceTree = "<group>"; };
+		B852818D255132CA00B74F87 /* PDLBacktraceRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLBacktraceRecord.m; sourceTree = "<group>"; };
+		B852818E255132CA00B74F87 /* PDLBacktraceRecorder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLBacktraceRecorder.m; sourceTree = "<group>"; };
+		B8528190255132CA00B74F87 /* PDLBacktraceRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLBacktraceRecord.h; sourceTree = "<group>"; };
+		B8528242255132E100B74F87 /* libPDLRunLoopObserver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLRunLoopObserver.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B852829E255132E300B74F87 /* libPDLBacktraceRecorder.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLBacktraceRecorder.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B852844A2551344200B74F87 /* PDLBacktraceRecordsItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLBacktraceRecordsItem.m; sourceTree = "<group>"; };
+		B852844B2551344200B74F87 /* PDLBacktraceRecordsItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLBacktraceRecordsItem.h; sourceTree = "<group>"; };
+		B85284A92551345200B74F87 /* libPDLBacktraceRecordsItem.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLBacktraceRecordsItem.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8584229246B961400AC3717 /* pdl_backtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_backtrace.h; sourceTree = "<group>"; };
 		B858422B246B963E00AC3717 /* pdl_backtrace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_backtrace.m; sourceTree = "<group>"; };
 		B85842AE246B968D00AC3717 /* libpdl_backtrace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_backtrace.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2253,6 +2328,27 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B83EFAEB25036CC500FDBA43 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B852823C255132E100B74F87 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8528298255132E300B74F87 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B85284A32551345200B74F87 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2795,6 +2891,37 @@
 			path = "UIViewController+PDLStatusBar";
 			sourceTree = "<group>";
 		};
+		B8528185255132CA00B74F87 /* PDLRunLoopObserver */ = {
+			isa = PBXGroup;
+			children = (
+				B8528186255132CA00B74F87 /* PDLRunLoopObserver.h */,
+				B8528188255132CA00B74F87 /* PDLRunLoopObserver.m */,
+				B8528189255132CA00B74F87 /* PDLRunLoopObserverLoop.h */,
+				B8528187255132CA00B74F87 /* PDLRunLoopObserverLoop.m */,
+			);
+			path = PDLRunLoopObserver;
+			sourceTree = "<group>";
+		};
+		B852818A255132CA00B74F87 /* PDLBacktraceRecorder */ = {
+			isa = PBXGroup;
+			children = (
+				B8528190255132CA00B74F87 /* PDLBacktraceRecord.h */,
+				B852818D255132CA00B74F87 /* PDLBacktraceRecord.m */,
+				B852818B255132CA00B74F87 /* PDLBacktraceRecorder.h */,
+				B852818E255132CA00B74F87 /* PDLBacktraceRecorder.m */,
+			);
+			path = PDLBacktraceRecorder;
+			sourceTree = "<group>";
+		};
+		B85284492551344200B74F87 /* PDLBacktraceRecordsItem */ = {
+			isa = PBXGroup;
+			children = (
+				B852844B2551344200B74F87 /* PDLBacktraceRecordsItem.h */,
+				B852844A2551344200B74F87 /* PDLBacktraceRecordsItem.m */,
+			);
+			path = PDLBacktraceRecordsItem;
+			sourceTree = "<group>";
+		};
 		B8584227246B961400AC3717 /* pdl_backtrace */ = {
 			isa = PBXGroup;
 			children = (
@@ -3016,6 +3143,9 @@
 				B8A6F50F2546CAAF00426AD1 /* libPDLPageController.a */,
 				B8A6F5182546CAB500426AD1 /* libPDLPageView.a */,
 				B8A6F5212546CAB800426AD1 /* libPDLPageViewController.a */,
+				B8528242255132E100B74F87 /* libPDLRunLoopObserver.a */,
+				B852829E255132E300B74F87 /* libPDLBacktraceRecorder.a */,
+				B85284A92551345200B74F87 /* libPDLBacktraceRecordsItem.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3837,6 +3967,8 @@
 				B8E56EC823D7001A008D2DA1 /* pdl_utils */,
 				B8E56E5823D70017008D2DA1 /* PDLAddressQueryViewController */,
 				B87953022485127900798005 /* PDLBacktrace */,
+				B852818A255132CA00B74F87 /* PDLBacktraceRecorder */,
+				B85284492551344200B74F87 /* PDLBacktraceRecordsItem */,
 				B8E56E3F23D70017008D2DA1 /* PDLCollectionViewFlowLayout */,
 				B8E56E6D23D70018008D2DA1 /* PDLDatabase */,
 				B8E56EB423D7001A008D2DA1 /* PDLFileSystemViewController */,
@@ -3854,6 +3986,7 @@
 				B8A6F4FE2546CA4000426AD1 /* PDLPageViewController */,
 				B8E56E8023D70018008D2DA1 /* PDLPrivate */,
 				B8E56E4523D70017008D2DA1 /* PDLResizableImageView */,
+				B8528185255132CA00B74F87 /* PDLRunLoopObserver */,
 				B8E56EAD23D70019008D2DA1 /* PDLSafeOperation */,
 				B8E56E0923D70016008D2DA1 /* PDLScreenDebugger */,
 				B8E56E7723D70018008D2DA1 /* PDLSystemImage */,
@@ -4051,6 +4184,60 @@
 			name = "UIViewController+PDLStatusBar";
 			productName = "CAAnimation+PDLExtension";
 			productReference = B83EFAF125036CC500FDBA43 /* libUIViewController+PDLStatusBar.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B852823A255132E100B74F87 /* PDLRunLoopObserver */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B852823F255132E100B74F87 /* Build configuration list for PBXNativeTarget "PDLRunLoopObserver" */;
+			buildPhases = (
+				B852823B255132E100B74F87 /* Sources */,
+				B852823C255132E100B74F87 /* Frameworks */,
+				B852823D255132E100B74F87 /* CopyFiles */,
+				B852823E255132E100B74F87 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLRunLoopObserver;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B8528242255132E100B74F87 /* libPDLRunLoopObserver.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B8528296255132E300B74F87 /* PDLBacktraceRecorder */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B852829B255132E300B74F87 /* Build configuration list for PBXNativeTarget "PDLBacktraceRecorder" */;
+			buildPhases = (
+				B8528297255132E300B74F87 /* Sources */,
+				B8528298255132E300B74F87 /* Frameworks */,
+				B8528299255132E300B74F87 /* CopyFiles */,
+				B852829A255132E300B74F87 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLBacktraceRecorder;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B852829E255132E300B74F87 /* libPDLBacktraceRecorder.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B85284A12551345200B74F87 /* PDLBacktraceRecordsItem */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B85284A62551345200B74F87 /* Build configuration list for PBXNativeTarget "PDLBacktraceRecordsItem" */;
+			buildPhases = (
+				B85284A22551345200B74F87 /* Sources */,
+				B85284A32551345200B74F87 /* Frameworks */,
+				B85284A42551345200B74F87 /* CopyFiles */,
+				B85284A52551345200B74F87 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLBacktraceRecordsItem;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B85284A92551345200B74F87 /* libPDLBacktraceRecordsItem.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		B85842A6246B968D00AC3717 /* pdl_backtrace */ = {
@@ -4367,6 +4554,9 @@
 			buildRules = (
 			);
 			dependencies = (
+				B852865A2551348700B74F87 /* PBXTargetDependency */,
+				B85286582551348000B74F87 /* PBXTargetDependency */,
+				B85286562551347800B74F87 /* PBXTargetDependency */,
 				B8FC6AC422EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC622EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC822EEF563005B91DE /* PBXTargetDependency */,
@@ -5511,6 +5701,8 @@
 				B8FC6D5422EF0A9B005B91DE /* pdl_utils */,
 				B85ECBF122F5783D0063BB7C /* PDLAddressQueryViewController */,
 				B8795306248512B500798005 /* PDLBacktrace */,
+				B8528296255132E300B74F87 /* PDLBacktraceRecorder */,
+				B85284A12551345200B74F87 /* PDLBacktraceRecordsItem */,
 				B8FC6D1522EF0A94005B91DE /* PDLCollectionViewFlowLayout */,
 				B8B9A562234F9A100069476E /* PDLDatabase */,
 				B802ACCB22F33A6A00BF028E /* PDLFileSystemViewController */,
@@ -5528,6 +5720,7 @@
 				B8A6F5192546CAB800426AD1 /* PDLPageViewController */,
 				B8FC6D8522EFD8F1005B91DE /* PDLPrivate */,
 				B8FC6D3022EF0A98005B91DE /* PDLResizableImageView */,
+				B852823A255132E100B74F87 /* PDLRunLoopObserver */,
 				B8FC6C6E22EF063A005B91DE /* PDLSafeOperation */,
 				B85ECB6622F27B3B0063BB7C /* PDLScreenDebugger */,
 				B8FC6C6522EF0639005B91DE /* PDLSystemImage */,
@@ -5713,6 +5906,57 @@
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
 		B83EFAED25036CC500FDBA43 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B852823E255132E100B74F87 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B852829A255132E300B74F87 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B85284A52551345200B74F87 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -7038,6 +7282,30 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B852823B255132E100B74F87 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8528297255132E300B74F87 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B852839B2551333700B74F87 /* PDLBacktraceRecord.m in Sources */,
+				B852839C2551333700B74F87 /* PDLBacktraceRecorder.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B85284A22551345200B74F87 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B85285A92551346400B74F87 /* PDLBacktraceRecordsItem.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B85842A7246B968D00AC3717 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7090,6 +7358,7 @@
 				B85D4615240E85A600CBF758 /* pdl_systemcall-arm.s in Sources */,
 				B8DEC4C424877D1800DB3D0E /* pdl_dispatch_backtrace.m in Sources */,
 				B85D4616240E85A600CBF758 /* pdl_systemcall-arm64.s in Sources */,
+				B8528191255132CA00B74F87 /* PDLRunLoopObserverLoop.m in Sources */,
 				B85D4617240E85A600CBF758 /* pdl_systemcall-i386.s in Sources */,
 				B85D4618240E85A600CBF758 /* pdl_systemcall-x86_64.s in Sources */,
 				B85D45BC240E859000CBF758 /* CAAnimation+PDLExtension.m in Sources */,
@@ -7120,6 +7389,7 @@
 				B85D45D3240E859000CBF758 /* pdl_os.m in Sources */,
 				B85D45D4240E859000CBF758 /* pdl_pthread.m in Sources */,
 				B8795333248688D800798005 /* pdl_thread-i386.s in Sources */,
+				B852844C2551344200B74F87 /* PDLBacktraceRecordsItem.m in Sources */,
 				B85D45D5240E859000CBF758 /* pdl_spinlock.m in Sources */,
 				B85D45D6240E859000CBF758 /* PDLAddressQueryViewController.m in Sources */,
 				B85D45D7240E859000CBF758 /* PDLCollectionViewFlowLayout.m in Sources */,
@@ -7133,6 +7403,7 @@
 				B80DF29824C45E6300AE1B00 /* pdl_algorithm.c in Sources */,
 				B81E710E2501185A00399E4B /* PDLInitialization.m in Sources */,
 				B8B7B5B2249B9132008D4604 /* pdl_objc_runtime.m in Sources */,
+				B8528192255132CA00B74F87 /* PDLRunLoopObserver.m in Sources */,
 				B85D45DC240E859000CBF758 /* PDLDirectoryViewController.m in Sources */,
 				B85D45DD240E859000CBF758 /* PDLFileSystemViewController.m in Sources */,
 				B85D45DE240E859000CBF758 /* PDLPropertyListViewController.m in Sources */,
@@ -7140,6 +7411,7 @@
 				B888660D24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.m in Sources */,
 				B85D45E0240E859000CBF758 /* PDLWebViewController.m in Sources */,
 				B8A6F4F025428B7400426AD1 /* PDLFormViewCell.m in Sources */,
+				B8528195255132CA00B74F87 /* PDLBacktraceRecorder.m in Sources */,
 				B85D45E1240E859000CBF758 /* PDLFontViewController.m in Sources */,
 				B85D45E2240E859000CBF758 /* PDLFormView.m in Sources */,
 				B85D45E3240E859000CBF758 /* PDLClassListViewController.m in Sources */,
@@ -7183,6 +7455,7 @@
 				B85D45FB240E859000CBF758 /* PDLColorPropertyDebugger.m in Sources */,
 				B85D45FC240E859000CBF758 /* PDLFloatPropertyDebugger.m in Sources */,
 				B88865F324C02F1A00D58BC7 /* pdl_thread_storage.c in Sources */,
+				B8528194255132CA00B74F87 /* PDLBacktraceRecord.m in Sources */,
 				B85D45FD240E859000CBF758 /* PDLPropertyDebugger.m in Sources */,
 				B85D45FE240E859000CBF758 /* PDLRectPropertyDebugger.m in Sources */,
 				B85D45FF240E859000CBF758 /* PDLSystemImage.m in Sources */,
@@ -7852,6 +8125,21 @@
 			target = B83EFAE925036CC500FDBA43 /* UIViewController+PDLStatusBar */;
 			targetProxy = B83EFAF225036CD400FDBA43 /* PBXContainerItemProxy */;
 		};
+		B85286562551347800B74F87 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B85284A12551345200B74F87 /* PDLBacktraceRecordsItem */;
+			targetProxy = B85286552551347800B74F87 /* PBXContainerItemProxy */;
+		};
+		B85286582551348000B74F87 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8528296255132E300B74F87 /* PDLBacktraceRecorder */;
+			targetProxy = B85286572551348000B74F87 /* PBXContainerItemProxy */;
+		};
+		B852865A2551348700B74F87 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B852823A255132E100B74F87 /* PDLRunLoopObserver */;
+			targetProxy = B85286592551348700B74F87 /* PBXContainerItemProxy */;
+		};
 		B85842B2246B96CB00AC3717 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B85842A6246B968D00AC3717 /* pdl_backtrace */;
@@ -8429,6 +8717,72 @@
 			name = Debug;
 		};
 		B83EFAF025036CC500FDBA43 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B8528240255132E100B74F87 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B8528241255132E100B74F87 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B852829C255132E300B74F87 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B852829D255132E300B74F87 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B85284A72551345200B74F87 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B85284A82551345200B74F87 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -10257,6 +10611,33 @@
 			buildConfigurations = (
 				B83EFAEF25036CC500FDBA43 /* Debug */,
 				B83EFAF025036CC500FDBA43 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B852823F255132E100B74F87 /* Build configuration list for PBXNativeTarget "PDLRunLoopObserver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8528240255132E100B74F87 /* Debug */,
+				B8528241255132E100B74F87 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B852829B255132E300B74F87 /* Build configuration list for PBXNativeTarget "PDLBacktraceRecorder" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B852829C255132E300B74F87 /* Debug */,
+				B852829D255132E300B74F87 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B85284A62551345200B74F87 /* Build configuration list for PBXNativeTarget "PDLBacktraceRecordsItem" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B85284A72551345200B74F87 /* Debug */,
+				B85284A82551345200B74F87 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

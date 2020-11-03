@@ -534,6 +534,26 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/pdl_backtrace'
         end
 
+        s.subspec 'PDLBacktraceRecorder' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLBacktraceRecorder/' + source_files
+            ss.vendored_library = base + 'PDLBacktraceRecorder/' + librariy_files
+            ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/PDLBacktrace'
+        end
+
+        s.subspec 'PDLBacktraceRecordsItem' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLBacktraceRecordsItem/' + source_files
+            ss.vendored_library = base + 'PDLBacktraceRecordsItem/' + librariy_files
+            ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/PDLBacktraceRecorder'
+        end
+
         s.subspec 'PDLCollectionViewFlowLayout' do |ss|
             ss.platform = platform_ios
             ss.ios.deployment_target  = '9.0'
@@ -686,6 +706,15 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.source_files = base + 'PDLResizableImageView/' + source_files
             ss.vendored_library = base + 'PDLResizableImageView/' + librariy_files
             ss.frameworks = 'UIKit'
+        end
+
+        s.subspec 'PDLRunLoopObserver' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLRunLoopObserver/' + source_files
+            ss.vendored_library = base + 'PDLRunLoopObserver/' + librariy_files
+            ss.frameworks = 'Foundation'
         end
 
         s.subspec 'PDLSafeOperation' do |ss|
