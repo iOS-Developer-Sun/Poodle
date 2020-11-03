@@ -8,13 +8,13 @@ ______PDL_THREAD_FAKE_END_____:
       34:	02 af	add	r7, sp, #8
       36:	99 b0	sub	sp, #100
       38:	d7 f8 08 90	ldr.w	r9, [r7, #8]
-      3c:	41 f2 4c 2c	movw	r12, :lower16:((4756-68)-4)
-      40:	c0 f2 00 0c	movt	r12, :upper16:((4756-68)-4)
+      3c:	41 f2 58 2c	movw	r12, :lower16:((4768-68)-4)
+      40:	c0 f2 00 0c	movt	r12, :upper16:((4768-68)-4)
       44:	fc 44	add	r12, pc
       46:	dc f8 00 c0	ldr.w	r12, [r12]
       4a:	dc f8 00 c0	ldr.w	r12, [r12]
-      4e:	41 f2 3a 2e	movw	lr, :lower16:((4756-86)-4)
-      52:	c0 f2 00 0e	movt	lr, :upper16:((4756-86)-4)
+      4e:	41 f2 46 2e	movw	lr, :lower16:((4768-86)-4)
+      52:	c0 f2 00 0e	movt	lr, :upper16:((4768-86)-4)
       56:	fe 44	add	lr, pc
       58:	de f8 00 e0	ldr.w	lr, [lr]
       5c:	de f8 00 e0	ldr.w	lr, [lr]
@@ -266,8 +266,8 @@ ______PDL_THREAD_FAKE_END_____:
      35c:	57 f8 68 0c	ldr	r0, [r7, #-104]
      360:	57 f8 30 1c	ldr	r1, [r7, #-48]
      364:	8d 46	mov	sp, r1
-     366:	40 f6 22 71	movw	r1, :lower16:((4756-878)-4)
-     36a:	c0 f2 00 01	movt	r1, :upper16:((4756-878)-4)
+     366:	40 f6 2e 71	movw	r1, :lower16:((4768-878)-4)
+     36a:	c0 f2 00 01	movt	r1, :upper16:((4768-878)-4)
      36e:	79 44	add	r1, pc
      370:	09 68	ldr	r1, [r1]
      372:	09 68	ldr	r1, [r1]

@@ -20,7 +20,7 @@ ______PDL_THREAD_FAKE_END_____:
       88:	8b 7d 0c	movl	12(%ebp), %edi
       8b:	8b 5d 08	movl	8(%ebp), %ebx
       8e:	89 45 a0	movl	%eax, -96(%ebp)
-      91:	8b 80 47 13 00 00	movl	5061-126(%eax), %eax
+      91:	8b 80 4e 13 00 00	movl	5068-126(%eax), %eax
       97:	8b 00	movl	_pdl_thread_execute(%eax), %eax
       99:	89 45 f0	movl	%eax, -16(%ebp)
       9c:	8b 45 18	movl	24(%ebp), %eax
@@ -239,7 +239,7 @@ ______PDL_THREAD_FAKE_END_____:
      37e:	8b 4d dc	movl	-36(%ebp), %ecx
      381:	89 cc	movl	%ecx, %esp
      383:	8b 4d a0	movl	-96(%ebp), %ecx
-     386:	8b 91 47 13 00 00	movl	5061-126(%ecx), %edx
+     386:	8b 91 4e 13 00 00	movl	5068-126(%ecx), %edx
      38c:	8b 12	movl	_pdl_thread_execute(%edx), %edx
      38e:	8b 75 f0	movl	-16(%ebp), %esi
      391:	39 f2	cmpl	%esi, %edx

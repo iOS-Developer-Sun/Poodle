@@ -1,8 +1,8 @@
 Release i386
 00000009 t ______PDL_THREAD_FAKE_END_____
-00000374 T _pdl_thread_frames
+00000380 T _pdl_thread_frames
     start:                0x9 ______PDL_THREAD_FAKE_END_____
-    length:               0x16d
+    length:               0x173
 i386/pdl_thread.o:
 (__TEXT,__text) section
 ______PDL_THREAD_FAKE_END_____:
@@ -14,134 +14,138 @@ ______PDL_THREAD_FAKE_END_____:
        f:	83 ec 1c	subl	$28, %esp
       12:	e8 00 00 00 00	calll	0x17
       17:	58	popl	%eax
-      18:	8b 7d 18	movl	24(%ebp), %edi
-      1b:	8b 5d 0c	movl	12(%ebp), %ebx
-      1e:	8b 88 d7 16 00 00	movl	5870-23(%eax), %ecx
-      24:	31 c0	xorl	%eax, %eax
-      26:	40	incl	%eax
-      27:	85 db	testl	%ebx, %ebx
-      29:	0f 45 c3	cmovnel	%ebx, %eax
-      2c:	31 d2	xorl	%edx, %edx
-      2e:	85 ff	testl	%edi, %edi
-      30:	0f 9f c2	setg	%dl
-      33:	89 55 dc	movl	%edx, -36(%ebp)
-      36:	01 d0	addl	%edx, %eax
-      38:	89 fe	movl	%edi, %esi
-      3a:	f7 de	negl	%esi
-      3c:	0f 4c f7	cmovll	%edi, %esi
-      3f:	89 75 ec	movl	%esi, -20(%ebp)
-      42:	89 4d d8	movl	%ecx, -40(%ebp)
-      45:	8b 09	movl	_pdl_thread_execute(%ecx), %ecx
-      47:	89 4d f0	movl	%ecx, -16(%ebp)
-      4a:	c1 e0 04	shll	$4, %eax
-      4d:	83 c8 08	orl	$8, %eax
-      50:	83 c0 0f	addl	$15, %eax
-      53:	83 e0 f0	andl	$-16, %eax
-      56:	8b 7d 08	movl	8(%ebp), %edi
-      59:	89 e1	movl	%esp, %ecx
-      5b:	89 ce	movl	%ecx, %esi
-      5d:	29 c6	subl	%eax, %esi
-      5f:	89 f4	movl	%esi, %esp
-      61:	f7 d8	negl	%eax
-      63:	8d 44 01 08	leal	8(%ecx,%eax), %eax
-      67:	89 45 e0	movl	%eax, -32(%ebp)
-      6a:	83 ec 0c	subl	$12, %esp
-      6d:	31 c0	xorl	%eax, %eax
-      6f:	50	pushl	%eax
-      70:	e8 68 02 00 00	calll	_pdl_builtin_return_address
-      75:	83 c4 10	addl	$16, %esp
-      78:	89 45 e4	movl	%eax, -28(%ebp)
-      7b:	83 ec 0c	subl	$12, %esp
-      7e:	31 c0	xorl	%eax, %eax
-      80:	50	pushl	%eax
-      81:	e8 3e 02 00 00	calll	_pdl_builtin_frame_address
-      86:	31 d2	xorl	%edx, %edx
-      88:	83 c4 10	addl	$16, %esp
-      8b:	89 45 e8	movl	%eax, -24(%ebp)
-      8e:	8b 4d e4	movl	-28(%ebp), %ecx
-      91:	85 c0	testl	%eax, %eax
-      93:	74 1c	je	0xb1
-      95:	85 c9	testl	%ecx, %ecx
-      97:	74 18	je	0xb1
-      99:	42	incl	%edx
-      9a:	8b 00	movl	_pdl_thread_execute(%eax), %eax
-      9c:	85 c0	testl	%eax, %eax
-      9e:	74 05	je	0xa5
-      a0:	8b 48 04	movl	4(%eax), %ecx
-      a3:	eb 02	jmp	0xa7
-      a5:	31 c9	xorl	%ecx, %ecx
-      a7:	81 fa 00 00 00 80	cmpl	$2147483648, %edx
-      ad:	75 e2	jne	0x91
-      af:	eb 07	jmp	0xb8
-      b1:	31 c0	xorl	%eax, %eax
-      b3:	3b 55 ec	cmpl	-20(%ebp), %edx
-      b6:	7c 26	jl	0xde
-      b8:	8b 45 ec	movl	-20(%ebp), %eax
-      bb:	03 45 dc	addl	-36(%ebp), %eax
-      be:	89 45 ec	movl	%eax, -20(%ebp)
-      c1:	83 ec 0c	subl	$12, %esp
-      c4:	50	pushl	%eax
-      c5:	e8 fa 01 00 00	calll	_pdl_builtin_frame_address
-      ca:	83 c4 10	addl	$16, %esp
-      cd:	89 45 e8	movl	%eax, -24(%ebp)
-      d0:	83 ec 0c	subl	$12, %esp
-      d3:	ff 75 ec	pushl	-20(%ebp)
-      d6:	e8 02 02 00 00	calll	_pdl_builtin_return_address
-      db:	83 c4 10	addl	$16, %esp
-      de:	85 db	testl	%ebx, %ebx
-      e0:	74 40	je	0x122
-      e2:	83 c6 18	addl	$24, %esi
-      e5:	8b 55 18	movl	24(%ebp), %edx
-      e8:	83 fb 01	cmpl	$1, %ebx
-      eb:	75 17	jne	0x104
-      ed:	85 d2	testl	%edx, %edx
-      ef:	7e 1d	jle	0x10e
-      f1:	89 76 f0	movl	%esi, -16(%esi)
-      f4:	8b 4d e4	movl	-28(%ebp), %ecx
-      f7:	89 4e f4	movl	%ecx, -12(%esi)
-      fa:	8b 4d e8	movl	-24(%ebp), %ecx
-      fd:	89 0e	movl	%ecx, _pdl_thread_execute(%esi)
-      ff:	89 46 04	movl	%eax, 4(%esi)
-     102:	eb 13	jmp	0x117
-     104:	89 76 f0	movl	%esi, -16(%esi)
-     107:	8b 0f	movl	_pdl_thread_execute(%edi), %ecx
-     109:	89 4e f4	movl	%ecx, -12(%esi)
-     10c:	eb 09	jmp	0x117
-     10e:	8b 4d e8	movl	-24(%ebp), %ecx
-     111:	89 4e f0	movl	%ecx, -16(%esi)
-     114:	89 46 f4	movl	%eax, -12(%esi)
-     117:	83 c7 04	addl	$4, %edi
-     11a:	83 c6 10	addl	$16, %esi
-     11d:	4b	decl	%ebx
-     11e:	75 c8	jne	0xe8
-     120:	eb 29	jmp	0x14b
-     122:	83 7d 18 00	cmpl	$0, 24(%ebp)
-     126:	7e 13	jle	0x13b
-     128:	8d 4e 18	leal	24(%esi), %ecx
-     12b:	89 4e 08	movl	%ecx, 8(%esi)
-     12e:	8b 55 e4	movl	-28(%ebp), %edx
-     131:	89 56 0c	movl	%edx, 12(%esi)
-     134:	ba 07 00 00 00	movl	$7, %edx
-     139:	eb 08	jmp	0x143
-     13b:	ba 03 00 00 00	movl	$3, %edx
-     140:	8b 4d e0	movl	-32(%ebp), %ecx
-     143:	8b 7d e8	movl	-24(%ebp), %edi
-     146:	89 39	movl	%edi, _pdl_thread_execute(%ecx)
-     148:	89 04 96	movl	%eax, _pdl_thread_execute(%esi,%edx,4)
-     14b:	83 ec 04	subl	$4, %esp
-     14e:	ff 75 14	pushl	20(%ebp)
-     151:	ff 75 10	pushl	16(%ebp)
-     154:	ff 75 e0	pushl	-32(%ebp)
-     157:	e8 a4 fe ff ff	calll	______PDL_THREAD_FAKE_BEGIN_____
-     15c:	83 c4 10	addl	$16, %esp
-     15f:	8b 4d d8	movl	-40(%ebp), %ecx
-     162:	8b 09	movl	_pdl_thread_execute(%ecx), %ecx
-     164:	3b 4d f0	cmpl	-16(%ebp), %ecx
-     167:	75 08	jne	0x171
-     169:	8d 65 f4	leal	-12(%ebp), %esp
-     16c:	5e	popl	%esi
-     16d:	5f	popl	%edi
-     16e:	5b	popl	%ebx
-     16f:	5d	popl	%ebp
-     170:	c3	retl
-     171:	e8 8a fe ff ff	calll	___stack_chk_fail
+      18:	8b 55 18	movl	24(%ebp), %edx
+      1b:	8b 75 0c	movl	12(%ebp), %esi
+      1e:	8b 80 ae 17 00 00	movl	6085-23(%eax), %eax
+      24:	89 45 d8	movl	%eax, -40(%ebp)
+      27:	8b 00	movl	_pdl_thread_execute(%eax), %eax
+      29:	31 c9	xorl	%ecx, %ecx
+      2b:	41	incl	%ecx
+      2c:	85 f6	testl	%esi, %esi
+      2e:	0f 45 ce	cmovnel	%esi, %ecx
+      31:	89 45 f0	movl	%eax, -16(%ebp)
+      34:	31 c0	xorl	%eax, %eax
+      36:	85 d2	testl	%edx, %edx
+      38:	0f 9f c0	setg	%al
+      3b:	89 45 e0	movl	%eax, -32(%ebp)
+      3e:	01 c1	addl	%eax, %ecx
+      40:	89 d0	movl	%edx, %eax
+      42:	f7 d8	negl	%eax
+      44:	0f 4c c2	cmovll	%edx, %eax
+      47:	89 45 dc	movl	%eax, -36(%ebp)
+      4a:	c1 e1 04	shll	$4, %ecx
+      4d:	b8 08 00 00 00	movl	$8, %eax
+      52:	09 c1	orl	%eax, %ecx
+      54:	83 c1 0f	addl	$15, %ecx
+      57:	83 e1 f0	andl	$-16, %ecx
+      5a:	8b 7d 08	movl	8(%ebp), %edi
+      5d:	89 e6	movl	%esp, %esi
+      5f:	29 ce	subl	%ecx, %esi
+      61:	89 f4	movl	%esi, %esp
+      63:	01 f0	addl	%esi, %eax
+      65:	89 45 e8	movl	%eax, -24(%ebp)
+      68:	83 ec 0c	subl	$12, %esp
+      6b:	31 c0	xorl	%eax, %eax
+      6d:	50	pushl	%eax
+      6e:	e8 7d 02 00 00	calll	_pdl_builtin_return_address
+      73:	83 c4 10	addl	$16, %esp
+      76:	89 c3	movl	%eax, %ebx
+      78:	83 ec 0c	subl	$12, %esp
+      7b:	31 c0	xorl	%eax, %eax
+      7d:	50	pushl	%eax
+      7e:	e8 54 02 00 00	calll	_pdl_builtin_frame_address
+      83:	83 c4 10	addl	$16, %esp
+      86:	31 c9	xorl	%ecx, %ecx
+      88:	49	decl	%ecx
+      89:	89 45 ec	movl	%eax, -20(%ebp)
+      8c:	89 c2	movl	%eax, %edx
+      8e:	89 5d e4	movl	%ebx, -28(%ebp)
+      91:	31 c0	xorl	%eax, %eax
+      93:	85 d2	testl	%edx, %edx
+      95:	74 1d	je	0xb4
+      97:	85 db	testl	%ebx, %ebx
+      99:	74 19	je	0xb4
+      9b:	8b 12	movl	_pdl_thread_execute(%edx), %edx
+      9d:	85 d2	testl	%edx, %edx
+      9f:	bb 00 00 00 00	movl	$_pdl_thread_execute, %ebx
+      a4:	74 03	je	0xa9
+      a6:	8b 5a 04	movl	4(%edx), %ebx
+      a9:	49	decl	%ecx
+      aa:	81 f9 ff ff ff 7f	cmpl	$2147483647, %ecx
+      b0:	75 e1	jne	0x93
+      b2:	eb 29	jmp	0xdd
+      b4:	f7 d9	negl	%ecx
+      b6:	31 c0	xorl	%eax, %eax
+      b8:	8b 5d dc	movl	-36(%ebp), %ebx
+      bb:	39 d9	cmpl	%ebx, %ecx
+      bd:	7e 1e	jle	0xdd
+      bf:	03 5d e0	addl	-32(%ebp), %ebx
+      c2:	83 ec 0c	subl	$12, %esp
+      c5:	53	pushl	%ebx
+      c6:	e8 0c 02 00 00	calll	_pdl_builtin_frame_address
+      cb:	83 c4 10	addl	$16, %esp
+      ce:	89 45 ec	movl	%eax, -20(%ebp)
+      d1:	83 ec 0c	subl	$12, %esp
+      d4:	53	pushl	%ebx
+      d5:	e8 16 02 00 00	calll	_pdl_builtin_return_address
+      da:	83 c4 10	addl	$16, %esp
+      dd:	8b 4d 0c	movl	12(%ebp), %ecx
+      e0:	85 c9	testl	%ecx, %ecx
+      e2:	74 44	je	0x128
+      e4:	83 c6 18	addl	$24, %esi
+      e7:	8b 55 18	movl	24(%ebp), %edx
+      ea:	83 f9 01	cmpl	$1, %ecx
+      ed:	75 17	jne	0x106
+      ef:	85 d2	testl	%edx, %edx
+      f1:	7e 21	jle	0x114
+      f3:	89 76 f0	movl	%esi, -16(%esi)
+      f6:	8b 5d e4	movl	-28(%ebp), %ebx
+      f9:	89 5e f4	movl	%ebx, -12(%esi)
+      fc:	8b 5d ec	movl	-20(%ebp), %ebx
+      ff:	89 1e	movl	%ebx, _pdl_thread_execute(%esi)
+     101:	89 46 04	movl	%eax, 4(%esi)
+     104:	eb 17	jmp	0x11d
+     106:	89 76 f0	movl	%esi, -16(%esi)
+     109:	89 cb	movl	%ecx, %ebx
+     10b:	8b 0f	movl	_pdl_thread_execute(%edi), %ecx
+     10d:	89 4e f4	movl	%ecx, -12(%esi)
+     110:	89 d9	movl	%ebx, %ecx
+     112:	eb 09	jmp	0x11d
+     114:	8b 5d ec	movl	-20(%ebp), %ebx
+     117:	89 5e f0	movl	%ebx, -16(%esi)
+     11a:	89 46 f4	movl	%eax, -12(%esi)
+     11d:	83 c7 04	addl	$4, %edi
+     120:	83 c6 10	addl	$16, %esi
+     123:	49	decl	%ecx
+     124:	75 c4	jne	0xea
+     126:	eb 29	jmp	0x151
+     128:	83 7d 18 00	cmpl	$0, 24(%ebp)
+     12c:	7e 13	jle	0x141
+     12e:	8d 4e 18	leal	24(%esi), %ecx
+     131:	89 4e 08	movl	%ecx, 8(%esi)
+     134:	8b 55 e4	movl	-28(%ebp), %edx
+     137:	89 56 0c	movl	%edx, 12(%esi)
+     13a:	ba 07 00 00 00	movl	$7, %edx
+     13f:	eb 08	jmp	0x149
+     141:	ba 03 00 00 00	movl	$3, %edx
+     146:	8b 4d e8	movl	-24(%ebp), %ecx
+     149:	8b 7d ec	movl	-20(%ebp), %edi
+     14c:	89 39	movl	%edi, _pdl_thread_execute(%ecx)
+     14e:	89 04 96	movl	%eax, _pdl_thread_execute(%esi,%edx,4)
+     151:	83 ec 04	subl	$4, %esp
+     154:	ff 75 14	pushl	20(%ebp)
+     157:	ff 75 10	pushl	16(%ebp)
+     15a:	ff 75 e8	pushl	-24(%ebp)
+     15d:	e8 9e fe ff ff	calll	______PDL_THREAD_FAKE_BEGIN_____
+     162:	83 c4 10	addl	$16, %esp
+     165:	8b 4d d8	movl	-40(%ebp), %ecx
+     168:	8b 09	movl	_pdl_thread_execute(%ecx), %ecx
+     16a:	3b 4d f0	cmpl	-16(%ebp), %ecx
+     16d:	75 08	jne	0x177
+     16f:	8d 65 f4	leal	-12(%ebp), %esp
+     172:	5e	popl	%esi
+     173:	5f	popl	%edi
+     174:	5b	popl	%ebx
+     175:	5d	popl	%ebp
+     176:	c3	retl
+     177:	e8 84 fe ff ff	calll	___stack_chk_fail

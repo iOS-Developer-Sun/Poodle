@@ -24,25 +24,25 @@
 #ifdef DEBUG
 
 #if defined(__i386__)
-#define pdl_thread_fake_end_size 830
+#define pdl_thread_fake_end_size 830 // 0x33e
 #elif defined(__x86_64__)
-#define pdl_thread_fake_end_size 942
+#define pdl_thread_fake_end_size 942 // 0x3ae
 #elif defined(__arm__)
-#define pdl_thread_fake_end_size 864
+#define pdl_thread_fake_end_size 864 // 0x360
 #elif defined(__arm64__)
-#define pdl_thread_fake_end_size 1200
+#define pdl_thread_fake_end_size 992 // 0x3e0
 #endif
 
 #else
 
 #if defined(__i386__)
-#define pdl_thread_fake_end_size 365
+#define pdl_thread_fake_end_size 371 // 0x173
 #elif defined(__x86_64__)
-#define pdl_thread_fake_end_size 378
+#define pdl_thread_fake_end_size 404 // 0x194
 #elif defined(__arm__)
-#define pdl_thread_fake_end_size 356
+#define pdl_thread_fake_end_size 366 // 0x16e
 #elif defined(__arm64__)
-#define pdl_thread_fake_end_size 456
+#define pdl_thread_fake_end_size 460 // 0x1cc
 #endif
 
 #endif
