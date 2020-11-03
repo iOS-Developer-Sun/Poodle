@@ -46,7 +46,7 @@ static void *PDLBacktraceRecorderMain(void *data) {
 }
 
 - (void)main {
-#if defined(__x86_64__) || defined(__x86_64__)
+#if defined(__x86_64__) || defined(__arm64__)
     [NSThread currentThread].name = NSStringFromClass(self.class);
     while (!self.invalidated) {
         [self tick];
@@ -64,14 +64,14 @@ static void *PDLBacktraceRecorderMain(void *data) {
 
     void *frames[128 + 1] = {0};
     unsigned int frames_count = 0;
-    void *fp = NULL;
-    void *lr = NULL;
-    void *pc = NULL;
+    __unused void *fp = NULL;
+    __unused void *lr = NULL;
+    __unused void *pc = NULL;
 
     mach_port_t thread = self.thread;
     thread_suspend(thread);
 
-#if defined(__x86_64__) || defined(__x86_64__)
+#if defined(__x86_64__) || defined(__arm64__)
 
     _STRUCT_MCONTEXT machine_context = {0};
 #ifdef __x86_64__
