@@ -46,11 +46,13 @@ static void *PDLBacktraceRecorderMain(void *data) {
 }
 
 - (void)main {
+#if defined(__x86_64__) || defined(__x86_64__)
     [NSThread currentThread].name = NSStringFromClass(self.class);
     while (!self.invalidated) {
         [self tick];
         usleep(1000 * 1000 / 60 / 2);
     }
+#endif
 }
 
 - (void)tick {
@@ -69,19 +71,35 @@ static void *PDLBacktraceRecorderMain(void *data) {
     mach_port_t thread = self.thread;
     thread_suspend(thread);
 
-//#ifdef __arm64__
-//    _STRUCT_MCONTEXT machine_context = {0};
-//    mach_msg_type_number_t state_count = ARM_THREAD_STATE64_COUNT;
-//    kern_return_t kr = thread_get_state(self.thread, ARM_THREAD_STATE64, (thread_state_t)&(machine_context.__ss), &state_count);
-//    if (kr == KERN_SUCCESS) {
-//        fp = (void *)machine_context.__ss.__fp;
-//        lr = (void *)machine_context.__ss.__lr;
-//        pc = (void *)machine_context.__ss.__pc;
-//    }
-//    void *fp_lr[2] = {fp, lr};
-//    void *frame_pointer = &fp_lr;
-//    frames_count = pdl_thread_frames(pc, frame_pointer, frames, sizeof(frames) / sizeof(frames[0]) - 1);
-//#endif
+#if defined(__x86_64__) || defined(__x86_64__)
+
+    _STRUCT_MCONTEXT machine_context = {0};
+#ifdef __x86_64__
+    thread_state_flavor_t flavor = x86_THREAD_STATE64;
+    mach_msg_type_number_t state_count = x86_THREAD_STATE64_COUNT;
+#endif
+#ifdef __arm64__
+    thread_state_flavor_t flavor = ARM_THREAD_STATE64;
+    mach_msg_type_number_t state_count = ARM_THREAD_STATE64_COUNT;
+#endif
+    kern_return_t kr = thread_get_state(thread, flavor, (thread_state_t)&(machine_context.__ss), &state_count);
+    if (kr == KERN_SUCCESS) {
+#ifdef __x86_64__
+        fp = (void *)machine_context.__ss.__rbp;
+        lr = ((void **)machine_context.__ss.__rsp)[0];
+        pc = (void *)machine_context.__ss.__rip;
+#endif
+#ifdef __arm64__
+        fp = (void *)machine_context.__ss.__fp;
+        lr = (void *)machine_context.__ss.__lr;
+        pc = (void *)machine_context.__ss.__pc;
+#endif
+    }
+    void *fp_lr[2] = {fp, lr};
+    void *frame_pointer = &fp_lr;
+    frames_count = pdl_thread_frames(pc, frame_pointer, frames, sizeof(frames) / sizeof(frames[0]) - 1);
+
+#endif
 
     thread_resume(thread);
 

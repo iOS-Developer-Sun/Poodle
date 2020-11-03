@@ -1,8 +1,8 @@
 Debug arm64
 0000000000000076 t ______PDL_THREAD_FAKE_END_____
-0000000000001276 T _pdl_thread_frames
+0000000000001068 T _pdl_thread_frames
     start:                0x4c ______PDL_THREAD_FAKE_END_____
-    length:               0x4b0
+    length:               0x3e0
 arm64/pdl_thread.o:
 (__TEXT,__text) section
 ______PDL_THREAD_FAKE_END_____:
@@ -12,104 +12,104 @@ ______PDL_THREAD_FAKE_END_____:
       58:	08 00 00 90	adrp	x8, ___stack_chk_guard@GOTPAGE
       5c:	08 01 40 f9	ldr	x8, [x8, ___stack_chk_guard@GOTPAGEOFF]
       60:	08 01 40 f9	ldr	x8, [x8]
-      64:	09 00 00 90	adrp	x9, ___stack_chk_guard@GOTPAGE
-      68:	29 01 40 f9	ldr	x9, [x9, ___stack_chk_guard@GOTPAGEOFF]
-      6c:	29 01 40 f9	ldr	x9, [x9]
-      70:	a9 83 1f f8	stur	x9, [x29, #-8]
-      74:	a0 03 1f f8	stur	x0, [x29, #-16]
-      78:	a1 c3 1e b8	stur	w1, [x29, #-20]
-      7c:	a2 03 1e f8	stur	x2, [x29, #-32]
-      80:	a3 83 1d f8	stur	x3, [x29, #-40]
-      84:	a4 43 1d b8	stur	w4, [x29, #-44]
-      88:	aa 43 5d b8	ldur	w10, [x29, #-44]
-      8c:	aa 03 1d b8	stur	w10, [x29, #-48]
-      90:	aa c3 5e b8	ldur	w10, [x29, #-20]
-      94:	aa c3 1c b8	stur	w10, [x29, #-52]
-      98:	aa c3 5e b8	ldur	w10, [x29, #-20]
-      9c:	8a 00 00 35	cbnz	w10, 0xac
-      a0:	a8 c3 5c b8	ldur	w8, [x29, #-52]
-      a4:	08 05 00 11	add	w8, w8, #1
-      a8:	a8 c3 1c b8	stur	w8, [x29, #-52]
-      ac:	a8 03 5d b8	ldur	w8, [x29, #-48]
-      b0:	1f 01 00 71	cmp	w8, #0
-      b4:	e8 d7 9f 1a	cset	w8, gt
-      b8:	08 01 00 12	and	w8, w8, #0x1
-      bc:	a8 b3 1c 38	sturb	w8, [x29, #-53]
-      c0:	a8 b3 5c 38	ldurb	w8, [x29, #-53]
-      c4:	a8 00 00 36	tbz	w8, #0, 0xd8
-      c8:	a8 c3 5c b8	ldur	w8, [x29, #-52]
-      cc:	08 05 00 11	add	w8, w8, #1
-      d0:	a8 c3 1c b8	stur	w8, [x29, #-52]
-      d4:	05 00 00 14	b	0xe8
-      d8:	a8 03 5d b8	ldur	w8, [x29, #-48]
-      dc:	09 00 80 52	mov	w9, #0
-      e0:	28 01 08 4b	sub	w8, w9, w8
-      e4:	a8 03 1d b8	stur	w8, [x29, #-48]
-      e8:	48 00 80 52	mov	w8, #2
-      ec:	a8 43 1c b8	stur	w8, [x29, #-60]
-      f0:	a8 c3 5c b8	ldur	w8, [x29, #-52]
-      f4:	a9 43 5c b8	ldur	w9, [x29, #-60]
-      f8:	08 7d 09 1b	mul	w8, w8, w9
-      fc:	ea 03 08 aa	mov	x10, x8
-     100:	eb 03 00 91	mov	x11, sp
-     104:	ab 83 1b f8	stur	x11, [x29, #-72]
-     108:	4b f1 7d d3	lsl	x11, x10, #3
-     10c:	6b 3d 00 91	add	x11, x11, #15
-     110:	6b 7d 7c 92	and	x11, x11, #0xffffffff0
-     114:	ec 03 00 91	mov	x12, sp
-     118:	8b 01 0b eb	subs	x11, x12, x11
-     11c:	7f 01 00 91	mov	sp, x11
-     120:	aa 03 1b f8	stur	x10, [x29, #-80]
-     124:	ab 83 1a f8	stur	x11, [x29, #-88]
-     128:	08 00 80 52	mov	w8, #0
-     12c:	e0 03 08 aa	mov	x0, x8
+      64:	a8 83 1f f8	stur	x8, [x29, #-8]
+      68:	a0 03 1f f8	stur	x0, [x29, #-16]
+      6c:	a1 c3 1e b8	stur	w1, [x29, #-20]
+      70:	a2 03 1e f8	stur	x2, [x29, #-32]
+      74:	a3 83 1d f8	stur	x3, [x29, #-40]
+      78:	a4 43 1d b8	stur	w4, [x29, #-44]
+      7c:	a9 43 5d b8	ldur	w9, [x29, #-44]
+      80:	a9 03 1d b8	stur	w9, [x29, #-48]
+      84:	a9 c3 5e b8	ldur	w9, [x29, #-20]
+      88:	a9 c3 1c b8	stur	w9, [x29, #-52]
+      8c:	a9 c3 5e b8	ldur	w9, [x29, #-20]
+      90:	89 00 00 35	cbnz	w9, 0xa0
+      94:	a8 c3 5c b8	ldur	w8, [x29, #-52]
+      98:	08 05 00 11	add	w8, w8, #1
+      9c:	a8 c3 1c b8	stur	w8, [x29, #-52]
+      a0:	a8 03 5d b8	ldur	w8, [x29, #-48]
+      a4:	1f 01 00 71	cmp	w8, #0
+      a8:	e8 d7 9f 1a	cset	w8, gt
+      ac:	08 01 00 12	and	w8, w8, #0x1
+      b0:	a8 b3 1c 38	sturb	w8, [x29, #-53]
+      b4:	a8 b3 5c 38	ldurb	w8, [x29, #-53]
+      b8:	48 00 00 37	tbnz	w8, #0, 0xc0
+      bc:	05 00 00 14	b	0xd0
+      c0:	a8 c3 5c b8	ldur	w8, [x29, #-52]
+      c4:	08 05 00 11	add	w8, w8, #1
+      c8:	a8 c3 1c b8	stur	w8, [x29, #-52]
+      cc:	05 00 00 14	b	0xe0
+      d0:	a8 03 5d b8	ldur	w8, [x29, #-48]
+      d4:	09 00 80 52	mov	w9, #0
+      d8:	28 01 08 6b	subs	w8, w9, w8
+      dc:	a8 03 1d b8	stur	w8, [x29, #-48]
+      e0:	48 00 80 52	mov	w8, #2
+      e4:	a8 43 1c b8	stur	w8, [x29, #-60]
+      e8:	a8 c3 5c b8	ldur	w8, [x29, #-52]
+      ec:	a9 43 5c b8	ldur	w9, [x29, #-60]
+      f0:	08 7d 09 1b	mul	w8, w8, w9
+      f4:	ea 03 08 aa	mov	x10, x8
+      f8:	4a 7d 40 d3	ubfx	x10, x10, #0, #32
+      fc:	eb 03 00 91	mov	x11, sp
+     100:	ab 83 1b f8	stur	x11, [x29, #-72]
+     104:	4b f1 7d d3	lsl	x11, x10, #3
+     108:	6b 3d 00 91	add	x11, x11, #15
+     10c:	6b ed 7c 92	and	x11, x11, #0xfffffffffffffff0
+     110:	ec 03 00 91	mov	x12, sp
+     114:	8b 01 0b eb	subs	x11, x12, x11
+     118:	7f 01 00 91	mov	sp, x11
+     11c:	aa 03 1b f8	stur	x10, [x29, #-80]
+     120:	ab 83 1a f8	stur	x11, [x29, #-88]
+     124:	08 00 80 52	mov	w8, #0
+     128:	e0 03 08 aa	mov	x0, x8
+     12c:	a8 c3 15 b8	stur	w8, [x29, #-164]
      130:	00 00 00 94	bl	_pdl_builtin_return_address
      134:	a0 03 1a f8	stur	x0, [x29, #-96]
-     138:	08 00 80 52	mov	w8, #0
-     13c:	e0 03 08 aa	mov	x0, x8
-     140:	00 00 00 94	bl	_pdl_builtin_frame_address
-     144:	a0 83 19 f8	stur	x0, [x29, #-104]
-     148:	aa 03 5a f8	ldur	x10, [x29, #-96]
-     14c:	aa 03 19 f8	stur	x10, [x29, #-112]
-     150:	aa 83 59 f8	ldur	x10, [x29, #-104]
-     154:	aa 83 18 f8	stur	x10, [x29, #-120]
-     158:	aa 03 59 f8	ldur	x10, [x29, #-112]
-     15c:	a1 83 58 f8	ldur	x1, [x29, #-120]
-     160:	e0 03 0a aa	mov	x0, x10
-     164:	0a 00 80 d2	mov	x10, #0
-     168:	e2 03 0a aa	mov	x2, x10
-     16c:	03 00 b0 12	mov	w3, #2147483647
-     170:	00 00 00 94	bl	_pdl_thread_frames
-     174:	08 04 00 51	sub	w8, w0, #1
-     178:	a8 43 18 b8	stur	w8, [x29, #-124]
-     17c:	a8 43 58 b8	ldur	w8, [x29, #-124]
-     180:	a9 03 5d b8	ldur	w9, [x29, #-48]
-     184:	1f 01 09 6b	cmp	w8, w9
-     188:	8a 00 00 54	b.ge	0x198
-     18c:	08 00 80 d2	mov	x8, #0
-     190:	a8 03 19 f8	stur	x8, [x29, #-112]
-     194:	0e 00 00 14	b	0x1cc
-     198:	a8 03 5d b8	ldur	w8, [x29, #-48]
-     19c:	a8 03 18 b8	stur	w8, [x29, #-128]
-     1a0:	a8 b3 5c 38	ldurb	w8, [x29, #-53]
-     1a4:	88 00 00 36	tbz	w8, #0, 0x1b4
-     1a8:	a8 03 58 b8	ldur	w8, [x29, #-128]
-     1ac:	08 05 00 11	add	w8, w8, #1
-     1b0:	a8 03 18 b8	stur	w8, [x29, #-128]
-     1b4:	a0 03 58 b8	ldur	w0, [x29, #-128]
-     1b8:	00 00 00 94	bl	_pdl_builtin_frame_address
-     1bc:	a0 83 18 f8	stur	x0, [x29, #-120]
-     1c0:	a0 03 58 b8	ldur	w0, [x29, #-128]
-     1c4:	00 00 00 94	bl	_pdl_builtin_return_address
-     1c8:	a0 03 19 f8	stur	x0, [x29, #-112]
-     1cc:	a8 c3 5e b8	ldur	w8, [x29, #-20]
-     1d0:	1f 01 00 71	cmp	w8, #0
-     1d4:	89 0e 00 54	b.ls	0x3a4
+     138:	a0 c3 55 b8	ldur	w0, [x29, #-164]
+     13c:	00 00 00 94	bl	_pdl_builtin_frame_address
+     140:	a0 83 19 f8	stur	x0, [x29, #-104]
+     144:	aa 03 5a f8	ldur	x10, [x29, #-96]
+     148:	aa 03 19 f8	stur	x10, [x29, #-112]
+     14c:	aa 83 59 f8	ldur	x10, [x29, #-104]
+     150:	aa 83 18 f8	stur	x10, [x29, #-120]
+     154:	a0 03 59 f8	ldur	x0, [x29, #-112]
+     158:	a1 83 58 f8	ldur	x1, [x29, #-120]
+     15c:	0a 00 80 d2	mov	x10, #0
+     160:	e2 03 0a aa	mov	x2, x10
+     164:	03 00 b0 12	mov	w3, #2147483647
+     168:	00 00 00 94	bl	_pdl_thread_frames
+     16c:	08 04 00 71	subs	w8, w0, #1
+     170:	a8 43 18 b8	stur	w8, [x29, #-124]
+     174:	a8 43 58 b8	ldur	w8, [x29, #-124]
+     178:	a9 03 5d b8	ldur	w9, [x29, #-48]
+     17c:	1f 01 09 6b	cmp	w8, w9
+     180:	8a 00 00 54	b.ge	0x190
+     184:	08 00 80 d2	mov	x8, #0
+     188:	a8 03 19 f8	stur	x8, [x29, #-112]
+     18c:	0f 00 00 14	b	0x1c8
+     190:	a8 03 5d b8	ldur	w8, [x29, #-48]
+     194:	a8 03 18 b8	stur	w8, [x29, #-128]
+     198:	a8 b3 5c 38	ldurb	w8, [x29, #-53]
+     19c:	48 00 00 37	tbnz	w8, #0, 0x1a4
+     1a0:	04 00 00 14	b	0x1b0
+     1a4:	a8 03 58 b8	ldur	w8, [x29, #-128]
+     1a8:	08 05 00 11	add	w8, w8, #1
+     1ac:	a8 03 18 b8	stur	w8, [x29, #-128]
+     1b0:	a0 03 58 b8	ldur	w0, [x29, #-128]
+     1b4:	00 00 00 94	bl	_pdl_builtin_frame_address
+     1b8:	a0 83 18 f8	stur	x0, [x29, #-120]
+     1bc:	a0 03 58 b8	ldur	w0, [x29, #-128]
+     1c0:	00 00 00 94	bl	_pdl_builtin_return_address
+     1c4:	a0 03 19 f8	stur	x0, [x29, #-112]
+     1c8:	a8 c3 5e b8	ldur	w8, [x29, #-20]
+     1cc:	1f 01 00 71	cmp	w8, #0
+     1d0:	e8 87 9f 1a	cset	w8, ls
+     1d4:	a8 0a 00 37	tbnz	w8, #0, 0x328
      1d8:	bf c3 17 b8	stur	wzr, [x29, #-132]
      1dc:	a8 c3 57 b8	ldur	w8, [x29, #-132]
      1e0:	a9 c3 5e b8	ldur	w9, [x29, #-20]
      1e4:	1f 01 09 6b	cmp	w8, w9
-     1e8:	c2 0d 00 54	b.hs	0x3a0
+     1e8:	e2 09 00 54	b.hs	0x324
      1ec:	a8 c3 57 b8	ldur	w8, [x29, #-132]
      1f0:	a9 43 5c b8	ldur	w9, [x29, #-60]
      1f4:	08 7d 09 1b	mul	w8, w8, w9
@@ -121,188 +121,136 @@ ______PDL_THREAD_FAKE_END_____:
      20c:	a8 43 17 b8	stur	w8, [x29, #-140]
      210:	a8 c3 57 b8	ldur	w8, [x29, #-132]
      214:	a9 c3 5e b8	ldur	w9, [x29, #-20]
-     218:	29 05 00 51	sub	w9, w9, #1
+     218:	29 05 00 71	subs	w9, w9, #1
      21c:	1f 01 09 6b	cmp	w8, w9
-     220:	a0 03 00 54	b.eq	0x294
+     220:	60 02 00 54	b.eq	0x26c
      224:	a8 83 5a f8	ldur	x8, [x29, #-88]
      228:	a9 83 57 b8	ldur	w9, [x29, #-136]
      22c:	aa 43 5c b8	ldur	w10, [x29, #-60]
      230:	29 01 0a 0b	add	w9, w9, w10
-     234:	eb 03 09 aa	mov	x11, x9
-     238:	6b 7d 40 93	sxtw	x11, w11
-     23c:	0c 01 80 d2	mov	x12, #8
-     240:	6b 7d 0c 9b	mul	x11, x11, x12
-     244:	08 01 0b 8b	add	x8, x8, x11
-     248:	ab 83 5a f8	ldur	x11, [x29, #-88]
-     24c:	ac 83 97 b8	ldursw	x12, [x29, #-136]
-     250:	0d 01 80 d2	mov	x13, #8
-     254:	8c 7d 0d 9b	mul	x12, x12, x13
-     258:	6b 01 0c 8b	add	x11, x11, x12
-     25c:	68 01 00 f9	str	x8, [x11]
-     260:	a8 03 5f f8	ldur	x8, [x29, #-16]
-     264:	ab c3 97 b8	ldursw	x11, [x29, #-132]
-     268:	0c 01 80 d2	mov	x12, #8
-     26c:	6b 7d 0c 9b	mul	x11, x11, x12
-     270:	08 01 0b 8b	add	x8, x8, x11
-     274:	08 01 40 f9	ldr	x8, [x8]
-     278:	ab 83 5a f8	ldur	x11, [x29, #-88]
-     27c:	ac 43 97 b8	ldursw	x12, [x29, #-140]
-     280:	0d 01 80 d2	mov	x13, #8
-     284:	8c 7d 0d 9b	mul	x12, x12, x13
-     288:	6b 01 0c 8b	add	x11, x11, x12
-     28c:	68 01 00 f9	str	x8, [x11]
-     290:	3f 00 00 14	b	0x38c
-     294:	a8 b3 5c 38	ldurb	w8, [x29, #-53]
-     298:	c8 05 00 36	tbz	w8, #0, 0x350
-     29c:	a8 83 5a f8	ldur	x8, [x29, #-88]
-     2a0:	a9 83 57 b8	ldur	w9, [x29, #-136]
-     2a4:	aa 43 5c b8	ldur	w10, [x29, #-60]
-     2a8:	29 01 0a 0b	add	w9, w9, w10
-     2ac:	eb 03 09 aa	mov	x11, x9
-     2b0:	6b 7d 40 93	sxtw	x11, w11
-     2b4:	0c 01 80 d2	mov	x12, #8
-     2b8:	6b 7d 0c 9b	mul	x11, x11, x12
-     2bc:	08 01 0b 8b	add	x8, x8, x11
-     2c0:	ab 83 5a f8	ldur	x11, [x29, #-88]
-     2c4:	ac 83 97 b8	ldursw	x12, [x29, #-136]
-     2c8:	0d 01 80 d2	mov	x13, #8
-     2cc:	8c 7d 0d 9b	mul	x12, x12, x13
-     2d0:	6b 01 0c 8b	add	x11, x11, x12
-     2d4:	68 01 00 f9	str	x8, [x11]
-     2d8:	a8 03 5a f8	ldur	x8, [x29, #-96]
-     2dc:	ab 83 5a f8	ldur	x11, [x29, #-88]
-     2e0:	ac 43 97 b8	ldursw	x12, [x29, #-140]
-     2e4:	0d 01 80 d2	mov	x13, #8
-     2e8:	8c 7d 0d 9b	mul	x12, x12, x13
-     2ec:	6b 01 0c 8b	add	x11, x11, x12
-     2f0:	68 01 00 f9	str	x8, [x11]
-     2f4:	a8 83 58 f8	ldur	x8, [x29, #-120]
-     2f8:	ab 83 5a f8	ldur	x11, [x29, #-88]
-     2fc:	a9 83 57 b8	ldur	w9, [x29, #-136]
-     300:	aa 43 5c b8	ldur	w10, [x29, #-60]
-     304:	29 01 0a 0b	add	w9, w9, w10
-     308:	ec 03 09 aa	mov	x12, x9
-     30c:	8c 7d 40 93	sxtw	x12, w12
-     310:	0d 01 80 d2	mov	x13, #8
-     314:	8c 7d 0d 9b	mul	x12, x12, x13
-     318:	6b 01 0c 8b	add	x11, x11, x12
-     31c:	68 01 00 f9	str	x8, [x11]
-     320:	a8 03 59 f8	ldur	x8, [x29, #-112]
-     324:	ab 83 5a f8	ldur	x11, [x29, #-88]
-     328:	a9 43 57 b8	ldur	w9, [x29, #-140]
-     32c:	aa 43 5c b8	ldur	w10, [x29, #-60]
-     330:	29 01 0a 0b	add	w9, w9, w10
-     334:	ec 03 09 aa	mov	x12, x9
-     338:	8c 7d 40 93	sxtw	x12, w12
-     33c:	0d 01 80 d2	mov	x13, #8
-     340:	8c 7d 0d 9b	mul	x12, x12, x13
-     344:	6b 01 0c 8b	add	x11, x11, x12
-     348:	68 01 00 f9	str	x8, [x11]
-     34c:	0f 00 00 14	b	0x388
-     350:	a8 83 58 f8	ldur	x8, [x29, #-120]
-     354:	a9 83 5a f8	ldur	x9, [x29, #-88]
-     358:	aa 83 97 b8	ldursw	x10, [x29, #-136]
-     35c:	0b 01 80 d2	mov	x11, #8
-     360:	4a 7d 0b 9b	mul	x10, x10, x11
-     364:	29 01 0a 8b	add	x9, x9, x10
-     368:	28 01 00 f9	str	x8, [x9]
-     36c:	a8 03 59 f8	ldur	x8, [x29, #-112]
-     370:	a9 83 5a f8	ldur	x9, [x29, #-88]
-     374:	aa 43 97 b8	ldursw	x10, [x29, #-140]
-     378:	0b 01 80 d2	mov	x11, #8
-     37c:	4a 7d 0b 9b	mul	x10, x10, x11
-     380:	29 01 0a 8b	add	x9, x9, x10
-     384:	28 01 00 f9	str	x8, [x9]
-     388:	01 00 00 14	b	0x38c
-     38c:	01 00 00 14	b	0x390
-     390:	a8 c3 57 b8	ldur	w8, [x29, #-132]
-     394:	08 05 00 11	add	w8, w8, #1
-     398:	a8 c3 17 b8	stur	w8, [x29, #-132]
-     39c:	90 ff ff 17	b	0x1dc
-     3a0:	42 00 00 14	b	0x4a8
-     3a4:	bf 03 17 b8	stur	wzr, [x29, #-144]
-     3a8:	28 00 80 52	mov	w8, #1
-     3ac:	a8 c3 16 b8	stur	w8, [x29, #-148]
-     3b0:	a8 b3 5c 38	ldurb	w8, [x29, #-53]
-     3b4:	c8 05 00 36	tbz	w8, #0, 0x46c
-     3b8:	a8 83 5a f8	ldur	x8, [x29, #-88]
-     3bc:	a9 03 57 b8	ldur	w9, [x29, #-144]
-     3c0:	aa 43 5c b8	ldur	w10, [x29, #-60]
-     3c4:	29 01 0a 0b	add	w9, w9, w10
-     3c8:	eb 03 09 aa	mov	x11, x9
-     3cc:	6b 7d 40 93	sxtw	x11, w11
-     3d0:	0c 01 80 d2	mov	x12, #8
-     3d4:	6b 7d 0c 9b	mul	x11, x11, x12
-     3d8:	08 01 0b 8b	add	x8, x8, x11
-     3dc:	ab 83 5a f8	ldur	x11, [x29, #-88]
-     3e0:	ac 03 97 b8	ldursw	x12, [x29, #-144]
-     3e4:	0d 01 80 d2	mov	x13, #8
-     3e8:	8c 7d 0d 9b	mul	x12, x12, x13
-     3ec:	6b 01 0c 8b	add	x11, x11, x12
-     3f0:	68 01 00 f9	str	x8, [x11]
-     3f4:	a8 03 5a f8	ldur	x8, [x29, #-96]
-     3f8:	ab 83 5a f8	ldur	x11, [x29, #-88]
-     3fc:	ac c3 96 b8	ldursw	x12, [x29, #-148]
-     400:	0d 01 80 d2	mov	x13, #8
-     404:	8c 7d 0d 9b	mul	x12, x12, x13
-     408:	6b 01 0c 8b	add	x11, x11, x12
-     40c:	68 01 00 f9	str	x8, [x11]
-     410:	a8 83 58 f8	ldur	x8, [x29, #-120]
-     414:	ab 83 5a f8	ldur	x11, [x29, #-88]
-     418:	a9 03 57 b8	ldur	w9, [x29, #-144]
-     41c:	aa 43 5c b8	ldur	w10, [x29, #-60]
-     420:	29 01 0a 0b	add	w9, w9, w10
-     424:	ec 03 09 aa	mov	x12, x9
-     428:	8c 7d 40 93	sxtw	x12, w12
-     42c:	0d 01 80 d2	mov	x13, #8
-     430:	8c 7d 0d 9b	mul	x12, x12, x13
-     434:	6b 01 0c 8b	add	x11, x11, x12
-     438:	68 01 00 f9	str	x8, [x11]
-     43c:	a8 03 59 f8	ldur	x8, [x29, #-112]
-     440:	ab 83 5a f8	ldur	x11, [x29, #-88]
-     444:	a9 c3 56 b8	ldur	w9, [x29, #-148]
-     448:	aa 43 5c b8	ldur	w10, [x29, #-60]
-     44c:	29 01 0a 0b	add	w9, w9, w10
-     450:	ec 03 09 aa	mov	x12, x9
-     454:	8c 7d 40 93	sxtw	x12, w12
-     458:	0d 01 80 d2	mov	x13, #8
-     45c:	8c 7d 0d 9b	mul	x12, x12, x13
-     460:	6b 01 0c 8b	add	x11, x11, x12
-     464:	68 01 00 f9	str	x8, [x11]
-     468:	0f 00 00 14	b	0x4a4
-     46c:	a8 83 58 f8	ldur	x8, [x29, #-120]
-     470:	a9 83 5a f8	ldur	x9, [x29, #-88]
-     474:	aa 03 97 b8	ldursw	x10, [x29, #-144]
-     478:	0b 01 80 d2	mov	x11, #8
-     47c:	4a 7d 0b 9b	mul	x10, x10, x11
-     480:	29 01 0a 8b	add	x9, x9, x10
-     484:	28 01 00 f9	str	x8, [x9]
-     488:	a8 03 59 f8	ldur	x8, [x29, #-112]
-     48c:	a9 83 5a f8	ldur	x9, [x29, #-88]
-     490:	aa c3 96 b8	ldursw	x10, [x29, #-148]
-     494:	0b 01 80 d2	mov	x11, #8
-     498:	4a 7d 0b 9b	mul	x10, x10, x11
-     49c:	29 01 0a 8b	add	x9, x9, x10
-     4a0:	28 01 00 f9	str	x8, [x9]
-     4a4:	01 00 00 14	b	0x4a8
-     4a8:	a0 83 5a f8	ldur	x0, [x29, #-88]
-     4ac:	a1 03 5e f8	ldur	x1, [x29, #-32]
-     4b0:	a2 83 5d f8	ldur	x2, [x29, #-40]
-     4b4:	00 00 00 94	bl	______PDL_THREAD_FAKE_BEGIN_____
-     4b8:	a0 03 16 f8	stur	x0, [x29, #-160]
-     4bc:	a0 03 56 f8	ldur	x0, [x29, #-160]
-     4c0:	a8 83 5b f8	ldur	x8, [x29, #-72]
-     4c4:	1f 01 00 91	mov	sp, x8
-     4c8:	08 00 00 90	adrp	x8, ___stack_chk_guard@GOTPAGE
-     4cc:	08 01 40 f9	ldr	x8, [x8, ___stack_chk_guard@GOTPAGEOFF]
-     4d0:	08 01 40 f9	ldr	x8, [x8]
-     4d4:	a9 83 5f f8	ldur	x9, [x29, #-8]
-     4d8:	1f 01 09 eb	cmp	x8, x9
-     4dc:	a0 83 15 f8	stur	x0, [x29, #-168]
-     4e0:	a1 00 00 54	b.ne	0x4f4
-     4e4:	a0 83 55 f8	ldur	x0, [x29, #-168]
-     4e8:	bf 03 00 91	mov	sp, x29
-     4ec:	fd 7b c1 a8	ldp	x29, x30, [sp], #16
-     4f0:	c0 03 5f d6	ret
-     4f4:	00 00 00 94	bl	___stack_chk_fail
-     4f8:	20 00 20 d4	brk	#0x1
+     234:	08 cd 29 8b	add	x8, x8, w9, sxtw #3
+     238:	ab 83 5a f8	ldur	x11, [x29, #-88]
+     23c:	ac 83 97 b8	ldursw	x12, [x29, #-136]
+     240:	6b 0d 0c 8b	add	x11, x11, x12, lsl #3
+     244:	68 01 00 f9	str	x8, [x11]
+     248:	a8 03 5f f8	ldur	x8, [x29, #-16]
+     24c:	ab c3 97 b8	ldursw	x11, [x29, #-132]
+     250:	08 0d 0b 8b	add	x8, x8, x11, lsl #3
+     254:	08 01 40 f9	ldr	x8, [x8]
+     258:	ab 83 5a f8	ldur	x11, [x29, #-88]
+     25c:	ac 43 97 b8	ldursw	x12, [x29, #-140]
+     260:	6b 0d 0c 8b	add	x11, x11, x12, lsl #3
+     264:	68 01 00 f9	str	x8, [x11]
+     268:	2b 00 00 14	b	0x314
+     26c:	a8 b3 5c 38	ldurb	w8, [x29, #-53]
+     270:	48 00 00 37	tbnz	w8, #0, 0x278
+     274:	1e 00 00 14	b	0x2ec
+     278:	a8 83 5a f8	ldur	x8, [x29, #-88]
+     27c:	a9 83 57 b8	ldur	w9, [x29, #-136]
+     280:	aa 43 5c b8	ldur	w10, [x29, #-60]
+     284:	29 01 0a 0b	add	w9, w9, w10
+     288:	08 cd 29 8b	add	x8, x8, w9, sxtw #3
+     28c:	ab 83 5a f8	ldur	x11, [x29, #-88]
+     290:	ac 83 97 b8	ldursw	x12, [x29, #-136]
+     294:	6b 0d 0c 8b	add	x11, x11, x12, lsl #3
+     298:	68 01 00 f9	str	x8, [x11]
+     29c:	a8 03 5a f8	ldur	x8, [x29, #-96]
+     2a0:	ab 83 5a f8	ldur	x11, [x29, #-88]
+     2a4:	ac 43 97 b8	ldursw	x12, [x29, #-140]
+     2a8:	6b 0d 0c 8b	add	x11, x11, x12, lsl #3
+     2ac:	68 01 00 f9	str	x8, [x11]
+     2b0:	a8 83 58 f8	ldur	x8, [x29, #-120]
+     2b4:	ab 83 5a f8	ldur	x11, [x29, #-88]
+     2b8:	a9 83 57 b8	ldur	w9, [x29, #-136]
+     2bc:	aa 43 5c b8	ldur	w10, [x29, #-60]
+     2c0:	29 01 0a 0b	add	w9, w9, w10
+     2c4:	6b cd 29 8b	add	x11, x11, w9, sxtw #3
+     2c8:	68 01 00 f9	str	x8, [x11]
+     2cc:	a8 03 59 f8	ldur	x8, [x29, #-112]
+     2d0:	ab 83 5a f8	ldur	x11, [x29, #-88]
+     2d4:	a9 43 57 b8	ldur	w9, [x29, #-140]
+     2d8:	aa 43 5c b8	ldur	w10, [x29, #-60]
+     2dc:	29 01 0a 0b	add	w9, w9, w10
+     2e0:	6b cd 29 8b	add	x11, x11, w9, sxtw #3
+     2e4:	68 01 00 f9	str	x8, [x11]
+     2e8:	0b 00 00 14	b	0x314
+     2ec:	a8 83 58 f8	ldur	x8, [x29, #-120]
+     2f0:	a9 83 5a f8	ldur	x9, [x29, #-88]
+     2f4:	aa 83 97 b8	ldursw	x10, [x29, #-136]
+     2f8:	29 0d 0a 8b	add	x9, x9, x10, lsl #3
+     2fc:	28 01 00 f9	str	x8, [x9]
+     300:	a8 03 59 f8	ldur	x8, [x29, #-112]
+     304:	a9 83 5a f8	ldur	x9, [x29, #-88]
+     308:	aa 43 97 b8	ldursw	x10, [x29, #-140]
+     30c:	29 0d 0a 8b	add	x9, x9, x10, lsl #3
+     310:	28 01 00 f9	str	x8, [x9]
+     314:	a8 c3 57 b8	ldur	w8, [x29, #-132]
+     318:	08 05 00 11	add	w8, w8, #1
+     31c:	a8 c3 17 b8	stur	w8, [x29, #-132]
+     320:	af ff ff 17	b	0x1dc
+     324:	2e 00 00 14	b	0x3dc
+     328:	bf 03 17 b8	stur	wzr, [x29, #-144]
+     32c:	28 00 80 52	mov	w8, #1
+     330:	a8 c3 16 b8	stur	w8, [x29, #-148]
+     334:	a8 b3 5c 38	ldurb	w8, [x29, #-53]
+     338:	48 00 00 37	tbnz	w8, #0, 0x340
+     33c:	1e 00 00 14	b	0x3b4
+     340:	a8 83 5a f8	ldur	x8, [x29, #-88]
+     344:	a9 03 57 b8	ldur	w9, [x29, #-144]
+     348:	aa 43 5c b8	ldur	w10, [x29, #-60]
+     34c:	29 01 0a 0b	add	w9, w9, w10
+     350:	08 cd 29 8b	add	x8, x8, w9, sxtw #3
+     354:	ab 83 5a f8	ldur	x11, [x29, #-88]
+     358:	ac 03 97 b8	ldursw	x12, [x29, #-144]
+     35c:	6b 0d 0c 8b	add	x11, x11, x12, lsl #3
+     360:	68 01 00 f9	str	x8, [x11]
+     364:	a8 03 5a f8	ldur	x8, [x29, #-96]
+     368:	ab 83 5a f8	ldur	x11, [x29, #-88]
+     36c:	ac c3 96 b8	ldursw	x12, [x29, #-148]
+     370:	6b 0d 0c 8b	add	x11, x11, x12, lsl #3
+     374:	68 01 00 f9	str	x8, [x11]
+     378:	a8 83 58 f8	ldur	x8, [x29, #-120]
+     37c:	ab 83 5a f8	ldur	x11, [x29, #-88]
+     380:	a9 03 57 b8	ldur	w9, [x29, #-144]
+     384:	aa 43 5c b8	ldur	w10, [x29, #-60]
+     388:	29 01 0a 0b	add	w9, w9, w10
+     38c:	6b cd 29 8b	add	x11, x11, w9, sxtw #3
+     390:	68 01 00 f9	str	x8, [x11]
+     394:	a8 03 59 f8	ldur	x8, [x29, #-112]
+     398:	ab 83 5a f8	ldur	x11, [x29, #-88]
+     39c:	a9 c3 56 b8	ldur	w9, [x29, #-148]
+     3a0:	aa 43 5c b8	ldur	w10, [x29, #-60]
+     3a4:	29 01 0a 0b	add	w9, w9, w10
+     3a8:	6b cd 29 8b	add	x11, x11, w9, sxtw #3
+     3ac:	68 01 00 f9	str	x8, [x11]
+     3b0:	0b 00 00 14	b	0x3dc
+     3b4:	a8 83 58 f8	ldur	x8, [x29, #-120]
+     3b8:	a9 83 5a f8	ldur	x9, [x29, #-88]
+     3bc:	aa 03 97 b8	ldursw	x10, [x29, #-144]
+     3c0:	29 0d 0a 8b	add	x9, x9, x10, lsl #3
+     3c4:	28 01 00 f9	str	x8, [x9]
+     3c8:	a8 03 59 f8	ldur	x8, [x29, #-112]
+     3cc:	a9 83 5a f8	ldur	x9, [x29, #-88]
+     3d0:	aa c3 96 b8	ldursw	x10, [x29, #-148]
+     3d4:	29 0d 0a 8b	add	x9, x9, x10, lsl #3
+     3d8:	28 01 00 f9	str	x8, [x9]
+     3dc:	a0 83 5a f8	ldur	x0, [x29, #-88]
+     3e0:	a1 03 5e f8	ldur	x1, [x29, #-32]
+     3e4:	a2 83 5d f8	ldur	x2, [x29, #-40]
+     3e8:	00 00 00 94	bl	______PDL_THREAD_FAKE_BEGIN_____
+     3ec:	a0 03 16 f8	stur	x0, [x29, #-160]
+     3f0:	a0 03 56 f8	ldur	x0, [x29, #-160]
+     3f4:	a8 83 5b f8	ldur	x8, [x29, #-72]
+     3f8:	1f 01 00 91	mov	sp, x8
+     3fc:	08 00 00 90	adrp	x8, ___stack_chk_guard@GOTPAGE
+     400:	08 01 40 f9	ldr	x8, [x8, ___stack_chk_guard@GOTPAGEOFF]
+     404:	08 01 40 f9	ldr	x8, [x8]
+     408:	a9 83 5f f8	ldur	x9, [x29, #-8]
+     40c:	1f 01 09 eb	cmp	x8, x9
+     410:	a0 03 15 f8	stur	x0, [x29, #-176]
+     414:	a1 00 00 54	b.ne	0x428
+     418:	a0 03 55 f8	ldur	x0, [x29, #-176]
+     41c:	bf 03 00 91	mov	sp, x29
+     420:	fd 7b c1 a8	ldp	x29, x30, [sp], #16
+     424:	c0 03 5f d6	ret
+     428:	00 00 00 94	bl	___stack_chk_fail
