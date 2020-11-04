@@ -27,6 +27,10 @@
 		B83EFAE8250369CC00FDBA43 /* UIViewController+PDLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */; };
 		B83EFAF425036CDE00FDBA43 /* UIViewController+PDLStatusBar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83EFAE7250369CC00FDBA43 /* UIViewController+PDLStatusBar.h */; };
 		B83EFAF525036CE200FDBA43 /* UIViewController+PDLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */; };
+		B847222025524C5A00387EB4 /* PDLRunLoopObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528188255132CA00B74F87 /* PDLRunLoopObserver.m */; };
+		B847222125524C5A00387EB4 /* PDLRunLoopObserverLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528187255132CA00B74F87 /* PDLRunLoopObserverLoop.m */; };
+		B847227725524C6400387EB4 /* PDLRunLoopObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8528186255132CA00B74F87 /* PDLRunLoopObserver.h */; };
+		B847227825524C6400387EB4 /* PDLRunLoopObserverLoop.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8528189255132CA00B74F87 /* PDLRunLoopObserverLoop.h */; };
 		B8528191255132CA00B74F87 /* PDLRunLoopObserverLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528187255132CA00B74F87 /* PDLRunLoopObserverLoop.m */; };
 		B8528192255132CA00B74F87 /* PDLRunLoopObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528188255132CA00B74F87 /* PDLRunLoopObserver.m */; };
 		B8528194255132CA00B74F87 /* PDLBacktraceRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = B852818D255132CA00B74F87 /* PDLBacktraceRecord.m */; };
@@ -1112,6 +1116,8 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				B847227725524C6400387EB4 /* PDLRunLoopObserver.h in CopyFiles */,
+				B847227825524C6400387EB4 /* PDLRunLoopObserverLoop.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7286,6 +7292,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B847222025524C5A00387EB4 /* PDLRunLoopObserver.m in Sources */,
+				B847222125524C5A00387EB4 /* PDLRunLoopObserverLoop.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
