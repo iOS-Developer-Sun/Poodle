@@ -21,12 +21,6 @@
 		B83CAA78248B487E009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA82248B49C9009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA83248B49D1009C784A /* pdl_security.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83CAA74248B4830009C784A /* pdl_security.h */; };
-		B83EFADC2503408300FDBA43 /* UIViewController+PDLRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFADB2503408300FDBA43 /* UIViewController+PDLRotation.m */; };
-		B83EFADD2503409400FDBA43 /* UIViewController+PDLRotation.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFADB2503408300FDBA43 /* UIViewController+PDLRotation.m */; };
-		B83EFADE2503409A00FDBA43 /* UIViewController+PDLRotation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83EFADA2503408300FDBA43 /* UIViewController+PDLRotation.h */; };
-		B83EFAE8250369CC00FDBA43 /* UIViewController+PDLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */; };
-		B83EFAF425036CDE00FDBA43 /* UIViewController+PDLStatusBar.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83EFAE7250369CC00FDBA43 /* UIViewController+PDLStatusBar.h */; };
-		B83EFAF525036CE200FDBA43 /* UIViewController+PDLStatusBar.m in Sources */ = {isa = PBXBuildFile; fileRef = B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */; };
 		B847222025524C5A00387EB4 /* PDLRunLoopObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528188255132CA00B74F87 /* PDLRunLoopObserver.m */; };
 		B847222125524C5A00387EB4 /* PDLRunLoopObserverLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528187255132CA00B74F87 /* PDLRunLoopObserverLoop.m */; };
 		B847227725524C6400387EB4 /* PDLRunLoopObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8528186255132CA00B74F87 /* PDLRunLoopObserver.h */; };
@@ -481,20 +475,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = B8FC6C0322EF0540005B91DE;
 			remoteInfo = PoodleLibraryTemplate;
-		};
-		B83EFAE3250340B200FDBA43 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B83EFACE2503405A00FDBA43;
-			remoteInfo = "UIViewController+PDLRotation";
-		};
-		B83EFAF225036CD400FDBA43 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = B83EFAE925036CC500FDBA43;
-			remoteInfo = "UIViewController+PDLStatusBar";
 		};
 		B85286552551347800B74F87 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1087,26 +1067,6 @@
 			dstSubfolderSpec = 16;
 			files = (
 				B83CAA83248B49D1009C784A /* pdl_security.h in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B83EFAD12503405A00FDBA43 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "${TARGETNAME}";
-			dstSubfolderSpec = 16;
-			files = (
-				B83EFADE2503409A00FDBA43 /* UIViewController+PDLRotation.h in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B83EFAEC25036CC500FDBA43 /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "${TARGETNAME}";
-			dstSubfolderSpec = 16;
-			files = (
-				B83EFAF425036CDE00FDBA43 /* UIViewController+PDLStatusBar.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1880,12 +1840,6 @@
 		B83CAA77248B487E009C784A /* pdl_security.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_security.c; sourceTree = "<group>"; };
 		B83CAA81248B49B4009C784A /* libpdl_security.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_security.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B83CAA8B248BA622009C784A /* pdl_thread_define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_thread_define.h; sourceTree = "<group>"; };
-		B83EFAD62503405A00FDBA43 /* libUIViewController+PDLRotation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUIViewController+PDLRotation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		B83EFADA2503408300FDBA43 /* UIViewController+PDLRotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLRotation.h"; sourceTree = "<group>"; };
-		B83EFADB2503408300FDBA43 /* UIViewController+PDLRotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLRotation.m"; sourceTree = "<group>"; };
-		B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLStatusBar.m"; sourceTree = "<group>"; };
-		B83EFAE7250369CC00FDBA43 /* UIViewController+PDLStatusBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLStatusBar.h"; sourceTree = "<group>"; };
-		B83EFAF125036CC500FDBA43 /* libUIViewController+PDLStatusBar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUIViewController+PDLStatusBar.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B85068EE250121690028E642 /* NSArray+PDLSafeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PDLSafeOperation.h"; sourceTree = "<group>"; };
 		B85068EF250121690028E642 /* NSDictionary+PDLSafeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+PDLSafeOperation.h"; sourceTree = "<group>"; };
 		B8528186255132CA00B74F87 /* PDLRunLoopObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLRunLoopObserver.h; sourceTree = "<group>"; };
@@ -2320,20 +2274,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B83CAA7B248B49B4009C784A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B83EFAD02503405A00FDBA43 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B83EFAEB25036CC500FDBA43 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2879,24 +2819,6 @@
 			path = pdl_security;
 			sourceTree = "<group>";
 		};
-		B83EFAD92503408300FDBA43 /* UIViewController+PDLRotation */ = {
-			isa = PBXGroup;
-			children = (
-				B83EFADA2503408300FDBA43 /* UIViewController+PDLRotation.h */,
-				B83EFADB2503408300FDBA43 /* UIViewController+PDLRotation.m */,
-			);
-			path = "UIViewController+PDLRotation";
-			sourceTree = "<group>";
-		};
-		B83EFAE5250369CC00FDBA43 /* UIViewController+PDLStatusBar */ = {
-			isa = PBXGroup;
-			children = (
-				B83EFAE7250369CC00FDBA43 /* UIViewController+PDLStatusBar.h */,
-				B83EFAE6250369CC00FDBA43 /* UIViewController+PDLStatusBar.m */,
-			);
-			path = "UIViewController+PDLStatusBar";
-			sourceTree = "<group>";
-		};
 		B8528185255132CA00B74F87 /* PDLRunLoopObserver */ = {
 			isa = PBXGroup;
 			children = (
@@ -3142,8 +3064,6 @@
 				B88865EA24C02AA600D58BC7 /* libpdl_pthread_key.a */,
 				B888660924C0436A00D58BC7 /* libNSObject+PDLThreadSafetifyMethod.a */,
 				B81E710A250117A300399E4B /* libPDLInitialization.a */,
-				B83EFAD62503405A00FDBA43 /* libUIViewController+PDLRotation.a */,
-				B83EFAF125036CC500FDBA43 /* libUIViewController+PDLStatusBar.a */,
 				B864FA1E252356BB00842343 /* libPDLTaskManager.a */,
 				B8E5455D25382417004C1033 /* libpdl_objc_message_hook.a */,
 				B8A6F50F2546CAAF00426AD1 /* libPDLPageController.a */,
@@ -4002,8 +3922,6 @@
 				B8E56EDE23D7001A008D2DA1 /* UINavigationController+PDLLongPressPop */,
 				B8E56EF423D7001A008D2DA1 /* UIScreen+PDLExtension */,
 				B8E56DFB23D70016008D2DA1 /* UIViewController+PDLNavigationBar */,
-				B83EFAD92503408300FDBA43 /* UIViewController+PDLRotation */,
-				B83EFAE5250369CC00FDBA43 /* UIViewController+PDLStatusBar */,
 				B8E56EFA23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation */,
 			);
 			path = Poodle;
@@ -4154,42 +4072,6 @@
 			name = pdl_security;
 			productName = "CAAnimation+PDLExtension";
 			productReference = B83CAA81248B49B4009C784A /* libpdl_security.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		B83EFACE2503405A00FDBA43 /* UIViewController+PDLRotation */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B83EFAD32503405A00FDBA43 /* Build configuration list for PBXNativeTarget "UIViewController+PDLRotation" */;
-			buildPhases = (
-				B83EFACF2503405A00FDBA43 /* Sources */,
-				B83EFAD02503405A00FDBA43 /* Frameworks */,
-				B83EFAD12503405A00FDBA43 /* CopyFiles */,
-				B83EFAD22503405A00FDBA43 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "UIViewController+PDLRotation";
-			productName = "CAAnimation+PDLExtension";
-			productReference = B83EFAD62503405A00FDBA43 /* libUIViewController+PDLRotation.a */;
-			productType = "com.apple.product-type.library.static";
-		};
-		B83EFAE925036CC500FDBA43 /* UIViewController+PDLStatusBar */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B83EFAEE25036CC500FDBA43 /* Build configuration list for PBXNativeTarget "UIViewController+PDLStatusBar" */;
-			buildPhases = (
-				B83EFAEA25036CC500FDBA43 /* Sources */,
-				B83EFAEB25036CC500FDBA43 /* Frameworks */,
-				B83EFAEC25036CC500FDBA43 /* CopyFiles */,
-				B83EFAED25036CC500FDBA43 /* ShellScript */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "UIViewController+PDLStatusBar";
-			productName = "CAAnimation+PDLExtension";
-			productReference = B83EFAF125036CC500FDBA43 /* libUIViewController+PDLStatusBar.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		B852823A255132E100B74F87 /* PDLRunLoopObserver */ = {
@@ -4611,8 +4493,6 @@
 				B802AC9622F3377900BF028E /* PBXTargetDependency */,
 				B8FC6D7D22EF0BC7005B91DE /* PBXTargetDependency */,
 				B8FC6D7F22EF0BC7005B91DE /* PBXTargetDependency */,
-				B83EFAE4250340B200FDBA43 /* PBXTargetDependency */,
-				B83EFAF325036CD400FDBA43 /* PBXTargetDependency */,
 				B8FC6D8122EF0BC7005B91DE /* PBXTargetDependency */,
 				B8B7B5C4249B934D008D4604 /* PBXTargetDependency */,
 				B8FC6DAB22EFD9B0005B91DE /* PBXTargetDependency */,
@@ -5736,8 +5616,6 @@
 				B802AC8A22F3372C00BF028E /* UINavigationController+PDLLongPressPop */,
 				B8FC6D3922EF0A99005B91DE /* UIScreen+PDLExtension */,
 				B8FC6D4222EF0A9A005B91DE /* UIViewController+PDLNavigationBar */,
-				B83EFACE2503405A00FDBA43 /* UIViewController+PDLRotation */,
-				B83EFAE925036CC500FDBA43 /* UIViewController+PDLStatusBar */,
 				B8FC6D4B22EF0A9A005B91DE /* UIViewController+PDLTransitionAnimation */,
 			);
 		};
@@ -5878,40 +5756,6 @@
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
 		B83CAA7D248B49B4009C784A /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
-		};
-		B83EFAD22503405A00FDBA43 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
-		};
-		B83EFAED25036CC500FDBA43 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -7272,22 +7116,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B83EFACF2503405A00FDBA43 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B83EFADD2503409400FDBA43 /* UIViewController+PDLRotation.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		B83EFAEA25036CC500FDBA43 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B83EFAF525036CE200FDBA43 /* UIViewController+PDLStatusBar.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B852823B255132E100B74F87 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7445,7 +7273,6 @@
 				B85D45F0240E859000CBF758 /* PDLPageControl.m in Sources */,
 				B85D45F1240E859000CBF758 /* NSObject+PDLPrivate.m in Sources */,
 				B85D45F2240E859000CBF758 /* PDLResizableImageView.m in Sources */,
-				B83EFADC2503408300FDBA43 /* UIViewController+PDLRotation.m in Sources */,
 				B85D45F3240E859000CBF758 /* NSArray+PDLSafeOperation.m in Sources */,
 				B879531F248685B000798005 /* pdl_thread.c in Sources */,
 				B85D45F4240E859000CBF758 /* NSDictionary+PDLSafeOperation.m in Sources */,
@@ -7471,7 +7298,6 @@
 				B85D4601240E859000CBF758 /* UINavigationController+PDLLongPressPop.m in Sources */,
 				B85D4602240E859000CBF758 /* UIScreen+PDLExtension.m in Sources */,
 				B85D4603240E859000CBF758 /* UIViewController+PDLNavigationBar.m in Sources */,
-				B83EFAE8250369CC00FDBA43 /* UIViewController+PDLStatusBar.m in Sources */,
 				B85D4604240E859000CBF758 /* UIViewController+PDLTransitionAnimation.m in Sources */,
 				B85D45AD240E84DA00CBF758 /* ViewController.m in Sources */,
 				B85D45A7240E84DA00CBF758 /* AppDelegate.m in Sources */,
@@ -8123,16 +7949,6 @@
 			target = B8FC6C0322EF0540005B91DE /* PoodleLibraryTemplate */;
 			targetProxy = B83EFAE1250340B200FDBA43 /* PBXContainerItemProxy */;
 		};
-		B83EFAE4250340B200FDBA43 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B83EFACE2503405A00FDBA43 /* UIViewController+PDLRotation */;
-			targetProxy = B83EFAE3250340B200FDBA43 /* PBXContainerItemProxy */;
-		};
-		B83EFAF325036CD400FDBA43 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = B83EFAE925036CC500FDBA43 /* UIViewController+PDLStatusBar */;
-			targetProxy = B83EFAF225036CD400FDBA43 /* PBXContainerItemProxy */;
-		};
 		B85286562551347800B74F87 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B85284A12551345200B74F87 /* PDLBacktraceRecordsItem */;
@@ -8681,50 +8497,6 @@
 			name = Debug;
 		};
 		B83CAA80248B49B4009C784A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		B83EFAD42503405A00FDBA43 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		B83EFAD52503405A00FDBA43 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Release;
-		};
-		B83EFAEF25036CC500FDBA43 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				OTHER_LDFLAGS = "-ObjC";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		B83EFAF025036CC500FDBA43 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -10598,24 +10370,6 @@
 			buildConfigurations = (
 				B83CAA7F248B49B4009C784A /* Debug */,
 				B83CAA80248B49B4009C784A /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B83EFAD32503405A00FDBA43 /* Build configuration list for PBXNativeTarget "UIViewController+PDLRotation" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B83EFAD42503405A00FDBA43 /* Debug */,
-				B83EFAD52503405A00FDBA43 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		B83EFAEE25036CC500FDBA43 /* Build configuration list for PBXNativeTarget "UIViewController+PDLStatusBar" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B83EFAEF25036CC500FDBA43 /* Debug */,
-				B83EFAF025036CC500FDBA43 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
