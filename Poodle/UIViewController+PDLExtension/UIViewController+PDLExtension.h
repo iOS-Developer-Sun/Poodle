@@ -12,8 +12,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol PDLViewControllerExtensionActions <NSObject>
 
-- (void(^_Nullable)(__kindof UIViewController *))objectForKeyedSubscript:(id)key;
-- (void)setObject:(void(^_Nullable)(__kindof UIViewController *, id key))obj forKeyedSubscript:(id)key;
+- (void(^_Nullable)(__kindof UIViewController *))actionForKey:(id)key;
+- (void)setAction:(void(^_Nullable)(__kindof UIViewController *viewController, id key))action forKey:(id)key;
+
+- (void(^_Nullable)(__kindof UIViewController *))actionForWeakKey:(id)key;
+- (void)setAction:(void(^_Nullable)(__kindof UIViewController *viewController, id key))action forWeakKey:(id)key;
 
 @end
 

@@ -19,6 +19,7 @@ typedef NS_ENUM(NSUInteger, PDLViewControllerExtensionControllerType) {
 @interface PDLViewControllerExtensionActions : NSObject <PDLViewControllerExtensionActions>
 
 @property (nonatomic, strong, readonly) NSMapTable *actions;
+@property (nonatomic, strong, readonly) NSMapTable *weakActions;
 
 @end
 
@@ -28,6 +29,7 @@ typedef NS_ENUM(NSUInteger, PDLViewControllerExtensionControllerType) {
     self = [super init];
     if (self) {
         _actions = [NSMapTable weakToStrongObjectsMapTable];
+        _weakActions = [NSMapTable weakToStrongObjectsMapTable];
     }
     return self;
 }
@@ -38,47 +40,71 @@ typedef NS_ENUM(NSUInteger, PDLViewControllerExtensionControllerType) {
         void(^action)(__kindof UIViewController *, id key) = [actions objectForKey:key];
         action(viewController, key);
     }
+
+    NSMapTable *weakActions = _weakActions;
+    for (id key in weakActions) {
+        void(^action)(__kindof UIViewController *, id key) = [weakActions objectForKey:key];
+        action(viewController, key);
+    }
 }
 
-- (void(^)(__kindof UIViewController *))objectForKeyedSubscript:(id)key {
+- (void (^)(__kindof UIViewController * _Nonnull))actionForKey:(id)key {
     return [self.actions objectForKey:key];
 }
 
-- (void)setObject:(void (^)(__kindof UIViewController * _Nonnull, id _Nonnull))obj forKeyedSubscript:(id)key {
-    [self.actions setObject:obj forKey:key];
+- (void)setAction:(void (^)(__kindof UIViewController * _Nonnull, id _Nonnull))action forKey:(id)key {
+    [self.actions setObject:action forKey:key];
+}
+
+- (void(^_Nullable)(__kindof UIViewController *))actionForWeakKey:(id)key {
+    return [self.weakActions objectForKey:key];
+}
+
+- (void)setAction:(void(^_Nullable)(__kindof UIViewController *viewController, id key))action forWeakKey:(id)key {
+    [self.weakActions setObject:action forKey:key];
 }
 
 @end
 
 @interface PDLViewControllerExtensionController : NSObject <PDLViewControllerExtensionController>
 
-@property (nonatomic, strong, readonly) NSDictionary *actionsMap;
+@property (nonatomic, strong, readonly) NSMutableDictionary *actionsMap;
 
 @end
 
 @implementation PDLViewControllerExtensionController
 
-@synthesize viewWillAppearActions = _viewWillAppearActions;
-@synthesize viewWillDisappearActions = _viewWillDisappearActions;
-@synthesize viewDidAppearActions = _viewDidAppearActions;
-@synthesize viewDidDisappearActions = _viewDidDisappearActions;
-
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _viewWillAppearActions = [[PDLViewControllerExtensionActions alloc] init];
-        _viewWillDisappearActions = [[PDLViewControllerExtensionActions alloc] init];
-        _viewDidAppearActions = [[PDLViewControllerExtensionActions alloc] init];
-        _viewDidDisappearActions = [[PDLViewControllerExtensionActions alloc] init];
-
-        _actionsMap = @{
-            @(PDLViewControllerExtensionControllerTypeViewWillAppear) : _viewWillAppearActions,
-            @(PDLViewControllerExtensionControllerTypeViewWillDisappear) : _viewWillDisappearActions,
-            @(PDLViewControllerExtensionControllerTypeViewDidAppear) : _viewDidAppearActions,
-            @(PDLViewControllerExtensionControllerTypeViewDidDisappear) : _viewDidDisappearActions,
-        };
+        _actionsMap = [NSMutableDictionary dictionary];
     }
     return self;
+}
+
+- (id<PDLViewControllerExtensionActions>)actionsForType:(PDLViewControllerExtensionControllerType)type {
+    PDLViewControllerExtensionActions *actions = self.actionsMap[@(type)];
+    if (!actions) {
+        actions = [[PDLViewControllerExtensionActions alloc] init];
+        self.actionsMap[@(type)] = actions;
+    }
+    return actions;
+}
+
+- (id<PDLViewControllerExtensionActions>)viewWillAppearActions {
+    return [self actionsForType:PDLViewControllerExtensionControllerTypeViewWillAppear];
+}
+
+- (id<PDLViewControllerExtensionActions>)viewWillDisappearActions {
+    return [self actionsForType:PDLViewControllerExtensionControllerTypeViewWillDisappear];
+}
+
+- (id<PDLViewControllerExtensionActions>)viewDidAppearActions {
+    return [self actionsForType:PDLViewControllerExtensionControllerTypeViewDidAppear];
+}
+
+- (id<PDLViewControllerExtensionActions>)viewDidDisappearActions {
+    return [self actionsForType:PDLViewControllerExtensionControllerTypeViewDidDisappear];
 }
 
 - (void)act:(UIViewController *)viewController type:(PDLViewControllerExtensionControllerType)type {
@@ -103,7 +129,7 @@ static void PDLViewControllerDoAppear(__unsafe_unretained UIViewController *self
     PDLImplementationInterceptorRecover(_cmd);
     ((typeof(&PDLViewControllerDoAppear))(_imp))(self, _cmd, animated);
     PDLViewControllerExtensionController *extensionController = self.pdl_extensionController;
-    [extensionController act:self type:(NSInteger)_data];
+    [extensionController act:self type:(PDLViewControllerExtensionControllerType)(long)_data];
 }
 
 + (void)load {
