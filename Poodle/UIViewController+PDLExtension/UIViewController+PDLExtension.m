@@ -28,7 +28,7 @@ typedef NS_ENUM(NSUInteger, PDLViewControllerExtensionControllerType) {
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _actions = [NSMapTable weakToStrongObjectsMapTable];
+        _actions = [NSMapTable strongToStrongObjectsMapTable];
         _weakActions = [NSMapTable weakToStrongObjectsMapTable];
     }
     return self;
