@@ -624,6 +624,15 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'UIKit'
         end
 
+        s.subspec 'PDLLoad' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLLoad/' + source_files
+            ss.vendored_library = base + 'PDLLoad/' + librariy_files
+            ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/pdl_objc_runtime'
+        end
+
         s.subspec 'PDLMemoryQueryViewController' do |ss|
             ss.platform = platform_ios
             ss.ios.deployment_target  = '9.0'
