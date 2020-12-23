@@ -16,7 +16,7 @@ static void emptyLoad(__unsafe_unretained id self, SEL _cmd) {
     return;
 }
 
-+ (void)disableLoad:(BOOL(^_Nullable)(Class aClass, NSString *categoryName))filter {
++ (void)disableCategoryLoad:(BOOL(^_Nullable)(Class aClass, NSString *categoryName))filter {
     if (!filter) {
         return;
     }
