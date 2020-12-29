@@ -163,6 +163,7 @@
 		B8672C14259B109A008082E5 /* PDLSessionTaskStatisticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B8672A5B259B1014008082E5 /* PDLSessionTaskStatisticsManager.m */; };
 		B8672C6B259B10A0008082E5 /* PDLSessionTaskStatisticsManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8672A5A259B1014008082E5 /* PDLSessionTaskStatisticsManager.h */; };
 		B8672D37259B3E2E008082E5 /* PDLSessionTaskStatistics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8672A5C259B1014008082E5 /* PDLSessionTaskStatistics.h */; };
+		B8672D8E259B3F24008082E5 /* PDLSessionTaskStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = B8672A59259B1014008082E5 /* PDLSessionTaskStatistics.m */; };
 		B877A617257F6FE000580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A8BC257F70EA00580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A911257F70F100580C6E /* UIViewController+PDLExtension.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B877A615257F6FE000580C6E /* UIViewController+PDLExtension.h */; };
@@ -7623,6 +7624,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8672D8E259B3F24008082E5 /* PDLSessionTaskStatistics.m in Sources */,
 				B8672C14259B109A008082E5 /* PDLSessionTaskStatisticsManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
