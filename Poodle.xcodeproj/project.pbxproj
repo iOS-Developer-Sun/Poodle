@@ -158,6 +158,10 @@
 		B864FA272523571A00842343 /* PDLTaskManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B864FA232523570300842343 /* PDLTaskManager.h */; };
 		B864FA282523572800842343 /* PDLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = B864FA222523570300842343 /* PDLTask.m */; };
 		B864FA292523572800842343 /* PDLTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B864FA212523570300842343 /* PDLTaskManager.m */; };
+		B8672A5D259B1014008082E5 /* PDLSessionTaskStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = B8672A59259B1014008082E5 /* PDLSessionTaskStatistics.m */; };
+		B8672A5E259B1014008082E5 /* PDLSessionTaskStatisticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B8672A5B259B1014008082E5 /* PDLSessionTaskStatisticsManager.m */; };
+		B8672C14259B109A008082E5 /* PDLSessionTaskStatisticsManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B8672A5B259B1014008082E5 /* PDLSessionTaskStatisticsManager.m */; };
+		B8672C6B259B10A0008082E5 /* PDLSessionTaskStatisticsManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8672A5A259B1014008082E5 /* PDLSessionTaskStatisticsManager.h */; };
 		B877A617257F6FE000580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A8BC257F70EA00580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A911257F70F100580C6E /* UIViewController+PDLExtension.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B877A615257F6FE000580C6E /* UIViewController+PDLExtension.h */; };
@@ -558,6 +562,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B864FA16252356BB00842343;
 			remoteInfo = PDLTaskManager;
+		};
+		B8672CC2259B10AB008082E5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8672B09259B108D008082E5;
+			remoteInfo = PDLSessionTaskStatisticsManager;
 		};
 		B86A6BAE23BB560E00715650 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1202,6 +1213,16 @@
 				B893CC002524969900174119 /* PDLTaskScheduler.h in CopyFiles */,
 				B864FA262523571A00842343 /* PDLTask.h in CopyFiles */,
 				B864FA272523571A00842343 /* PDLTaskManager.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8672B0C259B108D008082E5 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B8672C6B259B10A0008082E5 /* PDLSessionTaskStatisticsManager.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1922,6 +1943,11 @@
 		B864FA212523570300842343 /* PDLTaskManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLTaskManager.m; sourceTree = "<group>"; };
 		B864FA222523570300842343 /* PDLTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLTask.m; sourceTree = "<group>"; };
 		B864FA232523570300842343 /* PDLTaskManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLTaskManager.h; sourceTree = "<group>"; };
+		B8672A59259B1014008082E5 /* PDLSessionTaskStatistics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLSessionTaskStatistics.m; sourceTree = "<group>"; };
+		B8672A5A259B1014008082E5 /* PDLSessionTaskStatisticsManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLSessionTaskStatisticsManager.h; sourceTree = "<group>"; };
+		B8672A5B259B1014008082E5 /* PDLSessionTaskStatisticsManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLSessionTaskStatisticsManager.m; sourceTree = "<group>"; };
+		B8672A5C259B1014008082E5 /* PDLSessionTaskStatistics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLSessionTaskStatistics.h; sourceTree = "<group>"; };
+		B8672B11259B108D008082E5 /* libPDLSessionTaskStatisticsManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLSessionTaskStatisticsManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B86A6BAD23BB55E500715650 /* libPDLViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8724BB823AB9EDF003A4D2A /* libpdl_lldb_hook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_lldb_hook.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B877A615257F6FE000580C6E /* UIViewController+PDLExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLExtension.h"; sourceTree = "<group>"; };
@@ -2404,6 +2430,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B864FA18252356BB00842343 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8672B0B259B108D008082E5 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2952,6 +2985,17 @@
 			path = PDLTaskManager;
 			sourceTree = "<group>";
 		};
+		B8672A58259B0FDA008082E5 /* PDLSessionTaskStatisticsManager */ = {
+			isa = PBXGroup;
+			children = (
+				B8672A5C259B1014008082E5 /* PDLSessionTaskStatistics.h */,
+				B8672A59259B1014008082E5 /* PDLSessionTaskStatistics.m */,
+				B8672A5A259B1014008082E5 /* PDLSessionTaskStatisticsManager.h */,
+				B8672A5B259B1014008082E5 /* PDLSessionTaskStatisticsManager.m */,
+			);
+			path = PDLSessionTaskStatisticsManager;
+			sourceTree = "<group>";
+		};
 		B877A614257F6FCD00580C6E /* UIViewController+PDLExtension */ = {
 			isa = PBXGroup;
 			children = (
@@ -3143,6 +3187,7 @@
 				B85284A92551345200B74F87 /* libPDLBacktraceRecordsItem.a */,
 				B877A7BF257F70D700580C6E /* libUIViewController+PDLExtension.a */,
 				B89FA8AA25921FC800B714BE /* libPDLLoad.a */,
+				B8672B11259B108D008082E5 /* libPDLSessionTaskStatisticsManager.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3996,6 +4041,7 @@
 				B8528185255132CA00B74F87 /* PDLRunLoopObserver */,
 				B8E56EAD23D70019008D2DA1 /* PDLSafeOperation */,
 				B8E56E0923D70016008D2DA1 /* PDLScreenDebugger */,
+				B8672A58259B0FDA008082E5 /* PDLSessionTaskStatisticsManager */,
 				B8E56E7723D70018008D2DA1 /* PDLSystemImage */,
 				B864FA1F2523570300842343 /* PDLTaskManager */,
 				B8E56DF823D70016008D2DA1 /* PDLViewController */,
@@ -4371,6 +4417,24 @@
 			productReference = B864FA1E252356BB00842343 /* libPDLTaskManager.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		B8672B09259B108D008082E5 /* PDLSessionTaskStatisticsManager */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8672B0E259B108D008082E5 /* Build configuration list for PBXNativeTarget "PDLSessionTaskStatisticsManager" */;
+			buildPhases = (
+				B8672B0A259B108D008082E5 /* Sources */,
+				B8672B0B259B108D008082E5 /* Frameworks */,
+				B8672B0C259B108D008082E5 /* CopyFiles */,
+				B8672B0D259B108D008082E5 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLSessionTaskStatisticsManager;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B8672B11259B108D008082E5 /* libPDLSessionTaskStatisticsManager.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		B86A6BA523BB55E500715650 /* PDLViewController */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B86A6BAA23BB55E500715650 /* Build configuration list for PBXNativeTarget "PDLViewController" */;
@@ -4542,6 +4606,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B8672CC3259B10AB008082E5 /* PBXTargetDependency */,
 				B89FAA5725921FEC00B714BE /* PBXTargetDependency */,
 				B877A967257F710700580C6E /* PBXTargetDependency */,
 				B852865A2551348700B74F87 /* PBXTargetDependency */,
@@ -5730,6 +5795,7 @@
 				B852823A255132E100B74F87 /* PDLRunLoopObserver */,
 				B8FC6C6E22EF063A005B91DE /* PDLSafeOperation */,
 				B85ECB6622F27B3B0063BB7C /* PDLScreenDebugger */,
+				B8672B09259B108D008082E5 /* PDLSessionTaskStatisticsManager */,
 				B8FC6C6522EF0639005B91DE /* PDLSystemImage */,
 				B864FA16252356BB00842343 /* PDLTaskManager */,
 				B86A6BA523BB55E500715650 /* PDLViewController */,
@@ -6065,6 +6131,23 @@
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
 		B864FA1A252356BB00842343 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B8672B0D259B108D008082E5 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -7377,6 +7460,7 @@
 				B85D45CE240E859000CBF758 /* pdl_mach.m in Sources */,
 				B85D45CF240E859000CBF758 /* pdl_mach_o_const_symbols.m in Sources */,
 				B8795337248688D800798005 /* pdl_thread-arm64.s in Sources */,
+				B8672A5E259B1014008082E5 /* PDLSessionTaskStatisticsManager.m in Sources */,
 				B85D45D0240E859000CBF758 /* pdl_mach_o_symbol_pointer.m in Sources */,
 				B85D45D2240E859000CBF758 /* pdl_objc_message.m in Sources */,
 				B85D45D3240E859000CBF758 /* pdl_os.m in Sources */,
@@ -7408,6 +7492,7 @@
 				B8528195255132CA00B74F87 /* PDLBacktraceRecorder.m in Sources */,
 				B85D45E1240E859000CBF758 /* PDLFontViewController.m in Sources */,
 				B85D45E2240E859000CBF758 /* PDLFormView.m in Sources */,
+				B8672A5D259B1014008082E5 /* PDLSessionTaskStatistics.m in Sources */,
 				B85D45E3240E859000CBF758 /* PDLClassListViewController.m in Sources */,
 				B85D45E4240E859000CBF758 /* PDLClassViewController.m in Sources */,
 				B8B7B5C9249CE7FE008D4604 /* pdl_list.c in Sources */,
@@ -7529,6 +7614,14 @@
 				B893CBFA2524896B00174119 /* PDLTaskScheduler.m in Sources */,
 				B864FA282523572800842343 /* PDLTask.m in Sources */,
 				B864FA292523572800842343 /* PDLTaskManager.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8672B0A259B108D008082E5 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B8672C14259B109A008082E5 /* PDLSessionTaskStatisticsManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8177,6 +8270,11 @@
 			isa = PBXTargetDependency;
 			target = B864FA16252356BB00842343 /* PDLTaskManager */;
 			targetProxy = B864FA2A2523573400842343 /* PBXContainerItemProxy */;
+		};
+		B8672CC3259B10AB008082E5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8672B09259B108D008082E5 /* PDLSessionTaskStatisticsManager */;
+			targetProxy = B8672CC2259B10AB008082E5 /* PBXContainerItemProxy */;
 		};
 		B86A6BAF23BB560E00715650 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8958,6 +9056,28 @@
 			name = Debug;
 		};
 		B864FA1D252356BB00842343 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B8672B0F259B108D008082E5 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B8672B10259B108D008082E5 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -10706,6 +10826,15 @@
 			buildConfigurations = (
 				B864FA1C252356BB00842343 /* Debug */,
 				B864FA1D252356BB00842343 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B8672B0E259B108D008082E5 /* Build configuration list for PBXNativeTarget "PDLSessionTaskStatisticsManager" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8672B0F259B108D008082E5 /* Debug */,
+				B8672B10259B108D008082E5 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
