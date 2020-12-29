@@ -12,10 +12,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLSessionTaskStatistics : NSObject
 
+@property (readonly) Class taskClass;
 @property (readonly) NSString *urlString;
 @property (readonly) int64_t countOfBytesReceived;
 @property (readonly) int64_t countOfBytesSent;
-@property (readonly) NSURLSessionTaskState state;
 @property (readonly) NSError *_Nullable error;
 @property (readonly) NSTimeInterval startTime;
 @property (readonly) NSTimeInterval duration;

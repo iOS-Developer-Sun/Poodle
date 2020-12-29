@@ -31,10 +31,15 @@ static NSDate *PDLSessionTaskStatisticsProcessStartDate(void) {
 - (instancetype)initWithTask:(NSURLSessionTask *)task {
     self = [super init];
     if (self) {
-        _urlString = task.originalRequest.URL.absoluteString;
+        NSString *urlString = task.originalRequest.URL.absoluteString;
+        if (urlString.length == 0) {
+            return nil;
+        }
+
+        _taskClass = [task class];
+        _urlString = urlString;
         _countOfBytesReceived = [task countOfBytesReceived];
         _countOfBytesSent = [task countOfBytesSent];
-        _state = task.state;
         _error = task.error;
 
         NSTimeInterval taskStartTime = 0;
@@ -46,12 +51,16 @@ static NSDate *PDLSessionTaskStatisticsProcessStartDate(void) {
             _startTime = startTime;
             _duration = [[NSDate date] timeIntervalSinceDate:startTimeDate];
         }
+
+        if (_urlString.length == 0) {
+            free(NULL);
+        }
     }
     return self;
 }
 
 - (NSString *)description {
-    NSString *description = [NSString stringWithFormat:@"%@, [%@|%@] %.3f, %.3fs", _urlString, @(_countOfBytesSent), @(_countOfBytesReceived), _startTime, _duration];
+    NSString *description = [NSString stringWithFormat:@"%@(%@), %@, [%@|%@] %.3fs, %.3fs", _taskClass, @(_error.code), _urlString, @(_countOfBytesSent), @(_countOfBytesReceived), _startTime, _duration];
     return description;
 }
 
