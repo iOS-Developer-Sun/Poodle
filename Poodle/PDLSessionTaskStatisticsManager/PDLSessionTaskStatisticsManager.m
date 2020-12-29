@@ -25,9 +25,11 @@
 
 static void pdl_NSURLSessionTaskSetState(__unsafe_unretained NSURLSessionTask *self, SEL _cmd, NSURLSessionTaskState state) {
     PDLImplementationInterceptorRecover(_cmd);
+    NSURLSessionTaskState originalState = self.state;
     ((typeof(&pdl_NSURLSessionTaskSetState))_imp)(self, _cmd, state);
-
-    [[PDLSessionTaskStatisticsManager sharedInstance] taskDidSetState:self];
+    if (originalState != state) {
+        [[PDLSessionTaskStatisticsManager sharedInstance] taskDidSetState:self];
+    }
 }
 
 + (BOOL)setup {
@@ -58,17 +60,17 @@ static void pdl_NSURLSessionTaskSetState(__unsafe_unretained NSURLSessionTask *s
 }
 
 - (void)taskDidSetState:(NSURLSessionTask *)task {
-    NSURLSessionTaskState state = task.state;
-    switch (state) {
-        case NSURLSessionTaskStateCanceling:
-        case NSURLSessionTaskStateCompleted: {
-            PDLSessionTaskStatistics *taskStatistics = [[PDLSessionTaskStatistics alloc] initWithTask:task];
-            @synchronized (_records) {
-                [_records addObject:taskStatistics];
-            }
-        } break;
-        default:
-            break;
+    if (task.state != NSURLSessionTaskStateCompleted) {
+        return;
+    }
+
+    PDLSessionTaskStatistics *taskStatistics = [[PDLSessionTaskStatistics alloc] initWithTask:task];
+    if (!taskStatistics) {
+        return;
+    }
+
+    @synchronized (_records) {
+        [_records addObject:taskStatistics];
     }
 }
 
