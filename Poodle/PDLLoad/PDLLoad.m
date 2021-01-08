@@ -26,6 +26,10 @@ static void emptyLoad(__unsafe_unretained id self, SEL _cmd) {
     SEL selLoad = sel_registerName("load");
     for (size_t i = 0; i < count; i++) {
         pdl_objc_runtime_category *category = categories[i];
+        if (!category) {
+            continue;
+        }
+
         const char *name = pdl_objc_runtime_category_get_name(category);
         Class aClass = pdl_objc_runtime_category_get_class(category);
         pdl_objc_runtime_method_list method_list = pdl_objc_runtime_category_get_class_method_list(category);
