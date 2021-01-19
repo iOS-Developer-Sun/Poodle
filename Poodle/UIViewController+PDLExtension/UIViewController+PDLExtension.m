@@ -68,15 +68,17 @@ typedef NS_ENUM(NSUInteger, PDLViewControllerExtensionControllerType) {
 
 @interface PDLViewControllerExtensionController : NSObject <PDLViewControllerExtensionController>
 
+@property (nonatomic, unsafe_unretained, readonly) UIViewController *viewController;
 @property (nonatomic, strong, readonly) NSMutableDictionary *actionsMap;
 
 @end
 
 @implementation PDLViewControllerExtensionController
 
-- (instancetype)init {
+- (instancetype)initWithViewController:(UIViewController *)viewController {
     self = [super init];
     if (self) {
+        _viewController = viewController;
         _actionsMap = [NSMutableDictionary dictionary];
     }
     return self;
@@ -119,7 +121,7 @@ typedef NS_ENUM(NSUInteger, PDLViewControllerExtensionControllerType) {
 - (id<PDLViewControllerExtensionController>)pdl_extensionController {
     id<PDLViewControllerExtensionController> controller = objc_getAssociatedObject(self, &PDLViewControllerDoAppear);
     if (!controller) {
-        controller = [[PDLViewControllerExtensionController alloc] init];
+        controller = [[PDLViewControllerExtensionController alloc] initWithViewController:self];
         objc_setAssociatedObject(self, &PDLViewControllerDoAppear, controller, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     }
     return controller;
