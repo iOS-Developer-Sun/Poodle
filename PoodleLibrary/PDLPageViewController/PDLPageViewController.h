@@ -19,6 +19,13 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger)numberOfViewControllersInPageViewController:(PDLPageViewController *)pageViewController;
 - (__kindof UIViewController *)pageViewController:(PDLPageViewController *)pageViewController viewControllerAtIndex:(NSInteger)index;
 
+- (void)pageViewController:(PDLPageViewController *)pageViewController currentIndexDidChange:(NSInteger)originalCurrentIndex;
+
+- (void)pageViewController:(PDLPageViewController *)pageViewController willDisplay:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)pageViewController:(PDLPageViewController *)pageViewController didDisplay:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)pageViewController:(PDLPageViewController *)pageViewController willEndDisplaying:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)pageViewController:(PDLPageViewController *)pageViewController didEndDisplaying:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
+
 - (void)pageViewControllerWillBeginDragging:(PDLPageViewController *)pageViewController;
 - (void)pageViewController:(PDLPageViewController *)pageViewController didScrollToIndex:(CGFloat)index;
 - (void)pageViewControllerDidEndScrollingAnimation:(PDLPageViewController *)pageViewController;
@@ -30,7 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLPageViewController : UIViewController
 
 @property (nonatomic, weak) id <PDLPageViewControllerDelegate> delegate;
-@property (nonatomic, readonly) NSInteger currentIndex;
+@property (nonatomic, assign) NSInteger currentIndex;
+@property (nonatomic, readonly) __kindof UIViewController *currentViewController;
 @property (nonatomic, assign) BOOL scrollEnabled;
 @property (nonatomic, assign) BOOL bounces;
 
@@ -39,7 +47,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (__kindof UIViewController *)dequeueReusableViewControllerWithIdentifier:(NSString *)identifier;
 - (NSDictionary *)dequeueAllReusableViewControllers;
 
-- (void)scrollToIndex:(NSInteger)index animated:(BOOL)animated;
+- (__kindof UIViewController *)viewControllerAtIndex:(NSInteger)index;
+- (void)setCurrentIndex:(NSInteger)currentIndex animated:(BOOL)animated;
 - (void)reloadData;
 
 @end

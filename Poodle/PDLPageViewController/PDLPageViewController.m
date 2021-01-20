@@ -43,6 +43,13 @@
     BOOL _delegateRespondsNumberOfViewControllers;
     BOOL _delegateRespondsViewControllerAtIndex;
 
+    BOOL _delegateRespondsCurrentIndexDidChange;
+
+    BOOL _delegateRespondsWillDisplay;
+    BOOL _delegateRespondsDidDisplay;
+    BOOL _delegateRespondsWillEndDisplaying;
+    BOOL _delegateRespondsDidEndDisplaying;
+
     BOOL _delegateRespondsWillBeginDragging;
     BOOL _delegateRespondsDidEndScrollingAnimation;
     BOOL _delegateRespondsDidScrollToIndex;
@@ -92,6 +99,13 @@
     _delegateRespondsNumberOfViewControllers = [delegate respondsToSelector:@selector(numberOfViewControllersInPageViewController:)];
     _delegateRespondsViewControllerAtIndex = [delegate respondsToSelector:@selector(pageViewController:viewControllerAtIndex:)];
 
+    _delegateRespondsCurrentIndexDidChange = [delegate respondsToSelector:@selector(pageViewController:currentIndexDidChange:)];
+
+    _delegateRespondsWillDisplay = [delegate respondsToSelector:@selector(pageViewController:willDisplay:atIndex:animated:)];
+    _delegateRespondsDidDisplay = [delegate respondsToSelector:@selector(pageViewController:didDisplay:atIndex:animated:)];
+    _delegateRespondsWillEndDisplaying = [delegate respondsToSelector:@selector(pageViewController:willEndDisplaying:atIndex:animated:)];
+    _delegateRespondsDidEndDisplaying = [delegate respondsToSelector:@selector(pageViewController:didEndDisplaying:atIndex:animated:)];
+
     _delegateRespondsWillBeginDragging = [delegate respondsToSelector:@selector(pageViewControllerWillBeginDragging:)];
     _delegateRespondsDidEndScrollingAnimation = [delegate respondsToSelector:@selector(pageViewControllerDidEndScrollingAnimation:)];
     _delegateRespondsDidScrollToIndex = [delegate respondsToSelector:@selector(pageViewController:didScrollToIndex:)];
@@ -113,6 +127,10 @@
 
 - (NSInteger)currentIndex {
     return self.pageController.currentIndex;
+}
+
+- (void)setCurrentIndex:(NSInteger)currentIndex {
+    [self setCurrentIndex:currentIndex animated:NO];
 }
 
 - (BOOL)isScrollEnabled {
@@ -166,9 +184,18 @@
     return reusableItems;
 }
 
+- (__kindof UIViewController *)viewControllerAtIndex:(NSInteger)index {
+    UIView *view = [self.pageController viewAtIndex:index];
+    PDLPageViewControllerItem *item = [self itemForView:view];
+    return item.viewController;
+}
 
-- (void)scrollToIndex:(NSInteger)index animated:(BOOL)animated {
-    [self.pageController scrollToIndex:index animated:animated];
+- (__kindof UIViewController *)currentViewController {
+    return [self viewControllerAtIndex:self.currentIndex];
+}
+
+- (void)setCurrentIndex:(NSInteger)currentIndex animated:(BOOL)animated {
+    [self.pageController setCurrentIndex:currentIndex animated:animated];
 }
 
 - (void)reloadData {
@@ -200,6 +227,12 @@
     return view;
 }
 
+- (void)pageController:(PDLPageController *)pageController currentIndexDidChange:(NSInteger)originalCurrentIndex {
+    if (_delegateRespondsCurrentIndexDidChange) {
+        [_delegate pageViewController:self currentIndexDidChange:originalCurrentIndex];
+    }
+}
+
 - (void)pageController:(PDLPageController *)pageController willDisplay:(UIView *)view atIndex:(NSInteger)index animated:(BOOL)animated {
     BOOL viewAnimated = animated || self.isScrolling;
     PDLPageViewControllerItem *item = [self itemForView:view];
@@ -215,6 +248,10 @@
 
     [self.appearingItem beginAppearanceTransition:YES animated:viewAnimated];
     [self.disappearingItem beginAppearanceTransition:NO animated:viewAnimated];
+
+    if (_delegateRespondsWillDisplay) {
+        [_delegate pageViewController:self willDisplay:item.viewController atIndex:index animated:animated];
+    }
 }
 
 - (void)pageController:(PDLPageController *)pageController didDisplay:(UIView *)view atIndex:(NSInteger)index animated:(BOOL)animated {
@@ -225,6 +262,10 @@
 
     PDLPageViewControllerItem *item = [self itemForView:view];
     [self addChildViewController:item.viewController];
+
+    if (_delegateRespondsDidDisplay) {
+        [_delegate pageViewController:self didDisplay:item.viewController atIndex:index animated:animated];
+    }
 }
 
 - (void)pageController:(PDLPageController *)pageController willEndDisplaying:(UIView *)view atIndex:(NSInteger)index animated:(BOOL)animated {
@@ -241,6 +282,10 @@
         self.disappearingItem = item;
         [self.disappearingItem beginAppearanceTransition:NO animated:viewAnimated];
     }
+
+    if (_delegateRespondsWillEndDisplaying) {
+        [_delegate pageViewController:self willEndDisplaying:item.viewController atIndex:index animated:animated];
+    }
 }
 
 - (void)pageController:(PDLPageController *)pageController didEndDisplaying:(UIView *)view atIndex:(NSInteger)index animated:(BOOL)animated {
@@ -251,6 +296,10 @@
 
     PDLPageViewControllerItem *item = [self itemForView:view];
     [item.viewController removeFromParentViewController];
+
+    if (_delegateRespondsDidEndDisplaying) {
+        [_delegate pageViewController:self didEndDisplaying:item.viewController atIndex:index animated:animated];
+    }
 }
 
 - (void)pageController:(PDLPageController *)pageController didBeginScrollingAnimation:(BOOL)scrollsRectToVisible {

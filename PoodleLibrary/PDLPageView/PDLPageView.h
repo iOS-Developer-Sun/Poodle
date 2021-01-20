@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger)numberOfViewsInPageView:(PDLPageView *)pageView;
 - (__kindof UIView *)pageView:(PDLPageView *)pageView viewAtIndex:(NSInteger)index;
 
+- (void)pageView:(PDLPageView *)pageView currentIndexDidChange:(NSInteger)originalCurrentIndex;
+
 - (void)pageViewWillBeginDragging:(PDLPageView *)pageView;
 - (void)pageView:(PDLPageView *)pageView didScrollToIndex:(CGFloat)index;
 - (void)pageViewDidEndScrollingAnimation:(PDLPageView *)pageView;
@@ -30,7 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLPageView : UIView
 
 @property (nonatomic, weak) id <PDLPageViewDelegate> delegate;
-@property (nonatomic, readonly) NSInteger currentIndex;
+@property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, assign) BOOL scrollEnabled;
 @property (nonatomic, assign) BOOL bounces;
 
@@ -39,7 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (__kindof UIView *)dequeueReusableViewWithIdentifier:(NSString *)identifier;
 - (NSDictionary <NSString *, NSMutableArray <UIView *>*>*)dequeueAllReusableViews;
 
-- (void)scrollToIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)setCurrentIndex:(NSInteger)currentIndex animated:(BOOL)animated;
 - (void)reloadData;
 
 @end

@@ -13,6 +13,8 @@
     BOOL _delegateRespondsNumberOfViews;
     BOOL _delegateRespondsViewAtIndex;
 
+    BOOL _delegateRespondsCurrentIndexDidChange;
+
     BOOL _delegateRespondsWillBeginDragging;
     BOOL _delegateRespondsDidEndScrollingAnimation;
     BOOL _delegateRespondsDidScrollToIndex;
@@ -63,6 +65,8 @@ static void init(PDLPageView *self) {
     _delegateRespondsNumberOfViews = [delegate respondsToSelector:@selector(numberOfViewsInPageView:)];
     _delegateRespondsViewAtIndex = [delegate respondsToSelector:@selector(pageView:viewAtIndex:)];
 
+    _delegateRespondsCurrentIndexDidChange = [delegate respondsToSelector:@selector(pageView:currentIndexDidChange:)];
+
     _delegateRespondsWillBeginDragging = [delegate respondsToSelector:@selector(pageViewWillBeginDragging:)];
     _delegateRespondsDidEndScrollingAnimation = [delegate respondsToSelector:@selector(pageViewDidEndScrollingAnimation:)];
     _delegateRespondsDidScrollToIndex = [delegate respondsToSelector:@selector(pageView:didScrollToIndex:)];
@@ -74,6 +78,10 @@ static void init(PDLPageView *self) {
 
 - (NSInteger)currentIndex {
     return self.pageController.currentIndex;
+}
+
+- (void)setCurrentIndex:(NSInteger)currentIndex {
+    [self setCurrentIndex:currentIndex animated:NO];
 }
 
 - (BOOL)isScrollEnabled {
@@ -110,8 +118,8 @@ static void init(PDLPageView *self) {
     return [self.pageController dequeueAllReusableViews];
 }
 
-- (void)scrollToIndex:(NSInteger)index animated:(BOOL)animated {
-    [self.pageController scrollToIndex:index animated:animated];
+- (void)setCurrentIndex:(NSInteger)currentIndex animated:(BOOL)animated {
+    [self.pageController setCurrentIndex:currentIndex animated:animated];
 }
 
 - (void)reloadData {
@@ -134,6 +142,12 @@ static void init(PDLPageView *self) {
         view = [_delegate pageView:self viewAtIndex:index];
     }
     return view;
+}
+
+- (void)pageController:(PDLPageController *)pageController currentIndexDidChange:(NSInteger)originalCurrentIndex {
+    if (_delegateRespondsCurrentIndexDidChange) {
+        [_delegate pageView:self currentIndexDidChange:originalCurrentIndex];
+    }
 }
 
 #pragma mark - UIScrollViewDelegate
