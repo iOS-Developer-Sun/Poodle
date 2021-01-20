@@ -19,6 +19,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSInteger)numberOfViewsInPageController:(PDLPageController *)pageController;
 - (__kindof UIView *)pageController:(PDLPageController *)pageController viewAtIndex:(NSInteger)index;
 
+- (void)pageController:(PDLPageController *)pageController currentIndexDidChange:(NSInteger)originalCurrentIndex;
+
 - (void)pageController:(PDLPageController *)pageController willDisplay:(UIView *)view atIndex:(NSInteger)index animated:(BOOL)animated;
 - (void)pageController:(PDLPageController *)pageController didDisplay:(UIView *)view atIndex:(NSInteger)index animated:(BOOL)animated;
 - (void)pageController:(PDLPageController *)pageController willEndDisplaying:(UIView *)view atIndex:(NSInteger)index animated:(BOOL)animated;
@@ -41,7 +43,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (UIView *)viewAtIndex:(NSInteger)index;
 
-- (void)scrollToIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)setCurrentIndex:(NSInteger)currentIndex animated:(BOOL)animated;
 - (void)reloadData;
 
 @end
