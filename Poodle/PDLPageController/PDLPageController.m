@@ -13,6 +13,8 @@
     BOOL _delegateRespondsNumberOfViews;
     BOOL _delegateRespondsViewAtIndex;
 
+    BOOL _delegateRespondsCurrentIndexDidChange;
+
     BOOL _delegateRespondsWillDisplayAtIndexAnimated;
     BOOL _delegateRespondsDidDisplayAtIndexAnimated;
     BOOL _delegateRespondsWillEndDisplayingAtIndexAnimated;
@@ -79,6 +81,8 @@
     _delegateRespondsNumberOfViews = [delegate respondsToSelector:@selector(numberOfViewsInPageController:)];
     _delegateRespondsViewAtIndex = [delegate respondsToSelector:@selector(pageController:viewAtIndex:)];
 
+    _delegateRespondsCurrentIndexDidChange = [delegate respondsToSelector:@selector(pageController:currentIndexDidChange:)];
+
     _delegateRespondsWillDisplayAtIndexAnimated = [delegate respondsToSelector:@selector(pageController:willDisplay:atIndex:animated:)];
     _delegateRespondsDidDisplayAtIndexAnimated = [delegate respondsToSelector:@selector(pageController:didDisplay:atIndex:animated:)];
     _delegateRespondsWillEndDisplayingAtIndexAnimated = [delegate respondsToSelector:@selector(pageController:willEndDisplaying:atIndex:animated:)];
@@ -111,12 +115,39 @@
     return [self.pageView viewForColumn:index row:0];
 }
 
-- (void)scrollToIndex:(NSInteger)index animated:(BOOL)animated {
-    [self.pageView scrollToColumn:index row:0 atScrollPosition:PDLFormViewScrollPositionNone animated:animated];
+- (void)setCurrentIndex:(NSInteger)currentIndex {
+    [self setCurrentIndex:currentIndex animated:NO];
+}
+
+- (void)setCurrentIndex:(NSInteger)currentIndex animated:(BOOL)animated {
+    NSInteger originalCurrentIndex = _currentIndex;
+    if (originalCurrentIndex == currentIndex) {
+        return;
+    }
+
+    _currentIndex = currentIndex;
+
+    [self.pageView scrollToColumn:currentIndex row:0 atScrollPosition:PDLFormViewScrollPositionNone animated:animated];
+
+    if (_delegateRespondsCurrentIndexDidChange) {
+        [_delegate pageController:self currentIndexDidChange:originalCurrentIndex];
+    }
 }
 
 - (void)reloadData {
     [self.pageView reloadData];
+}
+
+- (void)refreshCurrent {
+    CGPoint contentOffset = self.scrollView.contentOffset;
+    CGRect frame = self.scrollView.frame;
+    CGFloat width = CGRectGetWidth(frame);
+    if (width == 0) {
+        return;
+    }
+
+    CGFloat currentIndex = contentOffset.x / width;
+    self.currentIndex = round(currentIndex);
 }
 
 #pragma mark - PDLFormViewDelegate
@@ -150,17 +181,7 @@
 }
 
 - (void)visibleColumnsRowsDidChange:(PDLFormView *)formView {
-    NSArray <NSNumber *> *visibleColumns = formView.visibleColumns;
-    NSUInteger count = visibleColumns.count;
-    if (count > 1) {
-        return;
-    }
-
-    NSInteger currentIndex = NSNotFound;
-    if (count == 1) {
-        currentIndex = visibleColumns.firstObject.integerValue;
-    }
-    self.currentIndex = currentIndex;
+    [self refreshCurrent];
 }
 
 - (void)formView:(PDLFormView *)formView willDisplayView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row {
