@@ -38,6 +38,7 @@
         pageView.clipsToBounds = YES;
         pageView.pagingEnabled = YES;
         pageView.showsHorizontalScrollIndicator = NO;
+        pageView.showsVerticalScrollIndicator = NO;
         pageView.formViewDelegate = self;
         if (@available(iOS 11.0, *)) {
             pageView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;

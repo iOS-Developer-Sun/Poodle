@@ -39,8 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id <PDLPageViewControllerDelegate> delegate;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, readonly) __kindof UIViewController *currentViewController;
-@property (nonatomic, assign) BOOL scrollEnabled;
-@property (nonatomic, assign) BOOL bounces;
+@property (nonatomic, weak, readonly) UIScrollView *scrollView;
 
 - (NSString *)reuseIdentifierForViewController:(UIViewController *)viewController;
 - (void)setReuseIdentifier:(NSString *)identifier forViewController:(UIViewController *)viewController;
