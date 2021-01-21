@@ -84,20 +84,8 @@ static void init(PDLPageView *self) {
     [self setCurrentIndex:currentIndex animated:NO];
 }
 
-- (BOOL)isScrollEnabled {
-    return self.pageController.scrollView.scrollEnabled;
-}
-
-- (void)setScrollEnabled:(BOOL)scrollEnabled {
-    self.pageController.scrollView.scrollEnabled = scrollEnabled;
-}
-
-- (BOOL)bounces {
-    return self.pageController.scrollView.bounces;
-}
-
-- (void)setBounces:(BOOL)bounces {
-    self.pageController.scrollView.bounces = bounces;
+- (UIScrollView *)scrollView {
+    return self.pageController.scrollView;
 }
 
 #pragma mark - Public methods
