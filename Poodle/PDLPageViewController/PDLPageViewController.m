@@ -89,6 +89,14 @@
     [self.view addSubview:scrollView];
 }
 
+- (BOOL)isVertical {
+    return self.pageController.isVertical;
+}
+
+- (void)setIsVertical:(BOOL)isVertical {
+    self.pageController.isVertical = isVertical;
+}
+
 - (void)setDelegate:(id<PDLPageViewControllerDelegate>)delegate {
     if (_delegate == delegate) {
         return;
@@ -299,11 +307,12 @@
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView {
     CGPoint contentOffset = scrollView.contentOffset;
     CGRect frame = scrollView.frame;
-    CGFloat width = CGRectGetWidth(frame);
-    if (width == 0) {
+    BOOL isVertical = self.pageController.isVertical;
+    CGFloat length = isVertical ?  CGRectGetHeight(frame) : CGRectGetWidth(frame);
+    if (length == 0) {
         return;
     }
-    CGFloat ratio = contentOffset.x / width;
+    CGFloat ratio = (isVertical ? contentOffset.y : contentOffset.x) / length;
 
     if (_delegateRespondsDidScrollToIndex) {
         [_delegate pageViewController:self didScrollToIndex:ratio];

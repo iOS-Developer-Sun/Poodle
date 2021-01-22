@@ -32,9 +32,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLPageController : NSObject
 
+@property (nonatomic, assign) BOOL isVertical;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, strong, readonly) UIScrollView *scrollView;
 @property (nonatomic, weak) id <PDLPageControllerDelegate> delegate;
+@property (nonatomic, assign, readonly) NSInteger numberOfItems;
 
 - (NSString *)reuseIdentifierForView:(UIView *)view;
 - (void)setReuseIdentifier:(NSString *)identifier forView:(UIView *)view;

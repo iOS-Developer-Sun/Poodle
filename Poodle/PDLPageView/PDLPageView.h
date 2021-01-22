@@ -31,6 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLPageView : UIView
 
+@property (nonatomic, assign) BOOL isVertical;
 @property (nonatomic, weak) id <PDLPageViewDelegate> delegate;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, weak, readonly) UIScrollView *scrollView;
