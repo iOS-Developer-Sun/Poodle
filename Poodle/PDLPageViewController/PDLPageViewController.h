@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLPageViewController : UIViewController
 
+@property (nonatomic, assign) BOOL isVertical;
 @property (nonatomic, weak) id <PDLPageViewControllerDelegate> delegate;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, readonly) __kindof UIViewController *currentViewController;

@@ -21,6 +21,8 @@
     BOOL _delegateRespondsDidEndDisplayingAtIndexAnimated;
 
     BOOL _delegateRespondsDidBeginScrollingAnimation;
+
+    NSNumber *_numberOfItems;
 }
 
 @property (nonatomic, strong) PDLFormView *pageView;
@@ -113,7 +115,19 @@
 }
 
 - (UIView *)viewAtIndex:(NSInteger)index {
+    if (self.isVertical) {
+        return [self.pageView viewForColumn:0 row:index];
+    }
     return [self.pageView viewForColumn:index row:0];
+}
+
+- (void)setIsVertical:(BOOL)isVertical {
+    if (_isVertical == isVertical) {
+        return;
+    }
+
+    _isVertical = isVertical;
+    [self reloadData];
 }
 
 - (void)setCurrentIndex:(NSInteger)currentIndex {
@@ -126,29 +140,55 @@
         return;
     }
 
-    _currentIndex = currentIndex;
-
-    [self.pageView scrollToColumn:currentIndex row:0 atScrollPosition:PDLFormViewScrollPositionNone animated:animated];
-
-    if (_delegateRespondsCurrentIndexDidChange) {
-        [_delegate pageController:self currentIndexDidChange:originalCurrentIndex];
+    if (self.isVertical) {
+        [self.pageView scrollToColumn:0 row:currentIndex atScrollPosition:PDLFormViewScrollPositionNone animated:animated];
+    } else {
+        [self.pageView scrollToColumn:currentIndex row:0 atScrollPosition:PDLFormViewScrollPositionNone animated:animated];
     }
 }
 
 - (void)reloadData {
+    _numberOfItems = nil;
     [self.pageView reloadData];
 }
 
 - (void)refreshCurrent {
     CGPoint contentOffset = self.scrollView.contentOffset;
     CGRect frame = self.scrollView.frame;
-    CGFloat width = CGRectGetWidth(frame);
-    if (width == 0) {
+    BOOL isVertical = self.isVertical;
+    CGFloat length = isVertical ? CGRectGetHeight(frame) : CGRectGetWidth(frame);
+    if (length == 0) {
         return;
     }
 
-    CGFloat currentIndex = contentOffset.x / width;
-    self.currentIndex = round(currentIndex);
+    if ([self numberOfItems] <= 0) {
+        return;
+    }
+
+    NSInteger originalCurrentIndex = _currentIndex;
+    NSInteger currentIndex = round((isVertical ? contentOffset.y : contentOffset.x) / length);
+    if (originalCurrentIndex == currentIndex) {
+        return;
+    }
+
+    _currentIndex = currentIndex;
+
+    if (_delegateRespondsCurrentIndexDidChange) {
+        [_delegate pageController:self currentIndexDidChange:originalCurrentIndex];
+    }
+}
+
+- (NSInteger)numberOfItems {
+    if (_numberOfItems) {
+        return _numberOfItems.integerValue;
+    }
+
+    NSInteger numberOfItems = 0;
+    if (_delegateRespondsNumberOfViews) {
+        numberOfItems = [_delegate numberOfViewsInPageController:self];
+    }
+    _numberOfItems = @(numberOfItems);
+    return numberOfItems;
 }
 
 #pragma mark - PDLFormViewDelegate
@@ -156,21 +196,23 @@
 - (UIView *)formView:(PDLFormView *)formView viewForColumn:(NSInteger)column row:(NSInteger)row {
     UIView *view = nil;
     if (_delegateRespondsViewAtIndex) {
-        view = [_delegate pageController:self viewAtIndex:column];
+        view = [_delegate pageController:self viewAtIndex:self.isVertical ? row : column];
     }
     return view;
 }
 
 - (NSInteger)numberOfColumnsInFormView:(PDLFormView *)formView {
-    NSInteger number = 0;
-    if (_delegateRespondsNumberOfViews) {
-        number = [_delegate numberOfViewsInPageController:self];
+    if (self.isVertical) {
+        return 1;
     }
-    return number;
+    return [self numberOfItems];
 }
 
 - (NSInteger)numberOfRowsInFormView:(PDLFormView *)formView {
-    return 1;
+    if (!self.isVertical) {
+        return 1;
+    }
+    return [self numberOfItems];
 }
 
 - (CGFloat)formView:(PDLFormView *)formView widthForColumn:(NSInteger)column {
@@ -188,28 +230,28 @@
 - (void)formView:(PDLFormView *)formView willDisplayView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row {
     if (_delegateRespondsWillDisplayAtIndexAnimated) {
         BOOL animated = [self formViewAnimated:formView];
-        [_delegate pageController:self willDisplay:view atIndex:column animated:animated];
+        [_delegate pageController:self willDisplay:view atIndex:self.isVertical ? row : column animated:animated];
     }
 }
 
 - (void)formView:(PDLFormView *)formView didDisplayView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row {
     if (_delegateRespondsDidDisplayAtIndexAnimated) {
         BOOL animated = [self formViewAnimated:formView];
-        [_delegate pageController:self didDisplay:view atIndex:column animated:animated];
+        [_delegate pageController:self didDisplay:view atIndex:self.isVertical ? row : column animated:animated];
     }
 }
 
 - (void)formView:(PDLFormView *)formView willEndDisplayingView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row {
     if (_delegateRespondsWillEndDisplayingAtIndexAnimated) {
         BOOL animated = [self formViewAnimated:formView];
-        [_delegate pageController:self willEndDisplaying:view atIndex:column animated:animated];
+        [_delegate pageController:self willEndDisplaying:view atIndex:self.isVertical ? row : column animated:animated];
     }
 }
 
 - (void)formView:(PDLFormView *)formView didEndDisplayingView:(UIView *)view forColumn:(NSInteger)column row:(NSInteger)row {
     if (_delegateRespondsDidEndDisplayingAtIndexAnimated) {
         BOOL animated = [self formViewAnimated:formView];
-        [_delegate pageController:self didEndDisplaying:view atIndex:column animated:animated];
+        [_delegate pageController:self didEndDisplaying:view atIndex:self.isVertical ? row : column animated:animated];
     }
 }
 
