@@ -96,6 +96,10 @@ static void init(PDLPageView *self) {
     return self.pageController.scrollView;
 }
 
+- (NSInteger)numberOfViews {
+    return self.pageController.numberOfItems;
+}
+
 #pragma mark - Public methods
 
 - (NSString *)reuseIdentifierForView:(UIView *)view {
