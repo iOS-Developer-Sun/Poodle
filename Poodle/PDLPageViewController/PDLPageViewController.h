@@ -41,6 +41,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, readonly) __kindof UIViewController *currentViewController;
 @property (nonatomic, weak, readonly) UIScrollView *scrollView;
+@property (nonatomic, assign, readonly) NSInteger numberOfViewControllers;
 
 - (NSString *)reuseIdentifierForViewController:(UIViewController *)viewController;
 - (void)setReuseIdentifier:(NSString *)identifier forViewController:(UIViewController *)viewController;

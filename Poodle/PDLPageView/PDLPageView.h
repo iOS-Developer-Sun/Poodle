@@ -35,6 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, weak) id <PDLPageViewDelegate> delegate;
 @property (nonatomic, assign) NSInteger currentIndex;
 @property (nonatomic, weak, readonly) UIScrollView *scrollView;
+@property (nonatomic, assign, readonly) NSInteger numberOfViews;
 
 - (NSString *)reuseIdentifierForView:(UIView *)view;
 - (void)setReuseIdentifier:(NSString *)identifier forView:(UIView *)view;

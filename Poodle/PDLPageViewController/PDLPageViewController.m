@@ -145,6 +145,10 @@
     return self.pageController.scrollView;
 }
 
+- (NSInteger)numberOfViewControllers {
+    return self.pageController.numberOfItems;
+}
+
 #pragma mark - Public methods
 
 - (NSString *)reuseIdentifierForViewController:(UIViewController *)viewController {
