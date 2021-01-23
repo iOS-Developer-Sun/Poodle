@@ -215,12 +215,8 @@
     return [self numberOfItems];
 }
 
-- (CGFloat)formView:(PDLFormView *)formView widthForColumn:(NSInteger)column {
-    return formView.bounds.size.width;
-}
-
-- (CGFloat)formView:(PDLFormView *)formView heightForRow:(NSInteger)row {
-    return formView.bounds.size.height;
+- (CGSize)formView:(PDLFormView *)formView sizeForColumn:(NSInteger)column row:(NSInteger)row {
+    return formView.bounds.size;
 }
 
 - (void)visibleColumnsRowsDidChange:(PDLFormView *)formView {
