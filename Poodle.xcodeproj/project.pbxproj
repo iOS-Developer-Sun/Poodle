@@ -18,6 +18,9 @@
 		B81E710E2501185A00399E4B /* PDLInitialization.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E710D2501185A00399E4B /* PDLInitialization.m */; };
 		B81E710F2501185A00399E4B /* PDLInitialization.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E710D2501185A00399E4B /* PDLInitialization.m */; };
 		B81E711225011A4E00399E4B /* PDLInitialization.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B81E710C2501185A00399E4B /* PDLInitialization.h */; };
+		B8300F2225BEB61600A02412 /* PDLScrollPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */; };
+		B8300FD125BEB61D00A02412 /* PDLScrollPageViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8300F2125BEB61600A02412 /* PDLScrollPageViewController.h */; };
+		B830102925BEB62200A02412 /* PDLScrollPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */; };
 		B83CAA78248B487E009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA82248B49C9009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA83248B49D1009C784A /* pdl_security.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83CAA74248B4830009C784A /* pdl_security.h */; };
@@ -473,6 +476,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B82334A723BC982900B1B15B;
 			remoteInfo = "NSObject+PDLSelectorProxy";
+		};
+		B830108125BEB63000A02412 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B8300E1125BEB5E700A02412;
+			remoteInfo = PDLScrollPageViewController;
 		};
 		B83CAA84248B49FE009C784A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1090,6 +1100,16 @@
 			dstSubfolderSpec = 16;
 			files = (
 				B8E56F2023D701E5008D2DA1 /* NSObject+PDLSelectorProxy.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8300E1425BEB5E700A02412 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B8300FD125BEB61D00A02412 /* PDLScrollPageViewController.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1900,6 +1920,9 @@
 		B81E710C2501185A00399E4B /* PDLInitialization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLInitialization.h; sourceTree = "<group>"; };
 		B81E710D2501185A00399E4B /* PDLInitialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLInitialization.m; sourceTree = "<group>"; };
 		B82334AF23BC982900B1B15B /* libNSObject+PDLSelectorProxy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLSelectorProxy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8300E1925BEB5E700A02412 /* libPDLScrollPageViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLScrollPageViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLScrollPageViewController.m; sourceTree = "<group>"; };
+		B8300F2125BEB61600A02412 /* PDLScrollPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLScrollPageViewController.h; sourceTree = "<group>"; };
 		B83CAA74248B4830009C784A /* pdl_security.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_security.h; sourceTree = "<group>"; };
 		B83CAA77248B487E009C784A /* pdl_security.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_security.c; sourceTree = "<group>"; };
 		B83CAA81248B49B4009C784A /* libpdl_security.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_security.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2342,6 +2365,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B82334A923BC982900B1B15B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B8300E1325BEB5E700A02412 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2906,6 +2936,15 @@
 			path = PDLInitialization;
 			sourceTree = "<group>";
 		};
+		B8300F1F25BEB61600A02412 /* PDLScrollPageViewController */ = {
+			isa = PBXGroup;
+			children = (
+				B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */,
+				B8300F2125BEB61600A02412 /* PDLScrollPageViewController.h */,
+			);
+			path = PDLScrollPageViewController;
+			sourceTree = "<group>";
+		};
 		B83CAA73248B4830009C784A /* pdl_security */ = {
 			isa = PBXGroup;
 			children = (
@@ -3191,6 +3230,7 @@
 				B877A7BF257F70D700580C6E /* libUIViewController+PDLExtension.a */,
 				B89FA8AA25921FC800B714BE /* libPDLLoad.a */,
 				B8672B11259B108D008082E5 /* libPDLSessionTaskStatisticsManager.a */,
+				B8300E1925BEB5E700A02412 /* libPDLScrollPageViewController.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4044,6 +4084,7 @@
 				B8528185255132CA00B74F87 /* PDLRunLoopObserver */,
 				B8E56EAD23D70019008D2DA1 /* PDLSafeOperation */,
 				B8E56E0923D70016008D2DA1 /* PDLScreenDebugger */,
+				B8300F1F25BEB61600A02412 /* PDLScrollPageViewController */,
 				B8672A58259B0FDA008082E5 /* PDLSessionTaskStatisticsManager */,
 				B8E56E7723D70018008D2DA1 /* PDLSystemImage */,
 				B864FA1F2523570300842343 /* PDLTaskManager */,
@@ -4185,6 +4226,24 @@
 			name = "NSObject+PDLSelectorProxy";
 			productName = "CAAnimation+PDLExtension";
 			productReference = B82334AF23BC982900B1B15B /* libNSObject+PDLSelectorProxy.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B8300E1125BEB5E700A02412 /* PDLScrollPageViewController */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B8300E1625BEB5E700A02412 /* Build configuration list for PBXNativeTarget "PDLScrollPageViewController" */;
+			buildPhases = (
+				B8300E1225BEB5E700A02412 /* Sources */,
+				B8300E1325BEB5E700A02412 /* Frameworks */,
+				B8300E1425BEB5E700A02412 /* CopyFiles */,
+				B8300E1525BEB5E700A02412 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLScrollPageViewController;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B8300E1925BEB5E700A02412 /* libPDLScrollPageViewController.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		B83CAA79248B49B4009C784A /* pdl_security */ = {
@@ -4609,6 +4668,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B830108225BEB63000A02412 /* PBXTargetDependency */,
 				B8672CC3259B10AB008082E5 /* PBXTargetDependency */,
 				B89FAA5725921FEC00B714BE /* PBXTargetDependency */,
 				B877A967257F710700580C6E /* PBXTargetDependency */,
@@ -5798,6 +5858,7 @@
 				B852823A255132E100B74F87 /* PDLRunLoopObserver */,
 				B8FC6C6E22EF063A005B91DE /* PDLSafeOperation */,
 				B85ECB6622F27B3B0063BB7C /* PDLScreenDebugger */,
+				B8300E1125BEB5E700A02412 /* PDLScrollPageViewController */,
 				B8672B09259B108D008082E5 /* PDLSessionTaskStatisticsManager */,
 				B8FC6C6522EF0639005B91DE /* PDLSystemImage */,
 				B864FA16252356BB00842343 /* PDLTaskManager */,
@@ -5930,6 +5991,23 @@
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
 		B82334AB23BC982900B1B15B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B8300E1525BEB5E700A02412 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -7350,6 +7428,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B8300E1225BEB5E700A02412 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B830102925BEB62200A02412 /* PDLScrollPageViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B83CAA7A248B49B4009C784A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -7521,6 +7607,7 @@
 				B85D45F2240E859000CBF758 /* PDLResizableImageView.m in Sources */,
 				B85D45F3240E859000CBF758 /* NSArray+PDLSafeOperation.m in Sources */,
 				B879531F248685B000798005 /* pdl_thread.c in Sources */,
+				B8300F2225BEB61600A02412 /* PDLScrollPageViewController.m in Sources */,
 				B85D45F4240E859000CBF758 /* NSDictionary+PDLSafeOperation.m in Sources */,
 				B893CBF9252488D000174119 /* PDLTaskScheduler.m in Sources */,
 				B85D45F5240E859000CBF758 /* PDLLayerDebuggerWindow.m in Sources */,
@@ -8210,6 +8297,11 @@
 			target = B82334A723BC982900B1B15B /* NSObject+PDLSelectorProxy */;
 			targetProxy = B82334B623BC988E00B1B15B /* PBXContainerItemProxy */;
 		};
+		B830108225BEB63000A02412 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B8300E1125BEB5E700A02412 /* PDLScrollPageViewController */;
+			targetProxy = B830108125BEB63000A02412 /* PBXContainerItemProxy */;
+		};
 		B83CAA85248B49FE009C784A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B83CAA79248B49B4009C784A /* pdl_security */;
@@ -8761,6 +8853,28 @@
 			name = Debug;
 		};
 		B82334AE23BC982900B1B15B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B8300E1725BEB5E700A02412 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B8300E1825BEB5E700A02412 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -10713,6 +10827,15 @@
 			buildConfigurations = (
 				B82334AD23BC982900B1B15B /* Debug */,
 				B82334AE23BC982900B1B15B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B8300E1625BEB5E700A02412 /* Build configuration list for PBXNativeTarget "PDLScrollPageViewController" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B8300E1725BEB5E700A02412 /* Debug */,
+				B8300E1825BEB5E700A02412 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
