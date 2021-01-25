@@ -140,6 +140,10 @@
         return;
     }
 
+    if (currentIndex >= self.numberOfItems) {
+        return;
+    }
+
     if (self.isVertical) {
         [self.pageView scrollToColumn:0 row:currentIndex atScrollPosition:PDLFormViewScrollPositionNone animated:animated];
     } else {
