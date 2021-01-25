@@ -78,21 +78,6 @@
         [self reloadSizes];
     }
 
-    CGFloat width = [self.columnWidths.lastObject doubleValue];
-    if (self.isScrollHorizontallyForcedEnabled) {
-        if (width <= self.bounds.size.width) {
-            width = self.bounds.size.width + 1;
-        }
-    }
-
-    CGFloat height = [self.rowHeights.lastObject doubleValue];
-    if (self.isScrollVerticallyForcedEnabled) {
-        if (height <= self.bounds.size.height) {
-            height = self.bounds.size.height + 1;
-        }
-    }
-    self.contentSize = CGSizeMake(width, height);
-
     NSArray *oldVisibleColumns = self.visibleColumns;
     [self calculateVisibleColumns];
     NSArray *newVisibleColumns = self.visibleColumns;
@@ -206,7 +191,7 @@
     }
     
     _isScrollHorizontallyForcedEnabled = isScrollHorizontallyForcedEnabled;
-    [self setNeedsLayout];
+    [self refreshContentSize];
 }
 
 - (void)setIsScrollVerticallyForcedEnabled:(BOOL)isScrollVerticallyForcedEnabled {
@@ -215,7 +200,7 @@
     }
 
     _isScrollVerticallyForcedEnabled = isScrollVerticallyForcedEnabled;
-    [self setNeedsLayout];
+    [self refreshContentSize];
 }
 
 - (void)reloadData {
@@ -338,6 +323,8 @@
 
     self.columnWidths = columnWidths;
     self.rowHeights = rowHeights;
+
+    [self refreshContentSize];
 }
 
 - (void)applyCell:(PDLFormViewCell *)cell isLeft:(BOOL)isLeft isRight:(BOOL)isRight isTop:(BOOL)isTop isBottom:(BOOL)isBottom {
@@ -446,6 +433,23 @@
     BOOL isBottom = (bottomRow == self.rowHeights.count - 1);
 
     [self applyCell:cell isLeft:isLeft isRight:isRight isTop:isTop isBottom:isBottom];
+}
+
+- (void)refreshContentSize {
+    CGFloat width = [self.columnWidths.lastObject doubleValue];
+    if (self.isScrollHorizontallyForcedEnabled) {
+        if (width <= self.bounds.size.width) {
+            width = self.bounds.size.width + 1;
+        }
+    }
+
+    CGFloat height = [self.rowHeights.lastObject doubleValue];
+    if (self.isScrollVerticallyForcedEnabled) {
+        if (height <= self.bounds.size.height) {
+            height = self.bounds.size.height + 1;
+        }
+    }
+    self.contentSize = CGSizeMake(width, height);
 }
 
 - (void)refreshVisibleViewAtColumn:(NSInteger)column row:(NSInteger)row {
