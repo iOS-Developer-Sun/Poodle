@@ -14,15 +14,11 @@ NS_ASSUME_NONNULL_BEGIN
 
 @protocol PDLScrollPageViewControllerDelegate <NSObject>
 
-- (UIViewController *)scrollPageViewControllerCurrentViewController:(PDLScrollPageViewController *)scrollPageViewController;
+- (UIViewController *_Nullable)scrollPageViewController:(PDLScrollPageViewController *)scrollPageViewController viewControllerAtIndex:(NSInteger)index;
 
 @optional
 
-- (UIViewController *_Nullable)scrollPageViewControllerPreviousViewController:(PDLScrollPageViewController *)scrollPageViewController;
-- (UIViewController *_Nullable)scrollPageViewControllerNextViewController:(PDLScrollPageViewController *)scrollPageViewController;
-
-- (void)scrollPageViewControllerDidScrollToPrevious:(PDLScrollPageViewController *)scrollPageViewController;
-- (void)scrollPageViewControllerDidScrollToNext:(PDLScrollPageViewController *)scrollPageViewController;
+- (void)scrollPageViewController:(PDLScrollPageViewController *)scrollPageViewController didScrollToIndex:(NSInteger)index;
 - (void)scrollPageViewController:scrollPageViewController didScrollWithOffset:(CGFloat)offset;
 
 @optional
@@ -39,9 +35,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)scrollToNextAnimated:(BOOL)animated;
 
 - (void)reloadData;
-
-- (void)reloadPrevious;
-- (void)reloadNext;
 
 @end
 

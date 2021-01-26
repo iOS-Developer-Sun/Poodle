@@ -8,6 +8,84 @@
 
 #import "PDLScrollPageViewController.h"
 
+@interface PDLScrollPageViewControllerScrollPageView : UIView
+
+@property (nonatomic, assign) BOOL needsReload;
+
+@property (nonatomic, assign) NSInteger state; // 0 1 2
+@property (nonatomic, copy) void (^stateDidChangeAction)(PDLScrollPageViewControllerScrollPageView *pageView, NSInteger originalState);
+@property (nonatomic, strong) UIViewController *viewController;
+
+@end
+
+@implementation PDLScrollPageViewControllerScrollPageView
+
+- (void)setViewController:(UIViewController *)viewController {
+    if (_viewController == viewController) {
+        return;
+    }
+
+    [viewController.view removeFromSuperview];
+    _viewController = viewController;
+    [self addSubview:viewController.view];
+}
+
+- (BOOL)refreshState {
+    NSInteger originalState = self.state;
+    NSInteger state = originalState;
+    do {
+        UIView *superview = self.superview;
+        if (!superview) {
+            state = 0;
+            break;
+        }
+
+        CGRect frame = self.frame;
+        CGRect bounds = superview.bounds;
+        BOOL contains = CGRectContainsRect(bounds, frame);
+        if (contains) {
+            state = 2;
+            break;
+        }
+
+        BOOL isOnScreen = CGRectIntersectsRect(bounds, frame);
+        if (isOnScreen) {
+            state = 1;
+            break;
+        }
+        state = 0;
+    } while (0);
+
+    self.state = state;
+    if (originalState != state) {
+        if (self.stateDidChangeAction) {
+            self.stateDidChangeAction(self, originalState);
+        }
+        return YES;
+    }
+    return NO;
+}
+
+@end
+
+@interface PDLScrollPageViewControllerScrollView : UIScrollView
+
+@property (nonatomic, copy) void(^layoutSubviewsAction)(PDLScrollPageViewControllerScrollView *scrollView);
+
+@end
+
+@implementation PDLScrollPageViewControllerScrollView
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    if (self.layoutSubviewsAction) {
+        self.layoutSubviewsAction(self);
+    }
+}
+
+@end
+
 @interface PDLScrollPageViewControllerItem : NSObject
 
 @end
@@ -16,11 +94,8 @@ static const NSInteger PDLScrollPageCount = 3;
 
 @interface PDLScrollPageViewController () <UIScrollViewDelegate>
 
-@property (nonatomic, weak) UIScrollView *scrollView;
-
-@property (nonatomic, strong) UIViewController *currentPage;
-@property (nonatomic, strong) UIViewController *previousPage;
-@property (nonatomic, strong) UIViewController *nextPage;
+@property (nonatomic, weak) PDLScrollPageViewControllerScrollView *scrollView;
+@property (nonatomic, copy) NSArray <PDLScrollPageViewControllerScrollPageView *> *pageViews;
 
 @property (nonatomic, assign) BOOL isReseting;
 
@@ -31,7 +106,7 @@ static const NSInteger PDLScrollPageCount = 3;
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    UIScrollView *scrollView = [[UIScrollView alloc] initWithFrame:self.view.bounds];
+    PDLScrollPageViewControllerScrollView *scrollView = [[PDLScrollPageViewControllerScrollView alloc] initWithFrame:self.view.bounds];
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     scrollView.backgroundColor = [UIColor clearColor];
     scrollView.showsHorizontalScrollIndicator = NO;
@@ -43,11 +118,48 @@ static const NSInteger PDLScrollPageCount = 3;
     scrollView.clipsToBounds = YES;
     [self.view addSubview:scrollView];
     self.scrollView = scrollView;
+
+    __weak __typeof(self) weakSelf = self;
+    scrollView.layoutSubviewsAction = ^(PDLScrollPageViewControllerScrollView *scrollView) {
+        [weakSelf scrollViewDidLayoutSubviews];
+    };
+
+    NSMutableArray <PDLScrollPageViewControllerScrollPageView *> *pageViews = [NSMutableArray array];
+    for (NSInteger i = 0; i < PDLScrollPageCount; i++) {
+        PDLScrollPageViewControllerScrollPageView *pageView = [[PDLScrollPageViewControllerScrollPageView alloc] initWithFrame:CGRectMake(0, 0, scrollView.bounds.size.width, scrollView.bounds.size.height)];
+        pageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        pageView.needsReload = YES;
+        pageView.stateDidChangeAction = ^(PDLScrollPageViewControllerScrollPageView *pageView, NSInteger originalState) {
+            [weakSelf pageViewStateDidChange:pageView originalState:originalState];
+        };
+        [scrollView addSubview:pageView];
+        [pageViews addObject:pageView];
+    }
+    self.pageViews = pageViews;
 }
 
 - (UIScrollView *)scrollView {
     [self loadViewIfNeeded];
     return _scrollView;
+}
+
+- (NSInteger)count {
+    return self.pageViews.count;
+}
+
+- (PDLScrollPageViewControllerScrollPageView *)currentPageView {
+    NSInteger index = self.count / 2;
+    return self.pageViews[index];
+}
+
+- (PDLScrollPageViewControllerScrollPageView *)previousPageView {
+    NSInteger index = self.count / 2 - 1;
+    return self.pageViews[index];
+}
+
+- (PDLScrollPageViewControllerScrollPageView *)nextPageView {
+    NSInteger index = self.count / 2 + 1;
+    return self.pageViews[index];
 }
 
 - (void)setIsVertical:(BOOL)isVertical {
@@ -56,29 +168,57 @@ static const NSInteger PDLScrollPageCount = 3;
     }
 
     _isVertical = isVertical;
-//    [self reloadData];
+
+    [self.scrollView setNeedsLayout];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
 
-    if (!self.currentPage) {
-        [self reloadData];
-    }
+//    if (!self.currentPage) {
+//        [self reloadData];
+//    }
 }
 
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
+- (void)scrollViewDidLayoutSubviews {
+    if (self.scrollView.contentSize.width == 0 || self.scrollView.contentSize.height == 0) {
+        [self refreshContentSize];
+        [self refreshPageViewsFrame];
+        [self resetContentOffset];
+    }
 
-    if (!self.currentPage) {
-        [self reloadData];
-    } else {
-        [self resetScrollView];
+    BOOL changed = NO;
+    for (NSInteger i = 0; i < self.count; i++) {
+        PDLScrollPageViewControllerScrollPageView *pageView = self.pageViews[i];
+        if (pageView.needsReload) {
+            [self reloadPageViewAtIndex:i];
+        }
+        changed |= [pageView refreshState];
+    }
+
+    if (changed) {
+        [self didScroll];
+    }
+    [self refreshContentInset];
+}
+
+- (void)reloadPageViewAtIndex:(NSInteger)index {
+    PDLScrollPageViewControllerScrollPageView *pageView = self.pageViews[index];
+    pageView.needsReload = NO;
+    NSInteger currentIndex = self.count / 2;
+    UIViewController *viewController = [self.delegate scrollPageViewController:self viewControllerAtIndex:index - currentIndex];
+    pageView.viewController = viewController;
+}
+
+- (void)pageViewStateDidChange:(PDLScrollPageViewControllerScrollPageView *)pageView originalState:(NSInteger)originalState {
+    NSInteger state = pageView.state;
+    if (originalState == 0) {
+        ;
     }
 }
 
 - (void)scrollToPreviousAnimated:(BOOL)animated {
-    if (!self.previousPage) {
+    if (!self.scrollView) {
         return;
     }
 
@@ -86,7 +226,7 @@ static const NSInteger PDLScrollPageCount = 3;
 }
 
 - (void)scrollToNextAnimated:(BOOL)animated {
-    if (!self.nextPage) {
+    if (!self.nextPageView.viewController) {
         return;
     }
 
@@ -95,119 +235,48 @@ static const NSInteger PDLScrollPageCount = 3;
 }
 
 - (void)reloadData {
-    [self reloadCurrent];
-    [self reloadPrevious];
-    [self reloadNext];
-    [self resetScrollView];
+//    [self resetScrollView];
 }
 
 - (void)enqueue:(UIViewController *)item {
     ;
 }
 
-- (void)setCurrentPage:(UIViewController *)currentPage {
-    if (_currentPage == currentPage) {
-        return;
-    }
-
-    [_currentPage.view removeFromSuperview];
-    [_currentPage removeFromParentViewController];
-
-    _currentPage = currentPage;
-
-    if (currentPage) {
-        [self.scrollView addSubview:currentPage.view];
-        [self addChildViewController:currentPage];
+- (void)refreshPageViewsFrame {
+    BOOL isVertical = self.isVertical;
+    CGSize size = self.scrollView.frame.size;
+    for (NSInteger i = 0; i < self.count; i++) {
+        PDLScrollPageViewControllerScrollPageView *pageView = self.pageViews[i];
+        if (isVertical) {
+            pageView.frame = CGRectMake(0, i * size.height, size.width, size.height);
+        } else {
+            pageView.frame = CGRectMake(i * size.width, 0, size.width, size.height);
+        }
     }
 }
 
-- (void)setPreviousPage:(UIViewController *)previousPage {
-    if (_previousPage == previousPage) {
-        return;
-    }
-
-    [_previousPage.view removeFromSuperview];
-    [_previousPage removeFromParentViewController];
-
-    _previousPage = previousPage;
-
-    if (previousPage) {
-        [self.scrollView addSubview:previousPage.view];
-        [self addChildViewController:previousPage];
-    }
+- (void)refreshContentSize {
+    BOOL isVertical = self.isVertical;
+    CGSize size = self.scrollView.frame.size;
+    NSInteger count = self.pageViews.count;
+    self.scrollView.contentSize = isVertical ? CGSizeMake(size.width, size.height * count) : CGSizeMake(size.width * count, size.height);
 }
 
-- (void)setNextPage:(UIViewController *)nextPage {
-    if (_nextPage == nextPage) {
-        return;
-    }
-
-    [_nextPage.view removeFromSuperview];
-    [_nextPage removeFromParentViewController];
-
-    _nextPage = nextPage;
-
-    if (nextPage) {
-        [self.scrollView addSubview:nextPage.view];
-        [self addChildViewController:nextPage];
-    }
+- (void)resetContentOffset {
+    BOOL isVertical = self.isVertical;
+    CGSize size = self.scrollView.frame.size;
+    NSInteger offsetPageCount = self.count / 2;
+    self.scrollView.contentOffset = isVertical ? CGPointMake(0, size.height * offsetPageCount) : CGPointMake(size.width * offsetPageCount, 0);
 }
 
-- (void)reloadCurrent {
-    [self enqueue:self.currentPage];
-    self.currentPage = nil;
-
-    if ([self.delegate respondsToSelector:@selector(scrollPageViewControllerCurrentViewController:)]) {
-        UIViewController *viewController = [self.delegate scrollPageViewControllerCurrentViewController:self];
-        self.currentPage = viewController;
-    }
-}
-
-- (void)reloadPrevious {
-    [self enqueue:self.previousPage];
-    self.previousPage = nil;
-
-    if ([self.delegate respondsToSelector:@selector(scrollPageViewControllerPreviousViewController:)]) {
-        UIViewController *viewController = [self.delegate scrollPageViewControllerPreviousViewController:self];
-        self.previousPage = viewController;
-    }
-}
-
-- (void)reloadNext {
-    [self enqueue:self.nextPage];
-    self.nextPage = nil;
-
-    if ([self.delegate respondsToSelector:@selector(scrollPageViewControllerNextViewController:)]) {
-        UIViewController *viewController = [self.delegate scrollPageViewControllerNextViewController:self];
-        self.nextPage = viewController;
-    }
-}
-
-- (void)resetScrollView {
-    self.isReseting = YES;
-    self.scrollView.frame = self.view.bounds;
+- (void)refreshContentInset {
     BOOL isVertical = self.isVertical;
     CGSize size = self.scrollView.frame.size;
     CGFloat length = isVertical ? size.height : size.width;
-    CGFloat previousInset = self.previousPage ? 0 : -length;
-    CGFloat nextInset = self.nextPage ? 0 : -length;
+
+    CGFloat previousInset = self.previousPageView.viewController ? 0 : -length;
+    CGFloat nextInset = self.nextPageView.viewController ? 0 : -length;
     self.scrollView.contentInset = self.isVertical ? UIEdgeInsetsMake(previousInset, 0, nextInset, 0) : UIEdgeInsetsMake(0, previousInset, 0, nextInset);
-
-    NSInteger count = 3;
-    self.scrollView.contentSize = isVertical ? CGSizeMake(size.width, size.height * count) : CGSizeMake(size.width * count, size.height);
-    self.scrollView.contentOffset = isVertical ? CGPointMake(0, size.height) : CGPointMake(size.width, 0);
-
-    if (isVertical) {
-        self.previousPage.view.frame = CGRectMake(0, 0 * size.height, size.width, size.height);
-        self.currentPage.view.frame = CGRectMake(0, 1 * size.height, size.width, size.height);
-        self.nextPage.view.frame = CGRectMake(0, 2 * size.height, size.width, size.height);
-    } else {
-        self.previousPage.view.frame = CGRectMake(0 * size.width, 0, size.width, size.height);
-        self.currentPage.view.frame = CGRectMake(1 * size.width, 0, size.width, size.height);
-        self.nextPage.view.frame = CGRectMake(2 * size.width, 0, size.width, size.height);
-    }
-
-    self.isReseting = NO;
 }
 
 - (void)didScroll {
@@ -215,26 +284,36 @@ static const NSInteger PDLScrollPageCount = 3;
     BOOL isVertical = self.isVertical;
     CGFloat length = isVertical ? frame.size.height : frame.size.width;
     CGFloat offset = isVertical ?  self.scrollView.contentOffset.y : self.scrollView.contentOffset.x;
-    if (offset < length * (PDLScrollPageCount / 2 - 0.5)) {
-        UIViewController *viewController = self.nextPage;
-        _nextPage = self.currentPage;
-        _currentPage = self.previousPage;
-        _previousPage = viewController;
-        if ([self.delegate respondsToSelector:@selector(scrollPageViewControllerDidScrollToPrevious:)]) {
-            [self.delegate scrollPageViewControllerDidScrollToPrevious:self];
+    if (offset < length * (self.count / 2 - 0.5)) {
+        // left
+        NSMutableArray *pageViews = [self.pageViews mutableCopy];
+        id pageView = pageViews.lastObject;
+        [pageViews removeLastObject];
+        [pageViews insertObject:pageView atIndex:0];
+        self.pageViews = pageViews;
+
+        if ([self.delegate respondsToSelector:@selector(scrollPageViewController:didScrollToIndex:)]) {
+            [self.delegate scrollPageViewController:self didScrollToIndex:-1];
         }
-        [self reloadPrevious];
-        [self resetScrollView];
-    } else if (offset > length * (PDLScrollPageCount / 2 + 0.5)) {
-        UIViewController *viewController = self.previousPage;
-        _previousPage = self.currentPage;
-        _currentPage = self.nextPage;
-        _nextPage = viewController;
-        if ([self.delegate respondsToSelector:@selector(scrollPageViewControllerDidScrollToNext:)]) {
-            [self.delegate scrollPageViewControllerDidScrollToNext:self];
+
+        [self refreshPageViewsFrame];
+        [self resetContentOffset];
+        [self reloadPageViewAtIndex:0];
+    } else if (offset > length * (self.count / 2 + 0.5)) {
+        // right
+        NSMutableArray *pageViews = [self.pageViews mutableCopy];
+        id pageView = pageViews.firstObject;
+        [pageViews removeObjectAtIndex:0];
+        [pageViews addObject:pageView];
+        self.pageViews = pageViews;
+
+        if ([self.delegate respondsToSelector:@selector(scrollPageViewController:didScrollToIndex:)]) {
+            [self.delegate scrollPageViewController:self didScrollToIndex:1];
         }
-        [self reloadNext];
-        [self resetScrollView];
+
+        [self refreshPageViewsFrame];
+        [self resetContentOffset];
+        [self reloadPageViewAtIndex:self.count - 1];
     }
 }
 
@@ -272,15 +351,15 @@ static const NSInteger PDLScrollPageCount = 3;
 
 #pragma mark - UIScrollViewDelegate
 
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-    if (!self.isReseting && !CGRectIntersectsRect(scrollView.bounds, self.currentPage.view.frame)) {
-        [self didScroll];
-    }
-
-    CGFloat offset = (self.isVertical ? (scrollView.contentOffset.y / scrollView.frame.size.height) : (scrollView.contentOffset.x / scrollView.frame.size.width)) - PDLScrollPageCount / 2;
-    if ([self.delegate respondsToSelector:@selector(scrollPageViewController:didScrollWithOffset:)]) {
-        [self.delegate scrollPageViewController:self didScrollWithOffset:offset];
-    }
-}
+//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+//    if (!self.isReseting && !CGRectIntersectsRect(scrollView.bounds, self.currentPageView.frame)) {
+//        [self didScroll];
+//    }
+//
+//    CGFloat offset = (self.isVertical ? (scrollView.contentOffset.y / scrollView.frame.size.height) : (scrollView.contentOffset.x / scrollView.frame.size.width)) - PDLScrollPageCount / 2;
+//    if ([self.delegate respondsToSelector:@selector(scrollPageViewController:didScrollWithOffset:)]) {
+//        [self.delegate scrollPageViewController:self didScrollWithOffset:offset];
+//    }
+//}
 
 @end
