@@ -11,59 +11,99 @@
 @interface PDLScrollPageViewControllerScrollPageView : UIView
 
 @property (nonatomic, assign) BOOL needsReload;
+@property (nonatomic, assign) BOOL state;
 
-@property (nonatomic, assign) NSInteger state; // 0 1 2
-@property (nonatomic, copy) void (^stateDidChangeAction)(PDLScrollPageViewControllerScrollPageView *pageView, NSInteger originalState);
+@property (nonatomic, copy) void (^willDisplayAction)(PDLScrollPageViewControllerScrollPageView *pageView);
+@property (nonatomic, copy) void (^didDisplayAction)(PDLScrollPageViewControllerScrollPageView *pageView);
+@property (nonatomic, copy) void (^willEndDisplayingAction)(PDLScrollPageViewControllerScrollPageView *pageView);
+@property (nonatomic, copy) void (^didEndDisplayingAction)(PDLScrollPageViewControllerScrollPageView *pageView);
 @property (nonatomic, strong) UIViewController *viewController;
+@property (nonatomic, strong) NSNumber *appearing;
 
 @end
 
 @implementation PDLScrollPageViewControllerScrollPageView
 
-- (void)setViewController:(UIViewController *)viewController {
-    if (_viewController == viewController) {
+- (instancetype)initWithFrame:(CGRect)frame {
+    self = [super initWithFrame:frame];
+    if (self) {
+        _needsReload = YES;
+    }
+    return self;
+}
+
+- (void)setNeedsReload:(BOOL)needsReload {
+    if (_needsReload == needsReload) {
         return;
     }
 
-    [viewController.view removeFromSuperview];
-    _viewController = viewController;
-    [self addSubview:viewController.view];
+    _needsReload = needsReload;
+    if (needsReload) {
+        self.state = NO;
+    } else {
+        [self refreshState];
+    }
+}
+
+- (void)beginAppearanceTransition:(BOOL)isAppearing animated:(BOOL)animated {
+    if (self.appearing && self.appearing.boolValue == isAppearing) {
+        return;
+    }
+
+    [self.viewController beginAppearanceTransition:isAppearing animated:animated];
+    self.appearing = @(isAppearing);
+}
+
+- (void)endAppearanceTransition {
+    if (!self.appearing) {
+        return;
+    }
+
+    [self.viewController endAppearanceTransition];
+    self.appearing = nil;
+}
+
+- (void)setState:(BOOL)state {
+    if (_state == state) {
+        return;
+    }
+
+    if (state) {
+        if (self.willDisplayAction) {
+            self.willDisplayAction(self);
+        }
+    } else {
+        if (self.willEndDisplayingAction) {
+            self.willEndDisplayingAction(self);
+        }
+    }
+
+    _state = state;
+
+    if (self.viewController) {
+        if (state) {
+            [self addSubview:self.viewController.view];
+        } else {
+            [self.viewController.view removeFromSuperview];
+        }
+    }
+
+    if (state) {
+        if (self.didDisplayAction) {
+            self.didDisplayAction(self);
+        }
+    } else {
+        if (self.didEndDisplayingAction) {
+            self.didEndDisplayingAction(self);
+        }
+    }
 }
 
 - (BOOL)refreshState {
-    NSInteger originalState = self.state;
-    NSInteger state = originalState;
-    do {
-        UIView *superview = self.superview;
-        if (!superview) {
-            state = 0;
-            break;
-        }
-
-        CGRect frame = self.frame;
-        CGRect bounds = superview.bounds;
-        BOOL contains = CGRectContainsRect(bounds, frame);
-        if (contains) {
-            state = 2;
-            break;
-        }
-
-        BOOL isOnScreen = CGRectIntersectsRect(bounds, frame);
-        if (isOnScreen) {
-            state = 1;
-            break;
-        }
-        state = 0;
-    } while (0);
-
+    BOOL originalState = self.state;
+    BOOL state = CGRectIntersectsRect(self.superview.bounds, self.frame);
     self.state = state;
-    if (originalState != state) {
-        if (self.stateDidChangeAction) {
-            self.stateDidChangeAction(self, originalState);
-        }
-        return YES;
-    }
-    return NO;
+    return (originalState != state);
 }
 
 @end
@@ -97,7 +137,9 @@ static const NSInteger PDLScrollPageCount = 3;
 @property (nonatomic, weak) PDLScrollPageViewControllerScrollView *scrollView;
 @property (nonatomic, copy) NSArray <PDLScrollPageViewControllerScrollPageView *> *pageViews;
 
-@property (nonatomic, assign) BOOL isReseting;
+@property (nonatomic, weak) PDLScrollPageViewControllerScrollPageView *appearingItem;
+@property (nonatomic, weak) PDLScrollPageViewControllerScrollPageView *disappearingItem;
+@property (nonatomic, assign) BOOL isScrolling;
 
 @end
 
@@ -128,9 +170,17 @@ static const NSInteger PDLScrollPageCount = 3;
     for (NSInteger i = 0; i < PDLScrollPageCount; i++) {
         PDLScrollPageViewControllerScrollPageView *pageView = [[PDLScrollPageViewControllerScrollPageView alloc] initWithFrame:CGRectMake(0, 0, scrollView.bounds.size.width, scrollView.bounds.size.height)];
         pageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        pageView.needsReload = YES;
-        pageView.stateDidChangeAction = ^(PDLScrollPageViewControllerScrollPageView *pageView, NSInteger originalState) {
-            [weakSelf pageViewStateDidChange:pageView originalState:originalState];
+        pageView.willDisplayAction = ^(PDLScrollPageViewControllerScrollPageView *pageView) {
+            [weakSelf willDisplay:pageView];
+        };
+        pageView.didDisplayAction = ^(PDLScrollPageViewControllerScrollPageView *pageView) {
+            [weakSelf didDisplay:pageView];
+        };
+        pageView.willEndDisplayingAction = ^(PDLScrollPageViewControllerScrollPageView *pageView) {
+            [weakSelf willEndDisplaying:pageView];
+        };
+        pageView.didEndDisplayingAction = ^(PDLScrollPageViewControllerScrollPageView *pageView) {
+            [weakSelf didEndDisplaying:pageView];
         };
         [scrollView addSubview:pageView];
         [pageViews addObject:pageView];
@@ -141,6 +191,26 @@ static const NSInteger PDLScrollPageCount = 3;
 - (UIScrollView *)scrollView {
     [self loadViewIfNeeded];
     return _scrollView;
+}
+
+- (BOOL)scrollViewHasAnimation {
+    id animation = nil;
+    @try {
+        animation = [self.scrollView valueForKeyPath:@"animation"];
+    } @catch (NSException *exception) {
+        ;
+    } @finally {
+        ;
+    }
+    return animation != nil;
+}
+
+- (BOOL)scrollViewAnimated {
+    if (self.scrollView.isDragging || self.scrollView.isDecelerating) {
+        return YES;
+    }
+
+    return [self scrollViewHasAnimation];
 }
 
 - (NSInteger)count {
@@ -204,17 +274,10 @@ static const NSInteger PDLScrollPageCount = 3;
 
 - (void)reloadPageViewAtIndex:(NSInteger)index {
     PDLScrollPageViewControllerScrollPageView *pageView = self.pageViews[index];
-    pageView.needsReload = NO;
     NSInteger currentIndex = self.count / 2;
     UIViewController *viewController = [self.delegate scrollPageViewController:self viewControllerAtIndex:index - currentIndex];
     pageView.viewController = viewController;
-}
-
-- (void)pageViewStateDidChange:(PDLScrollPageViewControllerScrollPageView *)pageView originalState:(NSInteger)originalState {
-    NSInteger state = pageView.state;
-    if (originalState == 0) {
-        ;
-    }
+    pageView.needsReload = NO;
 }
 
 - (void)scrollToPreviousAnimated:(BOOL)animated {
@@ -320,13 +383,13 @@ static const NSInteger PDLScrollPageCount = 3;
 #pragma mark - UIScrollViewDelegate
 
 - (void)scrollViewDidEndDragging:(UIScrollView *)scrollView willDecelerate:(BOOL)decelerate {
-    if (decelerate == NO) {
-//        [self didScroll];
+    if (!decelerate) {
+        self.isScrolling = NO;
     }
 }
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
-//    [self didScroll];
+    self.isScrolling = NO;
 
 //    if ([self.delegate respondsToSelector:@selector(scrollBannerDidEndScrollingAnimation:)]) {
 //        [self.delegate scrollBannerDidEndScrollingAnimation:self];
@@ -334,7 +397,7 @@ static const NSInteger PDLScrollPageCount = 3;
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
-//    [self didScroll];
+    self.isScrolling = NO;
 
 //    if ([self.delegate respondsToSelector:@selector(scrollBannerDidEndDecelerating:)]) {
 //        [self.delegate scrollBannerDidEndDecelerating:self];
@@ -342,14 +405,81 @@ static const NSInteger PDLScrollPageCount = 3;
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
-    ;
+    self.isScrolling = YES;
 }
 
 - (void)scrollViewWillBeginDecelerating:(UIScrollView *)scrollView {
     ;
 }
 
-#pragma mark - UIScrollViewDelegate
+#pragma mark -
+
+- (void)willDisplay:(PDLScrollPageViewControllerScrollPageView *)pageView {
+    NSInteger index = [self.pageViews indexOfObject:pageView];
+    BOOL viewAnimated = self.scrollViewAnimated || self.isScrolling;
+    NSInteger currentIndex = self.count / 2;
+    if (currentIndex == index) {
+        self.appearingItem = pageView;
+        self.disappearingItem = nil;
+    } else {
+        PDLScrollPageViewControllerScrollPageView *currentPageView = self.pageViews[currentIndex];
+        self.appearingItem = pageView;
+        self.disappearingItem = currentPageView;
+    }
+
+    [self.appearingItem beginAppearanceTransition:YES animated:viewAnimated];
+    [self.disappearingItem beginAppearanceTransition:NO animated:viewAnimated];
+
+//    if (_delegateRespondsWillDisplay) {
+//        [_delegate pageViewController:self willDisplay:item.viewController atIndex:index animated:animated];
+//    }
+}
+
+- (void)didDisplay:(PDLScrollPageViewControllerScrollPageView *)pageView {
+    if (!self.disappearingItem) {
+        [self.appearingItem endAppearanceTransition];
+        self.appearingItem = nil;
+    }
+
+//    [self addChildViewController:pageView.viewController];
+
+//    if (_delegateRespondsDidDisplay) {
+//        [_delegate pageViewController:self didDisplay:item.viewController atIndex:index animated:animated];
+//    }
+}
+
+- (void)willEndDisplaying:(PDLScrollPageViewControllerScrollPageView *)pageView {
+    NSInteger index = [self.pageViews indexOfObject:pageView];
+    BOOL viewAnimated = self.scrollViewAnimated || self.isScrolling;
+    NSInteger currentIndex = self.count / 2;
+    if (currentIndex != index) {
+        PDLScrollPageViewControllerScrollPageView *currentPageView = self.pageViews[currentIndex];
+        self.appearingItem = currentPageView;
+        self.disappearingItem = pageView;
+        [self.appearingItem beginAppearanceTransition:YES animated:viewAnimated];
+        [self.disappearingItem beginAppearanceTransition:NO animated:viewAnimated];
+    } else {
+        self.disappearingItem = pageView;
+        [self.disappearingItem beginAppearanceTransition:NO animated:viewAnimated];
+    }
+
+//    if (_delegateRespondsWillEndDisplaying) {
+//        [_delegate pageViewController:self willEndDisplaying:item.viewController atIndex:index animated:animated];
+//    }
+}
+
+- (void)didEndDisplaying:(PDLScrollPageViewControllerScrollPageView *)pageView {
+    [self.appearingItem endAppearanceTransition];
+    self.appearingItem = nil;
+    [self.disappearingItem endAppearanceTransition];
+    self.disappearingItem = nil;
+
+//    [pageView.viewController removeFromParentViewController];
+
+//    if (_delegateRespondsDidEndDisplaying) {
+//        [_delegate pageViewController:self didEndDisplaying:item.viewController atIndex:index animated:animated];
+//    }
+}
 
 //- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
 //    if (!self.isReseting && !CGRectIntersectsRect(scrollView.bounds, self.currentPageView.frame)) {
