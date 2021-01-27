@@ -7,18 +7,20 @@
 //
 
 #import "PDLScrollPageViewController.h"
+#import "PDLReuseItemManager.h"
 
 @interface PDLScrollPageViewControllerScrollPageView : UIView
 
 @property (nonatomic, assign) BOOL needsReload;
-@property (nonatomic, assign) BOOL state;
+@property (nonatomic, assign) BOOL visible;
+
+@property (nonatomic, strong) UIViewController *viewController;
+@property (nonatomic, strong) NSNumber *appearing;
 
 @property (nonatomic, copy) void (^willDisplayAction)(PDLScrollPageViewControllerScrollPageView *pageView);
 @property (nonatomic, copy) void (^didDisplayAction)(PDLScrollPageViewControllerScrollPageView *pageView);
 @property (nonatomic, copy) void (^willEndDisplayingAction)(PDLScrollPageViewControllerScrollPageView *pageView);
 @property (nonatomic, copy) void (^didEndDisplayingAction)(PDLScrollPageViewControllerScrollPageView *pageView);
-@property (nonatomic, strong) UIViewController *viewController;
-@property (nonatomic, strong) NSNumber *appearing;
 
 @end
 
@@ -39,9 +41,9 @@
 
     _needsReload = needsReload;
     if (needsReload) {
-        self.state = NO;
+        self.visible = NO;
     } else {
-        [self refreshState];
+        [self refreshVisible];
     }
 }
 
@@ -63,12 +65,12 @@
     self.appearing = nil;
 }
 
-- (void)setState:(BOOL)state {
-    if (_state == state) {
+- (void)setVisible:(BOOL)visible {
+    if (_visible == visible) {
         return;
     }
 
-    if (state) {
+    if (visible) {
         if (self.willDisplayAction) {
             self.willDisplayAction(self);
         }
@@ -78,17 +80,17 @@
         }
     }
 
-    _state = state;
+    _visible = visible;
 
     if (self.viewController) {
-        if (state) {
+        if (visible) {
             [self addSubview:self.viewController.view];
         } else {
             [self.viewController.view removeFromSuperview];
         }
     }
 
-    if (state) {
+    if (visible) {
         if (self.didDisplayAction) {
             self.didDisplayAction(self);
         }
@@ -99,11 +101,11 @@
     }
 }
 
-- (BOOL)refreshState {
-    BOOL originalState = self.state;
-    BOOL state = CGRectIntersectsRect(self.superview.bounds, self.frame);
-    self.state = state;
-    return (originalState != state);
+- (BOOL)refreshVisible {
+    BOOL originalVisible = self.visible;
+    BOOL visible = CGRectIntersectsRect(self.superview.bounds, self.frame);
+    self.visible = visible;
+    return (originalVisible != visible);
 }
 
 @end
@@ -130,9 +132,19 @@
 
 @end
 
+#pragma mark -
+
 static const NSInteger PDLScrollPageCount = 3;
 
-@interface PDLScrollPageViewController () <UIScrollViewDelegate>
+@interface PDLScrollPageViewController () <UIScrollViewDelegate> {
+    BOOL _delegateRespondsDidScrollToIndex;
+    BOOL _delegateRespondsDidScrollWithOffset;
+
+    BOOL _delegateRespondsWillDisplay;
+    BOOL _delegateRespondsDidDisplay;
+    BOOL _delegateRespondsWillEndDisplaying;
+    BOOL _delegateRespondsDidEndDisplaying;
+}
 
 @property (nonatomic, weak) PDLScrollPageViewControllerScrollView *scrollView;
 @property (nonatomic, copy) NSArray <PDLScrollPageViewControllerScrollPageView *> *pageViews;
@@ -141,12 +153,16 @@ static const NSInteger PDLScrollPageCount = 3;
 @property (nonatomic, weak) PDLScrollPageViewControllerScrollPageView *disappearingItem;
 @property (nonatomic, assign) BOOL isScrolling;
 
+@property (nonatomic, strong) PDLReuseItemManager *reuseItemManager;
+
 @end
 
 @implementation PDLScrollPageViewController
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+
+    self.reuseItemManager = [[PDLReuseItemManager alloc] init];
 
     PDLScrollPageViewControllerScrollView *scrollView = [[PDLScrollPageViewControllerScrollView alloc] initWithFrame:self.view.bounds];
     scrollView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
@@ -168,8 +184,7 @@ static const NSInteger PDLScrollPageCount = 3;
 
     NSMutableArray <PDLScrollPageViewControllerScrollPageView *> *pageViews = [NSMutableArray array];
     for (NSInteger i = 0; i < PDLScrollPageCount; i++) {
-        PDLScrollPageViewControllerScrollPageView *pageView = [[PDLScrollPageViewControllerScrollPageView alloc] initWithFrame:CGRectMake(0, 0, scrollView.bounds.size.width, scrollView.bounds.size.height)];
-        pageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        PDLScrollPageViewControllerScrollPageView *pageView = [[PDLScrollPageViewControllerScrollPageView alloc] init];
         pageView.willDisplayAction = ^(PDLScrollPageViewControllerScrollPageView *pageView) {
             [weakSelf willDisplay:pageView];
         };
@@ -242,16 +257,24 @@ static const NSInteger PDLScrollPageCount = 3;
     [self.scrollView setNeedsLayout];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)setDelegate:(id<PDLScrollPageViewControllerDelegate>)delegate {
+    if (_delegate == delegate) {
+        return;
+    }
 
-//    if (!self.currentPage) {
-//        [self reloadData];
-//    }
+    _delegate = delegate;
+
+    _delegateRespondsDidScrollToIndex = [delegate respondsToSelector:@selector(scrollPageViewController:didScrollToIndex:)];
+    _delegateRespondsDidScrollWithOffset = [delegate respondsToSelector:@selector(scrollPageViewController:didScrollWithOffset:)];
+
+    _delegateRespondsWillDisplay = [delegate respondsToSelector:@selector(scrollPageViewController:willDisplay:atIndex:animated:)];
+    _delegateRespondsDidDisplay = [delegate respondsToSelector:@selector(scrollPageViewController:didDisplay:atIndex:animated:)];
+    _delegateRespondsWillEndDisplaying = [delegate respondsToSelector:@selector(scrollPageViewController:willEndDisplaying:atIndex:animated:)];
+    _delegateRespondsDidEndDisplaying = [delegate respondsToSelector:@selector(scrollPageViewController:didEndDisplaying:atIndex:animated:)];
 }
 
 - (void)scrollViewDidLayoutSubviews {
-    if (self.scrollView.contentSize.width == 0 || self.scrollView.contentSize.height == 0) {
+    if (!CGSizeEqualToSize(self.scrollView.bounds.size, self.pageViews.firstObject.bounds.size)) {
         [self refreshContentSize];
         [self refreshPageViewsFrame];
         [self resetContentOffset];
@@ -263,19 +286,23 @@ static const NSInteger PDLScrollPageCount = 3;
         if (pageView.needsReload) {
             [self reloadPageViewAtIndex:i];
         }
-        changed |= [pageView refreshState];
+        changed |= [pageView refreshVisible];
     }
 
     if (changed) {
-        [self didScroll];
+        [self resetCurrent];
     }
     [self refreshContentInset];
 }
 
 - (void)reloadPageViewAtIndex:(NSInteger)index {
     PDLScrollPageViewControllerScrollPageView *pageView = self.pageViews[index];
+    UIViewController *viewController = pageView.viewController;
+    if (viewController) {
+        [self enqueue:viewController];
+    }
     NSInteger currentIndex = self.count / 2;
-    UIViewController *viewController = [self.delegate scrollPageViewController:self viewControllerAtIndex:index - currentIndex];
+    viewController = [_delegate scrollPageViewController:self viewControllerAtIndex:index - currentIndex];
     pageView.viewController = viewController;
     pageView.needsReload = NO;
 }
@@ -298,11 +325,25 @@ static const NSInteger PDLScrollPageCount = 3;
 }
 
 - (void)reloadData {
-//    [self resetScrollView];
+    for (NSInteger i = 0; i < self.count; i++) {
+        PDLScrollPageViewControllerScrollPageView *pageView = self.pageViews[i];
+        pageView.needsReload = YES;
+    }
+    [self.scrollView setNeedsLayout];
 }
 
-- (void)enqueue:(UIViewController *)item {
-    ;
+- (void)reloadPrevious {
+    NSInteger index = self.count / 2 - 1;
+    PDLScrollPageViewControllerScrollPageView *pageView = self.pageViews[index];
+    pageView.needsReload = YES;
+    [self.scrollView setNeedsLayout];
+}
+
+- (void)reloadNext {
+    NSInteger index = self.count / 2 + 1;
+    PDLScrollPageViewControllerScrollPageView *pageView = self.pageViews[index];
+    pageView.needsReload = YES;
+    [self.scrollView setNeedsLayout];
 }
 
 - (void)refreshPageViewsFrame {
@@ -342,7 +383,7 @@ static const NSInteger PDLScrollPageCount = 3;
     self.scrollView.contentInset = self.isVertical ? UIEdgeInsetsMake(previousInset, 0, nextInset, 0) : UIEdgeInsetsMake(0, previousInset, 0, nextInset);
 }
 
-- (void)didScroll {
+- (void)resetCurrent {
     CGRect frame = self.scrollView.frame;
     BOOL isVertical = self.isVertical;
     CGFloat length = isVertical ? frame.size.height : frame.size.width;
@@ -355,8 +396,8 @@ static const NSInteger PDLScrollPageCount = 3;
         [pageViews insertObject:pageView atIndex:0];
         self.pageViews = pageViews;
 
-        if ([self.delegate respondsToSelector:@selector(scrollPageViewController:didScrollToIndex:)]) {
-            [self.delegate scrollPageViewController:self didScrollToIndex:-1];
+        if (_delegateRespondsDidScrollToIndex) {
+            [_delegate scrollPageViewController:self didScrollToIndex:-1];
         }
 
         [self refreshPageViewsFrame];
@@ -370,14 +411,36 @@ static const NSInteger PDLScrollPageCount = 3;
         [pageViews addObject:pageView];
         self.pageViews = pageViews;
 
-        if ([self.delegate respondsToSelector:@selector(scrollPageViewController:didScrollToIndex:)]) {
-            [self.delegate scrollPageViewController:self didScrollToIndex:1];
+        if (_delegateRespondsDidScrollToIndex) {
+            [_delegate scrollPageViewController:self didScrollToIndex:1];
         }
 
         [self refreshPageViewsFrame];
         [self resetContentOffset];
         [self reloadPageViewAtIndex:self.count - 1];
     }
+}
+
+#pragma mark - Reuse
+
+- (NSString *)reuseIdentifierForViewController:(UIViewController *)viewController {
+    return [self.reuseItemManager reuseIdentifierForItem:viewController];
+}
+
+- (void)setReuseIdentifier:(NSString *)identifier forViewController:(UIViewController *)viewController {
+    [self.reuseItemManager setReuseIdentifier:identifier forItem:viewController];
+}
+
+- (void)enqueue:(UIViewController *)item {
+    [self.reuseItemManager enqueue:item];
+}
+
+- (__kindof UIViewController *)dequeueReusableViewControllerWithIdentifier:(NSString *)identifier {
+    return [self.reuseItemManager dequeueReusableItemWithIdentifier:identifier];
+}
+
+- (NSDictionary <NSString *, NSMutableArray <UIViewController *>*>*)dequeueAllReusableViewControllers {
+    return [self.reuseItemManager dequeueAllReusableItems];
 }
 
 #pragma mark - UIScrollViewDelegate
@@ -390,18 +453,10 @@ static const NSInteger PDLScrollPageCount = 3;
 
 - (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView {
     self.isScrolling = NO;
-
-//    if ([self.delegate respondsToSelector:@selector(scrollBannerDidEndScrollingAnimation:)]) {
-//        [self.delegate scrollBannerDidEndScrollingAnimation:self];
-//    }
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView {
     self.isScrolling = NO;
-
-//    if ([self.delegate respondsToSelector:@selector(scrollBannerDidEndDecelerating:)]) {
-//        [self.delegate scrollBannerDidEndDecelerating:self];
-//    }
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView {
@@ -416,8 +471,9 @@ static const NSInteger PDLScrollPageCount = 3;
 
 - (void)willDisplay:(PDLScrollPageViewControllerScrollPageView *)pageView {
     NSInteger index = [self.pageViews indexOfObject:pageView];
-    BOOL viewAnimated = self.scrollViewAnimated || self.isScrolling;
     NSInteger currentIndex = self.count / 2;
+    BOOL viewAnimated = self.scrollViewAnimated || self.isScrolling;
+
     if (currentIndex == index) {
         self.appearingItem = pageView;
         self.disappearingItem = nil;
@@ -430,28 +486,35 @@ static const NSInteger PDLScrollPageCount = 3;
     [self.appearingItem beginAppearanceTransition:YES animated:viewAnimated];
     [self.disappearingItem beginAppearanceTransition:NO animated:viewAnimated];
 
-//    if (_delegateRespondsWillDisplay) {
-//        [_delegate pageViewController:self willDisplay:item.viewController atIndex:index animated:animated];
-//    }
+    if (_delegateRespondsWillDisplay && pageView.viewController) {
+        [_delegate scrollPageViewController:self willDisplay:pageView.viewController atIndex:index - currentIndex animated:viewAnimated];
+    }
 }
 
 - (void)didDisplay:(PDLScrollPageViewControllerScrollPageView *)pageView {
+    NSInteger index = [self.pageViews indexOfObject:pageView];
+    NSInteger currentIndex = self.count / 2;
+    BOOL viewAnimated = self.scrollViewAnimated || self.isScrolling;
+
     if (!self.disappearingItem) {
         [self.appearingItem endAppearanceTransition];
         self.appearingItem = nil;
     }
 
-//    [self addChildViewController:pageView.viewController];
+    if (pageView.viewController) {
+        [self addChildViewController:pageView.viewController];
+    }
 
-//    if (_delegateRespondsDidDisplay) {
-//        [_delegate pageViewController:self didDisplay:item.viewController atIndex:index animated:animated];
-//    }
+    if (_delegateRespondsDidDisplay && pageView.viewController) {
+        [_delegate scrollPageViewController:self didDisplay:pageView.viewController atIndex:index - currentIndex animated:viewAnimated];
+    }
 }
 
 - (void)willEndDisplaying:(PDLScrollPageViewControllerScrollPageView *)pageView {
     NSInteger index = [self.pageViews indexOfObject:pageView];
-    BOOL viewAnimated = self.scrollViewAnimated || self.isScrolling;
     NSInteger currentIndex = self.count / 2;
+    BOOL viewAnimated = self.scrollViewAnimated || self.isScrolling;
+
     if (currentIndex != index) {
         PDLScrollPageViewControllerScrollPageView *currentPageView = self.pageViews[currentIndex];
         self.appearingItem = currentPageView;
@@ -463,33 +526,33 @@ static const NSInteger PDLScrollPageCount = 3;
         [self.disappearingItem beginAppearanceTransition:NO animated:viewAnimated];
     }
 
-//    if (_delegateRespondsWillEndDisplaying) {
-//        [_delegate pageViewController:self willEndDisplaying:item.viewController atIndex:index animated:animated];
-//    }
+    if (_delegateRespondsWillEndDisplaying && pageView.viewController) {
+        [_delegate scrollPageViewController:self willEndDisplaying:pageView.viewController atIndex:index - currentIndex animated:viewAnimated];
+    }
 }
 
 - (void)didEndDisplaying:(PDLScrollPageViewControllerScrollPageView *)pageView {
+    NSInteger index = [self.pageViews indexOfObject:pageView];
+    NSInteger currentIndex = self.count / 2;
+    BOOL viewAnimated = self.scrollViewAnimated || self.isScrolling;
+
     [self.appearingItem endAppearanceTransition];
     self.appearingItem = nil;
     [self.disappearingItem endAppearanceTransition];
     self.disappearingItem = nil;
 
-//    [pageView.viewController removeFromParentViewController];
+    [pageView.viewController removeFromParentViewController];
 
-//    if (_delegateRespondsDidEndDisplaying) {
-//        [_delegate pageViewController:self didEndDisplaying:item.viewController atIndex:index animated:animated];
-//    }
+    if (_delegateRespondsDidEndDisplaying && pageView.viewController) {
+        [_delegate scrollPageViewController:self didEndDisplaying:pageView.viewController atIndex:index - currentIndex animated:viewAnimated];
+    }
 }
 
-//- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-//    if (!self.isReseting && !CGRectIntersectsRect(scrollView.bounds, self.currentPageView.frame)) {
-//        [self didScroll];
-//    }
-//
-//    CGFloat offset = (self.isVertical ? (scrollView.contentOffset.y / scrollView.frame.size.height) : (scrollView.contentOffset.x / scrollView.frame.size.width)) - PDLScrollPageCount / 2;
-//    if ([self.delegate respondsToSelector:@selector(scrollPageViewController:didScrollWithOffset:)]) {
-//        [self.delegate scrollPageViewController:self didScrollWithOffset:offset];
-//    }
-//}
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+    CGFloat offset = (self.isVertical ? (scrollView.contentOffset.y / scrollView.frame.size.height) : (scrollView.contentOffset.x / scrollView.frame.size.width)) - PDLScrollPageCount / 2;
+    if (_delegateRespondsDidScrollWithOffset) {
+        [_delegate scrollPageViewController:self didScrollWithOffset:offset];
+    }
+}
 
 @end
