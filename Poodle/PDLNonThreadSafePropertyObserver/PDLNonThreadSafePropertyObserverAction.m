@@ -13,10 +13,11 @@
 - (NSString *)description {
     NSString *initializingString = self.isInitializing ? @"[init]" : @"";
     NSString *isSetterString = self.isSetter ? @"[setter]" : @"[getter]";
-    NSString *threadString = [NSString stringWithFormat:@"[%@]", @(self.thread)];
-    NSString *queueString = self.queueIdentifier ? [NSString stringWithFormat:@"[%@][%@]", self.queueIdentifier, self.queueLabel] : @"";
+    NSString *threadString = [NSString stringWithFormat:@"[t%@]", @(self.thread)];
+    NSString *queueString = self.queueIdentifier ? [NSString stringWithFormat:@"[q%@(%@)]", self.queueIdentifier, self.queueLabel] : @"";
+    NSString *timeString = [NSString stringWithFormat:@"[%.3f]", self.time];
 
-    NSString *actionString = [NSString stringWithFormat:@"%@%@%@%@", initializingString, isSetterString, threadString, queueString];
+    NSString *actionString = [NSString stringWithFormat:@"%@%@%@%@%@", initializingString, isSetterString, threadString, queueString, timeString];
     return actionString;
 }
 
