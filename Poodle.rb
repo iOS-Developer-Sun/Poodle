@@ -653,6 +653,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/NSObject+PDLDebug'
             ss.dependency pod_name + '/PDLPrivate'
+            ss.dependency pod_name + '/PDLProcessInfo'
         end
 
         s.subspec 'PDLOpenUrlViewController' do |ss|
@@ -698,6 +699,15 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'PDLPageViewController/' + librariy_files
             ss.frameworks = 'UIKit'
             ss.dependency pod_name + '/PDLPageController'
+        end
+
+        s.subspec 'PDLProcessInfo' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLProcessInfo/' + source_files
+            ss.vendored_library = base + 'PDLProcessInfo/' + librariy_files
+            ss.frameworks = 'Foundation'
         end
 
         s.subspec 'PDLPrivate' do |ss|
@@ -769,6 +779,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'PDLSessionTaskStatisticsManager/' + librariy_files
             ss.frameworks = 'Foundation'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+            ss.dependency pod_name + '/PDLProcessInfo'
         end
 
         s.subspec 'PDLSystemImage' do |ss|

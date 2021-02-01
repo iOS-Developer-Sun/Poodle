@@ -42,8 +42,12 @@
         pageView.showsHorizontalScrollIndicator = NO;
         pageView.showsVerticalScrollIndicator = NO;
         pageView.formViewDelegate = self;
-        if (@available(iOS 11.0, *)) {
+        if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
             pageView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+#pragma clang diagnostic pop
         }
         _pageView = pageView;
     }

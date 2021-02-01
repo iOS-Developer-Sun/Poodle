@@ -13,6 +13,7 @@
 #import "PDLNonThreadSafePropertyObserver.h"
 #import "PDLNonThreadSafePropertyObserverChecker.h"
 #import "pdl_dispatch.h"
+#import "PDLProcessInfo.h"
 
 @interface PDLNonThreadSafePropertyObserverChecker (PDLNonThreadSafePropertyObserverProperty)
 
@@ -73,6 +74,7 @@
     action.isSetter = isSetter;
     action.isInitializing = isInitializing;
     action.isSerialQueue = isSerialQueue;
+    action.time = [[NSDate date] timeIntervalSinceDate:[PDLProcessInfo sharedInstance].processStartDate];
 
     @synchronized (self) {
         [_actions addObject:action];
