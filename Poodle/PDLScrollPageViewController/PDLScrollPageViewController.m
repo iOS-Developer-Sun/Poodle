@@ -139,6 +139,7 @@ static const NSInteger PDLScrollPageCount = 3;
 @interface PDLScrollPageViewController () <UIScrollViewDelegate> {
     BOOL _delegateRespondsDidScrollToIndex;
     BOOL _delegateRespondsDidScrollWithOffset;
+    BOOL _delegateRespondsDidEnqueue;
 
     BOOL _delegateRespondsWillDisplay;
     BOOL _delegateRespondsDidDisplay;
@@ -174,6 +175,13 @@ static const NSInteger PDLScrollPageCount = 3;
     scrollView.bounces = NO;
     scrollView.scrollsToTop = NO;
     scrollView.clipsToBounds = YES;
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+        scrollView.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+#pragma clang diagnostic pop
+    }
     [self.view addSubview:scrollView];
     self.scrollView = scrollView;
 
@@ -266,6 +274,7 @@ static const NSInteger PDLScrollPageCount = 3;
 
     _delegateRespondsDidScrollToIndex = [delegate respondsToSelector:@selector(scrollPageViewController:didScrollToIndex:)];
     _delegateRespondsDidScrollWithOffset = [delegate respondsToSelector:@selector(scrollPageViewController:didScrollWithOffset:)];
+    _delegateRespondsDidEnqueue = [delegate respondsToSelector:@selector(scrollPageViewController:didEnqueue:)];
 
     _delegateRespondsWillDisplay = [delegate respondsToSelector:@selector(scrollPageViewController:willDisplay:atIndex:animated:)];
     _delegateRespondsDidDisplay = [delegate respondsToSelector:@selector(scrollPageViewController:didDisplay:atIndex:animated:)];
@@ -300,11 +309,24 @@ static const NSInteger PDLScrollPageCount = 3;
     UIViewController *viewController = pageView.viewController;
     if (viewController) {
         [self enqueue:viewController];
+        if (_delegateRespondsDidEnqueue) {
+            [_delegate scrollPageViewController:self didEnqueue:viewController];
+        }
     }
     NSInteger currentIndex = self.count / 2;
     viewController = [_delegate scrollPageViewController:self viewControllerAtIndex:index - currentIndex];
     pageView.viewController = viewController;
     pageView.needsReload = NO;
+}
+
+- (__kindof UIViewController *)viewControllerAtIndex:(NSInteger)index {
+    NSInteger currentIndex = self.count / 2;
+    NSInteger i = index + currentIndex;
+    if (i < 0 || i > self.count) {
+        return nil;
+    }
+
+    return self.pageViews[i].viewController;
 }
 
 - (void)scrollToPreviousAnimated:(BOOL)animated {

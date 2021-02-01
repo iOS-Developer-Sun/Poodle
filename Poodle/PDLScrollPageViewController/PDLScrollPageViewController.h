@@ -19,12 +19,14 @@ NS_ASSUME_NONNULL_BEGIN
 @optional
 
 - (void)scrollPageViewController:(PDLScrollPageViewController *)scrollPageViewController didScrollToIndex:(NSInteger)index;
-- (void)scrollPageViewController:scrollPageViewController didScrollWithOffset:(CGFloat)offset;
+- (void)scrollPageViewController:(PDLScrollPageViewController *)scrollPageViewController didScrollWithOffset:(CGFloat)offset;
 
-- (void)scrollPageViewController:scrollPageViewController willDisplay:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
-- (void)scrollPageViewController:scrollPageViewController didDisplay:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
-- (void)scrollPageViewController:scrollPageViewController willEndDisplaying:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
-- (void)scrollPageViewController:scrollPageViewController didEndDisplaying:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)scrollPageViewController:(PDLScrollPageViewController *)scrollPageViewController didEnqueue:(__kindof UIViewController *)viewController;
+
+- (void)scrollPageViewController:(PDLScrollPageViewController *)scrollPageViewController willDisplay:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)scrollPageViewController:(PDLScrollPageViewController *)scrollPageViewController didDisplay:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)scrollPageViewController:(PDLScrollPageViewController *)scrollPageViewController willEndDisplaying:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
+- (void)scrollPageViewController:(PDLScrollPageViewController *)scrollPageViewController didEndDisplaying:(__kindof UIViewController *)viewController atIndex:(NSInteger)index animated:(BOOL)animated;
 
 @optional
 
@@ -35,6 +37,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isVertical;
 @property (nonatomic, weak, readonly) UIScrollView *scrollView;
 @property (nonatomic, weak) id <PDLScrollPageViewControllerDelegate> delegate;
+
+- (__kindof UIViewController *)viewControllerAtIndex:(NSInteger)index;
 
 - (void)scrollToPreviousAnimated:(BOOL)animated;
 - (void)scrollToNextAnimated:(BOOL)animated;

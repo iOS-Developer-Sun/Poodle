@@ -7,26 +7,9 @@
 //
 
 #import "PDLSessionTaskStatistics.h"
-#import <sys/sysctl.h>
-#import <sys/types.h>
+#import "PDLProcessInfo.h"
 
 @implementation PDLSessionTaskStatistics
-
-static NSDate *PDLSessionTaskStatisticsProcessStartDate(void) {
-    static NSDate *_processStartDate = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        pid_t pid = [[NSProcessInfo processInfo] processIdentifier];
-        int mib[4] = { CTL_KERN, KERN_PROC, KERN_PROC_PID, pid };
-        struct kinfo_proc proc;
-        size_t size = sizeof(proc);
-        sysctl(mib, 4, &proc, &size, NULL, 0);
-
-        NSDate *processStartDate = [NSDate dateWithTimeIntervalSince1970:proc.kp_proc.p_starttime.tv_sec];
-        _processStartDate = processStartDate;
-    });
-    return _processStartDate;
-}
 
 - (instancetype)initWithTask:(NSURLSessionTask *)task {
     self = [super init];
@@ -46,7 +29,7 @@ static NSDate *PDLSessionTaskStatisticsProcessStartDate(void) {
         if ([task respondsToSelector:@selector(startTime)]) {
             taskStartTime = [((typeof(self))task) startTime];
             NSDate *startTimeDate = [NSDate dateWithTimeIntervalSinceReferenceDate:taskStartTime];
-            NSDate *processStartDate = PDLSessionTaskStatisticsProcessStartDate();
+            NSDate *processStartDate = [PDLProcessInfo sharedInstance].processStartDate;
             NSTimeInterval startTime = [startTimeDate timeIntervalSinceDate:processStartDate];
             _startTime = startTime;
             _duration = [[NSDate date] timeIntervalSinceDate:startTimeDate];
