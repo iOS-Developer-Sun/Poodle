@@ -36,7 +36,17 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.view.backgroundColor = [UIColor whiteColor];
+    UIColor *backgroundColor = nil;
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 13) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+        backgroundColor = [UIColor systemBackgroundColor];
+#pragma clang diagnostic pop
+    } else {
+        backgroundColor = [UIColor whiteColor];
+    }
+    self.view.backgroundColor = backgroundColor;
 }
 
 @end

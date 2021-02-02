@@ -25,8 +25,6 @@
 
     self.title = @"Address Query";
 
-    self.view.backgroundColor = [UIColor colorWithRed:0.937255 green:0.937255 blue:0.956863 alpha:1];
-
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Execute" style:UIBarButtonItemStylePlain target:self action:@selector(executeQuery)];
 
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
@@ -40,7 +38,8 @@
 
     UITextView *inputView = [[UITextView alloc] initWithFrame:CGRectInset(headerView.bounds, 5, 5)];
     inputView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    inputView.backgroundColor = [UIColor whiteColor];
+    inputView.layer.borderWidth = 1;
+    inputView.layer.borderColor = [UIColor grayColor].CGColor;
     inputView.keyboardType = UIKeyboardTypeASCIICapable;
     inputView.autocorrectionType = UITextAutocorrectionTypeNo;
     inputView.returnKeyType = UIReturnKeyGo;

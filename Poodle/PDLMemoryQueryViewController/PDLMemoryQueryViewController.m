@@ -180,7 +180,8 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
 @implementation PDLMemoryQueryArgumentCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
 
         CGFloat margin = 5;
@@ -270,12 +271,13 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
 @implementation PDLMemoryQueryResultCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
-    if (self = [super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
+    self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
+    if (self) {
         self.selectionStyle = UITableViewCellSelectionStyleNone;
 
         UILabel *indexLabel = [[UILabel alloc] initWithFrame:CGRectInset(self.contentView.bounds, 10, 0)];
-        indexLabel.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleRightMargin | UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleBottomMargin;
-        indexLabel.font = [UIFont systemFontOfSize:15.0];
+        indexLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+        indexLabel.font = [UIFont systemFontOfSize:15];
         [self.contentView addSubview:indexLabel];
         _indexLabel = indexLabel;
 
@@ -432,7 +434,7 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 50)];
     view.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     UIButton *button = [[UIButton alloc] initWithFrame:view.bounds];
-    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor grayColor] forState:UIControlStateNormal];
     button.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     if (section == 0) {
         [button setTitle:@"Arguments" forState:UIControlStateNormal];
