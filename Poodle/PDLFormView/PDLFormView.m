@@ -183,6 +183,8 @@
     _delegateRespondsDidSetContentOffsetAnimated = [formViewDelegate respondsToSelector:@selector(formView:didSetContentOffset:animated:)];
     _delegateRespondsWillScrollRectToVisibleAnimated = [formViewDelegate respondsToSelector:@selector(formView:willScrollRectToVisible:animated:)];
     _delegateRespondsDidScrollRectToVisibleAnimated = [formViewDelegate respondsToSelector:@selector(formView:didScrollRectToVisible:animated:)];
+
+    [self reloadData];
 }
 
 - (void)setIsScrollHorizontallyForcedEnabled:(BOOL)isScrollHorizontallyForcedEnabled {

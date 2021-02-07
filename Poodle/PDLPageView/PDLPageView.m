@@ -23,6 +23,7 @@
 }
 
 @property (nonatomic, strong) PDLPageController *pageController;
+@property (nonatomic, assign) CGSize contentSize;
 
 @end
 
@@ -37,6 +38,7 @@ static void init(PDLPageView *self) {
     scrollView.frame = self.bounds;
     scrollView.delegate = self;
     [self addSubview:scrollView];
+    self.contentSize = scrollView.bounds.size;
 }
 
 - (instancetype)initWithCoder:(NSCoder *)coder {
@@ -53,6 +55,16 @@ static void init(PDLPageView *self) {
         init(self);
     }
     return self;
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    CGSize contentSize = self.scrollView.bounds.size;
+    if (!CGSizeEqualToSize(self.contentSize, contentSize)) {
+        self.contentSize = contentSize;
+        [self reloadData];
+    }
 }
 
 - (BOOL)isVertical {
@@ -80,6 +92,8 @@ static void init(PDLPageView *self) {
     _delegateRespondsDidScrollToIndex = [delegate respondsToSelector:@selector(pageView:didScrollToIndex:)];
     _delegateRespondsDidEndDecelerating = [delegate respondsToSelector:@selector(pageViewDidEndDecelerating:)];
     _delegateRespondsDidEndDraggingWillDecelerate  = [delegate respondsToSelector:@selector(pageViewDidEndDragging:willDecelerate:)];
+
+    [self.pageController reloadData];
 }
 
 #pragma mark - Public properties

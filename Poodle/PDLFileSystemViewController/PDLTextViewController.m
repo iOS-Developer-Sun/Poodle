@@ -30,7 +30,7 @@
             }
         }
         _fileHandle = fileHandle;
-        self.title = path;
+        self.title = path.lastPathComponent;
     }
     return self;
 }
