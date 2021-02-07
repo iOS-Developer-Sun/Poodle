@@ -570,6 +570,16 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'UIKit'
         end
 
+        s.subspec 'PDLCrash' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLCrash/' + source_files
+            ss.vendored_library = base + 'PDLCrash/' + librariy_files
+            ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/PDLSystemImage'
+        end
+
         s.subspec 'PDLDatabase' do |ss|
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
@@ -587,6 +597,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'UIKit'
             ss.dependency pod_name + '/PDLDatabase'
             ss.dependency pod_name + '/PDLViewController'
+            ss.dependency pod_name + '/PDLCrash'
         end
 
         s.subspec 'PDLFontViewController' do |ss|

@@ -211,6 +211,30 @@ static const NSInteger PDLScrollPageCount = 3;
     self.pageViews = pageViews;
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    [self.disappearingItem beginAppearanceTransition:YES animated:animated];
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+
+    [self.disappearingItem endAppearanceTransition];
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+    [super viewWillDisappear:animated];
+
+    [self.appearingItem beginAppearanceTransition:NO animated:animated];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    [self.appearingItem endAppearanceTransition];
+}
+
 - (UIScrollView *)scrollView {
     [self loadViewIfNeeded];
     return _scrollView;
@@ -280,6 +304,8 @@ static const NSInteger PDLScrollPageCount = 3;
     _delegateRespondsDidDisplay = [delegate respondsToSelector:@selector(scrollPageViewController:didDisplay:atIndex:animated:)];
     _delegateRespondsWillEndDisplaying = [delegate respondsToSelector:@selector(scrollPageViewController:willEndDisplaying:atIndex:animated:)];
     _delegateRespondsDidEndDisplaying = [delegate respondsToSelector:@selector(scrollPageViewController:didEndDisplaying:atIndex:animated:)];
+
+    [self reloadData];
 }
 
 - (void)scrollViewDidLayoutSubviews {

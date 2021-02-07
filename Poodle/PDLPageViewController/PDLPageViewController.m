@@ -63,6 +63,7 @@
 @property (nonatomic, weak) PDLPageViewControllerItem *appearingItem;
 @property (nonatomic, weak) PDLPageViewControllerItem *disappearingItem;
 @property (nonatomic, assign) BOOL isScrolling;
+@property (nonatomic, assign) CGSize contentSize;
 
 @end
 
@@ -87,6 +88,17 @@
     scrollView.frame = self.view.bounds;
     scrollView.delegate = self;
     [self.view addSubview:scrollView];
+    self.contentSize = scrollView.bounds.size;
+}
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    CGSize contentSize = self.scrollView.bounds.size;
+    if (!CGSizeEqualToSize(self.contentSize, contentSize)) {
+        self.contentSize = contentSize;
+        [self reloadData];
+    }
 }
 
 - (BOOL)isVertical {
@@ -119,6 +131,8 @@
     _delegateRespondsDidScrollToIndex = [delegate respondsToSelector:@selector(pageViewController:didScrollToIndex:)];
     _delegateRespondsDidEndDecelerating = [delegate respondsToSelector:@selector(pageViewControllerDidEndDecelerating:)];
     _delegateRespondsDidEndDraggingWillDecelerate  = [delegate respondsToSelector:@selector(pageViewControllerDidEndDragging:willDecelerate:)];
+
+    [self.pageController reloadData];
 }
 
 #pragma mark - Private methods
