@@ -7,13 +7,14 @@
 //
 
 #import "PDLDirectoryViewController.h"
-#import "PDLDirectoryViewControllerResources.h"
 #import <dlfcn.h>
 #import <AVKit/AVKit.h>
+#import "PDLDirectoryViewControllerResources.h"
 #import "PDLTextViewController.h"
 #import "PDLPropertyListViewController.h"
 #import "PDLDatabaseViewController.h"
 #import "PDLWebViewController.h"
+#import "PDLCrashViewController.h"
 
 static NSString *PDLDirectoryViewControllerSizeStringOfBytes(uint64_t bytes) {
     double gigaBytes = bytes / 1024.0 / 1024.0 / 1024.0;
@@ -114,6 +115,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     PDLDirectoryContentTypePropertyList,
     PDLDirectoryContentTypeWebPage,
     PDLDirectoryContentTypeDynamicLibrary,
+    PDLDirectoryContentTypeCrash,
     PDLDirectoryContentTypeOther,
 
     PDLDirectoryContentTypeCount,
@@ -165,33 +167,36 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     if (isDirectory) {
         type = PDLDirectoryContentTypeDirectory;
     } else {
-        NSDictionary *typeMap = @{@"txt" : @(PDLDirectoryContentTypeText),
-                                  @"log" : @(PDLDirectoryContentTypeText),
+        NSDictionary *typeMap = @{
+            @"txt" : @(PDLDirectoryContentTypeText),
+            @"log" : @(PDLDirectoryContentTypeText),
 
-                                  @"png" : @(PDLDirectoryContentTypeImage),
-                                  @"jpg" : @(PDLDirectoryContentTypeImage),
-                                  @"jpeg" : @(PDLDirectoryContentTypeImage),
+            @"png" : @(PDLDirectoryContentTypeImage),
+            @"jpg" : @(PDLDirectoryContentTypeImage),
+            @"jpeg" : @(PDLDirectoryContentTypeImage),
 
-                                  @"mp3" : @(PDLDirectoryContentTypeAudio),
-                                  @"aac" : @(PDLDirectoryContentTypeAudio),
+            @"mp3" : @(PDLDirectoryContentTypeAudio),
+            @"aac" : @(PDLDirectoryContentTypeAudio),
 
-                                  @"mp4" : @(PDLDirectoryContentTypeVideo),
-                                  @"mov" : @(PDLDirectoryContentTypeVideo),
-                                  @"m3u8" : @(PDLDirectoryContentTypeVideo),
+            @"mp4" : @(PDLDirectoryContentTypeVideo),
+            @"mov" : @(PDLDirectoryContentTypeVideo),
+            @"m3u8" : @(PDLDirectoryContentTypeVideo),
 
-                                  @"db" : @(PDLDirectoryContentTypeDatabase),
-                                  @"sqlite" : @(PDLDirectoryContentTypeDatabase),
+            @"db" : @(PDLDirectoryContentTypeDatabase),
+            @"sqlite" : @(PDLDirectoryContentTypeDatabase),
 
-                                  @"plist" : @(PDLDirectoryContentTypePropertyList),
-                                  @"json" : @(PDLDirectoryContentTypePropertyList),
+            @"plist" : @(PDLDirectoryContentTypePropertyList),
+            @"json" : @(PDLDirectoryContentTypePropertyList),
 
-                                  @"htm" : @(PDLDirectoryContentTypeWebPage),
-                                  @"html" : @(PDLDirectoryContentTypeWebPage),
+            @"htm" : @(PDLDirectoryContentTypeWebPage),
+            @"html" : @(PDLDirectoryContentTypeWebPage),
 
-                                  @"framework" : @(PDLDirectoryContentTypeDynamicLibrary),
-                                  @"tbd" : @(PDLDirectoryContentTypeDynamicLibrary),
-                                  @"dylib" : @(PDLDirectoryContentTypeDynamicLibrary),
-                                  };
+            @"framework" : @(PDLDirectoryContentTypeDynamicLibrary),
+            @"tbd" : @(PDLDirectoryContentTypeDynamicLibrary),
+            @"dylib" : @(PDLDirectoryContentTypeDynamicLibrary),
+
+            @"crash" : @(PDLDirectoryContentTypeCrash),
+        };
         NSNumber *typeNumber = typeMap[extension];
         if (typeNumber) {
             type = typeNumber.integerValue;
@@ -262,6 +267,9 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
             case PDLDirectoryContentTypeDynamicLibrary:
                 thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor cyanColor], size);
                 break;
+            case PDLDirectoryContentTypeCrash:
+                thumbnailImage = PDLDirectoryViewControllerImageWithColorAndSize([UIColor brownColor], size);
+                break;
             case PDLDirectoryContentTypeUnknown: {
                 UIImage *image = [UIImage imageWithContentsOfFile:filePath];
                 if (image) {
@@ -310,6 +318,8 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
         case PDLDirectoryContentTypeWebPage:
             break;
         case PDLDirectoryContentTypeDynamicLibrary:
+            break;
+        case PDLDirectoryContentTypeCrash:
             break;
         case PDLDirectoryContentTypeUnknown:
             break;
@@ -674,6 +684,9 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a dynamic library file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [weakSelf openContent:content type:PDLDirectoryContentTypeDynamicLibrary];
         }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a crash file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [weakSelf openContent:content type:PDLDirectoryContentTypeCrash];
+        }]];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Other" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [weakSelf openContent:content type:PDLDirectoryContentTypeOther];
         }]];
@@ -764,6 +777,10 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
             }
 #endif
         } break;
+        case PDLDirectoryContentTypeCrash: {
+            PDLCrashViewController *viewController = [[PDLCrashViewController alloc] initWithPath:content.filePath];
+            [self.navigationController pushViewController:viewController animated:YES];
+        } break;
         case PDLDirectoryContentTypeOther: {
             NSURL *url = [NSURL fileURLWithPath:content.filePath];
             UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[url] applicationActivities:nil];
@@ -802,7 +819,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         ;
     }]];
-    [self presentViewController:alertController animated:YES completion:nil];;;
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate

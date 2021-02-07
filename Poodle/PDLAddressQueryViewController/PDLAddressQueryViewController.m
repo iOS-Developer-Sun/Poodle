@@ -64,9 +64,9 @@
     [self.inputView resignFirstResponder];
     NSString *query = self.inputView.text ?: @"";
 
-    Dl_info info = {0};
-
     long addr = strtol(query.UTF8String, NULL, 0);
+
+    Dl_info info = {0};
     int ret = dladdr((void *)addr, &info);
     NSMutableString *result = [NSMutableString stringWithFormat:@"input addr is %lu(0x%lx)\n\ndladdr returns %d\n", addr, addr, ret];
     if (ret) {

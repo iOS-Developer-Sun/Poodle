@@ -58,7 +58,7 @@
 }
 
 - (void)inDatabase:(void (^)(FMDatabase *db))block {
-    @synchronized(self) {
+    @synchronized (self) {
         if (self.databaseIn) {
             FMDatabase *db = self.databaseIn;
             [self setPropertiesOfDatabase:db];
@@ -145,7 +145,7 @@
 }
 
 - (BOOL)executeTransaction:(BOOL (^)(void))transaction {
-    @synchronized(self) {
+    @synchronized (self) {
         __block BOOL ret = YES;
         [self inDatabase:^(FMDatabase *db) {
             ret = [db beginTransaction];
