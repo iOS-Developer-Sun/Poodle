@@ -276,11 +276,11 @@ void **pdl_initializers(const void *header, size_t *count) {
     return count;
 }
 
-+ (NSArray *)initializes {
++ (NSArray *)initializers {
     return [_initializers copy];
 }
 
-+ (NSArray *)topInitializes {
++ (NSArray *)topInitializers {
     return [_initializers sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
         PDLInitializationInitializer *i1 = obj1;
         PDLInitializationInitializer *i2 = obj2;

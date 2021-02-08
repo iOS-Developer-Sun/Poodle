@@ -36,8 +36,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (NSUInteger)preinitializeCount;
 + (NSUInteger)preinitialize:(BOOL(^_Nullable)(NSString *imageName, NSString *functionName, void *function))filter;
-+ (NSArray <PDLInitializationInitializer *>*)initializes;
-+ (NSArray <PDLInitializationInitializer *>*)topInitializes;
++ (NSArray <PDLInitializationInitializer *>*)initializers;
++ (NSArray <PDLInitializationInitializer *>*)topInitializers;
 
 @end
 
