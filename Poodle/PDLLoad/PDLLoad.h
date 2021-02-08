@@ -12,7 +12,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLLoad : NSObject
 
-+ (void)disableCategoryLoad:(BOOL(^_Nullable)(Class aClass, NSString *categoryName))filter;
++ (void)disableCategoryLoad:(BOOL(^_Nullable)(void *imageHeader, NSString *imageName, Class aClass, NSString *categoryName))filter;
 
 @end
 

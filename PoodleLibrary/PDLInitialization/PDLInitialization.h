@@ -10,16 +10,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PDLInitialization : NSObject
+@interface PDLInitializationLoader : NSObject
 
-@property (nonatomic, assign, readonly) CFTimeInterval duration;
 @property (nonatomic, unsafe_unretained, readonly) Class aClass;
+@property (nonatomic, assign, readonly) CFTimeInterval duration;
 @property (nonatomic, assign, readonly) IMP imp;
 
-+ (NSUInteger)count;
+@end
+
+@interface PDLInitialization : NSObject
+
++ (NSUInteger)preloadCount;
 + (NSUInteger)preload:(BOOL(^_Nullable)(Class aClass, IMP imp))filter;
-+ (NSArray *)loaders;
-+ (NSArray *)topLoaders;
++ (NSArray <PDLInitializationLoader *>*)loaders;
++ (NSArray <PDLInitializationLoader *>*)topLoaders;
 
 @end
 
