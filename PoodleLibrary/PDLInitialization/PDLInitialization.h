@@ -12,9 +12,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLInitializationLoader : NSObject
 
-@property (nonatomic, unsafe_unretained, readonly) Class aClass;
 @property (nonatomic, assign, readonly) CFTimeInterval duration;
 @property (nonatomic, assign, readonly) IMP imp;
+@property (nonatomic, unsafe_unretained, readonly) Class aClass;
+
+@end
+
+@interface PDLInitializationInitializer : NSObject
+
+@property (nonatomic, assign, readonly) CFTimeInterval duration;
+@property (nonatomic, assign, readonly) void *function;
+@property (nonatomic, copy, readonly) NSString *imageName;
+@property (nonatomic, copy, readonly) NSString *functionName;
 
 @end
 
@@ -24,6 +33,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSUInteger)preload:(BOOL(^_Nullable)(Class aClass, IMP imp))filter;
 + (NSArray <PDLInitializationLoader *>*)loaders;
 + (NSArray <PDLInitializationLoader *>*)topLoaders;
+
++ (NSUInteger)preinitializeCount;
++ (NSUInteger)preinitialize:(BOOL(^_Nullable)(NSString *imageName, NSString *functionName, void *function))filter;
++ (NSArray <PDLInitializationInitializer *>*)initializes;
++ (NSArray <PDLInitializationInitializer *>*)topInitializes;
 
 @end
 
