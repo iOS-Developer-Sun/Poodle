@@ -11,6 +11,7 @@
 @interface PDLRectPropertyDebugger ()
 
 @property (nonatomic, weak) UIView *gestureView;
+@property (nonatomic, copy) NSArray *labels;
 @property (nonatomic, weak) UILabel *xLabel;
 @property (nonatomic, weak) UILabel *yLabel;
 @property (nonatomic, weak) UILabel *widthLabel;
@@ -32,7 +33,7 @@
 @implementation PDLRectPropertyDebugger
 
 - (CGRect)frame {
-     NSValue *value = self.value;
+    NSValue *value = self.value;
     CGRect frame = value.CGRectValue;
     return frame;
 }
@@ -48,8 +49,11 @@
 
     UIView *mainView = self.mainView;
     CGRect frame = mainView.frame;
+    CGFloat height = frame.size.height;
 
-    UIView *gestureView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height - 66)];
+    CGFloat controlPanelHeight = 66;
+
+    UIView *gestureView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, height - controlPanelHeight)];
     gestureView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     [mainView addSubview:gestureView];
     self.gestureView = gestureView;
@@ -60,34 +64,37 @@
     UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinch:)];
     [gestureView addGestureRecognizer:pinchGestureRecognizer];
 
-    self.controlPanel.frame = CGRectMake(0, frame.size.height - 66, frame.size.width, 66);
     UIView *bottomView = self.controlPanel;
+    bottomView.frame = CGRectMake(0, height - controlPanelHeight, frame.size.width, controlPanelHeight);
     bottomView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
     [mainView addSubview:bottomView];
 
+    NSMutableArray *labels = [NSMutableArray array];
     UILabel *xLabel = [self createLabel];
-    xLabel.frame = CGRectMake(0, 0, frame.size.width / 4, 66);
     xLabel.text = @"X";
     [bottomView addSubview:xLabel];
+    [labels addObject:xLabel];
     _xLabel = xLabel;
 
     UILabel *yLabel = [self createLabel];
-    yLabel.frame = CGRectMake(frame.size.width / 4, 0, frame.size.width / 4, 66);
     yLabel.text = @"Y";
     [bottomView addSubview:yLabel];
+    [labels addObject:yLabel];
     _yLabel = yLabel;
 
     UILabel *widthLabel = [self createLabel];
-    widthLabel.frame = CGRectMake(frame.size.width / 4 * 2, 0, frame.size.width / 4, 66);
     widthLabel.text = @"Width";
     [bottomView addSubview:widthLabel];
+    [labels addObject:widthLabel];
     _widthLabel = widthLabel;
 
     UILabel *heightLabel = [self createLabel];
-    heightLabel.frame = CGRectMake(frame.size.width / 4 * 3, 0, frame.size.width / 4, 66);
     heightLabel.text = @"Height";
     [bottomView addSubview:heightLabel];
+    [labels addObject:heightLabel];
     _heightLabel = heightLabel;
+
+    _labels = [labels copy];
 
     [self refresh];
 }
@@ -96,10 +103,13 @@
     [super mainViewDidLayoutSubviews];
 
     CGRect frame = self.controlPanel.frame;
-    self.xLabel.frame = CGRectMake(0, 0, frame.size.width / 4, frame.size.height);
-    self.yLabel.frame = CGRectMake(frame.size.width / 4, 0, frame.size.width / 4, frame.size.height);
-    self.widthLabel.frame = CGRectMake(frame.size.width / 4 * 2, 0, frame.size.width / 4, frame.size.height);
-    self.heightLabel.frame = CGRectMake(frame.size.width / 4 * 3, 0, frame.size.width / 4, frame.size.height);
+    CGFloat width = frame.size.width / 4;
+    CGFloat height = frame.size.height;
+    for (NSInteger i = 0; i < self.labels.count; i++) {
+        UILabel *label = self.labels[i];
+        label.frame = CGRectMake(width * i, 0, width, height);
+    }
+    [self refresh];
 }
 
 - (UILabel *)createLabel {
