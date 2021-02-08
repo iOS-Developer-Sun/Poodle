@@ -11,15 +11,15 @@
 #import <objc/runtime.h>
 #import <QuartzCore/QuartzCore.h>
 
-@interface PDLInitialization ()
+@interface PDLInitializationLoader ()
 
-@property (nonatomic, assign) CFTimeInterval duration;
 @property (nonatomic, unsafe_unretained) Class aClass;
+@property (nonatomic, assign) CFTimeInterval duration;
 @property (nonatomic, assign) IMP imp;
 
 @end
 
-@implementation PDLInitialization
+@implementation PDLInitializationLoader
 
 - (NSString *)description {
     NSString *durationString = @"0";
@@ -44,8 +44,12 @@
     return [[super description] stringByAppendingString:description];
 }
 
+@end
+
+@implementation PDLInitialization
+
 static NSMutableArray *_loaders = nil;
-static NSUInteger _count = 0;
+static NSUInteger _preloadCount = 0;
 
 static void pdl_initializeLoad(id self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
@@ -53,15 +57,15 @@ static void pdl_initializeLoad(id self, SEL _cmd) {
     ((typeof(&pdl_initializeLoad))_imp)(self, _cmd);
     CFTimeInterval end = CACurrentMediaTime();
     CFTimeInterval diff = end - begin;
-    PDLInitialization *initialization = [[PDLInitialization alloc] init];
-    initialization.duration = diff;
-    initialization.aClass = self;
-    initialization.imp = _imp;
-    [_loaders addObject:initialization];
+    PDLInitializationLoader *loader = [[PDLInitializationLoader alloc] init];
+    loader.duration = diff;
+    loader.aClass = self;
+    loader.imp = _imp;
+    [_loaders addObject:loader];
 }
 
-+ (NSUInteger)count {
-    return _count;
++ (NSUInteger)preloadCount {
+    return _preloadCount;
 }
 
 + (NSUInteger)preload:(BOOL(^)(Class aClass, IMP imp))filter {
@@ -106,7 +110,7 @@ static void pdl_initializeLoad(id self, SEL _cmd) {
         free(methodList);
     }
     free(classList);
-    _count = count;
+    _preloadCount = count;
     return count;
 }
 
@@ -116,8 +120,8 @@ static void pdl_initializeLoad(id self, SEL _cmd) {
 
 + (NSArray *)topLoaders {
     return [_loaders sortedArrayUsingComparator:^NSComparisonResult(id  _Nonnull obj1, id  _Nonnull obj2) {
-        PDLInitialization *i1 = obj1;
-        PDLInitialization *i2 = obj2;
+        PDLInitializationLoader *i1 = obj1;
+        PDLInitializationLoader *i2 = obj2;
         return [@(i2.duration) compare:@(i1.duration)];
     }];
 }
