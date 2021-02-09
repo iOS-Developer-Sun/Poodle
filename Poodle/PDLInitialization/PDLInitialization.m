@@ -169,16 +169,23 @@ static void pdl_initialize(int argc, const char **argv, const char **envp, const
     size_t offset = 320;
     uintptr_t rbx = 0;
     uintptr_t rbp = 0;
-    __asm__ volatile("movq %%rbx, %0" : "=r"(rbx));//0x10aeb1478
+    __asm__ volatile("movq %%rbx, %0" : "=r"(rbx));
     __asm__ volatile("movq %%rbp, %0" : "=r"(rbp));
     uintptr_t addr = *(uintptr_t *)(rbp + offset);
     uintptr_t index = rbx;
     uintptr_t key = addr + index * sizeof(void *);
 #endif
 #ifdef __arm64__
+#ifdef DEBUG
     uintptr_t x23 = 0;
     __asm__ volatile("mov %0, x23" : "=r"(x23));
     uintptr_t key = x23;
+#else
+    size_t offset = -40;
+    uintptr_t fp = 0;
+    __asm__ volatile("mov %0, x29" : "=r"(fp));
+    uintptr_t key = *(uintptr_t *)(fp + offset);
+#endif
 #endif
     uintptr_t value = [_initializersMap[@(key)] integerValue];
     void *function = (void *)value;
