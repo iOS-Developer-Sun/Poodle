@@ -7,14 +7,13 @@
 //
 
 #import "PDLInitialization.h"
-#import "NSObject+PDLImplementationInterceptor.h"
 #import <objc/runtime.h>
 #import <QuartzCore/QuartzCore.h>
 #import <mach-o/getsect.h>
 #import <mach-o/dyld.h>
 #import <mach-o/ldsyms.h>
 #import <dlfcn.h>
-#import <objc/runtime.h>
+#import "NSObject+PDLImplementationInterceptor.h"
 
 static NSString *PDLInitializationDurationString(CFTimeInterval duration) {
     NSString *durationString = @"0";
