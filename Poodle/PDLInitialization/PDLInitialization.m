@@ -157,38 +157,18 @@ static void pdl_load(id self, SEL _cmd) {
 #pragma mark -
 
 static NSMutableArray *_initializers = nil;
-static NSMutableDictionary *_initializersMap = nil;
+static NSMutableArray *_initializerFunctions = nil;
 static NSUInteger _preinitializeCount = 0;
-
-#if defined(__x86_64__) || defined(__arm64__)
 
 struct ProgramVars;
 static void pdl_initialize(int argc, const char **argv, const char **envp, const char **apple, struct ProgramVars *pvars) {
-    CFTimeInterval begin = CACurrentMediaTime();
-#ifdef __x86_64__
-    size_t offset = 320;
-    uintptr_t rbx = 0;
-    uintptr_t rbp = 0;
-    __asm__ volatile("movq %%rbx, %0" : "=r"(rbx));
-    __asm__ volatile("movq %%rbp, %0" : "=r"(rbp));
-    uintptr_t addr = *(uintptr_t *)(rbp + offset);
-    uintptr_t index = rbx;
-    uintptr_t key = addr + index * sizeof(void *);
-#endif
-#ifdef __arm64__
-#ifdef DEBUG
-    uintptr_t x23 = 0;
-    __asm__ volatile("mov %0, x23" : "=r"(x23));
-    uintptr_t key = x23;
-#else
-    size_t offset = -40;
-    uintptr_t fp = 0;
-    __asm__ volatile("mov %0, x29" : "=r"(fp));
-    uintptr_t key = *(uintptr_t *)(fp + offset);
-#endif
-#endif
-    uintptr_t value = [_initializersMap[@(key)] integerValue];
+    uintptr_t value = [_initializerFunctions.firstObject integerValue];
+    [_initializerFunctions removeObjectAtIndex:0];
+    if (_initializerFunctions.count == 0) {
+        _initializerFunctions = nil;
+    }
     void *function = (void *)value;
+    CFTimeInterval begin = CACurrentMediaTime();
     ((typeof(&pdl_initialize))function)(argc, argv, envp, apple, pvars);
     CFTimeInterval end = CACurrentMediaTime();
     CFTimeInterval diff = end - begin;
@@ -211,8 +191,6 @@ static void pdl_initialize(int argc, const char **argv, const char **envp, const
     initializer.functionName = functionName;
     [_initializers addObject:initializer];
 }
-
-#endif
 
 + (NSUInteger)preinitializeCount {
     return _preinitializeCount;
@@ -244,10 +222,9 @@ void **pdl_initializers(const void *header, size_t *count) {
     assert(_initializers == nil);
 
     _initializers = [NSMutableArray array];
-    _initializersMap = [NSMutableDictionary dictionary];
+    _initializerFunctions = [NSMutableArray array];
 
     NSInteger count = 0;
-#if defined(__x86_64__) || defined(__arm64__)
     size_t initializersCount = 0;
     void **initializers = pdl_initializers(&_mh_execute_header, &initializersCount);
     for (size_t i = 0; i < initializersCount; i++) {
@@ -272,12 +249,9 @@ void **pdl_initializers(const void *header, size_t *count) {
             continue;
         }
 
-        uintptr_t key = (uintptr_t)&initializers[i];
-        uintptr_t value = (uintptr_t)initializer;
-        _initializersMap[@(key)] = @(value);
+        [_initializerFunctions addObject:@((uintptr_t)initializer)];
         initializers[i] = (IMP)&pdl_initialize;
     }
-#endif
 
     _preinitializeCount = count;
     return count;
