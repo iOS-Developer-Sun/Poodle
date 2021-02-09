@@ -29,6 +29,8 @@ extern id objc_retain(__unsafe_unretained id object);
 extern void objc_release(__unsafe_unretained id object);
 extern id objc_autorelease(__unsafe_unretained id object);
 
+extern void *objc_autoreleasePoolPush(void);
+extern void objc_autoreleasePoolPop(void *pool);
 extern void _objc_autoreleasePoolPrint(void);
 
 extern id objc_storeStrong(__unsafe_unretained id *location, __unsafe_unretained id object);

@@ -130,7 +130,7 @@ typedef NS_ENUM(NSUInteger, PDLViewControllerExtensionControllerType) {
 static void PDLViewControllerDoAppear(__unsafe_unretained UIViewController *self, SEL _cmd, BOOL animated) {
     PDLImplementationInterceptorRecover(_cmd);
     ((typeof(&PDLViewControllerDoAppear))(_imp))(self, _cmd, animated);
-    PDLViewControllerExtensionController *extensionController = self.pdl_extensionController;
+    PDLViewControllerExtensionController *extensionController = objc_getAssociatedObject(self, &PDLViewControllerDoAppear);
     [extensionController act:self type:(PDLViewControllerExtensionControllerType)(long)_data];
 }
 
