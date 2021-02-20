@@ -10,47 +10,50 @@
 #import "NSObject+PDLImplementationInterceptor.h"
 #import "pdl_thread_storage.h"
 
+static BOOL(*_Nullable PDLBlockCopyRecordFilter)(void *block) = NULL;
 static void *PDLBlockThreadStorageKey = &PDLBlockThreadStorageKey;
 
-static void PDLBlockPush(void) {
-    NSInteger count = 0;
-    NSInteger *value = (NSInteger *)pdl_thread_storage_get(PDLBlockThreadStorageKey);
+static void PDLBlockDestroy(pdl_array_t array) {
+    assert(array);
+    assert(pdl_array_count(array) == 0);
+    pdl_array_destroy(array);
+}
+
+static void PDLBlockPush(void *block) {
+    pdl_array_t blocks = NULL;
+    pdl_array_t *value = (pdl_array_t *)pdl_thread_storage_get(PDLBlockThreadStorageKey);
     if (value) {
-        count = *value;
-    }
-    assert(count >= 0);
-    count++;
-    value = &count;
-    pdl_thread_storage_set(PDLBlockThreadStorageKey, (void **)value);
-}
-
-static void PDLBlockPop(void) {
-    NSInteger *value = (NSInteger *)pdl_thread_storage_get(PDLBlockThreadStorageKey);
-    assert(value);
-    NSInteger count = *value;
-    count--;
-    value = &count;
-    assert(count >= 0);
-    pdl_thread_storage_set(PDLBlockThreadStorageKey, (void **)value);
-}
-
-static void *PDLBlockRetain(__unsafe_unretained id self, SEL _cmd) {
-    PDLImplementationInterceptorRecover(_cmd);
-    PDLBlockPush();
-    void *object = NULL;
-    if (_imp) {
-        object = ((void *(*)(id, SEL))_imp)(self, _cmd);
+        blocks = *value;
     } else {
-        struct objc_super su = {self, class_getSuperclass(_class)};
-        object = ((void *(*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);
+        blocks = pdl_array_create(0);
+        value = &blocks;
+        pdl_thread_storage_set(PDLBlockThreadStorageKey, (void **)value);
     }
-    PDLBlockPop();
-    return object;
+    assert(pdl_array_count(blocks) >= 0);
+    pdl_array_add(blocks, block);
+}
+
+static void *PDLBlockPop(void) {
+    pdl_array_t *value = (pdl_array_t *)pdl_thread_storage_get(PDLBlockThreadStorageKey);
+    assert(value);
+    pdl_array_t blocks = *value;
+    unsigned int count = pdl_array_count(blocks);
+    assert(count > 0);
+    void *block = pdl_array_get(blocks, count - 1);
+    pdl_array_remove(blocks, count - 1);
+    return block;
 }
 
 static void *PDLBlockCopy(__unsafe_unretained id self, SEL _cmd, struct _NSZone *zone) {
     PDLImplementationInterceptorRecover(_cmd);
-    PDLBlockPush();
+    void *block = (__bridge void *)self;
+    BOOL valid = YES;
+    if (PDLBlockCopyRecordFilter) {
+        valid = PDLBlockCopyRecordFilter(block);
+    }
+    if (valid) {
+        PDLBlockPush(block);
+    }
     void *object = NULL;
     if (_imp) {
         object = ((void *(*)(id, SEL, struct _NSZone *))_imp)(self, _cmd, zone);
@@ -58,20 +61,28 @@ static void *PDLBlockCopy(__unsafe_unretained id self, SEL _cmd, struct _NSZone 
         struct objc_super su = {self, class_getSuperclass(_class)};
         object = ((void *(*)(struct objc_super *, SEL, struct _NSZone *))objc_msgSendSuper)(&su, _cmd, zone);
     }
-    PDLBlockPop();
+    if (valid) {
+        void *popped = PDLBlockPop();
+        assert(block == popped);
+    }
     return object;
 }
 
 BOOL PDLBlockCopying(void) {
-    NSInteger count = 0;
-    NSInteger *value = (NSInteger *)pdl_thread_storage_get(PDLBlockThreadStorageKey);
+    return pdl_array_count(PDLBlockCopyingBlocks()) > 0;
+}
+
+pdl_array_t PDLBlockCopyingBlocks(void) {
+    pdl_array_t array = NULL;
+    pdl_array_t *value = (pdl_array_t *)pdl_thread_storage_get(PDLBlockThreadStorageKey);
     if (value) {
-        count = *value;
+        array = *value;
     }
-    return count > 0;
+    return array;
 }
 
 static void(^_PDLBlockChecker)(void) = NULL;
+
 void(^PDLBlockChecker(void))(void) {
     return _PDLBlockChecker;
 }
@@ -80,12 +91,13 @@ void PDLBlockSetChecker(void(^checker)(void)) {
     _PDLBlockChecker = checker;
 }
 
-BOOL PDLBlockCopyRecordEnable(void) {
-    pdl_thread_storage_register(PDLBlockThreadStorageKey, NULL);
+BOOL PDLBlockCopyRecordEnable(BOOL(*_Nullable filter)(void *block)) {
+    pdl_thread_storage_register(PDLBlockThreadStorageKey, &PDLBlockDestroy);
     if (!pdl_thread_storage_enabled()) {
         return NO;
     }
 
+    PDLBlockCopyRecordFilter = filter;
     Class mallocBlockClass = objc_getClass("__NSMallocBlock__");
     Class stackBlockClass = objc_getClass("__NSStackBlock__");
     SEL copySelector = sel_registerName("copyWithZone:");
@@ -105,17 +117,19 @@ static void *PDLBlockRetainObject(__unsafe_unretained id self, SEL _cmd) {
         struct objc_super su = {self, class_getSuperclass(_class)};
         object = ((void *(*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);
     }
-    BOOL copying = PDLBlockCopying();
-    if (copying) {
-        void(^callback)(void *) = (__bridge void (^)(void *))(_data);
+    pdl_array_t blocks = PDLBlockCopyingBlocks();
+    unsigned int count = pdl_array_count(blocks);
+    if (count > 0) {
+        void *block = pdl_array_get(blocks, count - 1);
+        void(^callback)(void *, void *) = (__bridge void (^)(void *, void *))(_data);
         if (callback) {
-            callback((__bridge void *)(self));
+            callback((__bridge void *)self, block);
         }
     }
     return object;
 }
 
-+ (BOOL)pdl_enableBlockCheck:(void (^)(void *))callback {
++ (BOOL)pdl_enableBlockCheck:(void (^)(void *object, void *block))callback {
     BOOL ret = [self pdl_interceptSelector:sel_registerName("retain") withInterceptorImplementation:(IMP)&PDLBlockRetainObject isStructRet:@(NO) addIfNotExistent:YES data:(__bridge_retained void *)callback];
     return ret;
 }
