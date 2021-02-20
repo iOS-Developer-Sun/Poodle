@@ -31,6 +31,6 @@ typedef struct {
     char data[0];
 } pdl_block;
 
-extern size_t pdl_block_extra_size(id block);
+extern size_t pdl_block_extra_size(void *block);
 
 NS_ASSUME_NONNULL_END

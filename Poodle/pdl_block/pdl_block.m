@@ -8,7 +8,7 @@
 
 #import "pdl_block.h"
 
-size_t pdl_block_extra_size(__unsafe_unretained id block) {
-    pdl_block *b = (__bridge void *)block;
+size_t pdl_block_extra_size(void *block) {
+    pdl_block *b = (void *)block;
     return b->Desc->Block_size - sizeof(pdl_block);
 }
