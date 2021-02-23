@@ -69,7 +69,12 @@ static void *PDLBlockCopy(__unsafe_unretained id self, SEL _cmd, struct _NSZone 
 }
 
 BOOL PDLBlockCopying(void) {
-    return pdl_array_count(PDLBlockCopyingBlocks()) > 0;
+    unsigned int count = 0;
+    pdl_array_t blocks = PDLBlockCopyingBlocks();
+    if (blocks) {
+        count = pdl_array_count(blocks);
+    }
+    return count > 0;
 }
 
 pdl_array_t PDLBlockCopyingBlocks(void) {
@@ -117,8 +122,11 @@ static void *PDLBlockRetainObject(__unsafe_unretained id self, SEL _cmd) {
         struct objc_super su = {self, class_getSuperclass(_class)};
         object = ((void *(*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);
     }
+    unsigned int count = 0;
     pdl_array_t blocks = PDLBlockCopyingBlocks();
-    unsigned int count = pdl_array_count(blocks);
+    if (blocks) {
+        count = pdl_array_count(blocks);
+    }
     if (count > 0) {
         void *block = pdl_array_get(blocks, count - 1);
         void(^callback)(void *, void *) = (__bridge void (^)(void *, void *))(_data);
