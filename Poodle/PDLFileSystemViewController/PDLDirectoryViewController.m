@@ -501,7 +501,9 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 - (void)reloadData {
     self.rightBarButtonItem.enabled = NO;
     self.infoLabel.text = @"Loading...";
+    __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        __strong __typeof(self) self = weakSelf;
         NSMutableArray *contents = [NSMutableArray array];
         NSError *error = nil;
         NSArray *filenames = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.directory error:&error];
@@ -512,18 +514,19 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
                 continue;
             }
             [contents addObject:content];
-            __weak __typeof(self) weakSelf = self;
             content.sizeCalculatingCompletion = ^(PDLDirectoryContent *content) {
-                NSInteger index = [weakSelf.contents indexOfObject:content];
+                __strong __typeof(self) self = weakSelf;
+                NSInteger index = [self.contents indexOfObject:content];
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
-                NSArray *indexPathsForVisibleRows = weakSelf.tableView.indexPathsForVisibleRows;
+                NSArray *indexPathsForVisibleRows = self.tableView.indexPathsForVisibleRows;
                 if ([indexPathsForVisibleRows containsObject:indexPath]) {
-                    [weakSelf.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
+                    [self.tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
                 }
             };
         }
         [contents sortUsingSelector:@selector(compare:)];
         dispatch_async(dispatch_get_main_queue(), ^{
+            __strong __typeof(self) self = weakSelf;
             if (error) {
                 [self alertWithTitle:@"Error" message:error.localizedDescription];
             }
