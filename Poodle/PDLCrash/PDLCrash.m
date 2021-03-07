@@ -400,7 +400,9 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     }
 
     PDLSystemImage *systemImage = [PDLSystemImage systemImageWithHeader:(struct mach_header *)&_mh_execute_header];
-    if (!self.allowsUUIDMisMatched && ![systemImage.uuidString isEqualToString:image.uuid]) {
+    BOOL UUIDMismatched = ![systemImage.uuidString isEqualToString:image.uuid];
+    self.UUIDMismatched = UUIDMismatched;
+    if (!self.allowsUUIDMismatched && UUIDMismatched) {
         return NO;
     }
 

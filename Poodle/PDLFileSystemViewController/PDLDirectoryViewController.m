@@ -196,6 +196,8 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
             @"dylib" : @(PDLDirectoryContentTypeDynamicLibrary),
 
             @"crash" : @(PDLDirectoryContentTypeCrash),
+            @"ips" : @(PDLDirectoryContentTypeCrash),
+            @"synced" : @(PDLDirectoryContentTypeCrash),
         };
         NSNumber *typeNumber = typeMap[extension];
         if (typeNumber) {
