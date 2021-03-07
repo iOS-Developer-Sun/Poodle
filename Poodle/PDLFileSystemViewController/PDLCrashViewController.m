@@ -98,42 +98,75 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)symbolicate {
-    [self symbolicate:YES];
+- (void)finishSymbolication:(PDLCrash *)crash {
+    self.navigationItem.rightBarButtonItem.enabled = YES;
+    NSString *title = nil;
+    NSString *message = nil;
+    if (crash.symbolicatedCount > 0) {
+        title = @"Symbolicated";
+        if (crash.UUIDMismatched) {
+            title = [title stringByAppendingString:@"(UUID mismatched)"];
+        }
+        message = @(crash.symbolicatedCount).stringValue;
+        NSString *symbolicatedString = crash.symbolicatedString;
+        self.textView.text = symbolicatedString;
+        self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStylePlain target:self action:@selector(export)];
+    } else {
+        title = @"Failed";
+    }
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+        ;
+    }]];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)symbolicate:(BOOL)allowsUUIDMisMatched {
+- (void)symbolicate {
     self.navigationItem.rightBarButtonItem.enabled = NO;
 
     __weak __typeof(self) weakSelf = self;
+    [self symbolicate:NO completion:^(PDLCrash *crash) {
+        __strong __typeof(self) self = weakSelf;
+        if (!self) {
+            return;
+        }
+
+        if (crash.symbolicatedCount > 0) {
+            [self finishSymbolication:crash];
+        } else {
+            [self symbolicate:YES completion:^(PDLCrash *crash) {
+                __strong __typeof(self) self = weakSelf;
+                if (!self) {
+                    return;
+                }
+
+                [self finishSymbolication:crash];
+            }];
+        }
+    }];
+}
+
+- (void)symbolicate:(BOOL)allowsUUIDMismatched completion:(void (^)(PDLCrash *crash))completion {
+    __weak __typeof(self) weakSelf = self;
     NSString *string = self.textView.text;
+    PDLCrash *crash = [[PDLCrash alloc] initWithString:string];
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        PDLCrash *crash = [[PDLCrash alloc] initWithString:string];
-        crash.allowsUUIDMisMatched = allowsUUIDMisMatched;
-        BOOL symbolicated = [crash symbolicate];
+        __strong __typeof(self) self = weakSelf;
+        if (!self) {
+            return;
+        }
+
+        crash.allowsUUIDMismatched = allowsUUIDMismatched;
+        [crash symbolicate];
         dispatch_async(dispatch_get_main_queue(), ^{
             __strong __typeof(self) self = weakSelf;
             if (!self) {
                 return;
             }
 
-            self.navigationItem.rightBarButtonItem.enabled = YES;
-            NSString *title = nil;
-            NSString *message = nil;
-            if (symbolicated) {
-                title = @"Symbolicated";
-                message = @(crash.symbolicatedCount).stringValue;
-                NSString *symbolicatedString = crash.symbolicatedString;
-                self.textView.text = symbolicatedString;
-                self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStylePlain target:self action:@selector(export)];
-            } else {
-                title = @"Failed";
+            if (completion) {
+                completion(crash);
             }
-            UIAlertController *alertController = [UIAlertController alertControllerWithTitle:title message:message preferredStyle:UIAlertControllerStyleAlert];
-            [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
-                ;
-            }]];
-            [self presentViewController:alertController animated:YES completion:nil];
         });
     });
 }
