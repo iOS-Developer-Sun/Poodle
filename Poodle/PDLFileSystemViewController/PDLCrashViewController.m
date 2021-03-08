@@ -109,7 +109,23 @@
         }
         message = @(crash.symbolicatedCount).stringValue;
         NSString *symbolicatedString = crash.symbolicatedString;
+        UIColor *highlightedColor = [UIColor redColor];
+        UIColor *color = self.textView.textColor;
+        UIFont *font = self.textView.font;
+        NSMutableAttributedString *symbolicatedAttributedString = [[NSMutableAttributedString alloc] initWithString:symbolicatedString];
+        [symbolicatedAttributedString setAttributes:@{
+            NSForegroundColorAttributeName : color,
+            NSFontAttributeName : font,
+        } range:NSMakeRange(0, symbolicatedString.length)];
+        for (NSValue *range in crash.symbolicatedLocations) {
+            [symbolicatedAttributedString setAttributes:@{
+                NSForegroundColorAttributeName : highlightedColor,
+                NSFontAttributeName : font,
+            } range:range.rangeValue];
+        }
         self.textView.text = symbolicatedString;
+        self.textView.attributedText = symbolicatedAttributedString;
+
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Export" style:UIBarButtonItemStylePlain target:self action:@selector(export)];
     } else {
         title = @"Failed";
