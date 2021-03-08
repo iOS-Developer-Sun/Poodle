@@ -1,5 +1,5 @@
 //
-//  PDLCrash.m
+//  PDLCrash.mm
 //  Poodle
 //
 //  Created by Poodle on 2021/2/5.
@@ -9,6 +9,7 @@
 #import "PDLCrash.h"
 #import <mach-o/ldsyms.h>
 #import <dlfcn.h>
+#import <cxxabi.h>
 #import "PDLSystemImage.h"
 
 typedef NS_ENUM(NSUInteger, PDLCrashType) {
@@ -136,6 +137,7 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 @interface PDLCrash ()
 
 @property (copy) NSString *symbolicatedString;
+@property (copy) NSArray *symbolicatedLocations;
 @property (assign) NSInteger symbolicatedCount;
 
 @end
@@ -204,7 +206,7 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     return [binaryImages copy];
 }
 
-- (BOOL)symbolicateCrashLine:(NSString *)line symbolicatedLine:(NSString **)symbolicatedLine imagesMap:(NSDictionary *)imagesMap crashImagesMap:(NSDictionary *)crashImagesMap {
+- (BOOL)symbolicateCrashLine:(NSString *)line symbolicatedLine:(NSString **)symbolicatedLine symbolicatedLocations:(NSArray **)symbolicatedLocations imagesMap:(NSDictionary *)imagesMap crashImagesMap:(NSDictionary *)crashImagesMap {
     NSScanner *scanner = [NSScanner scannerWithString:line];
     int frame = 0;
     if (![scanner scanInt:&frame]) {
@@ -273,22 +275,26 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return NO;
     }
 
-    if (!info.dli_sname) {
+    const char *sname = info.dli_sname;
+    if (!sname) {
         return NO;
     }
 
     if (symbolicatedLine) {
+        NSString *symbolicatedSymbol = [self.class demangle:@(sname)] ?: @(sname);
         uintptr_t currentOffset = current - (uintptr_t)info.dli_saddr;
-        NSString *symbolicatedSymbol = @(info.dli_sname);
         NSString *prefix = [line substringToIndex:symbolBegin];
         NSString *result = [NSString stringWithFormat:@"%@ %@ + %@", prefix, symbolicatedSymbol, @(currentOffset)];
         *symbolicatedLine = result;
+        if (symbolicatedLocations) {
+            *symbolicatedLocations = @[[NSValue valueWithRange:NSMakeRange(symbolBegin, result.length - symbolBegin)]];
+        }
     }
 
     return YES;
 }
 
-- (BOOL)symbolicateEventLine:(NSString *)line symbolicatedLine:(NSString **)symbolicatedLine imagesMap:(NSDictionary *)imagesMap crashImagesMap:(NSDictionary *)crashImagesMap {
+- (BOOL)symbolicateEventLine:(NSString *)line symbolicatedLine:(NSString **)symbolicatedLine symbolicatedLocations:(NSArray **)symbolicatedLocations imagesMap:(NSDictionary *)imagesMap crashImagesMap:(NSDictionary *)crashImagesMap {
     NSScanner *scanner = [NSScanner scannerWithString:line];
     int frame = 0;
     if (![scanner scanInt:&frame]) {
@@ -360,16 +366,20 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return NO;
     }
 
-    if (!info.dli_sname) {
+    const char *sname = info.dli_sname;
+    if (!sname) {
         return NO;
     }
 
     if (symbolicatedLine) {
+        NSString *symbolicatedSymbol = [self.class demangle:@(sname)] ?: @(sname);
         uintptr_t currentOffset = current - (uintptr_t)info.dli_saddr;
-        NSString *symbolicatedSymbol = @(info.dli_sname);
         NSString *symbolicatedSymbolString = [NSString stringWithFormat:@"%@ + %@", symbolicatedSymbol, @(currentOffset)];
         NSString *result = [line stringByReplacingCharactersInRange:NSMakeRange(symbolBegin, unknown.length) withString:symbolicatedSymbolString];
         *symbolicatedLine = result;
+        if (symbolicatedLocations) {
+            *symbolicatedLocations = @[[NSValue valueWithRange:NSMakeRange(symbolBegin, symbolicatedSymbolString.length)]];
+        }
     }
 
     return YES;
@@ -422,15 +432,23 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 
     NSArray *lines = [string componentsSeparatedByString:@"\n"];
     NSMutableString *symbolicatedString = [NSMutableString string];
+    NSMutableArray *symbolicatedLocations = [NSMutableArray array];
     NSInteger symbolicatedCount = 0;
     for (NSString *line in lines) {
         NSString *symbolicateLine = line;
         BOOL symbolicated = NO;
+        NSArray *locations = nil;
         if (crashType == PDLCrashTypeCrash) {
-            symbolicated = [self symbolicateCrashLine:line symbolicatedLine:&symbolicateLine imagesMap:imagesMap crashImagesMap:crashImagesMap];
+            symbolicated = [self symbolicateCrashLine:line symbolicatedLine:&symbolicateLine symbolicatedLocations:&locations imagesMap:imagesMap crashImagesMap:crashImagesMap];
         } else if (crashType == PDLCrashTypeEvent) {
-            symbolicated = [self symbolicateEventLine:line symbolicatedLine:&symbolicateLine imagesMap:imagesMap crashImagesMap:crashImagesMap];
+            symbolicated = [self symbolicateEventLine:line symbolicatedLine:&symbolicateLine symbolicatedLocations:&locations imagesMap:imagesMap crashImagesMap:crashImagesMap];
         }
+        for (NSValue *rangeValue in locations) {
+            NSRange range = rangeValue.rangeValue;
+            range.location += symbolicatedString.length;
+            [symbolicatedLocations addObject:[NSValue valueWithRange:range]];
+        }
+
         [symbolicatedString appendFormat:@"%@\n", symbolicateLine];
         if (symbolicated) {
             symbolicatedCount++;
@@ -439,11 +457,25 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 
     BOOL symbolicated = symbolicatedCount > 0;
     if (symbolicated) {
+        self.symbolicatedLocations = symbolicatedLocations;
         self.symbolicatedString = symbolicatedString;
         self.symbolicatedCount = symbolicatedCount;
     }
 
     return symbolicated;
+}
+
++ (NSString *)demangle:(NSString *)name {
+    if (name.length == 0) {
+        return nil;
+    }
+
+    char *demangled = __cxxabiv1::__cxa_demangle(name.UTF8String, NULL, NULL, NULL);
+    if (!demangled) {
+        return nil;
+    }
+    NSString *ret = [[NSString alloc] initWithBytesNoCopy:demangled length:strlen(demangled) encoding:NSUTF8StringEncoding freeWhenDone:YES];
+    return ret;
 }
 
 @end

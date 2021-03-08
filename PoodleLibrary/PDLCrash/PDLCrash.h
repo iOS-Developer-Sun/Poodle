@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (copy, readonly) NSString *string;
 @property (copy, readonly) NSString *symbolicatedString;
+@property (copy, readonly) NSArray *symbolicatedLocations;
 @property (assign, readonly) NSInteger symbolicatedCount;
 @property (assign) BOOL UUIDMismatched;
 
@@ -22,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithString:(NSString *)string;
 
 - (BOOL)symbolicate;
+
++ (NSString *)demangle:(NSString *)name;
 
 @end
 

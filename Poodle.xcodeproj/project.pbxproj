@@ -24,6 +24,7 @@
 		B8300F2225BEB61600A02412 /* PDLScrollPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */; };
 		B8300FD125BEB61D00A02412 /* PDLScrollPageViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8300F2125BEB61600A02412 /* PDLScrollPageViewController.h */; };
 		B830102925BEB62200A02412 /* PDLScrollPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */; };
+		B830D01F25F5D19B00A5614E /* PDLCrash.mm in Sources */ = {isa = PBXBuildFile; fileRef = B830D01E25F5D19B00A5614E /* PDLCrash.mm */; };
 		B83CAA78248B487E009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA82248B49C9009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA83248B49D1009C784A /* pdl_security.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83CAA74248B4830009C784A /* pdl_security.h */; };
@@ -34,8 +35,6 @@
 		B84C805625CD1E280086CD36 /* PDLCrashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B84C805525CD1E280086CD36 /* PDLCrashViewController.m */; };
 		B84C810B25CD1E570086CD36 /* PDLCrashViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B84C805525CD1E280086CD36 /* PDLCrashViewController.m */; };
 		B84C816625CD1F6C0086CD36 /* PDLCrashViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B84C805425CD1E280086CD36 /* PDLCrashViewController.h */; };
-		B84C840925CD3C190086CD36 /* PDLCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = B84C840825CD3C190086CD36 /* PDLCrash.m */; };
-		B84C84C025CD3C3D0086CD36 /* PDLCrash.m in Sources */ = {isa = PBXBuildFile; fileRef = B84C840825CD3C190086CD36 /* PDLCrash.m */; };
 		B84C851C25CD3C580086CD36 /* PDLCrash.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B84C840725CD3C190086CD36 /* PDLCrash.h */; };
 		B8528191255132CA00B74F87 /* PDLRunLoopObserverLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528187255132CA00B74F87 /* PDLRunLoopObserverLoop.m */; };
 		B8528192255132CA00B74F87 /* PDLRunLoopObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528188255132CA00B74F87 /* PDLRunLoopObserver.m */; };
@@ -2030,6 +2029,7 @@
 		B8300E1925BEB5E700A02412 /* libPDLScrollPageViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLScrollPageViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLScrollPageViewController.m; sourceTree = "<group>"; };
 		B8300F2125BEB61600A02412 /* PDLScrollPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLScrollPageViewController.h; sourceTree = "<group>"; };
+		B830D01E25F5D19B00A5614E /* PDLCrash.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PDLCrash.mm; sourceTree = "<group>"; };
 		B83CAA74248B4830009C784A /* pdl_security.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_security.h; sourceTree = "<group>"; };
 		B83CAA77248B487E009C784A /* pdl_security.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_security.c; sourceTree = "<group>"; };
 		B83CAA81248B49B4009C784A /* libpdl_security.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_security.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2038,7 +2038,6 @@
 		B84C805525CD1E280086CD36 /* PDLCrashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLCrashViewController.m; sourceTree = "<group>"; };
 		B84C81E325CD3B580086CD36 /* libPDLCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B84C840725CD3C190086CD36 /* PDLCrash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLCrash.h; sourceTree = "<group>"; };
-		B84C840825CD3C190086CD36 /* PDLCrash.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLCrash.m; sourceTree = "<group>"; };
 		B85068EE250121690028E642 /* NSArray+PDLSafeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSArray+PDLSafeOperation.h"; sourceTree = "<group>"; };
 		B85068EF250121690028E642 /* NSDictionary+PDLSafeOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+PDLSafeOperation.h"; sourceTree = "<group>"; };
 		B8528186255132CA00B74F87 /* PDLRunLoopObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLRunLoopObserver.h; sourceTree = "<group>"; };
@@ -3123,7 +3122,7 @@
 			isa = PBXGroup;
 			children = (
 				B84C840725CD3C190086CD36 /* PDLCrash.h */,
-				B84C840825CD3C190086CD36 /* PDLCrash.m */,
+				B830D01E25F5D19B00A5614E /* PDLCrash.mm */,
 			);
 			path = PDLCrash;
 			sourceTree = "<group>";
@@ -7855,7 +7854,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B84C84C025CD3C3D0086CD36 /* PDLCrash.m in Sources */,
+				B830D01F25F5D19B00A5614E /* PDLCrash.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7933,7 +7932,6 @@
 				B85D4610240E85A600CBF758 /* pdl_die-x86_64.s in Sources */,
 				B85D4611240E85A600CBF758 /* pdl_objc_message-arm.s in Sources */,
 				B85D4612240E85A600CBF758 /* pdl_objc_message-arm64.s in Sources */,
-				B84C840925CD3C190086CD36 /* PDLCrash.m in Sources */,
 				B85D4613240E85A600CBF758 /* pdl_objc_message-i386.s in Sources */,
 				B85B447A24A0EC6200B25A3E /* pdl_allocation.m in Sources */,
 				B85D4614240E85A600CBF758 /* pdl_objc_message-x86_64.s in Sources */,
