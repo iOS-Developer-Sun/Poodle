@@ -43,7 +43,6 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     }
 
     uintptr_t endAddress = 0;
-
     if (![scanner scanHexLongLong:(unsigned long long *)&endAddress]) {
         return nil;
     }
@@ -97,7 +96,6 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     }
 
     uintptr_t endAddress = 0;
-
     if (![scanner scanHexLongLong:(unsigned long long *)&endAddress]) {
         if (![scanner scanString:@"???" intoString:NULL]) {
             return nil;
@@ -122,6 +120,10 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 
     NSString *path = nil;
     [scanner scanUpToString:@" " intoString:&path];
+
+    if ([name isEqualToString:@"???"]) {
+        name = [NSString stringWithFormat:@"<%@>", uuid];
+    }
 
     PDLCrashBinaryImage *ret = [[self alloc] init];
     ret.address = address;
@@ -296,8 +298,8 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 
 - (BOOL)symbolicateEventLine:(NSString *)line symbolicatedLine:(NSString **)symbolicatedLine symbolicatedLocations:(NSArray **)symbolicatedLocations imagesMap:(NSDictionary *)imagesMap crashImagesMap:(NSDictionary *)crashImagesMap {
     NSScanner *scanner = [NSScanner scannerWithString:line];
-    int frame = 0;
-    if (![scanner scanInt:&frame]) {
+    uintptr_t frame = 0;
+    if (![scanner scanHexLongLong:(unsigned long long *)&frame]) {
         return NO;
     }
 
@@ -308,6 +310,47 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     }
 
     if (![symbol isEqualToString:unknown]) {
+        if ([symbol isEqualToString:@"-"]) {
+            NSString *endAddressString = nil;
+            if (![scanner scanUpToString:@" " intoString:&endAddressString]) {
+                return NO;
+            }
+
+            NSString *imageName = nil;
+            [scanner scanUpToString:@" " intoString:&imageName];
+            if (![imageName isEqualToString:unknown]) {
+                return NO;
+            }
+
+            NSInteger nameBegin = [line rangeOfString:unknown options:NSBackwardsSearch].location;
+
+            if (![scanner scanUpToString:@"<" intoString:NULL] && ![scanner scanString:@"<" intoString:NULL]) {
+                return NO;
+            }
+
+            NSString *uuid = nil;
+            if (![scanner scanUpToString:@">" intoString:&uuid]) {
+                return NO;
+            }
+
+            [scanner scanString:@">" intoString:NULL];
+
+            NSString *key = [uuid.lowercaseString stringByReplacingOccurrencesOfString:@"-" withString:@""];
+            PDLSystemImage *systemImage = imagesMap[key];
+            if (!systemImage) {
+                return NO;
+            }
+
+            if (symbolicatedLine) {
+                NSString *result = line;
+                result = [result stringByReplacingCharactersInRange:NSMakeRange(nameBegin, unknown.length) withString:systemImage.name];
+                *symbolicatedLine = result;
+                if (symbolicatedLocations) {
+                    *symbolicatedLocations = @[[NSValue valueWithRange:NSMakeRange(nameBegin, systemImage.name.length)]];
+                }
+            }
+            return YES;
+        }
         return NO;
     }
 
@@ -321,13 +364,20 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return NO;
     }
 
-    [scanner scanUpToString:@"+" intoString:NULL];
-    [scanner scanString:@"+" intoString:NULL];
+    NSString *uuidString = nil;
+    NSInteger uuidBegin = 0;
+    if ([name hasPrefix:@"<"] && [name hasSuffix:@">"]) {
+        uuidString = [[name substringWithRange:NSMakeRange(1, name.length - 2)].lowercaseString stringByReplacingOccurrencesOfString:@"-" withString:@""];
+        uuidBegin = [line rangeOfString:name].location;
+    }
 
-    PDLSystemImage *systemImage = imagesMap[name];
+    PDLSystemImage *systemImage = imagesMap[uuidString ?: name];
     if (!systemImage) {
         return NO;
     }
+
+    [scanner scanUpToString:@"+" intoString:NULL];
+    [scanner scanString:@"+" intoString:NULL];
 
     uintptr_t offset = 0;
     if (![scanner scanUnsignedLongLong:(unsigned long long *)&offset]) {
@@ -343,6 +393,10 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     }
 
     PDLCrashBinaryImage *binaryImage = crashImagesMap[name];
+    if (!binaryImage) {
+        return NO;
+    }
+
     if (address != binaryImage.address + offset) {
         return NO;
     }
@@ -358,7 +412,8 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return NO;
     }
 
-    if (![@(info.dli_fname).lastPathComponent isEqualToString:name]) {
+    NSString *imageName = systemImage.name;
+    if (![@(info.dli_fname).lastPathComponent isEqualToString:imageName]) {
         return NO;
     }
 
@@ -375,10 +430,20 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         NSString *symbolicatedSymbol = [self.class demangle:@(sname)] ?: @(sname);
         uintptr_t currentOffset = current - (uintptr_t)info.dli_saddr;
         NSString *symbolicatedSymbolString = [NSString stringWithFormat:@"%@ + %@", symbolicatedSymbol, @(currentOffset)];
-        NSString *result = [line stringByReplacingCharactersInRange:NSMakeRange(symbolBegin, unknown.length) withString:symbolicatedSymbolString];
+        NSString *result = line;
+        NSValue *uuidRangeValue = nil;
+        if (uuidString) {
+            result = [result stringByReplacingCharactersInRange:NSMakeRange(uuidBegin, name.length) withString:imageName];
+            uuidRangeValue = [NSValue valueWithRange:NSMakeRange(uuidBegin - unknown.length + symbolicatedSymbolString.length, imageName.length)];
+        }
+        result = [result stringByReplacingCharactersInRange:NSMakeRange(symbolBegin, unknown.length) withString:symbolicatedSymbolString];
         *symbolicatedLine = result;
         if (symbolicatedLocations) {
-            *symbolicatedLocations = @[[NSValue valueWithRange:NSMakeRange(symbolBegin, symbolicatedSymbolString.length)]];
+            NSArray *locations = @[[NSValue valueWithRange:NSMakeRange(symbolBegin, symbolicatedSymbolString.length)]];
+            if (uuidRangeValue) {
+                locations = [locations arrayByAddingObject:uuidRangeValue];
+            }
+            *symbolicatedLocations = locations;
         }
     }
 
@@ -423,6 +488,7 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     NSMutableDictionary *imagesMap = [NSMutableDictionary dictionary];
     for (PDLSystemImage *systemImage in [PDLSystemImage systemImages]) {
         imagesMap[systemImage.name] = systemImage;
+        imagesMap[systemImage.uuidString] = systemImage;
     }
 
     NSMutableDictionary *crashImagesMap = [NSMutableDictionary dictionary];
