@@ -59,7 +59,7 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     }
 }
 
-+ (void)load {
++ (void)enable {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _systemImages = [NSMutableDictionary dictionary];
