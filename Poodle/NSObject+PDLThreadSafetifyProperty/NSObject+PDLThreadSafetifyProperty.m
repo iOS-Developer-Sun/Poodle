@@ -34,14 +34,16 @@ static id pdl_threadSafePropertyLock(__unsafe_unretained id self, Class aClass, 
 
 static id pdl_threadSafePropertyGetter(__unsafe_unretained id self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
-    @synchronized (pdl_threadSafePropertyLock(self, _class, _data)) {
+    id lock = pdl_threadSafePropertyLock(self, _class, _data);
+    @synchronized (lock) {
         return ((typeof(&pdl_threadSafePropertyGetter))_imp)(self, _cmd);
     }
 }
 
 static void pdl_threadSafePropertySetter(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id property) {
     PDLImplementationInterceptorRecover(_cmd);
-    @synchronized (pdl_threadSafePropertyLock(self, _class, _data)) {
+    id lock = pdl_threadSafePropertyLock(self, _class, _data);
+    @synchronized (lock) {
         ((typeof(&pdl_threadSafePropertySetter))_imp)(self, _cmd, property);
     }
 }
@@ -51,36 +53,54 @@ static void pdl_threadSafePropertySetter(__unsafe_unretained id self, SEL _cmd, 
         return NO;
     }
 
-    Class aClass = self;
-    objc_property_t property = class_getProperty(aClass, propertyName.UTF8String);
-    if (!property) {
-        return NO;
-    }
-
-    const char *attributes = property_getAttributes(property);
-    const char *name = property_getName(property);
-    NSArray *attributeList = [@(attributes) componentsSeparatedByString:@","];
-
     NSString *getterString = propertyName;
-    NSString *setterString = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
-    for (NSString *attributeString in attributeList) {
-        if ([attributeString hasPrefix:@"G"]) {
-            getterString = [attributeString substringFromIndex:1];
+    NSString *setterString = nil;
+    Class aClass = self;
+    BOOL readonly = NO;
+    objc_property_t property = class_getProperty(aClass, propertyName.UTF8String);
+    const char *name = nil;
+    SEL getter = NULL;
+    if (property) {
+        name = property_getName(property);
+        const char *attributes = property_getAttributes(property);
+        NSArray *attributeList = [@(attributes) componentsSeparatedByString:@","];
+        for (NSString *attributeString in attributeList) {
+            if ([attributeString hasPrefix:@"G"]) {
+                getterString = [attributeString substringFromIndex:1];
+            }
+            if ([attributeString hasPrefix:@"S"]) {
+                setterString = [attributeString substringFromIndex:1];
+            }
+            if ([attributeString isEqualToString:@"R"]) {
+                readonly = YES;
+            }
         }
-        if ([attributeString hasPrefix:@"S"]) {
-            setterString = [attributeString substringFromIndex:1];
+        getter = NSSelectorFromString(getterString);
+        if (!setterString) {
+            setterString = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
         }
+    } else {
+        readonly = YES;
+        getter = NSSelectorFromString(propertyName);
+        name = sel_getName(getter);
     }
 
-    SEL getter = NSSelectorFromString(getterString);
-    SEL setter = NSSelectorFromString(setterString);
-    if (!getter || !setter) {
+    if (!getter) {
         return NO;
+    }
+
+    SEL setter = nil;
+    if (!readonly) {
+        setter = NSSelectorFromString(setterString);
+        if (!setter) {
+            return NO;
+        }
     }
 
     BOOL ret = pdl_interceptSelector(aClass, getter, (IMP)&pdl_threadSafePropertyGetter, nil, NO, (void *)name);
-    ret &= pdl_interceptSelector(aClass, setter, (IMP)&pdl_threadSafePropertySetter, nil, NO, (void *)name);
-
+    if (!readonly) {
+        ret &= pdl_interceptSelector(aClass, setter, (IMP)&pdl_threadSafePropertySetter, nil, NO, (void *)name);
+    }
     return ret;
 }
 
