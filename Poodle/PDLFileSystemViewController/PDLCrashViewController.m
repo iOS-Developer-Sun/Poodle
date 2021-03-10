@@ -48,10 +48,10 @@
     self.textView.text = @"iOS UITextView bug";
     self.textView.text = @"";
 
-    [self load];
+    [self loadString];
 }
 
-- (void)load {
+- (void)loadString {
     __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
         NSString *string = [weakSelf textFileString];
