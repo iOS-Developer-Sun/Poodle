@@ -183,8 +183,6 @@
     _delegateRespondsDidSetContentOffsetAnimated = [formViewDelegate respondsToSelector:@selector(formView:didSetContentOffset:animated:)];
     _delegateRespondsWillScrollRectToVisibleAnimated = [formViewDelegate respondsToSelector:@selector(formView:willScrollRectToVisible:animated:)];
     _delegateRespondsDidScrollRectToVisibleAnimated = [formViewDelegate respondsToSelector:@selector(formView:didScrollRectToVisible:animated:)];
-
-    [self reloadData];
 }
 
 - (void)setIsScrollHorizontallyForcedEnabled:(BOOL)isScrollHorizontallyForcedEnabled {
@@ -823,6 +821,8 @@
 }
 
 - (void)scrollToColumn:(NSInteger)column row:(NSInteger)row atScrollPosition:(PDLFormViewScrollPosition)scrollPosition animated:(BOOL)animated {
+    [self layoutIfNeeded];
+
     NSInteger toColumn = column;
     if (toColumn < 0) {
         toColumn = 0;
@@ -874,7 +874,6 @@
         } else {
             y = contentOffset.y;
         }
-
     }
 
     CGFloat maxX = self.contentSize.width - self.bounds.size.width;

@@ -131,8 +131,6 @@
     _delegateRespondsDidScrollToIndex = [delegate respondsToSelector:@selector(pageViewController:didScrollToIndex:)];
     _delegateRespondsDidEndDecelerating = [delegate respondsToSelector:@selector(pageViewControllerDidEndDecelerating:)];
     _delegateRespondsDidEndDraggingWillDecelerate  = [delegate respondsToSelector:@selector(pageViewControllerDidEndDragging:willDecelerate:)];
-
-    [self.pageController reloadData];
 }
 
 #pragma mark - Private methods
