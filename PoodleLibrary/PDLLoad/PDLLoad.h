@@ -6,15 +6,14 @@
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import <objc/runtime.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-@interface PDLLoad : NSObject
+extern void pdl_disableCategoryLoad(bool(*filter)(void *image_header, const char *image_name, Class cls, const char *category_name));
 
-+ (void)disableCategoryLoad:(BOOL(^_Nullable)(void *imageHeader, NSString *imageName, Class aClass, NSString *categoryName))filter;
-
-@end
-
-
-NS_ASSUME_NONNULL_END
+#ifdef __cplusplus
+}
+#endif

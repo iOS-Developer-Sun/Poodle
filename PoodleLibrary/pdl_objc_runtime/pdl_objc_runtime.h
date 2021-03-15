@@ -12,16 +12,6 @@
 extern "C" {
 #endif
 
-extern __attribute__((ns_returns_retained))
-id pdl_class_createInstance(__unsafe_unretained Class cls, size_t extraBytes, __attribute__((ns_returns_retained)) id(*class_createInstance_original)(__unsafe_unretained Class cls, size_t extraBytes));
-
-extern __attribute__((ns_returns_retained))
-id pdl_objc_rootAllocWithZone(__unsafe_unretained Class cls, struct _NSZone *zone, id(*_objc_rootAllocWithZone_original)(Class cls, struct _NSZone *zone));
-
-extern
-void pdl_objc_rootDealloc(__unsafe_unretained id object, void(*_objc_rootDealloc_original)(__unsafe_unretained id object));
-
-
 typedef void *pdl_objc_runtime_category;
 typedef void *pdl_objc_runtime_method_list;
 
