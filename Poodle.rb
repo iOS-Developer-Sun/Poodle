@@ -414,6 +414,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'pdl_objc_runtime/' + source_files
             ss.vendored_library = base + 'pdl_objc_runtime/' + librariy_files
+            ss.requires_arc = false
             ss.frameworks = 'Foundation'
         end
 
