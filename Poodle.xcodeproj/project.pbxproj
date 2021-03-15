@@ -227,8 +227,6 @@
 		B899F9EF245065DA00EFBB39 /* PDLViewControllerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */; };
 		B899F9F924506A3A00EFBB39 /* PDLViewControllerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */; };
 		B899F9FA24506A4200EFBB39 /* PDLViewControllerListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B899F9EE245065DA00EFBB39 /* PDLViewControllerListViewController.h */; };
-		B89FA7F925921EB000B714BE /* PDLLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = B89FA7F825921EB000B714BE /* PDLLoad.m */; };
-		B89FA9AA25921FDC00B714BE /* PDLLoad.m in Sources */ = {isa = PBXBuildFile; fileRef = B89FA7F825921EB000B714BE /* PDLLoad.m */; };
 		B89FAA0025921FE100B714BE /* PDLLoad.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B89FA7F725921EB000B714BE /* PDLLoad.h */; };
 		B8A6F4F025428B7400426AD1 /* PDLFormViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */; };
 		B8A6F4F125428B7400426AD1 /* PDLFormViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */; };
@@ -245,11 +243,11 @@
 		B8B3AA0B24B71F6D008EFBE0 /* NSObject+PDLAssociation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B3A9FF24B71E2B008EFBE0 /* NSObject+PDLAssociation.m */; };
 		B8B3AA0C24B71F76008EFBE0 /* NSObject+PDLAssociation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B3AA0024B71E2B008EFBE0 /* NSObject+PDLAssociation.h */; };
 		B8B7B5AE249B6265008D4604 /* pdl_objc_runtime.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B7B5A1249B61CB008D4604 /* pdl_objc_runtime.h */; };
-		B8B7B5B2249B9132008D4604 /* pdl_objc_runtime.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */; };
-		B8B7B5B3249B9143008D4604 /* pdl_objc_runtime.m in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */; };
 		B8B7B5C9249CE7FE008D4604 /* pdl_list.c in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5C7249CE7FD008D4604 /* pdl_list.c */; };
 		B8B7B5CA249CE80E008D4604 /* pdl_list.c in Sources */ = {isa = PBXBuildFile; fileRef = B8B7B5C7249CE7FD008D4604 /* pdl_list.c */; };
 		B8B7B5CB249CE814008D4604 /* pdl_list.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8B7B5C8249CE7FE008D4604 /* pdl_list.h */; };
+		B8C7A0EC25FFAF740047EF59 /* PDLLoad.c in Sources */ = {isa = PBXBuildFile; fileRef = B8C7A0EB25FFAF740047EF59 /* PDLLoad.c */; };
+		B8C7A1A625FFAF950047EF59 /* pdl_objc_runtime.c in Sources */ = {isa = PBXBuildFile; fileRef = B8C7A1A525FFAF8C0047EF59 /* pdl_objc_runtime.c */; };
 		B8DEC4C424877D1800DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
 		B8DEC4CE2487807900DB3D0E /* pdl_dispatch_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */; };
 		B8DEC4CF2487807E00DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
@@ -2136,7 +2134,6 @@
 		B899F9EE245065DA00EFBB39 /* PDLViewControllerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLViewControllerListViewController.h; sourceTree = "<group>"; };
 		B899F9F824506A2900EFBB39 /* libPDLViewControllerListViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLViewControllerListViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B89FA7F725921EB000B714BE /* PDLLoad.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLLoad.h; sourceTree = "<group>"; };
-		B89FA7F825921EB000B714BE /* PDLLoad.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLLoad.m; sourceTree = "<group>"; };
 		B89FA8AA25921FC800B714BE /* libPDLLoad.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLLoad.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLFormViewCell.m; sourceTree = "<group>"; };
 		B8A6F4EF25428B7400426AD1 /* PDLFormViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLFormViewCell.h; sourceTree = "<group>"; };
@@ -2156,11 +2153,12 @@
 		B8B3AA0A24B71F4A008EFBE0 /* libNSObject+PDLAssociation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLAssociation.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8B7B5A1249B61CB008D4604 /* pdl_objc_runtime.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_objc_runtime.h; sourceTree = "<group>"; };
 		B8B7B5AC249B6240008D4604 /* libpdl_objc_runtime.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_objc_runtime.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_objc_runtime.m; sourceTree = "<group>"; };
 		B8B7B5C0249B9307008D4604 /* libNSObject+PDLAllocation.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; name = "libNSObject+PDLAllocation.a"; path = libpdl_allocation.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8B7B5C7249CE7FD008D4604 /* pdl_list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_list.c; sourceTree = "<group>"; };
 		B8B7B5C8249CE7FE008D4604 /* pdl_list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_list.h; sourceTree = "<group>"; };
 		B8B9A56A234F9A100069476E /* libPDLDatabase.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLDatabase.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8C7A0EB25FFAF740047EF59 /* PDLLoad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = PDLLoad.c; sourceTree = "<group>"; };
+		B8C7A1A525FFAF8C0047EF59 /* pdl_objc_runtime.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pdl_objc_runtime.c; sourceTree = "<group>"; };
 		B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_dispatch_backtrace.h; sourceTree = "<group>"; };
 		B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_dispatch_backtrace.m; sourceTree = "<group>"; };
 		B8DEC4CD2487805B00DB3D0E /* libpdl_dispatch_backtrace.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_dispatch_backtrace.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3454,8 +3452,8 @@
 		B89FA7F625921E9900B714BE /* PDLLoad */ = {
 			isa = PBXGroup;
 			children = (
+				B8C7A0EB25FFAF740047EF59 /* PDLLoad.c */,
 				B89FA7F725921EB000B714BE /* PDLLoad.h */,
-				B89FA7F825921EB000B714BE /* PDLLoad.m */,
 			);
 			path = PDLLoad;
 			sourceTree = "<group>";
@@ -3499,8 +3497,8 @@
 		B8B7B5A0249B61B4008D4604 /* pdl_objc_runtime */ = {
 			isa = PBXGroup;
 			children = (
+				B8C7A1A525FFAF8C0047EF59 /* pdl_objc_runtime.c */,
 				B8B7B5A1249B61CB008D4604 /* pdl_objc_runtime.h */,
-				B8B7B5B1249B9132008D4604 /* pdl_objc_runtime.m */,
 			);
 			path = pdl_objc_runtime;
 			sourceTree = "<group>";
@@ -7986,7 +7984,6 @@
 				B8B3AA0124B71E2B008EFBE0 /* NSObject+PDLAssociation.m in Sources */,
 				B80DF29824C45E6300AE1B00 /* pdl_algorithm.c in Sources */,
 				B81E710E2501185A00399E4B /* PDLInitialization.m in Sources */,
-				B8B7B5B2249B9132008D4604 /* pdl_objc_runtime.m in Sources */,
 				B8528192255132CA00B74F87 /* PDLRunLoopObserver.m in Sources */,
 				B85D45DC240E859000CBF758 /* PDLDirectoryViewController.m in Sources */,
 				B85D45DD240E859000CBF758 /* PDLFileSystemViewController.m in Sources */,
@@ -7995,7 +7992,6 @@
 				B888660D24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.m in Sources */,
 				B85D45E0240E859000CBF758 /* PDLWebViewController.m in Sources */,
 				B8A6F4F025428B7400426AD1 /* PDLFormViewCell.m in Sources */,
-				B89FA7F925921EB000B714BE /* PDLLoad.m in Sources */,
 				B8528195255132CA00B74F87 /* PDLBacktraceRecorder.m in Sources */,
 				B85D45E1240E859000CBF758 /* PDLFontViewController.m in Sources */,
 				B85D45E2240E859000CBF758 /* PDLFormView.m in Sources */,
@@ -8243,7 +8239,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B89FA9AA25921FDC00B714BE /* PDLLoad.m in Sources */,
+				B8C7A0EC25FFAF740047EF59 /* PDLLoad.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8303,7 +8299,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8B7B5B3249B9143008D4604 /* pdl_objc_runtime.m in Sources */,
+				B8C7A1A625FFAF950047EF59 /* pdl_objc_runtime.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
