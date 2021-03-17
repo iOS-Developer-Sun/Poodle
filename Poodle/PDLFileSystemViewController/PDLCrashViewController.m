@@ -8,6 +8,7 @@
 
 #import "PDLCrashViewController.h"
 #import "PDLCrash.h"
+#import "PDLColor.h"
 
 @interface PDLCrashViewController ()
 
@@ -41,6 +42,7 @@
     UITextView *textView = [[UITextView alloc] initWithFrame:CGRectInset(self.view.bounds, 5, 5)];
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textView.font = [UIFont systemFontOfSize:10];
+    textView.textColor = PDLColorTextColor();
     textView.editable = NO;
     [self.view addSubview:textView];
     self.textView = textView;

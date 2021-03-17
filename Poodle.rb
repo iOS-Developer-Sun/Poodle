@@ -580,6 +580,14 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'UIKit'
         end
 
+        s.subspec 'PDLColor' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLColor/' + source_files
+            ss.vendored_library = base + 'PDLColor/' + librariy_files
+            ss.frameworks = 'UIKit'
+        end
+
         s.subspec 'PDLCrash' do |ss|
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
@@ -608,6 +616,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/PDLDatabase'
             ss.dependency pod_name + '/PDLViewController'
             ss.dependency pod_name + '/PDLCrash'
+            ss.dependency pod_name + '/PDLColor'
         end
 
         s.subspec 'PDLFontViewController' do |ss|

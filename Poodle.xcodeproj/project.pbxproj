@@ -224,6 +224,9 @@
 		B893CBFF2524969900174119 /* PDLFirstOrderedTaskScheduler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B893CBFC2524959D00174119 /* PDLFirstOrderedTaskScheduler.h */; };
 		B893CC002524969900174119 /* PDLTaskScheduler.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B893CBF8252488D000174119 /* PDLTaskScheduler.h */; };
 		B893CC01252496A000174119 /* PDLFirstOrderedTaskScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = B893CBFD2524959D00174119 /* PDLFirstOrderedTaskScheduler.m */; };
+		B897B5B1260112B200696E06 /* PDLColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B897B5B0260112B100696E06 /* PDLColor.m */; };
+		B897B7E62601175B00696E06 /* PDLColor.m in Sources */ = {isa = PBXBuildFile; fileRef = B897B5B0260112B100696E06 /* PDLColor.m */; };
+		B897B8442601176100696E06 /* PDLColor.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B897B5AF260112B100696E06 /* PDLColor.h */; };
 		B899F9EF245065DA00EFBB39 /* PDLViewControllerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */; };
 		B899F9F924506A3A00EFBB39 /* PDLViewControllerListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */; };
 		B899F9FA24506A4200EFBB39 /* PDLViewControllerListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B899F9EE245065DA00EFBB39 /* PDLViewControllerListViewController.h */; };
@@ -687,6 +690,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = B890851E24AF490900DAC261;
 			remoteInfo = pdl_dispatch;
+		};
+		B897B8A22601176D00696E06 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B897B6C62601174900696E06;
+			remoteInfo = PDLColor;
 		};
 		B899F9FB24506A5D00EFBB39 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1430,6 +1440,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B897B6C92601174900696E06 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B897B8442601176100696E06 /* PDLColor.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B899F9F324506A2900EFBB39 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2130,6 +2150,9 @@
 		B893CBFD2524959D00174119 /* PDLFirstOrderedTaskScheduler.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLFirstOrderedTaskScheduler.m; sourceTree = "<group>"; };
 		B893CC022524997000174119 /* PDLTaskInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLTaskInternal.h; sourceTree = "<group>"; };
 		B893CC03252499F600174119 /* PDLTaskSchedulerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLTaskSchedulerInternal.h; sourceTree = "<group>"; };
+		B897B5AF260112B100696E06 /* PDLColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLColor.h; sourceTree = "<group>"; };
+		B897B5B0260112B100696E06 /* PDLColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLColor.m; sourceTree = "<group>"; };
+		B897B6CE2601174900696E06 /* libPDLColor.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLColor.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B899F9ED245065DA00EFBB39 /* PDLViewControllerListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLViewControllerListViewController.m; sourceTree = "<group>"; };
 		B899F9EE245065DA00EFBB39 /* PDLViewControllerListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLViewControllerListViewController.h; sourceTree = "<group>"; };
 		B899F9F824506A2900EFBB39 /* libPDLViewControllerListViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLViewControllerListViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2679,6 +2702,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B890852024AF490900DAC261 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B897B6C82601174900696E06 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3416,6 +3446,7 @@
 				B8E39A8625CA77A7004096FF /* libpdl_block.a */,
 				B84C81E325CD3B580086CD36 /* libPDLCrash.a */,
 				B882973025D2AC03006940F8 /* libPDLBlock.a */,
+				B897B6CE2601174900696E06 /* libPDLColor.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3438,6 +3469,15 @@
 				B890851B24AF48C700DAC261 /* pdl_dispatch.m */,
 			);
 			path = pdl_dispatch;
+			sourceTree = "<group>";
+		};
+		B897B5AE260112B100696E06 /* PDLColor */ = {
+			isa = PBXGroup;
+			children = (
+				B897B5AF260112B100696E06 /* PDLColor.h */,
+				B897B5B0260112B100696E06 /* PDLColor.m */,
+			);
+			path = PDLColor;
 			sourceTree = "<group>";
 		};
 		B899F9EC245065DA00EFBB39 /* PDLViewControllerListViewController */ = {
@@ -4271,6 +4311,7 @@
 				B85284492551344200B74F87 /* PDLBacktraceRecordsItem */,
 				B882966E25D2ABD2006940F8 /* PDLBlock */,
 				B8E56E3F23D70017008D2DA1 /* PDLCollectionViewFlowLayout */,
+				B897B5AE260112B100696E06 /* PDLColor */,
 				B84C840625CD3BF10086CD36 /* PDLCrash */,
 				B8E56E6D23D70018008D2DA1 /* PDLDatabase */,
 				B8E56EB423D7001A008D2DA1 /* PDLFileSystemViewController */,
@@ -4932,6 +4973,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B897B8A32601176D00696E06 /* PBXTargetDependency */,
 				B882990025D2AC2C006940F8 /* PBXTargetDependency */,
 				B84C857925CD3C640086CD36 /* PBXTargetDependency */,
 				B8E39CA625CA77D0004096FF /* PBXTargetDependency */,
@@ -5044,6 +5086,24 @@
 			name = pdl_dispatch;
 			productName = "CAAnimation+PDLExtension";
 			productReference = B890852624AF490900DAC261 /* libpdl_dispatch.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B897B6C62601174900696E06 /* PDLColor */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B897B6CB2601174900696E06 /* Build configuration list for PBXNativeTarget "PDLColor" */;
+			buildPhases = (
+				B897B6C72601174900696E06 /* Sources */,
+				B897B6C82601174900696E06 /* Frameworks */,
+				B897B6C92601174900696E06 /* CopyFiles */,
+				B897B6CA2601174900696E06 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLColor;
+			productName = "CAAnimation+PDLExtension";
+			productReference = B897B6CE2601174900696E06 /* libPDLColor.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		B899F9F024506A2900EFBB39 /* PDLViewControllerListViewController */ = {
@@ -6145,6 +6205,7 @@
 				B85284A12551345200B74F87 /* PDLBacktraceRecordsItem */,
 				B882972825D2AC03006940F8 /* PDLBlock */,
 				B8FC6D1522EF0A94005B91DE /* PDLCollectionViewFlowLayout */,
+				B897B6C62601174900696E06 /* PDLColor */,
 				B84C81DB25CD3B580086CD36 /* PDLCrash */,
 				B8B9A562234F9A100069476E /* PDLDatabase */,
 				B802ACCB22F33A6A00BF028E /* PDLFileSystemViewController */,
@@ -6760,6 +6821,23 @@
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
 		B890852224AF490900DAC261 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B897B6CA2601174900696E06 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -7975,6 +8053,7 @@
 				B85D45D6240E859000CBF758 /* PDLAddressQueryViewController.m in Sources */,
 				B85D45D7240E859000CBF758 /* PDLCollectionViewFlowLayout.m in Sources */,
 				B85D45D8240E859000CBF758 /* PDLDatabase.m in Sources */,
+				B897B5B1260112B200696E06 /* PDLColor.m in Sources */,
 				B85D45D9240E859000CBF758 /* PDLDatabaseTableViewController.m in Sources */,
 				B85D45DA240E859000CBF758 /* PDLDatabaseViewController.m in Sources */,
 				B85D45DB240E859000CBF758 /* PDLDataQueryViewController.m in Sources */,
@@ -8224,6 +8303,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				B890852724AF493400DAC261 /* pdl_dispatch.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B897B6C72601174900696E06 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B897B7E62601175B00696E06 /* PDLColor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8875,6 +8962,11 @@
 			isa = PBXTargetDependency;
 			target = B890851E24AF490900DAC261 /* pdl_dispatch */;
 			targetProxy = B890852924AF494900DAC261 /* PBXContainerItemProxy */;
+		};
+		B897B8A32601176D00696E06 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B897B6C62601174900696E06 /* PDLColor */;
+			targetProxy = B897B8A22601176D00696E06 /* PBXContainerItemProxy */;
 		};
 		B899F9FC24506A5D00EFBB39 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -10097,6 +10189,28 @@
 			name = Debug;
 		};
 		B890852524AF490900DAC261 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B897B6CC2601174900696E06 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B897B6CD2601174900696E06 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -11671,6 +11785,15 @@
 			buildConfigurations = (
 				B890852424AF490900DAC261 /* Debug */,
 				B890852524AF490900DAC261 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B897B6CB2601174900696E06 /* Build configuration list for PBXNativeTarget "PDLColor" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B897B6CC2601174900696E06 /* Debug */,
+				B897B6CD2601174900696E06 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

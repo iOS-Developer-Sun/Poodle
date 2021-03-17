@@ -7,6 +7,7 @@
 //
 
 #import "PDLViewController.h"
+#import "PDLColor.h"
 
 @interface PDLViewController ()
 
@@ -36,17 +37,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    UIColor *backgroundColor = nil;
-    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 13) {
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wunguarded-availability"
-#pragma clang diagnostic ignored "-Wunguarded-availability-new"
-        backgroundColor = [UIColor systemBackgroundColor];
-#pragma clang diagnostic pop
-    } else {
-        backgroundColor = [UIColor whiteColor];
-    }
-    self.view.backgroundColor = backgroundColor;
+    self.view.backgroundColor = PDLColorBackgroundColor();
 }
 
 @end
