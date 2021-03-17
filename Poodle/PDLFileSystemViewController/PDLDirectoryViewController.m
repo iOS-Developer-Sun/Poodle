@@ -15,6 +15,7 @@
 #import "PDLDatabaseViewController.h"
 #import "PDLWebViewController.h"
 #import "PDLCrashViewController.h"
+#import "PDLColor.h"
 
 static NSString *PDLDirectoryViewControllerSizeStringOfBytes(uint64_t bytes) {
     double gigaBytes = bytes / 1024.0 / 1024.0 / 1024.0;
@@ -353,7 +354,6 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     if (self) {
         UIImageView *selectionImageView = [[UIImageView alloc] init];
         selectionImageView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-        selectionImageView.contentMode = UIViewContentModeCenter;
         _selectionImageView = selectionImageView;
     }
     return self;
@@ -374,10 +374,12 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
     if ([NSStringFromClass(view.class) isEqualToString:@"UITableViewCellEditControl"]) {
         if (![self.selectionImageView isDescendantOfView:self]) {
+            for (UIView *subview in view.subviews) {
+                subview.hidden = YES;
+            }
             [view addSubview:self.selectionImageView];
             self.selectionImageView.frame = view.bounds;
-
-            self.selectionImageView.backgroundColor = [UIColor whiteColor];
+            self.selectionImageView.backgroundColor = [UIColor clearColor];
             self.selectionImageView.layer.zPosition = FLT_MAX;
         }
     }
@@ -456,7 +458,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     }
     UIView *selectAllView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height, self.view.frame.size.width, 49 + bottom)];
     selectAllView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleTopMargin;
-    selectAllView.backgroundColor = [UIColor whiteColor];
+    selectAllView.backgroundColor = PDLColorBackgroundColor();
 
     UIView *actionView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, selectAllView.frame.size.width, 49)];
     actionView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
@@ -467,7 +469,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     [checkboxButton setImage:PDLDirectoryViewControllerCheckboxImage() forState:UIControlStateNormal];
     [checkboxButton setImage:PDLDirectoryViewControllerCheckboxHighlightedImage() forState:UIControlStateSelected];
     [checkboxButton setTitle:@" Select All" forState:UIControlStateNormal];
-    [checkboxButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [checkboxButton setTitleColor:PDLColorTextColor() forState:UIControlStateNormal];
     checkboxButton.titleLabel.font = [UIFont systemFontOfSize:14];
     [actionView addSubview:checkboxButton];
     self.checkboxButton = checkboxButton;
@@ -476,7 +478,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     actButton.autoresizingMask = UIViewAutoresizingFlexibleLeftMargin | UIViewAutoresizingFlexibleHeight;
     actButton.titleLabel.font = [UIFont systemFontOfSize:14];
     [actButton setTitle:@"Act" forState:UIControlStateNormal];
-    [actButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [actButton setTitleColor:PDLColorTextColor() forState:UIControlStateNormal];
     [actButton setTitleColor:[UIColor lightGrayColor] forState:UIControlStateDisabled];
     [actionView addSubview:actButton];
     self.actButton = actButton;
