@@ -704,6 +704,14 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/PDLViewController'
         end
 
+        s.subspec 'PDLOverlayWindow' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLOverlayWindow/' + source_files
+            ss.vendored_library = base + 'PDLOverlayWindow/' + librariy_files
+            ss.frameworks = 'UIKit'
+        end
+
         s.subspec 'PDLPageControl' do |ss|
             ss.platform = platform_ios
             ss.ios.deployment_target  = '9.0'
