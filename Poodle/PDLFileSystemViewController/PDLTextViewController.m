@@ -50,17 +50,15 @@
     [self.view addSubview:textView];
     self.textView = textView;
 
-    self.textView.text = @"iOS UITextView bug";
-    self.textView.text = @"";
-
     [self loadString];
 }
 
 - (void)loadString {
+    __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
-        NSString *string = [self textFileString];
+        NSString *string = [weakSelf textFileString];
         dispatch_async(dispatch_get_main_queue(), ^{
-            self.textView.text = string;
+            weakSelf.textView.text = string;
         });
     });
 }
