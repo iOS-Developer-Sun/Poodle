@@ -37,7 +37,9 @@
 }
 
 - (void)loadData {
+    __weak __typeof(self) weakSelf = self;
     dispatch_async(dispatch_get_global_queue(0, 0), ^{
+        __strong __typeof(self) self = weakSelf;
         NSArray *fields = [self.database fieldsFromTable:self.tableName];
         NSArray *all = [self.database findAll:@"*" fromTable:self.tableName];
         NSMutableArray *rows = [NSMutableArray array];
@@ -50,6 +52,7 @@
             [rows addObject:[values copy]];
         }
         dispatch_async(dispatch_get_main_queue(), ^{
+            __strong __typeof(self) self = weakSelf;
             self.fields = fields;
             self.rows = rows;
             [self.formView reloadData];
