@@ -16,45 +16,13 @@
 #import "PDLWebViewController.h"
 #import "PDLCrashViewController.h"
 #import "PDLColor.h"
-
-static NSString *PDLDirectoryViewControllerSizeStringOfBytes(uint64_t bytes) {
-    double gigaBytes = bytes / 1024.0 / 1024.0 / 1024.0;
-    if (gigaBytes >= 1) {
-        return [NSString stringWithFormat:@"%.2fG", gigaBytes];
-    }
-
-    double megaBytes = bytes / 1024.0 / 1024.0;
-    if (megaBytes >= 1) {
-        return [NSString stringWithFormat:@"%.2fM", megaBytes];
-    }
-
-    double kiloBytes = bytes / 1024.0;
-    if (kiloBytes >= 1) {
-        return [NSString stringWithFormat:@"%.2fK", kiloBytes];
-    }
-
-    return [NSString stringWithFormat:@"%@B", @(bytes)];
-}
-
-static uint64_t PDLDirectoryViewControllerFileSizeAtPath(NSString *filePath) {
-    uint64_t totalFileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:filePath error:nil] fileSize];
-    NSArray *subpaths = nil;
-    @autoreleasepool {
-        subpaths = [[NSFileManager defaultManager] subpathsAtPath:filePath];
-    }
-    for (NSString *subpath in subpaths) {
-        NSString *subFilePath = [filePath stringByAppendingPathComponent:subpath];
-        uint64_t fileSize = [[[NSFileManager defaultManager] attributesOfItemAtPath:subFilePath error:nil] fileSize];
-        totalFileSize += fileSize;
-    }
-
-    return totalFileSize;
-}
+#import "PDLFileSystem.h"
 
 static UIImage *PDLDirectoryViewControllerAspectFitImageWithImageAndSize(UIImage *image, CGSize size) {
     if (image == nil) {
         return nil;
     }
+
     CGFloat scale = [UIScreen mainScreen].scale;
     UIImage *scaledImage = [UIImage imageWithCGImage:image.CGImage scale:scale orientation:image.imageOrientation];
     CGFloat ratio = MAX(scaledImage.size.width / size.width, scaledImage.size.height / size.height);
@@ -71,6 +39,7 @@ static UIImage *PDLDirectoryViewControllerImageWithColorAndSize(UIColor *color, 
     if (!color || size.width <= 0 || size.height <= 0) {
         return nil;
     }
+
     CGRect rect = CGRectMake(0, 0, size.width, size.height);
     UIGraphicsBeginImageContextWithOptions(rect.size, NO, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -151,15 +120,6 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 @implementation PDLDirectoryContent
 
-+ (dispatch_queue_t)sizeCalculatingQueue {
-    static dispatch_queue_t sizeCalculatingQueue;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        sizeCalculatingQueue =  dispatch_queue_create("PDLDirectoryContentSizeCalculatingQueue", NULL);
-    });
-    return sizeCalculatingQueue;
-}
-
 + (PDLDirectoryContentType)contentTypeOfFilePath:(NSString *)filePath {
     PDLDirectoryContentType type = PDLDirectoryContentTypeUnknown;
     BOOL isDirectory = NO;
@@ -222,8 +182,8 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
         _isDirectory = isDirectory;
         if (isDirectory) {
             __weak __typeof(self) weakSelf = self;
-            dispatch_async([self.class sizeCalculatingQueue], ^{
-                weakSelf.size = PDLDirectoryViewControllerFileSizeAtPath(filePath);
+            dispatch_async(dispatch_get_global_queue(0, 0), ^{
+                weakSelf.size = [PDLFileSystem fileSizeAtPath:filePath];
                 weakSelf.hasFinishCalculatingSize = YES;
                 dispatch_async(dispatch_get_main_queue(), ^{
                     __strong __typeof(self) strongSelf = self;
@@ -233,7 +193,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
                 });
             });
         } else {
-            _size = PDLDirectoryViewControllerFileSizeAtPath(filePath);
+            _size = [PDLFileSystem fileSizeAtPath:filePath];
             _hasFinishCalculatingSize = YES;
         }
         _extension = [filePath pathExtension];
@@ -817,7 +777,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 - (void)applyContent:(PDLDirectoryContent *)content forCell:(PDLDirectoryTableViewCell *)cell {
     cell.imageView.image = content.thumbnailImage;
     cell.textLabel.text = content.filename;
-    cell.detailTextLabel.text = content.hasFinishCalculatingSize ? PDLDirectoryViewControllerSizeStringOfBytes(content.size) : @"calculating size...";
+    cell.detailTextLabel.text = content.hasFinishCalculatingSize ? [PDLFileSystem sizeStringOfBytes:content.size] : @"calculating size...";
     cell.accessoryType = content.isDirectory ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
 }
 

@@ -532,6 +532,14 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/PDLViewController'
         end
 
+        s.subspec 'PDLApplication' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLApplication/' + source_files
+            ss.vendored_library = base + 'PDLApplication/' + librariy_files
+            ss.frameworks = 'UIKit'
+        end
+
         s.subspec 'PDLBacktrace' do |ss|
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
@@ -607,12 +615,22 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'Foundation'
         end
 
+        s.subspec 'PDLFileSystem' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLFileSystem/' + source_files
+            ss.vendored_library = base + 'PDLFileSystem/' + librariy_files
+            ss.frameworks = 'Foundation'
+        end
+
         s.subspec 'PDLFileSystemViewController' do |ss|
             ss.platform = platform_ios
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'PDLFileSystemViewController/' + source_files
             ss.vendored_library = base + 'PDLFileSystemViewController/' + librariy_files
             ss.frameworks = 'UIKit'
+            ss.dependency pod_name + '/PDLFileSystem'
             ss.dependency pod_name + '/PDLDatabase'
             ss.dependency pod_name + '/PDLViewController'
             ss.dependency pod_name + '/PDLCrash'
