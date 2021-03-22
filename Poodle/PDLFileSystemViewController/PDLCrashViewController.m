@@ -107,7 +107,11 @@
     if (crash.symbolicatedCount > 0) {
         title = @"Symbolicated";
         if (crash.UUIDMismatched) {
-            title = [title stringByAppendingString:@"(UUID mismatched)"];
+            if (crash.appMismatched) {
+                title = [title stringByAppendingString:@"(App mismatched)"];
+            } else {
+                title = [title stringByAppendingString:@"(UUID mismatched)"];
+            }
         }
         message = @(crash.symbolicatedCount).stringValue;
         NSString *symbolicatedString = crash.symbolicatedString;

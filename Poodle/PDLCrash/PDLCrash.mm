@@ -338,7 +338,11 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
             NSString *key = [uuid.lowercaseString stringByReplacingOccurrencesOfString:@"-" withString:@""];
             PDLSystemImage *systemImage = imagesMap[key];
             if (!systemImage) {
-                return NO;
+                NSString *uuidString = [NSString stringWithFormat:@"<%@>", uuid];
+                systemImage = crashImagesMap[uuidString];
+                if (!systemImage) {
+                    return NO;
+                }
             }
 
             if (symbolicatedLine) {
@@ -371,9 +375,17 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         uuidBegin = [line rangeOfString:name].location;
     }
 
+    PDLCrashBinaryImage *binaryImage = crashImagesMap[name];
+    if (!binaryImage) {
+        return NO;
+    }
+
     PDLSystemImage *systemImage = imagesMap[uuidString ?: name];
     if (!systemImage) {
-        return NO;
+        systemImage = imagesMap[binaryImage.name];
+        if (!systemImage) {
+            return NO;
+        }
     }
 
     [scanner scanUpToString:@"+" intoString:NULL];
@@ -389,11 +401,6 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 
     uintptr_t address = 0;
     if (![scanner scanHexLongLong:(unsigned long long *)&address]) {
-        return NO;
-    }
-
-    PDLCrashBinaryImage *binaryImage = crashImagesMap[name];
-    if (!binaryImage) {
         return NO;
     }
 
@@ -452,11 +459,6 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 
 - (BOOL)symbolicate {
     NSString *string = self.string;
-    NSString *identifier = [self.class identifier:string];
-    if (![identifier isEqualToString:[NSBundle mainBundle].bundleIdentifier]) {
-        return NO;
-    }
-
     PDLCrashType crashType = PDLCrashTypeCrash;
     NSString *process = [self.class process:string];
     NSString *command = [self.class command:string];
@@ -481,8 +483,9 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return NO;
     }
 
-    if (crashType == PDLCrashTypeEvent) {
-        image.name = command;
+    NSString *identifier = [self.class identifier:string];
+    if (![identifier isEqualToString:[NSBundle mainBundle].bundleIdentifier]) {
+        self.appMismatched = ![systemImage.name isEqualToString:(process ?: command)];
     }
 
     NSMutableDictionary *imagesMap = [NSMutableDictionary dictionary];
@@ -494,6 +497,10 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     NSMutableDictionary *crashImagesMap = [NSMutableDictionary dictionary];
     for (PDLCrashBinaryImage *binaryImage in binaryImages) {
         crashImagesMap[binaryImage.name] = binaryImage;
+    }
+
+    if (crashType == PDLCrashTypeEvent) {
+        image.name = command;
     }
 
     NSArray *lines = [string componentsSeparatedByString:@"\n"];
