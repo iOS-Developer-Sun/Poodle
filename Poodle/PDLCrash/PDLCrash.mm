@@ -26,9 +26,16 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 @property (nonatomic, assign) uintptr_t endAddress;
 @property (nonatomic, copy) NSString *path;
 
+@property (nonatomic, copy, readonly) NSString *uuidString;
+
 @end
 
 @implementation PDLCrashBinaryImage
+
+- (NSString *)uuidString {
+    NSString *uuidString = [self.uuid.lowercaseString stringByReplacingOccurrencesOfString:@"-" withString:@""];
+    return uuidString;
+}
 
 + (instancetype)crashBinaryImageWithString:(NSString *)string {
     uintptr_t address = 0;
@@ -141,6 +148,8 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 @property (copy) NSString *symbolicatedString;
 @property (copy) NSArray *symbolicatedLocations;
 @property (assign) NSInteger symbolicatedCount;
+@property (assign) BOOL UUIDMismatched;
+@property (assign) BOOL appMismatched;
 
 @end
 
@@ -477,7 +486,7 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     }
 
     PDLSystemImage *systemImage = [PDLSystemImage systemImageWithHeader:(struct mach_header *)&_mh_execute_header];
-    BOOL UUIDMismatched = ![systemImage.uuidString isEqualToString:image.uuid];
+    BOOL UUIDMismatched = ![systemImage.uuidString isEqualToString:image.uuidString];
     self.UUIDMismatched = UUIDMismatched;
     if (!self.allowsUUIDMismatched && UUIDMismatched) {
         return NO;
