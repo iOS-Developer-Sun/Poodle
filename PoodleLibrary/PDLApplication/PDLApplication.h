@@ -13,13 +13,13 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLApplication : NSObject
 
 + (void)registerDevelopmentToolWindowInitializer:(void(^)(UIWindow *window))initializer;
-+ (BOOL)isShowingDevelopmentToolWindow;
-+ (void)showDevelopmentToolWindow:(void(^ _Nullable)(UIWindow *window))completion;
-+ (void)hideDevelopmentToolWindow:(void(^ _Nullable)(UIWindow *window))completion;
++ (UIWindow *_Nullable)developmentToolWindow;
++ (void)showDevelopmentToolWindow:(BOOL)animated completion:(void(^ _Nullable)(UIWindow *window))completion;
++ (void)hideDevelopmentToolWindow:(BOOL)animated completion:(void(^ _Nullable)(UIWindow *_Nullable window))completion;
 
 + (void)registerVersion:(NSString *)version;
 + (void)registerIdentifier:(NSString *)version;
-+ (void)registerDevelopmentToolAction:(void(^)(void))action;
++ (void)registerDevelopmentToolAction:(BOOL(^)(void))action;
 
 + (BOOL)enable;
 

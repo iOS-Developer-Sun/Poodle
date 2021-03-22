@@ -14,7 +14,7 @@
 static void(^_developmentToolInitializer)(UIWindow *) = nil;
 static UIWindow *_developmentToolWindow = nil;
 static __weak UIWindow *_previousKeyWindow = nil;
-static void(^_developmentToolAction)(void) = nil;
+static BOOL(^_developmentToolAction)(void) = nil;
 static NSString *_developmentToolVersion = nil;
 static NSString *_developmentToolIdentifier = nil;
 
@@ -22,11 +22,11 @@ static NSString *_developmentToolIdentifier = nil;
     _developmentToolInitializer = [initializer copy];
 }
 
-+ (BOOL)isShowingDevelopmentToolWindow {
-    return (_developmentToolWindow != nil);
++ (UIWindow *)developmentToolWindow {
+    return _developmentToolWindow;
 }
 
-+ (void)showDevelopmentToolWindow:(void(^ _Nullable)(UIWindow *window))completion {
++ (void)showDevelopmentToolWindow:(BOOL)animated completion:(void (^)(UIWindow * _Nonnull))completion {
     if (_developmentToolWindow) {
         if (completion) {
             completion(_developmentToolWindow);
@@ -46,15 +46,27 @@ static NSString *_developmentToolIdentifier = nil;
     _developmentToolWindow = window;
     _previousKeyWindow = [UIApplication sharedApplication].keyWindow;
     [_developmentToolWindow makeKeyAndVisible];
-    [UIView animateWithDuration:[CATransaction animationDuration] animations:^{
-    } completion:^(BOOL finished) {
+
+    if (animated) {
+        CGRect toFrame = window.frame;
+        CGRect fromFrame = toFrame;
+        fromFrame.origin.y = fromFrame.size.height;
+        window.frame = fromFrame;
+        [UIView animateWithDuration:[CATransaction animationDuration] animations:^{
+            window.frame = toFrame;
+        } completion:^(BOOL finished) {
+            if (completion) {
+                completion(window);
+            }
+        }];
+    } else {
         if (completion) {
             completion(window);
         }
-    }];
+    }
 }
 
-+ (void)hideDevelopmentToolWindow:(void(^ _Nullable)(UIWindow *window))completion {
++ (void)hideDevelopmentToolWindow:(BOOL)animated completion:(void (^ _Nullable)(UIWindow * _Nullable))completion {
     UIWindow *window = _developmentToolWindow;
     if (!window) {
         if (completion) {
@@ -63,9 +75,7 @@ static NSString *_developmentToolIdentifier = nil;
         return;
     }
 
-    [UIView animateWithDuration:[CATransaction animationDuration] animations:^{
-        ;
-    } completion:^(BOOL finished) {
+    void(^action)(void) = ^{
         _developmentToolWindow.hidden = YES;
         _developmentToolWindow = nil;
         [_previousKeyWindow makeKeyWindow];
@@ -73,7 +83,18 @@ static NSString *_developmentToolIdentifier = nil;
         if (completion) {
             completion(window);
         }
-    }];
+    };
+    if (animated) {
+        CGRect toFrame = window.frame;
+        toFrame.origin.y = toFrame.size.height;
+        [UIView animateWithDuration:[CATransaction animationDuration] animations:^{
+            window.frame = toFrame;
+        } completion:^(BOOL finished) {
+            action();
+        }];
+    } else {
+        action();
+    }
 }
 
 + (void)registerVersion:(NSString *)version {
@@ -84,7 +105,7 @@ static NSString *_developmentToolIdentifier = nil;
     _developmentToolIdentifier = [identifier copy];
 }
 
-+ (void)registerDevelopmentToolAction:(void(^)(void))action {
++ (void)registerDevelopmentToolAction:(BOOL(^)(void))action {
     _developmentToolAction = [action copy];
 }
 
@@ -95,10 +116,15 @@ static NSString *_developmentToolIdentifier = nil;
     BOOL ret = [self parseUrl:url safeMode:&safeMode];
     if (ret) {
         if (!safeMode && _developmentToolAction) {
-            _developmentToolAction();
+            BOOL handled = _developmentToolAction();
+            if (!handled) {
+                if (!_developmentToolWindow) {
+                    [self showDevelopmentToolWindow:YES completion:nil];
+                }
+            }
         } else {
-            if (![self isShowingDevelopmentToolWindow]) {
-                [self showDevelopmentToolWindow:nil];
+            if (!_developmentToolWindow) {
+                [self showDevelopmentToolWindow:YES completion:nil];
             }
         }
     }
@@ -119,7 +145,7 @@ static NSString *_developmentToolIdentifier = nil;
                 ret = YES;
             }
         }
-        if ([queryItem.name isEqualToString:@"uuid"]) {
+        if ([queryItem.name isEqualToString:@"id"]) {
             if ([queryItem.value.lowercaseString isEqualToString:_developmentToolIdentifier]) {
                 ret = YES;
             }
@@ -137,7 +163,7 @@ static NSString *_developmentToolIdentifier = nil;
 }
 
 + (void)tap {
-    [self showDevelopmentToolWindow:nil];
+    [self showDevelopmentToolWindow:YES completion:nil];
 }
 
 + (UIWindow *)window:(BOOL)isSafeMode {
@@ -151,8 +177,12 @@ static NSString *_developmentToolIdentifier = nil;
         view.backgroundColor = [UIColor blackColor];
         CGFloat statusBarHeight = [UIApplication sharedApplication].statusBarFrame.size.height;
         CGFloat bottomMargin = 0;
-        if (@available(iOS 11.0, *)) {
+        if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
             bottomMargin = [UIApplication sharedApplication].windows.firstObject.safeAreaInsets.bottom;
+#pragma clang diagnostic pop
         }
         CGFloat margin = 5;
         for (NSInteger i = 0; i < 4; i++) {
