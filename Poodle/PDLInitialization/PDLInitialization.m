@@ -14,27 +14,7 @@
 #import <mach-o/ldsyms.h>
 #import <dlfcn.h>
 #import "NSObject+PDLImplementationInterceptor.h"
-
-static NSString *PDLInitializationDurationString(CFTimeInterval duration) {
-    NSString *durationString = @"0";
-    if (duration >= 1) {
-        durationString = [NSString stringWithFormat:@"%.3fs", duration];
-    } else {
-        duration *= 1000;
-        if (duration >= 1) {
-            durationString = [NSString stringWithFormat:@"%.3fms", duration];
-        } else {
-            duration *= 1000;
-            if (duration >= 1) {
-                durationString = [NSString stringWithFormat:@"%.3fus", duration];
-            } else {
-                duration *= 1000;
-                durationString = [NSString stringWithFormat:@"%.3fns", duration];
-            }
-        }
-    }
-    return durationString;
-}
+#import "NSObject+PDLDebug.h"
 
 @interface PDLInitializationLoader ()
 
@@ -47,7 +27,7 @@ static NSString *PDLInitializationDurationString(CFTimeInterval duration) {
 @implementation PDLInitializationLoader
 
 - (NSString *)description {
-    NSString *durationString = PDLInitializationDurationString(self.duration);
+    NSString *durationString = pdl_durationString(self.duration);
     NSString *description = [NSString stringWithFormat:@" [%@, %p, %@]", self.aClass, self.imp, durationString];
     return [[super description] stringByAppendingString:description];
 }
@@ -66,7 +46,7 @@ static NSString *PDLInitializationDurationString(CFTimeInterval duration) {
 @implementation PDLInitializationInitializer
 
 - (NSString *)description {
-    NSString *durationString = PDLInitializationDurationString(self.duration);
+    NSString *durationString = pdl_durationString(self.duration);
     NSString *description = [NSString stringWithFormat:@" [%@`%@, %p, %@]", self.imageName.lastPathComponent, self.functionName, self.function, durationString];
     return [[super description] stringByAppendingString:description];
 }
