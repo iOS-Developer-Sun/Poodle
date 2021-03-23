@@ -56,6 +56,8 @@ extern NSUInteger pdl_objectRetainCount(id object);
 
 extern id pdl_objectAutoreleaseRetained(id object);
 
+extern NSString *pdl_durationString(NSTimeInterval duration);
+
 @end
 
 #ifdef __cplusplus
