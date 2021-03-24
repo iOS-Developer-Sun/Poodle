@@ -141,12 +141,12 @@ static NSString *_developmentToolIdentifier = nil;
     BOOL sm = NO;
     for (NSURLQueryItem *queryItem in components.queryItems) {
         if ([queryItem.name isEqualToString:@"version"]) {
-            if ([queryItem.value.lowercaseString isEqualToString:_developmentToolVersion]) {
+            if ([_developmentToolVersion.lowercaseString isEqualToString:queryItem.value.lowercaseString]) {
                 ret = YES;
             }
         }
         if ([queryItem.name isEqualToString:@"id"]) {
-            if ([queryItem.value.lowercaseString isEqualToString:_developmentToolIdentifier]) {
+            if ([_developmentToolIdentifier.lowercaseString isEqualToString:queryItem.value.lowercaseString]) {
                 ret = YES;
             }
         }
