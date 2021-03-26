@@ -1,5 +1,5 @@
 //
-//  PDLColor.h
+//  PDLColor.m
 //  Poodle
 //
 //  Created by Poodle on 10/07/2017.

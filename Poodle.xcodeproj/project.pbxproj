@@ -54,8 +54,6 @@
 		B85B447B24A0EC9100B25A3E /* pdl_allocation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B85B447824A0EC6200B25A3E /* pdl_allocation.h */; };
 		B85B447C24A0EC9700B25A3E /* pdl_allocation.m in Sources */ = {isa = PBXBuildFile; fileRef = B85B447924A0EC6200B25A3E /* pdl_allocation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B85D45A7240E84DA00CBF758 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B85D45A6240E84DA00CBF758 /* AppDelegate.m */; };
-		B85D45AD240E84DA00CBF758 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B85D45AC240E84DA00CBF758 /* ViewController.m */; };
-		B85D45B0240E84DA00CBF758 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B85D45AE240E84DA00CBF758 /* Main.storyboard */; };
 		B85D45B2240E84DC00CBF758 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B85D45B1240E84DC00CBF758 /* Assets.xcassets */; };
 		B85D45B5240E84DC00CBF758 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B85D45B3240E84DC00CBF758 /* LaunchScreen.storyboard */; };
 		B85D45B8240E84DC00CBF758 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B85D45B7240E84DC00CBF758 /* main.m */; };
@@ -264,7 +262,6 @@
 		B8DEC4C424877D1800DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
 		B8DEC4CE2487807900DB3D0E /* pdl_dispatch_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */; };
 		B8DEC4CF2487807E00DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
-		B8DFB0A4248CC1E300880B66 /* pdl_thread_funtion_size.sh in Resources */ = {isa = PBXBuildFile; fileRef = B8DFB0A3248CC1E300880B66 /* pdl_thread_funtion_size.sh */; };
 		B8E3997225CA758C004096FF /* pdl_block.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E3997125CA758C004096FF /* pdl_block.m */; };
 		B8E39BEF25CA77BB004096FF /* pdl_block.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E3997025CA758C004096FF /* pdl_block.h */; };
 		B8E39C4A25CA77C2004096FF /* pdl_block.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E3997125CA758C004096FF /* pdl_block.m */; };
@@ -2141,9 +2138,6 @@
 		B85D45A3240E84DA00CBF758 /* PoodleApplication.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PoodleApplication.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B85D45A5240E84DA00CBF758 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		B85D45A6240E84DA00CBF758 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		B85D45AB240E84DA00CBF758 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		B85D45AC240E84DA00CBF758 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		B85D45AF240E84DA00CBF758 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B85D45B1240E84DC00CBF758 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B85D45B4240E84DC00CBF758 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		B85D45B6240E84DC00CBF758 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -3291,9 +3285,6 @@
 			children = (
 				B85D45A5240E84DA00CBF758 /* AppDelegate.h */,
 				B85D45A6240E84DA00CBF758 /* AppDelegate.m */,
-				B85D45AB240E84DA00CBF758 /* ViewController.h */,
-				B85D45AC240E84DA00CBF758 /* ViewController.m */,
-				B85D45AE240E84DA00CBF758 /* Main.storyboard */,
 				B85D45B1240E84DC00CBF758 /* Assets.xcassets */,
 				B85D45B3240E84DC00CBF758 /* LaunchScreen.storyboard */,
 				B85D45B6240E84DC00CBF758 /* Info.plist */,
@@ -6301,6 +6292,7 @@
 		B88DB4BF22EAF14B003D20F6 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				CLASSPREFIX = PDL;
 				LastUpgradeCheck = 1160;
 				ORGANIZATIONNAME = Poodle;
 				TargetAttributes = {
@@ -6435,8 +6427,6 @@
 			files = (
 				B85D45B5240E84DC00CBF758 /* LaunchScreen.storyboard in Resources */,
 				B85D45B2240E84DC00CBF758 /* Assets.xcassets in Resources */,
-				B8DFB0A4248CC1E300880B66 /* pdl_thread_funtion_size.sh in Resources */,
-				B85D45B0240E84DA00CBF758 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8365,7 +8355,6 @@
 				B85D4602240E859000CBF758 /* UIScreen+PDLExtension.m in Sources */,
 				B85D4603240E859000CBF758 /* UIViewController+PDLNavigationBar.m in Sources */,
 				B85D4604240E859000CBF758 /* UIViewController+PDLTransitionAnimation.m in Sources */,
-				B85D45AD240E84DA00CBF758 /* ViewController.m in Sources */,
 				B85D45A7240E84DA00CBF758 /* AppDelegate.m in Sources */,
 				B85D45B8240E84DC00CBF758 /* main.m in Sources */,
 			);
@@ -9524,14 +9513,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		B85D45AE240E84DA00CBF758 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				B85D45AF240E84DA00CBF758 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		B85D45B3240E84DC00CBF758 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
