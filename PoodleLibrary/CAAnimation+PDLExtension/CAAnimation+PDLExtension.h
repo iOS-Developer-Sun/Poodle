@@ -10,7 +10,7 @@
 
 @interface CAAnimation (PDLExtension)
 
-@property (copy, setter=pdl_setBeginning:) void (^pdl_beginning)(CAAnimation *animation);
-@property (copy, setter=pdl_setCompletion:) void (^pdl_completion)(CAAnimation *animation, BOOL finished);
+@property (copy, setter=pdl_setDidStartAction:) void (^pdl_didStartAction)(CAAnimation *animation);
+@property (copy, setter=pdl_setDidStopAction:) void (^pdl_didStopAction)(CAAnimation *animation, BOOL finished);
 
 @end

@@ -11,22 +11,22 @@
 
 @interface PDLCAAnimationDelegate : NSObject <CAAnimationDelegate>
 
-@property (atomic, copy) void (^beginning)(CAAnimation *animation);
-@property (atomic, copy) void (^completion)(CAAnimation *animation, BOOL finished);
+@property (atomic, copy) void (^didStartAction)(CAAnimation *animation);
+@property (atomic, copy) void (^didStopAction)(CAAnimation *animation, BOOL finished);
 
 @end
 
 @implementation PDLCAAnimationDelegate
 
 - (void)animationDidStart:(CAAnimation *)anim {
-    void (^beginning)(CAAnimation *animation) = self.beginning;
+    void (^beginning)(CAAnimation *animation) = self.didStartAction;
     if (beginning) {
         beginning(anim);
     }
 }
 
 - (void)animationDidStop:(CAAnimation *)anim finished:(BOOL)flag {
-    void (^completion)(CAAnimation *animation, BOOL finished) = self.completion;
+    void (^completion)(CAAnimation *animation, BOOL finished) = self.didStopAction;
     if (completion) {
         completion(anim, flag);
     }
@@ -38,34 +38,34 @@
 
 static void *CAAnimationDelegateKey = NULL;
 
-- (void (^)(CAAnimation *))pdl_beginning {
+- (void (^)(CAAnimation *))pdl_didStartAction {
     PDLCAAnimationDelegate *delegate = objc_getAssociatedObject(self, &CAAnimationDelegateKey);
-    return delegate.beginning;
+    return delegate.didStartAction;
 }
 
-- (void)pdl_setBeginning:(void (^)(CAAnimation *))pdl_beginning {
+- (void)pdl_setDidStartAction:(void (^)(CAAnimation *))pdl_didStartAction {
     PDLCAAnimationDelegate *delegate = objc_getAssociatedObject(self, &CAAnimationDelegateKey);
     if (delegate == nil) {
         delegate = [[PDLCAAnimationDelegate alloc] init];
         objc_setAssociatedObject(self, &CAAnimationDelegateKey, delegate, OBJC_ASSOCIATION_RETAIN);
         self.delegate = delegate;
     }
-    delegate.beginning = pdl_beginning;
+    delegate.didStartAction = pdl_didStartAction;
 }
 
-- (void (^)(CAAnimation *, BOOL))pdl_completion {
+- (void (^)(CAAnimation *, BOOL))pdl_didStopAction {
     PDLCAAnimationDelegate *delegate = objc_getAssociatedObject(self, &CAAnimationDelegateKey);
-    return delegate.completion;
+    return delegate.didStopAction;
 }
 
-- (void)pdl_setCompletion:(void (^)(CAAnimation *, BOOL))pdl_completion {
+- (void)pdl_setDidStopAction:(void (^)(CAAnimation *, BOOL))pdl_didStopAction {
     PDLCAAnimationDelegate *delegate = objc_getAssociatedObject(self, &CAAnimationDelegateKey);
     if (delegate == nil) {
         delegate = [[PDLCAAnimationDelegate alloc] init];
         objc_setAssociatedObject(self, &CAAnimationDelegateKey, delegate, OBJC_ASSOCIATION_RETAIN);
         self.delegate = delegate;
     }
-    delegate.completion = pdl_completion;
+    delegate.didStopAction = pdl_didStopAction;
 }
 
 @end
