@@ -72,6 +72,16 @@ void pdl_array_remove(pdl_array_t array, unsigned int index) {
     ((pdl_array *)array)->count = count - 1;
 }
 
+void pdl_array_remove_all(pdl_array_t array) {
+    int count = ((pdl_array *)array)->count;
+    void **a = ((pdl_array *)array)->array;
+    for (int i = 0; i < count; i++) {
+        a[i] = 0;
+    }
+
+    ((pdl_array *)array)->count = 0;
+}
+
 void pdl_array_remove_value(pdl_array_t array, void *value) {
     int count = ((pdl_array *)array)->count;
     void **a = ((pdl_array *)array)->array;
@@ -98,6 +108,9 @@ void pdl_array_insert(pdl_array_t array, void *value, unsigned int index) {
     int capacity = ((pdl_array *)array)->capacity;
     if (count >= capacity) {
         int new_capacity = capacity * 2;
+        if (new_capacity == 0) {
+            new_capacity = 1;
+        }
         ((pdl_array *)array)->capacity = new_capacity;
         void **new_array = ((pdl_array *)array)->malloc(new_capacity * sizeof(void *));
         memcpy(new_array, ((pdl_array *)array)->array, (capacity * sizeof(void *)));
