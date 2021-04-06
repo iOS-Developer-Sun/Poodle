@@ -17,6 +17,7 @@
 #import <sys/fcntl.h>
 #import <sys/time.h>
 #import <mach/mach.h>
+#import <execinfo.h>
 #import "pdl_backtrace.h"
 #import "pdl_dictionary.h"
 
@@ -29,10 +30,6 @@ static malloc_zone_t *_zone = NULL;
 #define PDL_MALLOC_DEBUG_BEGIN
 #define PDL_MALLOC_DEBUG_END
 #define PDL_MALLOC_DEBUG_IS_DEBUGGING false
-
-extern int backtrace(void **array, int size);
-extern char **backtrace_symbols(void *const *array, int size);
-extern void backtrace_symbols_fd(void *const *array, int size, int fd);
 
 #if 0
 __attribute__((naked))
