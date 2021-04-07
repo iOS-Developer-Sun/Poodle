@@ -14,6 +14,7 @@ extern "C" {
 
 extern void pdl_system_leak_list_add(void *ptr, size_t size, int class_createInstance_frame_index);
 extern CFDictionaryRef pdl_CNCopyCurrentNetworkInfo(CFStringRef interfaceName);
+extern CFDictionaryRef pdl_CNCopyCurrentNetworkInfoWithOriginal(CFStringRef interfaceName, CFDictionaryRef(*CNCopyCurrentNetworkInfo_original)(CFStringRef interfaceName));
 
 extern BOOL pdl_system_leak_enable_NEHotspotNetwork(void);
 

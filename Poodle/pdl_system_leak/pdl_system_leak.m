@@ -68,13 +68,12 @@ void pdl_system_leak_list_add(void *ptr, size_t size, int class_createInstance_f
     static void *end = NULL;
     end = begin + 256;
 
-    void *function = pdl_builtin_return_address(class_createInstance_frame_index);
+    void *function = pdl_builtin_return_address(class_createInstance_frame_index + 1);
     if (function < begin || function > end) {
         return;
     }
 
     if (size == 96) {
-        malloc_printf("sunzj %p", ptr);
         if (!pdl_leak_dictionary_96) {
             pdl_leak_dictionary_96 = ptr;
         }
@@ -84,6 +83,10 @@ void pdl_system_leak_list_add(void *ptr, size_t size, int class_createInstance_f
 }
 
 CFDictionaryRef pdl_CNCopyCurrentNetworkInfo(CFStringRef interfaceName) {
+    return pdl_CNCopyCurrentNetworkInfoWithOriginal(interfaceName, &CNCopyCurrentNetworkInfo);
+}
+
+CFDictionaryRef pdl_CNCopyCurrentNetworkInfoWithOriginal(CFStringRef interfaceName, CFDictionaryRef(*CNCopyCurrentNetworkInfo_original)(CFStringRef interfaceName)) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 13) {
@@ -100,7 +103,7 @@ CFDictionaryRef pdl_CNCopyCurrentNetworkInfo(CFStringRef interfaceName) {
     pthread_mutex_lock(&pdl_mutex);
 
     pdl_thread_CNCopyCurrentNetworkInfo = mach_thread_self();
-    CFDictionaryRef ret = CNCopyCurrentNetworkInfo(interfaceName);
+    CFDictionaryRef ret = CNCopyCurrentNetworkInfo_original(interfaceName);
     pdl_thread_CNCopyCurrentNetworkInfo = 0;
 
     pdl_system_leak_free_xpc_dictionary(pdl_leak_dictionary_96);
@@ -112,7 +115,6 @@ CFDictionaryRef pdl_CNCopyCurrentNetworkInfo(CFStringRef interfaceName) {
     pthread_mutex_unlock(&pdl_mutex);
     return ret;
 }
-
 
 static void pdl_NEHotspotNetworkFetchCurrentWithCompletionHandler(__unsafe_unretained id self, SEL _cmd, void (^completionHandler)(NEHotspotNetwork * __nullable currentNetwork)) {
     PDLImplementationInterceptorRecover(_cmd);
