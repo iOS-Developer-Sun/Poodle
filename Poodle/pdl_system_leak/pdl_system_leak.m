@@ -97,7 +97,7 @@ CFDictionaryRef pdl_CNCopyCurrentNetworkInfoWithOriginal(CFStringRef interfaceNa
     });
 
     if (!pdl_enabled_CNCopyCurrentNetworkInfo) {
-        return CNCopyCurrentNetworkInfo(interfaceName);
+        return CNCopyCurrentNetworkInfo_original(interfaceName);
     }
 
     pthread_mutex_lock(&pdl_mutex);
