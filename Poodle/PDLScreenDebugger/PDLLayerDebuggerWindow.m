@@ -7,7 +7,7 @@
 //
 
 #import "PDLLayerDebuggerWindow.h"
-
+#import "PDLScreenDebugger.h"
 #import "PDLRectPropertyDebugger.h"
 #import "PDLFloatPropertyDebugger.h"
 #import "PDLColorPropertyDebugger.h"
@@ -422,12 +422,18 @@
 }
 
 - (NSString *)layerDescription:(CALayer *)layer {
-    NSString *description = [layer description];
+    NSString *description = nil;
+    if ([layer respondsToSelector:@selector(pdl_screenDebuggerDescription)]) {
+        description = [(id <PDLScreenDebuggerDescription>)layer pdl_screenDebuggerDescription];
+        return description;
+    }
+
+    description = layer.description;
     if ([description hasSuffix:@">"]) {
         return [NSString stringWithFormat:@"%@; delegate = %@%@", [description substringToIndex:description.length - 1], layer.delegate, [description substringFromIndex:description.length - 1]];
-    } else {
-        return [description stringByAppendingFormat:@" delegate: %@", layer.delegate];
     }
+
+    return [description stringByAppendingFormat:@" delegate: %@", layer.delegate];
 }
 
 - (PDLLayerDebuggerLayerDetail *)layerDetailAtIndexPath:(NSIndexPath *)indexPath {

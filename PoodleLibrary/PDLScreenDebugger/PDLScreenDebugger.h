@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol PDLScreenDebuggerDescription <NSObject>
+
+@property (nonatomic, copy, readonly) NSString *pdl_screenDebuggerDescription;
+
+@end
+
 @interface PDLScreenDebugger : NSObject
 
 + (BOOL)isDebugging;
