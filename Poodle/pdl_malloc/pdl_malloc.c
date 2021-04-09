@@ -68,9 +68,9 @@ bool pdl_malloc_find(void *address, size_t *size, void **header) {
     return true;
 }
 
-void pdl_malloc_find_print(void *address) {
+void pdl_malloc_find_print(uintptr_t address) {
     size_t size = 0;
     void *header = NULL;
-    pdl_malloc_find(address, &size, &header);
+    pdl_malloc_find((void *)address, &size, &header);
     malloc_printf("%p:\nsize:%ld, header:%p\n", address, size, header);
 }

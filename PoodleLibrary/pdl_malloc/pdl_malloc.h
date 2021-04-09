@@ -14,7 +14,7 @@ extern "C" {
 #endif
 
 extern bool pdl_malloc_find(void *address, size_t *size, void **header);
-extern void pdl_malloc_find_print(void *address);
+extern void pdl_malloc_find_print(uintptr_t address);
 
 #ifdef __cplusplus
 }
