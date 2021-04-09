@@ -7,7 +7,7 @@
 //
 
 #import "PDLViewDebuggerWindow.h"
-
+#import "PDLScreenDebugger.h"
 #import "PDLRectPropertyDebugger.h"
 #import "PDLFloatPropertyDebugger.h"
 #import "PDLColorPropertyDebugger.h"
@@ -488,7 +488,13 @@
         [cell addGestureRecognizer:longPressGestureRecognizer];
     }
     UIView *view = [self viewDetailAtIndexPath:indexPath].view;
-    cell.textLabel.text = view.description;
+    NSString *description = nil;
+    if ([view respondsToSelector:@selector(pdl_screenDebuggerDescription)]) {
+        description = [(id <PDLScreenDebuggerDescription>)view pdl_screenDebuggerDescription];
+    } else {
+        description = view.description;
+    }
+    cell.textLabel.text = description;
     return cell;
 }
 
