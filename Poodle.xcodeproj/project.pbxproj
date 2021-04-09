@@ -28,6 +28,9 @@
 		B8300FD125BEB61D00A02412 /* PDLScrollPageViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8300F2125BEB61600A02412 /* PDLScrollPageViewController.h */; };
 		B830102925BEB62200A02412 /* PDLScrollPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */; };
 		B830D01F25F5D19B00A5614E /* PDLCrash.mm in Sources */ = {isa = PBXBuildFile; fileRef = B830D01E25F5D19B00A5614E /* PDLCrash.mm */; };
+		B839DA832620306F00D07F6E /* NSObject+PDLDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = B839DA812620306F00D07F6E /* NSObject+PDLDescription.m */; };
+		B839DBB22620309B00D07F6E /* NSObject+PDLDescription.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B839DA822620306F00D07F6E /* NSObject+PDLDescription.h */; };
+		B839DC15262030A100D07F6E /* NSObject+PDLDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = B839DA812620306F00D07F6E /* NSObject+PDLDescription.m */; };
 		B83CAA78248B487E009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA82248B49C9009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA83248B49D1009C784A /* pdl_security.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83CAA74248B4830009C784A /* pdl_security.h */; };
@@ -525,6 +528,20 @@
 			proxyType = 1;
 			remoteGlobalIDString = B8300E1125BEB5E700A02412;
 			remoteInfo = PDLScrollPageViewController;
+		};
+		B839DC78262030B700D07F6E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B839DAE52620307A00D07F6E;
+			remoteInfo = "NSObject+PDLDescription";
+		};
+		B839DC7A262030B700D07F6E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B85D45A2240E84DA00CBF758;
+			remoteInfo = PoodleApplication;
 		};
 		B83CAA84248B49FE009C784A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1229,6 +1246,16 @@
 			dstSubfolderSpec = 16;
 			files = (
 				B8300FD125BEB61D00A02412 /* PDLScrollPageViewController.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B839DAE82620307A00D07F6E /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				B839DBB22620309B00D07F6E /* NSObject+PDLDescription.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2129,6 +2156,9 @@
 		B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLScrollPageViewController.m; sourceTree = "<group>"; };
 		B8300F2125BEB61600A02412 /* PDLScrollPageViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLScrollPageViewController.h; sourceTree = "<group>"; };
 		B830D01E25F5D19B00A5614E /* PDLCrash.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PDLCrash.mm; sourceTree = "<group>"; };
+		B839DA812620306F00D07F6E /* NSObject+PDLDescription.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLDescription.m"; sourceTree = "<group>"; };
+		B839DA822620306F00D07F6E /* NSObject+PDLDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+PDLDescription.h"; sourceTree = "<group>"; };
+		B839DAED2620307A00D07F6E /* libNSObject+PDLDescription.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLDescription.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B83CAA74248B4830009C784A /* pdl_security.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_security.h; sourceTree = "<group>"; };
 		B83CAA77248B487E009C784A /* pdl_security.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_security.c; sourceTree = "<group>"; };
 		B83CAA81248B49B4009C784A /* libpdl_security.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_security.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2614,6 +2644,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		B8300E1325BEB5E700A02412 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B839DAE72620307A00D07F6E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -3261,6 +3298,15 @@
 			path = PDLScrollPageViewController;
 			sourceTree = "<group>";
 		};
+		B839DA802620306E00D07F6E /* NSObject+PDLDescription */ = {
+			isa = PBXGroup;
+			children = (
+				B839DA822620306F00D07F6E /* NSObject+PDLDescription.h */,
+				B839DA812620306F00D07F6E /* NSObject+PDLDescription.m */,
+			);
+			path = "NSObject+PDLDescription";
+			sourceTree = "<group>";
+		};
 		B83CAA73248B4830009C784A /* pdl_security */ = {
 			isa = PBXGroup;
 			children = (
@@ -3599,6 +3645,7 @@
 				B88666E12607808600458D3F /* libPDLApplication.a */,
 				B8866995260784EB00458D3F /* libPDLFileSystem.a */,
 				B8079C88261C7866007E7A17 /* libpdl_system_leak.a */,
+				B839DAED2620307A00D07F6E /* libNSObject+PDLDescription.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -4419,6 +4466,7 @@
 				B8E56E8323D70018008D2DA1 /* NSMapTable+PDLExtension */,
 				B8B3A9FE24B71E2B008EFBE0 /* NSObject+PDLAssociation */,
 				B8E56DFE23D70016008D2DA1 /* NSObject+PDLDebug */,
+				B839DA802620306E00D07F6E /* NSObject+PDLDescription */,
 				B8E56E2223D70017008D2DA1 /* NSObject+PDLExtension */,
 				B8E56E2523D70017008D2DA1 /* NSObject+PDLImplementationInterceptor */,
 				B88865CD24BF21AE00D58BC7 /* NSObject+PDLMethod */,
@@ -4687,6 +4735,24 @@
 			name = PDLScrollPageViewController;
 			productName = "CAAnimation+PDLExtension";
 			productReference = B8300E1925BEB5E700A02412 /* libPDLScrollPageViewController.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+		B839DAE52620307A00D07F6E /* NSObject+PDLDescription */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B839DAEA2620307A00D07F6E /* Build configuration list for PBXNativeTarget "NSObject+PDLDescription" */;
+			buildPhases = (
+				B839DAE62620307A00D07F6E /* Sources */,
+				B839DAE72620307A00D07F6E /* Frameworks */,
+				B839DAE82620307A00D07F6E /* CopyFiles */,
+				B839DAE92620307A00D07F6E /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "NSObject+PDLDescription";
+			productName = "CAAnimation+PDLExtension";
+			productReference = B839DAED2620307A00D07F6E /* libNSObject+PDLDescription.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		B83CAA79248B49B4009C784A /* pdl_security */ = {
@@ -5201,23 +5267,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B8079ED2261C789E007E7A17 /* PBXTargetDependency */,
-				B8866B792607852000458D3F /* PBXTargetDependency */,
-				B8866800260780B500458D3F /* PBXTargetDependency */,
-				B878EA4F260349F600F0859F /* PBXTargetDependency */,
-				B897B8A32601176D00696E06 /* PBXTargetDependency */,
-				B882990025D2AC2C006940F8 /* PBXTargetDependency */,
-				B84C857925CD3C640086CD36 /* PBXTargetDependency */,
-				B8E39CA625CA77D0004096FF /* PBXTargetDependency */,
-				B8019B7225C7EECF00C5C1CE /* PBXTargetDependency */,
-				B8E820A825C10A4600204009 /* PBXTargetDependency */,
-				B830108225BEB63000A02412 /* PBXTargetDependency */,
-				B8672CC3259B10AB008082E5 /* PBXTargetDependency */,
-				B89FAA5725921FEC00B714BE /* PBXTargetDependency */,
-				B877A967257F710700580C6E /* PBXTargetDependency */,
-				B852865A2551348700B74F87 /* PBXTargetDependency */,
-				B85286582551348000B74F87 /* PBXTargetDependency */,
-				B85286562551347800B74F87 /* PBXTargetDependency */,
 				B8FC6AC422EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC622EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC822EEF563005B91DE /* PBXTargetDependency */,
@@ -5229,6 +5278,7 @@
 				B8FC6C8622EF06D9005B91DE /* PBXTargetDependency */,
 				B8B3AA0E24B71F7F008EFBE0 /* PBXTargetDependency */,
 				B8FC6C8822EF06D9005B91DE /* PBXTargetDependency */,
+				B839DC79262030B700D07F6E /* PBXTargetDependency */,
 				B8FC6C8A22EF06D9005B91DE /* PBXTargetDependency */,
 				B8FC6BD122EF041B005B91DE /* PBXTargetDependency */,
 				B88865DD24BF222800D58BC7 /* PBXTargetDependency */,
@@ -5239,37 +5289,55 @@
 				B8FC6C8E22EF06D9005B91DE /* PBXTargetDependency */,
 				B8FC6C9022EF06D9005B91DE /* PBXTargetDependency */,
 				B85ECC0822F578B10063BB7C /* PBXTargetDependency */,
+				B8866800260780B500458D3F /* PBXTargetDependency */,
 				B8795312248518BC00798005 /* PBXTargetDependency */,
+				B85286582551348000B74F87 /* PBXTargetDependency */,
+				B85286562551347800B74F87 /* PBXTargetDependency */,
+				B882990025D2AC2C006940F8 /* PBXTargetDependency */,
 				B8FC6D7522EF0BC7005B91DE /* PBXTargetDependency */,
+				B897B8A32601176D00696E06 /* PBXTargetDependency */,
+				B84C857925CD3C640086CD36 /* PBXTargetDependency */,
 				B8B9A56E234F9A570069476E /* PBXTargetDependency */,
+				B8866B792607852000458D3F /* PBXTargetDependency */,
 				B802ACDF22F33AC500BF028E /* PBXTargetDependency */,
 				B85ECC2B22F5953D0063BB7C /* PBXTargetDependency */,
 				B85ECB8E22F28C800063BB7C /* PBXTargetDependency */,
 				B802ACE122F33AC500BF028E /* PBXTargetDependency */,
 				B81E71112501189800399E4B /* PBXTargetDependency */,
 				B8FC6D7722EF0BC7005B91DE /* PBXTargetDependency */,
+				B89FAA5725921FEC00B714BE /* PBXTargetDependency */,
 				B85ECC0A22F578B10063BB7C /* PBXTargetDependency */,
 				B8AD195423D15D1D005A7363 /* PBXTargetDependency */,
 				B861F035230A8CDB0071ADD4 /* PBXTargetDependency */,
+				B878EA4F260349F600F0859F /* PBXTargetDependency */,
 				B8FC6D7922EF0BC7005B91DE /* PBXTargetDependency */,
 				B8A6F52A2546CB4D00426AD1 /* PBXTargetDependency */,
 				B8A6F52C2546CB4D00426AD1 /* PBXTargetDependency */,
 				B8A6F52E2546CB4D00426AD1 /* PBXTargetDependency */,
 				B8FC6DA922EFD9B0005B91DE /* PBXTargetDependency */,
+				B8019B7225C7EECF00C5C1CE /* PBXTargetDependency */,
 				B8FC6D7B22EF0BC7005B91DE /* PBXTargetDependency */,
+				B8E820A825C10A4600204009 /* PBXTargetDependency */,
+				B852865A2551348700B74F87 /* PBXTargetDependency */,
 				B8FC6C9422EF06D9005B91DE /* PBXTargetDependency */,
 				B85ECB7B22F27C2E0063BB7C /* PBXTargetDependency */,
+				B830108225BEB63000A02412 /* PBXTargetDependency */,
+				B8672CC3259B10AB008082E5 /* PBXTargetDependency */,
 				B8FC6C9222EF06D9005B91DE /* PBXTargetDependency */,
 				B864FA2B2523573400842343 /* PBXTargetDependency */,
 				B86A6BAF23BB560E00715650 /* PBXTargetDependency */,
 				B899F9FC24506A5D00EFBB39 /* PBXTargetDependency */,
+				B839DC7B262030B700D07F6E /* PBXTargetDependency */,
+				B83EFAE2250340B200FDBA43 /* PBXTargetDependency */,
 				B802AC9622F3377900BF028E /* PBXTargetDependency */,
 				B8FC6D7D22EF0BC7005B91DE /* PBXTargetDependency */,
+				B877A967257F710700580C6E /* PBXTargetDependency */,
 				B8FC6D7F22EF0BC7005B91DE /* PBXTargetDependency */,
 				B8FC6D8122EF0BC7005B91DE /* PBXTargetDependency */,
 				B8B7B5C4249B934D008D4604 /* PBXTargetDependency */,
 				B8FC6DAB22EFD9B0005B91DE /* PBXTargetDependency */,
 				B85842B2246B96CB00AC3717 /* PBXTargetDependency */,
+				B8E39CA625CA77D0004096FF /* PBXTargetDependency */,
 				B8FC6D0422EF08B5005B91DE /* PBXTargetDependency */,
 				B890852A24AF494900DAC261 /* PBXTargetDependency */,
 				B8DEC4D12487808A00DB3D0E /* PBXTargetDependency */,
@@ -5291,11 +5359,11 @@
 				B8FC6BBE22EF02FC005B91DE /* PBXTargetDependency */,
 				B83CAA85248B49FE009C784A /* PBXTargetDependency */,
 				B8FC6D1222EF08B5005B91DE /* PBXTargetDependency */,
+				B8079ED2261C789E007E7A17 /* PBXTargetDependency */,
 				B8FC6D1422EF08B5005B91DE /* PBXTargetDependency */,
 				B879532C2486865D00798005 /* PBXTargetDependency */,
 				B88865F124C02B5A00D58BC7 /* PBXTargetDependency */,
 				B8FC6D8322EF0BC7005B91DE /* PBXTargetDependency */,
-				B83EFAE2250340B200FDBA43 /* PBXTargetDependency */,
 			);
 			name = PoodleLibrary;
 			productName = PoodleLibrary;
@@ -6395,6 +6463,7 @@
 				B8B3AA0224B71F4A008EFBE0 /* NSObject+PDLAssociation */,
 				B8FC6BBF22EF03AA005B91DE /* NSObject+PDLImplementationInterceptor */,
 				B8FC6C2D22EF05BE005B91DE /* NSObject+PDLDebug */,
+				B839DAE52620307A00D07F6E /* NSObject+PDLDescription */,
 				B8FC6C3622EF05BF005B91DE /* NSObject+PDLExtension */,
 				B88865D124BF21F500D58BC7 /* NSObject+PDLMethod */,
 				B82334A723BC982900B1B15B /* NSObject+PDLSelectorProxy */,
@@ -6648,6 +6717,23 @@
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
 		B8300E1525BEB5E700A02412 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
+		B839DAE92620307A00D07F6E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -8229,6 +8315,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		B839DAE62620307A00D07F6E /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B839DC15262030A100D07F6E /* NSObject+PDLDescription.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		B83CAA7A248B49B4009C784A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8406,6 +8500,7 @@
 				B878E7B2260345EF00F0859F /* PDLOverlayWindow.m in Sources */,
 				B882967125D2ABD3006940F8 /* PDLBlock.m in Sources */,
 				B85D45EB240E859000CBF758 /* PDLNonThreadSafePropertyObserverAction.m in Sources */,
+				B839DA832620306F00D07F6E /* NSObject+PDLDescription.m in Sources */,
 				B85D45EC240E859000CBF758 /* PDLNonThreadSafePropertyObserverChecker.m in Sources */,
 				B85D45ED240E859000CBF758 /* PDLNonThreadSafePropertyObserverObject.m in Sources */,
 				B85D45EE240E859000CBF758 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */,
@@ -9177,6 +9272,16 @@
 			target = B8300E1125BEB5E700A02412 /* PDLScrollPageViewController */;
 			targetProxy = B830108125BEB63000A02412 /* PBXContainerItemProxy */;
 		};
+		B839DC79262030B700D07F6E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B839DAE52620307A00D07F6E /* NSObject+PDLDescription */;
+			targetProxy = B839DC78262030B700D07F6E /* PBXContainerItemProxy */;
+		};
+		B839DC7B262030B700D07F6E /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B85D45A2240E84DA00CBF758 /* PoodleApplication */;
+			targetProxy = B839DC7A262030B700D07F6E /* PBXContainerItemProxy */;
+		};
 		B83CAA85248B49FE009C784A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B83CAA79248B49B4009C784A /* pdl_security */;
@@ -9826,6 +9931,28 @@
 			name = Debug;
 		};
 		B8300E1825BEB5E700A02412 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		B839DAEB2620307A00D07F6E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		B839DAEC2620307A00D07F6E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
@@ -11981,6 +12108,15 @@
 			buildConfigurations = (
 				B8300E1725BEB5E700A02412 /* Debug */,
 				B8300E1825BEB5E700A02412 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B839DAEA2620307A00D07F6E /* Build configuration list for PBXNativeTarget "NSObject+PDLDescription" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B839DAEB2620307A00D07F6E /* Debug */,
+				B839DAEC2620307A00D07F6E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
