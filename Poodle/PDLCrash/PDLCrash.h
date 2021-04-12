@@ -23,7 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithString:(NSString *)string;
 
-- (BOOL)symbolicate;
+- (BOOL)symbolicate:(const void *)header;
 
 + (NSString *)demangle:(NSString *)name;
 

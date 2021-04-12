@@ -57,7 +57,6 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         s.subspec 'CADisplayLink+PDLExtension' do |ss|
             ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'CADisplayLink+PDLExtension/' + source_files
             ss.vendored_library = base + 'CADisplayLink+PDLExtension/' + librariy_files
@@ -480,6 +479,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         s.subspec 'pdl_security' do |ss|
             ss.platform = platform_ios
+            ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'pdl_security/' + source_files
             ss.vendored_library = base + 'pdl_security/' + librariy_files
@@ -686,6 +686,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         s.subspec 'PDLInitialization' do |ss|
             ss.platform = platform_ios
+            ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'PDLInitialization/' + source_files
             ss.vendored_library = base + 'PDLInitialization/' + librariy_files
@@ -704,6 +705,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         s.subspec 'PDLLoad' do |ss|
             ss.platform = platform_ios
+            ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'PDLLoad/' + source_files
             ss.vendored_library = base + 'PDLLoad/' + librariy_files
@@ -724,6 +726,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         s.subspec 'PDLNonThreadSafePropertyObserver' do |ss|
             ss.platform = platform_ios
+            ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'PDLNonThreadSafePropertyObserver/' + source_files
             ss.vendored_library = base + 'PDLNonThreadSafePropertyObserver/' + librariy_files
@@ -860,6 +863,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         s.subspec 'PDLSessionTaskStatisticsManager' do |ss|
             ss.platform = platform_ios
+            ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'PDLSessionTaskStatisticsManager/' + source_files
             ss.vendored_library = base + 'PDLSessionTaskStatisticsManager/' + librariy_files

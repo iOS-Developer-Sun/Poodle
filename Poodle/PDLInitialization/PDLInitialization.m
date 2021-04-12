@@ -197,7 +197,7 @@ void **pdl_initializers(const void *header, size_t *count) {
     return data;
 }
 
-+ (NSUInteger)preinitialize:(BOOL(^_Nullable)(NSString *imageName, NSString *functionName, void *function))filter {
++ (NSUInteger)preinitialize:(const void *)header filter:(BOOL(^_Nullable)(NSString *imageName, NSString *functionName, void *function))filter {
     assert(_initializers == nil);
 
     _initializers = [NSMutableArray array];
@@ -205,7 +205,7 @@ void **pdl_initializers(const void *header, size_t *count) {
 
     NSInteger count = 0;
     size_t initializersCount = 0;
-    void **initializers = pdl_initializers(&_mh_execute_header, &initializersCount);
+    void **initializers = pdl_initializers(header, &initializersCount);
     for (size_t i = 0; i < initializersCount; i++) {
         void *initializer = initializers[i];
         BOOL shouldAdd = YES;

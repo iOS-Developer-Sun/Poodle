@@ -8,7 +8,6 @@
 
 #import "PDLRunLoopObserver.h"
 #import <mach/mach_time.h>
-#import <UIKit/UIKit.h>
 
 @interface PDLRunLoopObserverLoop ()
 
