@@ -41,7 +41,7 @@
 
 + (NSArray *)pdl_description {
     return @[
-        @{@"superclass" : [self superclass]},
+        @{@"superclass" : [self superclass] ?: @"nil"},
         @{@"subclasses" : [self pdl_subclasses]},
         @{@"ivars" : [self pdl_ivars]},
         @{@"properties" : [self pdl_properties]},
