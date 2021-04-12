@@ -12,7 +12,9 @@
 #import <pthread.h>
 #import "NSObject+PDLMethod.h"
 
+#if !TARGET_OS_OSX
 __unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_empty(void) {}
+#endif
 
 @implementation NSObject (PDLThreadSafetifyMethod)
 
