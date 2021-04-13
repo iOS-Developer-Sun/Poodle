@@ -155,14 +155,14 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 
 @implementation PDLCrash
 
-static const void *PDLCrashExecutableHeader = NULL;
-
 + (const void *)executableHeader {
-    return PDLCrashExecutableHeader;
-}
-
-+ (void)setExecutableHeader:(const void *)executableHeader {
-    PDLCrashExecutableHeader = executableHeader;
+    static void *header = NULL;
+    if (header == NULL) {
+        void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
+        header = dlsym(handle, MH_EXECUTE_SYM);
+        dlclose(handle);
+    }
+    return header;
 }
 
 - (instancetype)initWithString:(NSString *)string {
@@ -495,7 +495,7 @@ static const void *PDLCrashExecutableHeader = NULL;
         return NO;
     }
 
-    PDLSystemImage *systemImage = [PDLSystemImage systemImageWithHeader:(struct mach_header *)self.class.executableHeader];
+    PDLSystemImage *systemImage = [PDLSystemImage systemImageWithHeader:(struct mach_header *)[self.class executableHeader]];
     BOOL UUIDMismatched = ![systemImage.uuidString isEqualToString:image.uuidString];
     self.UUIDMismatched = UUIDMismatched;
     if (!self.allowsUUIDMismatched && UUIDMismatched) {
