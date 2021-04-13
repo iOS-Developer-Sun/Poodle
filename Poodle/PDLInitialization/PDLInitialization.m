@@ -14,7 +14,7 @@
 #import <mach-o/ldsyms.h>
 #import <dlfcn.h>
 #import "NSObject+PDLImplementationInterceptor.h"
-#import "NSObject+PDLDebug.h"
+#import "PDLDebug.h"
 
 @interface PDLInitializationLoader ()
 

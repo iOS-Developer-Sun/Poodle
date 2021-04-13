@@ -20,6 +20,7 @@ extern NSUInteger pdl_randomDigitsNumber(NSUInteger digits);
 extern NSString *pdl_randomLengthString(NSUInteger minLength, NSUInteger maxLength);
 extern NSTimeInterval pdl_performance(void(^code)(void));
 extern void pdl_performance_log(void(^code)(void));
+extern NSString *pdl_durationString(NSTimeInterval duration);
 extern void pdl_debug_halt(void);
 extern void pdl_logInstanceMethods(Class aClass);
 extern void pdl_logClassMethods(Class aClass);

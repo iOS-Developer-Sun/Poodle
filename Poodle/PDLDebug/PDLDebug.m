@@ -7,6 +7,7 @@
 //
 
 #import "PDLDebug.h"
+#import <objc/runtime.h>
 #import <QuartzCore/QuartzCore.h>
 #import "NSObject+PDLMethod.h"
 #import "pdl_security.h"
@@ -104,6 +105,27 @@ NSTimeInterval pdl_performance(void(^code)(void)) {
 void pdl_performance_log(void(^code)(void)) {
     NSTimeInterval diff = pdl_performance(code);
     NSLog(@"pdl_performance: %@", pdl_durationString(diff));
+}
+
+NSString *pdl_durationString(NSTimeInterval duration) {
+    NSString *durationString = @"0";
+    if (duration >= 1) {
+        durationString = [NSString stringWithFormat:@"%.3fs", duration];
+    } else {
+        duration *= 1000;
+        if (duration >= 1) {
+            durationString = [NSString stringWithFormat:@"%.3fms", duration];
+        } else {
+            duration *= 1000;
+            if (duration >= 1) {
+                durationString = [NSString stringWithFormat:@"%.3fus", duration];
+            } else {
+                duration *= 1000;
+                durationString = [NSString stringWithFormat:@"%.3fns", duration];
+            }
+        }
+    }
+    return durationString;
 }
 
 void pdl_debug_halt(void) {

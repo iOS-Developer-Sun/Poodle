@@ -293,27 +293,6 @@ NSArray *pdl_protocol_methods(Protocol *protocol) {
     return [methods copy];
 }
 
-NSString *pdl_durationString(NSTimeInterval duration) {
-    NSString *durationString = @"0";
-    if (duration >= 1) {
-        durationString = [NSString stringWithFormat:@"%.3fs", duration];
-    } else {
-        duration *= 1000;
-        if (duration >= 1) {
-            durationString = [NSString stringWithFormat:@"%.3fms", duration];
-        } else {
-            duration *= 1000;
-            if (duration >= 1) {
-                durationString = [NSString stringWithFormat:@"%.3fus", duration];
-            } else {
-                duration *= 1000;
-                durationString = [NSString stringWithFormat:@"%.3fns", duration];
-            }
-        }
-    }
-    return durationString;
-}
-
 @end
 
 #pragma clang diagnostic pop
