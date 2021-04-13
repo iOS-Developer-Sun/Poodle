@@ -35,7 +35,7 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray <PDLInitializationLoader *>*)topLoaders;
 
 + (NSUInteger)preinitializeCount;
-+ (NSUInteger)preinitialize:(BOOL(^_Nullable)(NSString *imageName, NSString *functionName, void *function))filter;
++ (NSUInteger)preinitialize:(const void *)header filter:(BOOL(^_Nullable)(NSString *imageName, NSString *functionName, void *function))filter;
 + (NSArray <PDLInitializationInitializer *>*)initializers;
 + (NSArray <PDLInitializationInitializer *>*)topInitializers;
 

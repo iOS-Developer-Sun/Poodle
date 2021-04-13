@@ -12,13 +12,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLCrash : NSObject
 
+@property (assign, class) const void *executableHeader;
+
 @property (copy, readonly) NSString *string;
 @property (copy, readonly) NSString *symbolicatedString;
 @property (copy, readonly) NSArray *symbolicatedLocations;
 @property (assign, readonly) NSInteger symbolicatedCount;
 @property (assign, readonly) BOOL UUIDMismatched;
 @property (assign, readonly) BOOL appMismatched;
-
 @property (assign) BOOL allowsUUIDMismatched;
 
 - (instancetype)initWithString:(NSString *)string;
