@@ -466,7 +466,7 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     return YES;
 }
 
-- (BOOL)symbolicate:(const void *)header {
+- (BOOL)symbolicate {
     NSString *string = self.string;
     PDLCrashType crashType = PDLCrashTypeCrash;
     NSString *process = [self.class process:string];
@@ -485,7 +485,7 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return NO;
     }
 
-    PDLSystemImage *systemImage = [PDLSystemImage systemImageWithHeader:(struct mach_header *)header];
+    PDLSystemImage *systemImage = [PDLSystemImage systemImageWithHeader:(struct mach_header *)self.class.executableHeader];
     BOOL UUIDMismatched = ![systemImage.uuidString isEqualToString:image.uuidString];
     self.UUIDMismatched = UUIDMismatched;
     if (!self.allowsUUIDMismatched && UUIDMismatched) {
