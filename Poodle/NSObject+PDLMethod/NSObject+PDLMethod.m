@@ -115,6 +115,9 @@ void *PDLMethodFullAfter(void) {
 }
 
 + (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
+#ifndef __i386__
+    return 0;
+#else
     NSUInteger ret = -1;
     pdl_thread_storage_register(_pdl_storage_key, &pdl_methods_list_destroy);
     if (!pdl_thread_storage_enabled()) {
@@ -176,6 +179,7 @@ void *PDLMethodFullAfter(void) {
         free(actions);
     }
     return ret;
+#endif
 }
 
 @end

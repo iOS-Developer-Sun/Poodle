@@ -155,6 +155,16 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 
 @implementation PDLCrash
 
+static const void *PDLCrashExecutableHeader = NULL;
+
++ (const void *)executableHeader {
+    return PDLCrashExecutableHeader;
+}
+
++ (void)setExecutableHeader:(const void *)executableHeader {
+    PDLCrashExecutableHeader = executableHeader;
+}
+
 - (instancetype)initWithString:(NSString *)string {
     self = [super init];
     if (self) {

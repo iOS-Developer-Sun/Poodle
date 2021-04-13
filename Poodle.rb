@@ -702,8 +702,8 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.source_files = base + 'PDLInitialization/' + source_files
             ss.vendored_library = base + 'PDLInitialization/' + librariy_files
             ss.frameworks = 'Foundation'
-            ss.dependency pod_name + '/NSObject+PDLDebug'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+            ss.dependency pod_name + '/PDLDebug'
         end
 
         s.subspec 'PDLKeyboardNotificationObserver' do |ss|
