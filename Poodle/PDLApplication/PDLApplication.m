@@ -440,6 +440,12 @@ static void pdl_handleMotion(__unsafe_unretained UIEvent *event) {
         return;
     }
 
+    SEL sel = sel_registerName("shakeState");
+    int state = ((int(*)(id, SEL))objc_msgSend)(event, sel);
+    if (state != 0) {
+        return;
+    }
+
     if (_shakeAction) {
         _shakeAction();
     }
@@ -522,11 +528,16 @@ static void pdl_prepareSendEvent(void) {
     PDLApplicationEventFeedbackEnabled = eventFeedbackEnabled;
 }
 
-+ (void)registerShakeAction:(void(^)(void))shakeAction {
-    if (!shakeAction) {
++ (BOOL)registerShakeAction:(void(^)(void))shakeAction {
+    if (![objc_getClass("UIMotionEvent") instancesRespondToSelector:sel_registerName("shakeState")]) {
+        return NO;
+    }
+
+    _shakeAction = shakeAction;
+    if (shakeAction) {
         pdl_prepareSendEvent();
     }
-    _shakeAction = shakeAction;
+    return YES;
 }
 
 @end
