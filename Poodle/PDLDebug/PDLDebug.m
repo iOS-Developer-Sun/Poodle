@@ -149,10 +149,10 @@ static void pdl_classBefore(__unsafe_unretained id self, SEL _cmd) {
     printf("+[<%s:%p> %s]\n", class_getName(object_getClass(self)), self, sel_getName(_cmd));
 }
 
-void pdl_logInstanceMethods(Class aClass) {
-    [aClass pdl_addInstanceMethodsBeforeAction:(IMP)&pdl_instanceBefore afterAction:NULL];
+NSInteger pdl_logInstanceMethods(Class aClass) {
+    return [aClass pdl_addInstanceMethodsBeforeAction:(IMP)&pdl_instanceBefore afterAction:NULL];
 }
 
-void pdl_logClassMethods(Class aClass) {
-    [object_getClass(aClass) pdl_addInstanceMethodsBeforeAction:(IMP)&pdl_classBefore afterAction:NULL];
+NSInteger pdl_logClassMethods(Class aClass) {
+    return [object_getClass(aClass) pdl_addInstanceMethodsBeforeAction:(IMP)&pdl_classBefore afterAction:NULL];
 }
