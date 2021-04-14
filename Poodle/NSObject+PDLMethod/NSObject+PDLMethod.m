@@ -115,7 +115,7 @@ void *PDLMethodFullAfter(void) {
 }
 
 + (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
-#ifndef __i386__
+#ifdef __i386__
     return 0;
 #else
     NSUInteger ret = -1;
