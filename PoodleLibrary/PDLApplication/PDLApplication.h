@@ -25,7 +25,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 + (BOOL)enableDevelopmentTool;
 
-+ (void)registerShakeAction:(void(^)(void))shakeAction;
++ (BOOL)registerShakeAction:(void(^)(void))shakeAction;
 
 + (void)exitApplication;
 + (void)terminate;
