@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLApplication : NSObject
 
+@property (nonatomic, assign, class) BOOL eventFeedbackEnabled;
+
 + (void)registerDevelopmentToolWindowInitializer:(void(^)(UIWindow *window))initializer;
 + (UIWindow *_Nullable)developmentToolWindow;
 + (void)showDevelopmentToolWindow:(BOOL)animated completion:(void(^ _Nullable)(UIWindow *window))completion;
@@ -21,7 +23,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)registerIdentifier:(NSString *)version;
 + (void)registerDevelopmentToolAction:(BOOL(^)(void))action;
 
-+ (BOOL)enable;
++ (BOOL)enableDevelopmentTool;
+
++ (void)registerShakeAction:(void(^)(void))shakeAction;
 
 + (void)exitApplication;
 + (void)terminate;

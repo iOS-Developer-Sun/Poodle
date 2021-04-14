@@ -8,6 +8,7 @@
 
 #import "PDLApplication.h"
 #import "NSObject+PDLImplementationInterceptor.h"
+#import "CAAnimation+PDLExtension.h"
 
 @implementation PDLApplication
 
@@ -373,7 +374,7 @@ static void applicationSetShortcutItems(__unsafe_unretained UIApplication *self,
     ((typeof(&applicationSetShortcutItems))_imp)(self, _cmd, items);
 }
 
-+ (BOOL)enable {
++ (BOOL)enableDevelopmentTool {
     static BOOL enabled = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
@@ -382,6 +383,150 @@ static void applicationSetShortcutItems(__unsafe_unretained UIApplication *self,
         enabled = ret;
     });
     return enabled;
+}
+
+#pragma mark -
+
+static BOOL PDLApplicationEventFeedbackEnabled = NO;
+static void(^_shakeAction)(void) = nil;
+
+static NSMapTable *pdl_touchColors(void) {
+    static NSMapTable *touchColors = nil;
+    if (!touchColors) {
+        touchColors = [NSMapTable weakToStrongObjectsMapTable];
+    }
+    return touchColors;
+}
+
+static NSMutableArray *pdl_colors(void) {
+    static NSMutableArray *colors = nil;
+    if (!colors) {
+        colors = [NSMutableArray array];
+        [colors addObject:[UIColor redColor]];
+        [colors addObject:[UIColor orangeColor]];
+        [colors addObject:[UIColor yellowColor]];
+        [colors addObject:[UIColor greenColor]];
+        [colors addObject:[UIColor cyanColor]];
+        [colors addObject:[UIColor blueColor]];
+        [colors addObject:[UIColor purpleColor]];
+    }
+    return colors;
+}
+
+static UIColor *pdl_colorForTouch(UITouch *touch) {
+    NSMapTable *touchColors = pdl_touchColors();
+    UIColor *color = [touchColors objectForKey:touch];
+    NSMutableArray *colors = pdl_colors();
+    if (touch.phase == UITouchPhaseBegan) {
+        if (!color) {
+            NSInteger index = 0;
+            color = colors[index];
+            [colors removeObjectAtIndex:index];
+            [touchColors setObject:color forKey:touch];
+        }
+    } else {
+        if ((touch.phase == UITouchPhaseEnded) || (touch.phase == UITouchPhaseCancelled)) {
+            if (color) {
+                [touchColors removeObjectForKey:touch];
+                [colors addObject:color];
+            }
+        }
+    }
+    return color;
+}
+
+static void pdl_handleMotion(__unsafe_unretained UIEvent *event) {
+    if (event.subtype != UIEventSubtypeMotionShake) {
+        return;
+    }
+
+    if (_shakeAction) {
+        _shakeAction();
+    }
+}
+
+static void pdl_handleTouches(__unsafe_unretained UIEvent *event) {
+    if (!PDLApplicationEventFeedbackEnabled) {
+        return;
+    }
+
+    NSSet *allTouches = [event allTouches];
+    for (UITouch *touch in allTouches) {
+        CGPoint locationInWindow = [touch locationInView:touch.view.window];
+        UIColor *color = pdl_colorForTouch(touch);
+        UIWindow *window = touch.window;
+        CALayer *rootLayer = [window valueForKeyPath:@"_rootLayer"];
+        CALayer *layer = [[CALayer alloc] init];
+        CGFloat radius = 20;
+        layer.bounds = CGRectMake(0, 0, radius * 2, radius * 2);
+        layer.position = locationInWindow;
+        layer.borderColor = color.CGColor;
+        layer.borderWidth = 2;
+        layer.cornerRadius = radius;
+        layer.transform = CATransform3DMakeScale(0, 0, 1);
+        [rootLayer addSublayer:layer];
+
+        NSTimeInterval duration = 1;
+
+        CAAnimationGroup *group = [CAAnimationGroup animation];
+        group.duration = duration;
+        group.fillMode = kCAFillModeForwards;
+        group.removedOnCompletion = NO;
+
+        CABasicAnimation *scale = [CABasicAnimation animationWithKeyPath:@"transform.scale"];
+        scale.fromValue = @(0);
+        scale.toValue = @(1);
+
+        CABasicAnimation *opacity = [CABasicAnimation animationWithKeyPath:@"opacity"];
+        opacity.fromValue = @(1);
+        opacity.toValue = @(0);
+
+        group.animations = @[scale, opacity];
+        group.pdl_didStopAction = ^(CAAnimation *animation, BOOL finished) {
+            [layer removeFromSuperlayer];
+        };
+
+        [layer addAnimation:group forKey:nil];
+    }
+}
+
+static void pdl_handleEvent(__unsafe_unretained UIEvent *event) {
+    if ([event isKindOfClass:objc_getClass("UIMotionEvent")]) {
+        pdl_handleMotion(event);
+    } else if ([event isKindOfClass:objc_getClass("UITouchesEvent")]) {
+        pdl_handleTouches(event);
+    } // UIPhysicalKeyboardEvent
+}
+
+static void applicationSendEvent(__unsafe_unretained UIApplication *self, SEL _cmd, __unsafe_unretained UIEvent *event) {
+    PDLImplementationInterceptorRecover(_cmd);
+    ((typeof(&applicationSendEvent))_imp)(self, _cmd, event);
+    pdl_handleEvent(event);
+}
+
+static void pdl_prepareSendEvent(void) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        __unused BOOL ret = [UIApplication pdl_interceptSelector:@selector(sendEvent:) withInterceptorImplementation:(IMP)&applicationSendEvent];
+    });
+}
+
++ (BOOL)eventFeedbackEnabled {
+    return PDLApplicationEventFeedbackEnabled;
+}
+
++ (void)setEventFeedbackEnabled:(BOOL)eventFeedbackEnabled {
+    if (eventFeedbackEnabled) {
+        pdl_prepareSendEvent();
+    }
+    PDLApplicationEventFeedbackEnabled = eventFeedbackEnabled;
+}
+
++ (void)registerShakeAction:(void(^)(void))shakeAction {
+    if (!shakeAction) {
+        pdl_prepareSendEvent();
+    }
+    _shakeAction = shakeAction;
 }
 
 @end
