@@ -155,6 +155,7 @@ static const NSInteger PDLScrollPageCount = 3;
 @property (nonatomic, assign) BOOL isScrolling;
 
 @property (nonatomic, strong) PDLReuseItemManager *reuseItemManager;
+@property (nonatomic, assign) BOOL hasAppearred;
 
 @end
 
@@ -220,11 +221,15 @@ static const NSInteger PDLScrollPageCount = 3;
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
 
+    self.hasAppearred = YES;
+
     [self.disappearingItem endAppearanceTransition];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
     [super viewWillDisappear:animated];
+
+    self.hasAppearred = NO;
 
     [self.appearingItem beginAppearanceTransition:NO animated:animated];
 }
@@ -545,7 +550,9 @@ static const NSInteger PDLScrollPageCount = 3;
     BOOL viewAnimated = self.scrollViewAnimated || self.isScrolling;
 
     if (!self.disappearingItem) {
-        [self.appearingItem endAppearanceTransition];
+        if (self.hasAppearred) {
+            [self.appearingItem endAppearanceTransition];
+        }
         self.appearingItem = nil;
     }
 
@@ -586,7 +593,9 @@ static const NSInteger PDLScrollPageCount = 3;
 
     [self.appearingItem endAppearanceTransition];
     self.appearingItem = nil;
-    [self.disappearingItem endAppearanceTransition];
+    if (self.hasAppearred) {
+        [self.disappearingItem endAppearanceTransition];
+    }
     self.disappearingItem = nil;
 
     [pageView.viewController removeFromParentViewController];
