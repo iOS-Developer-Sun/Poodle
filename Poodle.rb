@@ -935,6 +935,15 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'UIKit'
         end
 
+        s.subspec 'UIView+PDLDebug' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'UIView+PDLDebug/' + source_files
+            ss.vendored_library = base + 'UIView+PDLDebug/' + librariy_files
+            ss.frameworks = 'UIKit'
+            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+        end
+
         s.subspec 'UIViewController+PDLExtension' do |ss|
             ss.platform = platform_ios
             ss.ios.deployment_target  = '9.0'
