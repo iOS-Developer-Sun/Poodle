@@ -13,11 +13,16 @@
 @implementation PDLApplication
 
 static void(^_developmentToolInitializer)(UIWindow *) = nil;
+static void(^_eventFeedbackLayerInitializer)(CALayer *layer, void(^defaultInitializer)(CALayer *layer)) = nil;
 static UIWindow *_developmentToolWindow = nil;
 static __weak UIWindow *_previousKeyWindow = nil;
 static BOOL(^_developmentToolAction)(void) = nil;
 static NSString *_developmentToolVersion = nil;
 static NSString *_developmentToolIdentifier = nil;
+
++ (void)registerEventFeedbackLayerInitializer:(void(^)(CALayer *layer, void(^defaultInitializer)(CALayer *layer))) initializer {
+    _eventFeedbackLayerInitializer = [initializer copy];
+}
 
 + (void)registerDevelopmentToolWindowInitializer:(void(^)(UIWindow *window))initializer {
     _developmentToolInitializer = [initializer copy];
@@ -462,13 +467,21 @@ static void pdl_handleTouches(__unsafe_unretained UIEvent *event) {
         UIColor *color = pdl_colorForTouch(touch);
         UIWindow *window = touch.window;
         CALayer *rootLayer = [window valueForKeyPath:@"_rootLayer"];
+        CGFloat length = 20;
+
         CALayer *layer = [[CALayer alloc] init];
-        CGFloat radius = 20;
-        layer.bounds = CGRectMake(0, 0, radius * 2, radius * 2);
+        void(^defaultInitializer)(CALayer *) = ^(CALayer *layer) {
+            layer.borderColor = color.CGColor;
+            layer.borderWidth = 2;
+            layer.cornerRadius = length;
+        };
+        layer.bounds = CGRectMake(0, 0, length * 2, length * 2);
+        if (_eventFeedbackLayerInitializer) {
+            _eventFeedbackLayerInitializer(layer, defaultInitializer);
+        } else {
+            defaultInitializer(layer);
+        }
         layer.position = locationInWindow;
-        layer.borderColor = color.CGColor;
-        layer.borderWidth = 2;
-        layer.cornerRadius = radius;
         layer.transform = CATransform3DMakeScale(0, 0, 1);
         [rootLayer addSublayer:layer];
 

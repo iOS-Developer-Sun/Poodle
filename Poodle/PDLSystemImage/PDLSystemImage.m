@@ -41,6 +41,7 @@ static void pdl_systemImageAdded(const struct mach_header *header, intptr_t vmad
     PDLSystemImage *systemImage = [[PDLSystemImage alloc] initWithMachObject:&mach_object];
     @synchronized (_systemImages) {
         _systemImages[@((unsigned long)header)] = systemImage;
+        _systemImages[systemImage.name ?: @""] = systemImage;
     }
     if (_loaded) {
         [[NSNotificationCenter defaultCenter] postNotificationName:PDLSystemImage.imagesDidAddNotificationName object:systemImage];
@@ -140,6 +141,18 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
 
     return ret;
 }
+
++ (instancetype)systemImageWithName:(NSString *)name {
+    if (name.length == 0) {
+        return nil;
+    }
+
+    @synchronized (_systemImages) {
+        PDLSystemImage *systemImage = _systemImages[name];
+        return systemImage;
+    }
+}
+
 
 + (NSArray *)systemImages {
     NSArray *systemImages = nil;
