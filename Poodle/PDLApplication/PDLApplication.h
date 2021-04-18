@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, assign, class) BOOL eventFeedbackEnabled;
 
++ (void)registerEventFeedbackLayerInitializer:(void(^)(CALayer *layer, void(^defaultInitializer)(CALayer *layer)))initializer;
+
 + (void)registerDevelopmentToolWindowInitializer:(void(^)(UIWindow *window))initializer;
 + (UIWindow *_Nullable)developmentToolWindow;
 + (void)showDevelopmentToolWindow:(BOOL)animated completion:(void(^ _Nullable)(UIWindow *window))completion;

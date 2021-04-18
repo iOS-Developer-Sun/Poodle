@@ -38,6 +38,7 @@
 + (void)enable;
 + (instancetype)systemImageWithHeader:(struct mach_header *)header;
 + (instancetype)systemImageWithPath:(NSString *)path;
++ (instancetype)systemImageWithName:(NSString *)name;
 + (NSArray *)systemImages;
 
 - (BOOL)dump:(NSString *)path;
