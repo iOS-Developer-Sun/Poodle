@@ -18,6 +18,24 @@
 extern "C" {
 #endif
 
+#ifdef __LP64__
+typedef struct mach_header_64 pdl_mach_header;
+typedef struct segment_command_64 pdl_segment_command;
+typedef struct section_64 pdl_section;
+typedef struct nlist_64 pdl_nlist;
+typedef struct routines_command_64 pdl_routines_command;
+typedef struct encryption_info_command_64 pdl_encryption_info_command;
+typedef struct fat_header_64 pdl_fat_header;
+#else
+typedef struct mach_header pdl_mach_header;
+typedef struct segment_command pdl_segment_command;
+typedef struct section pdl_section;
+typedef struct nlist pdl_nlist;
+typedef struct routines_command pdl_routines_command;
+typedef struct encryption_info_command pdl_encryption_info_command;
+typedef struct fat_header pdl_fat_header;
+#endif
+
 typedef struct pdl_mach_object {
     bool is64;
     bool swaps;
@@ -182,6 +200,13 @@ typedef struct pdl_mach_object_64 {
 
 _Static_assert(sizeof(pdl_mach_object) == sizeof(pdl_mach_object_64),
                    "Incorrect pdl_mach_object size");
+
+#ifdef __LP64__
+typedef struct pdl_mach_object_64 pdl_mach_object_t;
+#else
+typedef struct pdl_mach_object pdl_mach_object_t;
+#endif
+
 
 typedef struct pdl_fat_object {
     bool is64;
