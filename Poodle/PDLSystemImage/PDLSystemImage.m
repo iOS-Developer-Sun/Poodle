@@ -9,7 +9,9 @@
 #import "PDLSystemImage.h"
 #import <mach-o/dyld.h>
 #import <dlfcn.h>
-#import "pdl_mach_object.h"
+#import <mach/vm_map.h>
+#import <mach/vm_region.h>
+#import <mach/mach.h>
 
 @interface PDLSystemImage () {
     pdl_mach_object _mach_object;
@@ -64,11 +66,9 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _systemImages = [NSMutableDictionary dictionary];
-        dispatch_async(dispatch_get_global_queue(0, 0), ^{
             _dyld_register_func_for_add_image(&pdl_systemImageAdded);
             _dyld_register_func_for_remove_image(&pdl_systemImageRemoved);
-            _loaded = YES;
-        });
+        _loaded = YES;
     });
 }
 
@@ -115,7 +115,7 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     return @"PDLSystemImageImagesDidRemoveNotification";
 }
 
-+ (instancetype)systemImageWithHeader:(struct mach_header *)header {
++ (instancetype)systemImageWithHeader:(const pdl_mach_header *)header {
     @synchronized (_systemImages) {
         PDLSystemImage *systemImage = _systemImages[@((unsigned long)header)];
         return systemImage;
@@ -366,6 +366,102 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
 
     BOOL ret = [data writeToFile:path atomically:YES];
     return ret;
+}
+
+#pragma mark - rebind
+
+static vm_prot_t get_protection(void *sectionStart) {
+    mach_port_t task = mach_task_self();
+    vm_size_t size = 0;
+    vm_address_t address = (vm_address_t)sectionStart;
+    memory_object_name_t object;
+#if __LP64__
+    mach_msg_type_number_t count = VM_REGION_BASIC_INFO_COUNT_64;
+    vm_region_basic_info_data_64_t info;
+    kern_return_t info_ret = vm_region_64(task, &address, &size, VM_REGION_BASIC_INFO_64, (vm_region_info_64_t)&info, &count, &object);
+#else
+    mach_msg_type_number_t count = VM_REGION_BASIC_INFO_COUNT;
+    vm_region_basic_info_data_t info;
+    kern_return_t info_ret = vm_region(task, &address, &size, VM_REGION_BASIC_INFO, (vm_region_info_t)&info, &count, &object);
+#endif
+    if (info_ret == KERN_SUCCESS) {
+        return info.protection;
+    } else {
+        return VM_PROT_READ;
+    }
+}
+
+- (void)enumerateSymbolPointersSection:(const pdl_section *)section symbolAction:(void(^)(const pdl_section *section, const char *symbol_name, void **address))symbolAction {
+    if (!section || !symbolAction) {
+        return;
+    }
+
+    pdl_mach_object_t *machObject = (pdl_mach_object_t *)self.machObject;
+    void *linkedit_base = (void *)machObject->linkedit_base;
+    uint32_t *indirect_symtab = linkedit_base + machObject->dysymtab_command->indirectsymoff;
+    uint32_t *indirect_symbol_indices = indirect_symtab + section->reserved1;
+    const pdl_nlist *symtab = machObject->symtab_list;
+    const char *strtab = machObject->strtab;
+    void **indirect_symbol_bindings = (void **)((uintptr_t)self.slide + section->addr);
+    for (uint i = 0; i < section->size / sizeof(void *); i++) {
+        uint32_t symtab_index = indirect_symbol_indices[i];
+        if (symtab_index == INDIRECT_SYMBOL_ABS || symtab_index == INDIRECT_SYMBOL_LOCAL ||
+            symtab_index == (INDIRECT_SYMBOL_LOCAL | INDIRECT_SYMBOL_ABS)) {
+            continue;
+        }
+
+        uint32_t strtab_offset = symtab[symtab_index].n_un.n_strx;
+        const char *symbol_name = strtab + strtab_offset;
+        symbolAction(section, symbol_name, &(indirect_symbol_bindings[i]));
+    }
+}
+
+- (void)enumerateSegment:(const pdl_segment_command *)segment sectionAction:(void(^)(const pdl_segment_command *segment, const pdl_section *section, uint32_t index))sectionAction {
+    if (!segment || !sectionAction) {
+        return;
+    }
+
+    const pdl_section *section_list = (const pdl_section *)(segment + 1);
+    for (uint32_t i = 0; i < segment->nsects; i++) {
+        const pdl_section *section = section_list + i;
+        sectionAction(segment, section, i);
+    }
+}
+
+- (void)enumerateSymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action {
+    if (!action) {
+        return;
+    }
+
+    pdl_mach_object_t *machObject = (pdl_mach_object_t *)self.machObject;
+    const pdl_segment_command *data = machObject->data_segment_command;
+    [self enumerateSegment:data sectionAction:^(const pdl_segment_command *segment, const pdl_section *section, uint32_t index) {
+        uint32_t flags = section->flags;
+        uint32_t section_type = flags & SECTION_TYPE;
+        if (section_type == S_LAZY_SYMBOL_POINTERS || section_type == S_NON_LAZY_SYMBOL_POINTERS) {
+            [self enumerateSymbolPointersSection:section symbolAction:^(const pdl_section *section, const char *symbol_name, void **address) {
+                action(self, symbol_name, address);
+            }];
+        }
+    }];
+}
+
+- (void *)hook:(void **)address with:(void *)function {
+    bool is_prot_changed = false;
+    void *replaced = *address;
+    vm_prot_t prot = get_protection(address);
+    if ((prot & VM_PROT_WRITE) == 0) {
+        is_prot_changed = true;
+        kern_return_t success = vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot | VM_PROT_WRITE);
+        if (success != KERN_SUCCESS) {
+            return NULL;
+        }
+    }
+    *address = function;
+    if (is_prot_changed) {
+        vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot);
+    }
+    return replaced;
 }
 
 @end

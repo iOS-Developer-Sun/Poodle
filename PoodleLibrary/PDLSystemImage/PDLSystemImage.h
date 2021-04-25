@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#include <mach-o/loader.h>
-#include <mach/machine.h>
+#import <mach-o/loader.h>
+#import <mach/machine.h>
+#import "pdl_mach_object.h"
 
 @interface PDLSystemImage : NSObject
 
@@ -36,11 +37,14 @@
 @property (readonly) NSString *crashLogString;
 
 + (void)enable;
-+ (instancetype)systemImageWithHeader:(struct mach_header *)header;
++ (instancetype)systemImageWithHeader:(const pdl_mach_header *)header;
 + (instancetype)systemImageWithPath:(NSString *)path;
 + (instancetype)systemImageWithName:(NSString *)name;
 + (NSArray *)systemImages;
 
 - (BOOL)dump:(NSString *)path;
+
+- (void)enumerateSymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action;
+- (void *)hook:(void **)address with:(void *)function;
 
 @end
