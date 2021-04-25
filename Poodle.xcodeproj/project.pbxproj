@@ -3327,8 +3327,8 @@
 		B8079BBC261C785D007E7A17 /* pdl_system_leak */ = {
 			isa = PBXGroup;
 			children = (
-				B8079BBD261C785D007E7A17 /* pdl_system_leak.m */,
 				B8079BBE261C785D007E7A17 /* pdl_system_leak.h */,
+				B8079BBD261C785D007E7A17 /* pdl_system_leak.m */,
 			);
 			path = pdl_system_leak;
 			sourceTree = "<group>";
