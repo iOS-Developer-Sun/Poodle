@@ -26,6 +26,8 @@ static void *pdl_leak_dictionary_240 = NULL;
 static BOOL pdl_enabled_NEHotspotNetwork = NO;
 static thread_t pdl_thread_NEHotspotNetwork = 0;
 
+BOOL(*pdl_system_leak_releaseAction)(void *ptr) = NULL;
+
 static void pdl_common_init(void) {
     pdl_xpc_dictionary_class = (__bridge void *)(objc_getClass("OS_xpc_dictionary"));
 }
@@ -41,7 +43,13 @@ static void pdl_system_leak_free_xpc_dictionary(void *ptr) {
 
     void *isa = *((void **)ptr);
     if (isa == pdl_xpc_dictionary_class) {
-        CFRelease(ptr);
+        BOOL continues = YES;
+        if (pdl_system_leak_releaseAction) {
+            continues = pdl_system_leak_releaseAction(ptr);
+        }
+        if (continues) {
+            CFRelease(ptr);
+        }
     }
 }
 
@@ -129,6 +137,10 @@ static void pdl_NEHotspotNetworkFetchCurrentWithCompletionHandler(__unsafe_unret
     pdl_leak_dictionary_96 = NULL;
 
     pthread_mutex_unlock(&pdl_mutex);
+}
+
+void pdl_system_leak_setReleaseAction(BOOL(*releaseAction)(void *ptr)) {
+    pdl_system_leak_releaseAction = releaseAction;
 }
 
 BOOL pdl_system_leak_enable_NEHotspotNetwork(void) {
