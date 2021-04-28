@@ -35,6 +35,7 @@
 @property (readonly) NSString *cpuTypeString;
 @property (readonly) NSString *crashLogString;
 
++ (const void *)executeHeader;
 + (instancetype)executeSystemImage;
 + (instancetype)systemImageWithHeader:(const void *)header;
 + (instancetype)systemImageWithPath:(NSString *)path;
