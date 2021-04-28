@@ -543,6 +543,14 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'pdl_utils/' + librariy_files
         end
 
+        s.subspec 'pdl_vm' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'pdl_vm/' + source_files
+            ss.vendored_library = base + 'pdl_vm/' + librariy_files
+        end
+
         s.subspec 'PDLAddressQueryViewController' do |ss|
             ss.platform = platform_ios
             ss.ios.deployment_target  = '9.0'
