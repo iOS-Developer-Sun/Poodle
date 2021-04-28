@@ -118,8 +118,12 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     return @"PDLSystemImageImagesDidRemoveNotification";
 }
 
++ (const void *)executeHeader {
+    return pdl_execute_header();
+}
+
 + (instancetype)executeSystemImage {
-    return [self systemImageWithHeader:pdl_execute_header()];
+    return [self systemImageWithHeader:[self executeHeader]];
 }
 
 + (instancetype)systemImageWithHeader:(const void *)header {
