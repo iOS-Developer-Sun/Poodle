@@ -66,8 +66,18 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
         static dispatch_once_t onceToken;
         dispatch_once(&onceToken, ^{
             _systemImages = [NSMutableDictionary dictionary];
-            _dyld_register_func_for_add_image(&pdl_systemImageAdded);
-            _dyld_register_func_for_remove_image(&pdl_systemImageRemoved);
+            NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
+            BOOL allEnabled = (operatingSystemVersion.majorVersion != 12) || (operatingSystemVersion.minorVersion > 2);
+            if (allEnabled) {
+                _dyld_register_func_for_add_image(&pdl_systemImageAdded);
+                _dyld_register_func_for_remove_image(&pdl_systemImageRemoved);
+            } else {
+                const void *header = _dyld_get_image_header(0);
+                intptr_t silde = _dyld_get_image_vmaddr_slide(0);
+                if (header == [self executeHeader]) {
+                    pdl_systemImageAdded(header, silde);
+                }
+            }
             _loaded = YES;
         });
     }
@@ -167,7 +177,7 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     @synchronized (_systemImages) {
         systemImages = _systemImages.allValues;
     }
-    NSArray *systemImagesSortedByAddress = [systemImages sortedArrayUsingComparator:^NSComparisonResult(PDLSystemImage *systemImage1, PDLSystemImage *systemImage2) {
+    NSArray *systemImagesSortedByAddress = [[[NSSet setWithArray:systemImages] allObjects] sortedArrayUsingComparator:^NSComparisonResult(PDLSystemImage *systemImage1, PDLSystemImage *systemImage2) {
         return [@(systemImage1.address) compare:@(systemImage2.address)];
     }];
     return systemImagesSortedByAddress;
