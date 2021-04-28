@@ -5378,8 +5378,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				B8811D45262828D600AFABB7 /* PBXTargetDependency */,
-				B80A5AAD26252858003EAA7D /* PBXTargetDependency */,
 				B8FC6AC422EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC622EEF563005B91DE /* PBXTargetDependency */,
 				B8FC6AC822EEF563005B91DE /* PBXTargetDependency */,
@@ -5411,6 +5409,7 @@
 				B897B8A32601176D00696E06 /* PBXTargetDependency */,
 				B84C857925CD3C640086CD36 /* PBXTargetDependency */,
 				B8B9A56E234F9A570069476E /* PBXTargetDependency */,
+				B80A5AAD26252858003EAA7D /* PBXTargetDependency */,
 				B8866B792607852000458D3F /* PBXTargetDependency */,
 				B802ACDF22F33AC500BF028E /* PBXTargetDependency */,
 				B85ECC2B22F5953D0063BB7C /* PBXTargetDependency */,
@@ -5440,9 +5439,9 @@
 				B864FA2B2523573400842343 /* PBXTargetDependency */,
 				B86A6BAF23BB560E00715650 /* PBXTargetDependency */,
 				B899F9FC24506A5D00EFBB39 /* PBXTargetDependency */,
-				B83EFAE2250340B200FDBA43 /* PBXTargetDependency */,
 				B802AC9622F3377900BF028E /* PBXTargetDependency */,
 				B8FC6D7D22EF0BC7005B91DE /* PBXTargetDependency */,
+				B8811D45262828D600AFABB7 /* PBXTargetDependency */,
 				B877A967257F710700580C6E /* PBXTargetDependency */,
 				B8FC6D7F22EF0BC7005B91DE /* PBXTargetDependency */,
 				B8FC6D8122EF0BC7005B91DE /* PBXTargetDependency */,
@@ -5476,6 +5475,7 @@
 				B879532C2486865D00798005 /* PBXTargetDependency */,
 				B88865F124C02B5A00D58BC7 /* PBXTargetDependency */,
 				B8FC6D8322EF0BC7005B91DE /* PBXTargetDependency */,
+				B83EFAE2250340B200FDBA43 /* PBXTargetDependency */,
 			);
 			name = PoodleLibrary;
 			productName = PoodleLibrary;

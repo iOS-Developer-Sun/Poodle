@@ -54,6 +54,8 @@ typedef struct pdl_mach_object {
     const struct segment_command *page_zero_segment_command;
     const struct segment_command *text_segment_command;
     const struct segment_command *data_segment_command;
+    const struct segment_command *data_const_segment_command;
+    const struct segment_command *auth_const_segment_command;
     const struct segment_command *linkedit_segment_command;
 
     const struct symtab_command *symtab_command;
@@ -135,6 +137,8 @@ typedef struct pdl_mach_object_64 {
     const struct segment_command_64 *page_zero_segment_command;
     const struct segment_command_64 *text_segment_command;
     const struct segment_command_64 *data_segment_command;
+    const struct segment_command_64 *data_const_segment_command;
+    const struct segment_command_64 *auth_const_segment_command;
     const struct segment_command_64 *linkedit_segment_command;
 
     const struct segment_command_64 *symtab_command;
@@ -207,7 +211,6 @@ typedef struct pdl_mach_object_64 pdl_mach_object_t;
 typedef struct pdl_mach_object pdl_mach_object_t;
 #endif
 
-
 typedef struct pdl_fat_object {
     bool is64;
     bool swaps;
@@ -238,6 +241,8 @@ _Static_assert(sizeof(pdl_fat_object) == sizeof(pdl_fat_object_64),
 extern bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t vmaddr_slide, const char *name, pdl_mach_object *mach_object);
 
 extern bool pdl_get_fat_object_with_header(const struct fat_header *header, pdl_fat_object *fat_object);
+
+extern void *pdl_execute_header(void);
 
 #ifdef __cplusplus
 }
