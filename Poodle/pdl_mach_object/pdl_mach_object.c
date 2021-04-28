@@ -7,6 +7,8 @@
 //
 
 #include "pdl_mach_object.h"
+#include <mach-o/ldsyms.h>
+#include <dlfcn.h>
 
 bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t vmaddr_slide, const char *name, pdl_mach_object *mach_object) {
     if (header == NULL) {
@@ -66,6 +68,10 @@ bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t 
                     }
                 } else if (strcmp(segname, SEG_DATA) == 0) {
                     mach_object->data_segment_command = segment_command;
+                } else if (strcmp(segname, "__DATA_CONST") == 0) {
+                    mach_object->data_const_segment_command = segment_command;
+                } else if (strcmp(segname, "__AUTH_CONST") == 0) {
+                    mach_object->auth_const_segment_command = segment_command;
                 } else if (strcmp(segname, SEG_LINKEDIT) == 0) {
                     mach_object->linkedit_segment_command = segment_command;
                 } else if (strcmp(segname, SEG_PAGEZERO) == 0) {
@@ -299,4 +305,14 @@ bool pdl_get_fat_object_with_header(const struct fat_header *header, pdl_fat_obj
     fat_object->arch_list = (struct fat_arch *)command_pointer;
 
     return true;
+}
+
+void *pdl_execute_header(void) {
+    static void *header = NULL;
+    if (header == NULL) {
+        void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
+        header = dlsym(handle, MH_EXECUTE_SYM);
+        dlclose(handle);
+    }
+    return header;
 }

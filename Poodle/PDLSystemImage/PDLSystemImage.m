@@ -12,6 +12,7 @@
 #import <mach/vm_map.h>
 #import <mach/vm_region.h>
 #import <mach/mach.h>
+#import "pdl_mach_object.h"
 
 @interface PDLSystemImage () {
     pdl_mach_object _mach_object;
@@ -62,14 +63,16 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     }
 }
 
-+ (void)enable {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _systemImages = [NSMutableDictionary dictionary];
++ (void)initialize {
+    if (self == [PDLSystemImage self]) {
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            _systemImages = [NSMutableDictionary dictionary];
             _dyld_register_func_for_add_image(&pdl_systemImageAdded);
             _dyld_register_func_for_remove_image(&pdl_systemImageRemoved);
-        _loaded = YES;
-    });
+            _loaded = YES;
+        });
+    }
 }
 
 - (instancetype)initWithMachObject:(pdl_mach_object *)machObject {
@@ -115,7 +118,11 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     return @"PDLSystemImageImagesDidRemoveNotification";
 }
 
-+ (instancetype)systemImageWithHeader:(const pdl_mach_header *)header {
++ (instancetype)executeSystemImage {
+    return [self systemImageWithHeader:pdl_execute_header()];
+}
+
++ (instancetype)systemImageWithHeader:(const void *)header {
     @synchronized (_systemImages) {
         PDLSystemImage *systemImage = _systemImages[@((unsigned long)header)];
         return systemImage;
@@ -152,7 +159,6 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
         return systemImage;
     }
 }
-
 
 + (NSArray *)systemImages {
     NSArray *systemImages = nil;
@@ -435,15 +441,21 @@ static vm_prot_t get_protection(void *sectionStart) {
 
     pdl_mach_object_t *machObject = (pdl_mach_object_t *)self.machObject;
     const pdl_segment_command *data = machObject->data_segment_command;
-    [self enumerateSegment:data sectionAction:^(const pdl_segment_command *segment, const pdl_section *section, uint32_t index) {
-        uint32_t flags = section->flags;
-        uint32_t section_type = flags & SECTION_TYPE;
-        if (section_type == S_LAZY_SYMBOL_POINTERS || section_type == S_NON_LAZY_SYMBOL_POINTERS) {
-            [self enumerateSymbolPointersSection:section symbolAction:^(const pdl_section *section, const char *symbol_name, void **address) {
-                action(self, symbol_name, address);
-            }];
-        }
-    }];
+    const pdl_segment_command *data_const = machObject->data_const_segment_command;
+    const pdl_segment_command *auth_const = machObject->auth_const_segment_command;
+    const pdl_segment_command *segments[] = {data, data_const, auth_const};
+    for (int i = 0; i < sizeof(segments) / sizeof(segments[0]); i++) {
+        const pdl_segment_command *segment = segments[i];
+        [self enumerateSegment:segment sectionAction:^(const pdl_segment_command *segment, const pdl_section *section, uint32_t index) {
+            uint32_t flags = section->flags;
+            uint32_t section_type = flags & SECTION_TYPE;
+            if (section_type == S_LAZY_SYMBOL_POINTERS || section_type == S_NON_LAZY_SYMBOL_POINTERS) {
+                [self enumerateSymbolPointersSection:section symbolAction:^(const pdl_section *section, const char *symbol_name, void **address) {
+                    action(self, symbol_name, address);
+                }];
+            }
+        }];
+    }
 }
 
 - (void *)hook:(void **)address with:(void *)function {

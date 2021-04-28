@@ -124,13 +124,7 @@
 }
 
 - (void)load {
-    struct mach_header *header = NULL;
-    if (header == NULL) {
-        void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
-        header = dlsym(handle, MH_EXECUTE_SYM);
-        dlclose(handle);
-    }
-
+    struct mach_header *header = pdl_execute_header();
     NSString *arch = [self archWithHeader:header];
     if (arch == nil) {
         self.currentState = PDL_MACH_O_SYMBOLS_STATE_ERROR;
