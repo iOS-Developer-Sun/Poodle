@@ -9,8 +9,6 @@
 #import "PDLSystemImage.h"
 #import <mach-o/dyld.h>
 #import <dlfcn.h>
-#import <mach/vm_map.h>
-#import <mach/vm_region.h>
 #import <mach/mach.h>
 #import "pdl_mach_object.h"
 
@@ -356,51 +354,6 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     return crashLogString;
 }
 
-- (BOOL)dump:(NSString *)path {
-    NSMutableData *data = [[NSMutableData alloc] init];
-    pdl_mach_object *machObject = self.machObject;
-
-    BOOL is64 = machObject->is64;
-    uint64_t slide = self.slide;
-    uint32_t segmentCount = machObject->segments_count;
-    for (uint32_t i = 0; i < segmentCount; i++) {
-        BOOL isLastOne = i == segmentCount - 1;
-        if (!is64) {
-            const struct segment_command *segment = machObject->segments[i];
-            [data appendBytes:(void *)(slide + segment->vmaddr) length:isLastOne ? segment->filesize : segment->vmsize];
-        } else {
-            const struct segment_command_64 *segment = ((pdl_mach_object_64 *)machObject)->segments[i];
-            [data appendBytes:(void *)(slide + segment->vmaddr) length:(NSUInteger)(isLastOne ? segment->filesize : segment->vmsize)];
-        }
-    }
-
-    BOOL ret = [data writeToFile:path atomically:YES];
-    return ret;
-}
-
-#pragma mark - rebind
-
-static vm_prot_t get_protection(void *sectionStart) {
-    mach_port_t task = mach_task_self();
-    vm_size_t size = 0;
-    vm_address_t address = (vm_address_t)sectionStart;
-    memory_object_name_t object;
-#if __LP64__
-    mach_msg_type_number_t count = VM_REGION_BASIC_INFO_COUNT_64;
-    vm_region_basic_info_data_64_t info;
-    kern_return_t info_ret = vm_region_64(task, &address, &size, VM_REGION_BASIC_INFO_64, (vm_region_info_64_t)&info, &count, &object);
-#else
-    mach_msg_type_number_t count = VM_REGION_BASIC_INFO_COUNT;
-    vm_region_basic_info_data_t info;
-    kern_return_t info_ret = vm_region(task, &address, &size, VM_REGION_BASIC_INFO, (vm_region_info_t)&info, &count, &object);
-#endif
-    if (info_ret == KERN_SUCCESS) {
-        return info.protection;
-    } else {
-        return VM_PROT_READ;
-    }
-}
-
 - (void)enumerateSymbolPointersSection:(const pdl_section *)section symbolAction:(void(^)(const pdl_section *section, const char *symbol_name, void **address))symbolAction {
     if (!section || !symbolAction) {
         return;
@@ -438,46 +391,44 @@ static vm_prot_t get_protection(void *sectionStart) {
     }
 }
 
-- (void)enumerateSymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action {
+- (void)enumerateLazySymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action {
     if (!action) {
         return;
     }
 
     pdl_mach_object_t *machObject = (pdl_mach_object_t *)self.machObject;
-    const pdl_segment_command *data = machObject->data_segment_command;
-    const pdl_segment_command *data_const = machObject->data_const_segment_command;
-    const pdl_segment_command *auth_const = machObject->auth_const_segment_command;
-    const pdl_segment_command *segments[] = {data, data_const, auth_const};
-    for (int i = 0; i < sizeof(segments) / sizeof(segments[0]); i++) {
-        const pdl_segment_command *segment = segments[i];
-        [self enumerateSegment:segment sectionAction:^(const pdl_segment_command *segment, const pdl_section *section, uint32_t index) {
-            uint32_t flags = section->flags;
-            uint32_t section_type = flags & SECTION_TYPE;
-            if (section_type == S_LAZY_SYMBOL_POINTERS || section_type == S_NON_LAZY_SYMBOL_POINTERS) {
-                [self enumerateSymbolPointersSection:section symbolAction:^(const pdl_section *section, const char *symbol_name, void **address) {
-                    action(self, symbol_name, address);
-                }];
-            }
-        }];
-    }
+    const pdl_segment_command *segment = machObject->data_segment_command;
+    [self enumerateSegment:segment sectionAction:^(const pdl_segment_command *segment, const pdl_section *section, uint32_t index) {
+        uint32_t flags = section->flags;
+        uint32_t section_type = flags & SECTION_TYPE;
+        if (section_type == S_LAZY_SYMBOL_POINTERS) {
+            [self enumerateSymbolPointersSection:section symbolAction:^(const pdl_section *section, const char *symbol_name, void **address) {
+                action(self, symbol_name, address);
+            }];
+        }
+    }];
 }
 
-- (void *)hook:(void **)address with:(void *)function {
-    bool is_prot_changed = false;
-    void *replaced = *address;
-    vm_prot_t prot = get_protection(address);
-    if ((prot & VM_PROT_WRITE) == 0) {
-        is_prot_changed = true;
-        kern_return_t success = vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot | VM_PROT_WRITE);
-        if (success != KERN_SUCCESS) {
-            return NULL;
+- (BOOL)dump:(NSString *)path {
+    NSMutableData *data = [[NSMutableData alloc] init];
+    pdl_mach_object *machObject = self.machObject;
+
+    BOOL is64 = machObject->is64;
+    uint64_t slide = self.slide;
+    uint32_t segmentCount = machObject->segments_count;
+    for (uint32_t i = 0; i < segmentCount; i++) {
+        BOOL isLastOne = i == segmentCount - 1;
+        if (!is64) {
+            const struct segment_command *segment = machObject->segments[i];
+            [data appendBytes:(void *)(slide + segment->vmaddr) length:isLastOne ? segment->filesize : segment->vmsize];
+        } else {
+            const struct segment_command_64 *segment = ((pdl_mach_object_64 *)machObject)->segments[i];
+            [data appendBytes:(void *)(slide + segment->vmaddr) length:(NSUInteger)(isLastOne ? segment->filesize : segment->vmsize)];
         }
     }
-    *address = function;
-    if (is_prot_changed) {
-        vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot);
-    }
-    return replaced;
+
+    BOOL ret = [data writeToFile:path atomically:YES];
+    return ret;
 }
 
 @end

@@ -42,9 +42,8 @@
 + (instancetype)systemImageWithName:(NSString *)name;
 + (NSArray *)systemImages;
 
-- (BOOL)dump:(NSString *)path;
+- (void)enumerateLazySymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action;
 
-- (void)enumerateSymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action;
-- (void *)hook:(void **)address with:(void *)function;
+- (BOOL)dump:(NSString *)path;
 
 @end
