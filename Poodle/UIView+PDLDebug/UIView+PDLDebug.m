@@ -111,8 +111,8 @@ static CGFloat textViewBaselineOffsetFromBottom(__unsafe_unretained UITextView *
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         BOOL enabled = YES;
-        enabled &= [UIVisualEffectView pdl_interceptSelector:sel_registerName("_addSubview:positioned:relativeTo:") withInterceptorImplementation:(IMP)&visualEffectViewAddSubviewPositionedRelativeTo];
-        enabled &= [UITextView pdl_interceptSelector:sel_registerName("_baselineOffsetFromBottom") withInterceptorImplementation:(IMP)&textViewBaselineOffsetFromBottom];
+        enabled = enabled && [UIVisualEffectView pdl_interceptSelector:sel_registerName("_addSubview:positioned:relativeTo:") withInterceptorImplementation:(IMP)&visualEffectViewAddSubviewPositionedRelativeTo];
+        enabled = enabled && [UITextView pdl_interceptSelector:sel_registerName("_baselineOffsetFromBottom") withInterceptorImplementation:(IMP)&textViewBaselineOffsetFromBottom];
         pdl_debugEnable = enabled;
     });
     return pdl_debugEnable;

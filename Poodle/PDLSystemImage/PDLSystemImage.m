@@ -68,6 +68,9 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
             _systemImages = [NSMutableDictionary dictionary];
             NSOperatingSystemVersion operatingSystemVersion = [NSProcessInfo processInfo].operatingSystemVersion;
             BOOL allEnabled = (operatingSystemVersion.majorVersion != 12) || (operatingSystemVersion.minorVersion > 2);
+#ifdef DEBUG
+            allEnabled = YES;
+#endif
             if (allEnabled) {
                 _dyld_register_func_for_add_image(&pdl_systemImageAdded);
                 _dyld_register_func_for_remove_image(&pdl_systemImageRemoved);

@@ -107,7 +107,7 @@ BOOL PDLBlockCopyRecordEnable(BOOL(*_Nullable filter)(void *block)) {
     Class stackBlockClass = objc_getClass("__NSStackBlock__");
     SEL copySelector = sel_registerName("copyWithZone:");
     BOOL ret = [mallocBlockClass pdl_interceptSelector:copySelector withInterceptorImplementation:(IMP)&PDLBlockCopy isStructRet:@(NO) addIfNotExistent:YES data:NULL];
-    ret &= [stackBlockClass pdl_interceptSelector:copySelector withInterceptorImplementation:(IMP)&PDLBlockCopy isStructRet:@(NO) addIfNotExistent:YES data:NULL];
+    ret = ret && [stackBlockClass pdl_interceptSelector:copySelector withInterceptorImplementation:(IMP)&PDLBlockCopy isStructRet:@(NO) addIfNotExistent:YES data:NULL];
     return ret;
 }
 
