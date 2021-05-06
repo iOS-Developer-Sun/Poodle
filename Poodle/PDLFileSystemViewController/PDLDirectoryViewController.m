@@ -594,9 +594,9 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     for (PDLDirectoryContent *content in self.selected) {
         NSString *filePath = content.filePath;
         if (error) {
-            isRemoved &= [[NSFileManager defaultManager] removeItemAtPath:filePath error:NULL];
+            isRemoved = isRemoved && [[NSFileManager defaultManager] removeItemAtPath:filePath error:NULL];
         } else {
-            isRemoved &= [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
+            isRemoved = isRemoved && [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
         }
     }
     if (!isRemoved) {

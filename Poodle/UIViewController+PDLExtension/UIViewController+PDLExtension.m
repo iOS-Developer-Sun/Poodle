@@ -138,10 +138,10 @@ static void PDLViewControllerDoAppear(__unsafe_unretained UIViewController *self
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         BOOL ret = YES;
-        ret &= [UIViewController pdl_interceptSelector:@selector(viewWillAppear:) withInterceptorImplementation:(IMP)&PDLViewControllerDoAppear isStructRet:@(NO) addIfNotExistent:NO data:(void *)(long)PDLViewControllerExtensionControllerTypeViewWillAppear];
-        ret &= [UIViewController pdl_interceptSelector:@selector(viewWillDisappear:) withInterceptorImplementation:(IMP)&PDLViewControllerDoAppear isStructRet:@(NO) addIfNotExistent:NO data:(void *)(long)PDLViewControllerExtensionControllerTypeViewWillDisappear];
-        ret &= [UIViewController pdl_interceptSelector:@selector(viewDidAppear:) withInterceptorImplementation:(IMP)&PDLViewControllerDoAppear isStructRet:@(NO) addIfNotExistent:NO data:(void *)(long)PDLViewControllerExtensionControllerTypeViewDidAppear];
-        ret &= [UIViewController pdl_interceptSelector:@selector(viewDidDisappear:) withInterceptorImplementation:(IMP)&PDLViewControllerDoAppear isStructRet:@(NO) addIfNotExistent:NO data:(void *)(long)PDLViewControllerExtensionControllerTypeViewDidDisappear];
+        ret = ret && [UIViewController pdl_interceptSelector:@selector(viewWillAppear:) withInterceptorImplementation:(IMP)&PDLViewControllerDoAppear isStructRet:@(NO) addIfNotExistent:NO data:(void *)(long)PDLViewControllerExtensionControllerTypeViewWillAppear];
+        ret = ret && [UIViewController pdl_interceptSelector:@selector(viewWillDisappear:) withInterceptorImplementation:(IMP)&PDLViewControllerDoAppear isStructRet:@(NO) addIfNotExistent:NO data:(void *)(long)PDLViewControllerExtensionControllerTypeViewWillDisappear];
+        ret = ret && [UIViewController pdl_interceptSelector:@selector(viewDidAppear:) withInterceptorImplementation:(IMP)&PDLViewControllerDoAppear isStructRet:@(NO) addIfNotExistent:NO data:(void *)(long)PDLViewControllerExtensionControllerTypeViewDidAppear];
+        ret = ret && [UIViewController pdl_interceptSelector:@selector(viewDidDisappear:) withInterceptorImplementation:(IMP)&PDLViewControllerDoAppear isStructRet:@(NO) addIfNotExistent:NO data:(void *)(long)PDLViewControllerExtensionControllerTypeViewDidDisappear];
         NSAssert(ret, @"UIViewController+PDLExtension");
     });
 }

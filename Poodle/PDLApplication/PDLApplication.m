@@ -384,7 +384,7 @@ static void applicationSetShortcutItems(__unsafe_unretained UIApplication *self,
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         BOOL ret = [UIApplication pdl_interceptSelector:@selector(setDelegate:) withInterceptorImplementation:(IMP)&applicationSetDelegate];
-        ret &= [UIApplication pdl_interceptSelector:@selector(setShortcutItems:) withInterceptorImplementation:(IMP)&applicationSetShortcutItems];
+        ret = ret && [UIApplication pdl_interceptSelector:@selector(setShortcutItems:) withInterceptorImplementation:(IMP)&applicationSetShortcutItems];
         enabled = ret;
     });
     return enabled;

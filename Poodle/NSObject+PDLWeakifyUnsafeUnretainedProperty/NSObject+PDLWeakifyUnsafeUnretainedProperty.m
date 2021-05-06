@@ -149,7 +149,7 @@ static void pdl_weakPropertySetter(__unsafe_unretained id self, SEL _cmd, __unsa
     ptrdiff_t offset = ivar_getOffset(ivar);
 
     BOOL ret = pdl_interceptSelector(aClass, getter, (IMP)&pdl_weakPropertyGetter, nil, NO, (void *)offset);
-    ret &= pdl_interceptSelector(aClass, setter, (IMP)&pdl_weakPropertySetter, nil, NO, (void *)offset);
+    ret = ret && pdl_interceptSelector(aClass, setter, (IMP)&pdl_weakPropertySetter, nil, NO, (void *)offset);
 
     return ret;
 }

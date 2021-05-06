@@ -101,7 +101,7 @@ static void pdl_threadSafePropertySetter(__unsafe_unretained id self, SEL _cmd, 
 
     BOOL ret = pdl_interceptSelector(aClass, getter, (IMP)&pdl_threadSafePropertyGetter, nil, NO, (void *)name);
     if (!readonly) {
-        ret &= pdl_interceptSelector(aClass, setter, (IMP)&pdl_threadSafePropertySetter, nil, NO, (void *)name);
+        ret = ret && pdl_interceptSelector(aClass, setter, (IMP)&pdl_threadSafePropertySetter, nil, NO, (void *)name);
     }
     return ret;
 }
