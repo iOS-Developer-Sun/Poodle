@@ -324,12 +324,22 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'pdl_dynamic/' + librariy_files
         end
 
+        s.subspec 'pdl_hook' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'pdl_hook/' + source_files
+            ss.vendored_library = base + 'pdl_hook/' + librariy_files
+        end
+
         s.subspec 'pdl_lldb_hook' do |ss|
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'pdl_lldb_hook/' + source_files
             ss.vendored_library = base + 'pdl_lldb_hook/' + librariy_files
+            ss.dependency pod_name + '/pdl_vm'
+            ss.dependency pod_name + '/PDLSystemImage'
         end
 
         s.subspec 'pdl_mach' do |ss|
