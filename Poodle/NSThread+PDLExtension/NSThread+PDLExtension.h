@@ -11,7 +11,9 @@
 
 @interface NSThread (PDLExtension)
 
+/// ivar in private ivar
 @property (readonly) pthread_t pdl_pthread;
+/// ivar in private ivar
 @property (readonly) int pdl_seqNum;
 
 @end

@@ -14,6 +14,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 #ifndef __i386__
 
+/// hook all instance methods except memory management and thread-safetify them with recursive locks
+/// @param filter  return YES if you want to thread-safetify the method with selector.
+/// @return methods thread-safetified count
 + (NSInteger)pdl_threadSafetifyMethods:(BOOL(^_Nullable)(SEL selector))filter;
 
 #endif

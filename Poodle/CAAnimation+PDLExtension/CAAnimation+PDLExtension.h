@@ -10,7 +10,10 @@
 
 @interface CAAnimation (PDLExtension)
 
+/// self.delegate will be set
 @property (copy, setter=pdl_setDidStartAction:) void (^pdl_didStartAction)(CAAnimation *animation);
+
+/// self.delegate will be set
 @property (copy, setter=pdl_setDidStopAction:) void (^pdl_didStopAction)(CAAnimation *animation, BOOL finished);
 
 @end
