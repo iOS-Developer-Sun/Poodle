@@ -10,6 +10,7 @@
 
 @interface NSCache (PDLExtension)
 
+/// private API
 @property (readonly) NSArray *allObjects;
 
 - (id)objectForKeyedSubscript:(id)key;
