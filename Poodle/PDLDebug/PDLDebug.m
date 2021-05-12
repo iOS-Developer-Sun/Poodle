@@ -134,7 +134,7 @@ void pdl_debug_halt(void) {
             NSException *e = [NSException exceptionWithName:@"!" reason:nil userInfo:nil];
             [e raise];
         } @catch (NSException *exception) {
-            ;
+            CFBridgingRelease((__bridge CFTypeRef _Nullable)(exception));
         } @finally {
             ;
         }
