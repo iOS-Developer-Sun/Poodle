@@ -44,7 +44,31 @@ static void *PDLBlockPop(void) {
     return block;
 }
 
-static void *PDLBlockCopy(__unsafe_unretained id self, SEL _cmd, struct _NSZone *zone) {
+static void *PDLBlockCopy(__unsafe_unretained id self, SEL _cmd) {
+    PDLImplementationInterceptorRecover(_cmd);
+    void *block = (__bridge void *)self;
+    BOOL valid = YES;
+    if (PDLBlockCopyRecordFilter) {
+        valid = PDLBlockCopyRecordFilter(block);
+    }
+    if (valid) {
+        PDLBlockPush(block);
+    }
+    void *object = NULL;
+    if (_imp) {
+        object = ((void *(*)(id, SEL))_imp)(self, _cmd);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        object = ((void *(*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);
+    }
+    if (valid) {
+        void *popped = PDLBlockPop();
+        assert(block == popped);
+    }
+    return object;
+}
+
+static void *PDLBlockCopyWithZone(__unsafe_unretained id self, SEL _cmd, struct _NSZone *zone) {
     PDLImplementationInterceptorRecover(_cmd);
     void *block = (__bridge void *)self;
     BOOL valid = YES;
@@ -103,11 +127,15 @@ BOOL PDLBlockCopyRecordEnable(BOOL(*_Nullable filter)(void *block)) {
     }
 
     PDLBlockCopyRecordFilter = filter;
+    Class blockClass = objc_getClass("NSBlock");
     Class mallocBlockClass = objc_getClass("__NSMallocBlock__");
     Class stackBlockClass = objc_getClass("__NSStackBlock__");
-    SEL copySelector = sel_registerName("copyWithZone:");
-    BOOL ret = [mallocBlockClass pdl_interceptSelector:copySelector withInterceptorImplementation:(IMP)&PDLBlockCopy isStructRet:@(NO) addIfNotExistent:YES data:NULL];
-    ret = ret && [stackBlockClass pdl_interceptSelector:copySelector withInterceptorImplementation:(IMP)&PDLBlockCopy isStructRet:@(NO) addIfNotExistent:YES data:NULL];
+    SEL copySelector = sel_registerName("copy");
+    SEL copyWithZoneSelector = sel_registerName("copyWithZone:");
+    BOOL ret = [blockClass pdl_interceptSelector:copySelector withInterceptorImplementation:(IMP)&PDLBlockCopy isStructRet:@(NO) addIfNotExistent:YES data:NULL];
+    ret = ret && [blockClass pdl_interceptSelector:copyWithZoneSelector withInterceptorImplementation:(IMP)&PDLBlockCopyWithZone isStructRet:@(NO) addIfNotExistent:YES data:NULL];
+    ret && [mallocBlockClass pdl_interceptSelector:copyWithZoneSelector withInterceptorImplementation:(IMP)&PDLBlockCopyWithZone isStructRet:@(NO) addIfNotExistent:YES data:NULL];
+    ret = ret && [stackBlockClass pdl_interceptSelector:copyWithZoneSelector withInterceptorImplementation:(IMP)&PDLBlockCopyWithZone isStructRet:@(NO) addIfNotExistent:YES data:NULL];
     return ret;
 }
 

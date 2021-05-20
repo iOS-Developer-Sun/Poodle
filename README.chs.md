@@ -440,8 +440,16 @@ UINavigationController长按返回支持
 
 ColorViewBounds和AlignmentRects支持
 
-不crash
+不抛异常
 
 ## UIViewController+PDLExtension
+
+无侵入生命周期回调
+
 ## UIViewController+PDLNavigationBar
+
+按钮便捷接口
+
 ## UIViewController+PDLTransitionAnimation
+
+转场动画便捷接口
