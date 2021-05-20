@@ -225,21 +225,21 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
 
 - (NSString *)cpuTypeString {
     NSDictionary *cpuTypeStringDictionary = @{
-                                              @(CPU_TYPE_ANY) : @"any",
-                                              @(CPU_TYPE_VAX) : @"vax",
-                                              @(CPU_TYPE_MC680x0) : @"mc680x0",
-                                              @(CPU_TYPE_I386) : @"i386",
-                                              @(CPU_TYPE_X86_64) : @"x86_64",
-                                              @(CPU_TYPE_MC98000) : @"mc98000",
-                                              @(CPU_TYPE_HPPA) : @"hppa",
-                                              @(CPU_TYPE_ARM) : @"arm",
-                                              @(CPU_TYPE_ARM64) : @"arm64",
-                                              @(CPU_TYPE_MC88000) : @"mc88000",
-                                              @(CPU_TYPE_SPARC) : @"sparc",
-                                              @(CPU_TYPE_I860) : @"i860",
-                                              @(CPU_TYPE_POWERPC) : @"powerpc",
-                                              @(CPU_TYPE_POWERPC64) : @"powerpc64"
-                                              };
+        @(CPU_TYPE_ANY) : @"any",
+        @(CPU_TYPE_VAX) : @"vax",
+        @(CPU_TYPE_MC680x0) : @"mc680x0",
+        @(CPU_TYPE_I386) : @"i386",
+        @(CPU_TYPE_X86_64) : @"x86_64",
+        @(CPU_TYPE_MC98000) : @"mc98000",
+        @(CPU_TYPE_HPPA) : @"hppa",
+        @(CPU_TYPE_ARM) : @"arm",
+        @(CPU_TYPE_ARM64) : @"arm64",
+        @(CPU_TYPE_MC88000) : @"mc88000",
+        @(CPU_TYPE_SPARC) : @"sparc",
+        @(CPU_TYPE_I860) : @"i860",
+        @(CPU_TYPE_POWERPC) : @"powerpc",
+        @(CPU_TYPE_POWERPC64) : @"powerpc64"
+    };
     NSString *string = cpuTypeStringDictionary[@(self.cpuType)];
     NSString *cpuTypeString = string ?: @(self.cpuType).stringValue;
     return cpuTypeString;
@@ -247,110 +247,109 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
 
 - (NSString *)cpuSubtypeString {
     NSDictionary *cpuSubtypeStringDictionaryDictionary = @{
-                                                           @(CPU_TYPE_ANY) : @{},
-                                                           @(CPU_TYPE_VAX) : @{
-                                                                   @(CPU_SUBTYPE_VAX_ALL) : @"vax",
-                                                                   @(CPU_SUBTYPE_VAX780) : @"vax780",
-                                                                   @(CPU_SUBTYPE_VAX785) : @"vax785",
-                                                                   @(CPU_SUBTYPE_VAX750) : @"vax750",
-                                                                   @(CPU_SUBTYPE_VAX730) : @"vax730",
-                                                                   @(CPU_SUBTYPE_UVAXI) : @"uvaxi",
-                                                                   @(CPU_SUBTYPE_UVAXII) : @"uvaxii",
-                                                                   @(CPU_SUBTYPE_VAX8200) : @"vax8200",
-                                                                   @(CPU_SUBTYPE_VAX8500) : @"vax8500",
-                                                                   @(CPU_SUBTYPE_VAX8600) : @"vax8600",
-                                                                   @(CPU_SUBTYPE_VAX8650) : @"vax8650",
-                                                                   @(CPU_SUBTYPE_VAX8800) : @"vax8800",
-                                                                   @(CPU_SUBTYPE_UVAXIII) : @"uvaxiii"
-                                                                   },
-                                                           @(CPU_TYPE_MC680x0) : @{
-                                                                   @(CPU_SUBTYPE_MC68030) : @"mc68030",
-                                                                   @(CPU_SUBTYPE_MC68040) : @"mc68040",
-                                                                   @(CPU_SUBTYPE_MC68030_ONLY) : @"mc68030only"
-                                                                   },
-                                                           @(CPU_TYPE_I386) : @{
-                                                                   @(CPU_SUBTYPE_I386_ALL) : @"i386",
-                                                                   @(CPU_SUBTYPE_486) : @"486",
-                                                                   @(CPU_SUBTYPE_486SX) : @"486sx",
-                                                                   @(CPU_SUBTYPE_586) : @"586",
-                                                                   @(CPU_SUBTYPE_PENT) : @"pent",
-                                                                   @(CPU_SUBTYPE_PENTPRO) : @"pentpro",
-                                                                   @(CPU_SUBTYPE_PENTII_M3) : @"pentii_m3",
-                                                                   @(CPU_SUBTYPE_PENTII_M5) : @"pentii_m5",
-                                                                   @(CPU_SUBTYPE_CELERON) : @"celeron",
-                                                                   @(CPU_SUBTYPE_CELERON_MOBILE) : @"celeron_mobile",
-                                                                   @(CPU_SUBTYPE_PENTIUM_3) : @"pentium_3",
-                                                                   @(CPU_SUBTYPE_PENTIUM_3_M) : @"pentium_3",
-                                                                   @(CPU_SUBTYPE_PENTIUM_3_XEON) : @"pentium_3_xeon",
-                                                                   @(CPU_SUBTYPE_PENTIUM_M) : @"pentium_m",
-                                                                   @(CPU_SUBTYPE_PENTIUM_4) : @"pentium_4",
-                                                                   @(CPU_SUBTYPE_PENTIUM_4_M) : @"pentium_4_m",
-                                                                   @(CPU_SUBTYPE_ITANIUM) : @"itanium",
-                                                                   @(CPU_SUBTYPE_ITANIUM_2) : @"itanium_2",
-                                                                   @(CPU_SUBTYPE_XEON) : @"xeon",
-                                                                   @(CPU_SUBTYPE_XEON_MP) : @"xeon_mp"
-                                                                   },
-                                                           @(CPU_TYPE_X86_64) : @{
-                                                                   @(CPU_SUBTYPE_X86_64_ALL) : @"x86_64",
-                                                                   @(CPU_SUBTYPE_X86_ARCH1) : @"x86_arch1",
-                                                                   @(CPU_SUBTYPE_X86_64_H) : @"x86_64_h"
-                                                                   },
-                                                           @(CPU_TYPE_MC98000) : @{
-                                                                   @(CPU_SUBTYPE_MC98000_ALL) : @"mc98000",
-                                                                   @(CPU_SUBTYPE_MC98601) : @"mc98601"
-                                                                   },
-                                                           @(CPU_TYPE_HPPA) : @{
-                                                                   @(CPU_SUBTYPE_HPPA_7100) : @"hppa_7100",
-                                                                   @(CPU_SUBTYPE_HPPA_7100LC) : @"hppa_7100lc"
-                                                                   },
-                                                           @(CPU_TYPE_ARM) : @{
-                                                                   @(CPU_SUBTYPE_ARM_ALL) : @"arm",
-                                                                   @(CPU_SUBTYPE_ARM_V4T) : @"arm_v4t",
-                                                                   @(CPU_SUBTYPE_ARM_V6) : @"arm_v6",
-                                                                   @(CPU_SUBTYPE_ARM_V5TEJ) : @"arm_v5tej",
-                                                                   @(CPU_SUBTYPE_ARM_XSCALE) : @"arm_xscale",
-                                                                   @(CPU_SUBTYPE_ARM_V7) : @"arm_v7",
-                                                                   @(CPU_SUBTYPE_ARM_V7F) : @"arm_v7f",
-                                                                   @(CPU_SUBTYPE_ARM_V7S) : @"arm_v7s",
-                                                                   @(CPU_SUBTYPE_ARM_V7K) : @"arm_v7k",
-                                                                   @(CPU_SUBTYPE_ARM_V6M) : @"arm_v6m",
-                                                                   @(CPU_SUBTYPE_ARM_V7M) : @"arm_v7m",
-                                                                   @(CPU_SUBTYPE_ARM_V7EM) : @"arm_v7em",
-                                                                   @(CPU_SUBTYPE_ARM_V8) : @"arm_v8"
-                                                                   },
-                                                           @(CPU_TYPE_ARM64) : @{
-                                                                   @(CPU_SUBTYPE_ARM64_ALL) : @"arm64",
-                                                                   @(CPU_SUBTYPE_ARM64_V8) : @"arm64_v8"
-                                                                   },
-                                                           @(CPU_TYPE_MC88000) : @{
-                                                                   @(CPU_SUBTYPE_MC88000_ALL) : @"mc88000",
-                                                                   @(CPU_SUBTYPE_MC88100) : @"mc88100",
-                                                                   @(CPU_SUBTYPE_MC88110) : @"mc88110"
-                                                                   },
-                                                           @(CPU_TYPE_SPARC) : @{
-                                                                   @(CPU_SUBTYPE_SPARC_ALL) : @"sparc"
-                                                                   },
-                                                           @(CPU_TYPE_I860) : @{
-                                                                   @(CPU_SUBTYPE_I860_ALL) : @"i860",
-                                                                   @(CPU_SUBTYPE_I860_860) : @"i860_860"
-                                                                   },
-                                                           @(CPU_TYPE_POWERPC) : @{
-                                                                   @(CPU_SUBTYPE_POWERPC_ALL) : @"powerpc",
-                                                                   @(CPU_SUBTYPE_POWERPC_601) : @"powerpc_601",
-                                                                   @(CPU_SUBTYPE_POWERPC_602) : @"powerpc_602",
-                                                                   @(CPU_SUBTYPE_POWERPC_603) : @"powerpc_603",
-                                                                   @(CPU_SUBTYPE_POWERPC_603e) : @"powerpc_603e",
-                                                                   @(CPU_SUBTYPE_POWERPC_603ev) : @"powerpc_603ev",
-                                                                   @(CPU_SUBTYPE_POWERPC_604) : @"powerpc_604",
-                                                                   @(CPU_SUBTYPE_POWERPC_604e) : @"powerpc_604e",
-                                                                   @(CPU_SUBTYPE_POWERPC_620) : @"powerpc_620",
-                                                                   @(CPU_SUBTYPE_POWERPC_750) : @"powerpc_750",
-                                                                   @(CPU_SUBTYPE_POWERPC_7400) : @"powerpc_7400",
-                                                                   @(CPU_SUBTYPE_POWERPC_7450) : @"powerpc_7450",
-                                                                   @(CPU_SUBTYPE_POWERPC_970) : @"powerpc_970"
-                                                                   },
-                                                           @(CPU_TYPE_POWERPC64) : @{}
-                                              };
+        @(CPU_TYPE_ANY) : @{},
+        @(CPU_TYPE_VAX) : @{
+                @(CPU_SUBTYPE_VAX_ALL) : @"vax",
+                @(CPU_SUBTYPE_VAX780) : @"vax780",
+                @(CPU_SUBTYPE_VAX785) : @"vax785",
+                @(CPU_SUBTYPE_VAX750) : @"vax750",
+                @(CPU_SUBTYPE_VAX730) : @"vax730",
+                @(CPU_SUBTYPE_UVAXI) : @"uvaxi",
+                @(CPU_SUBTYPE_UVAXII) : @"uvaxii",
+                @(CPU_SUBTYPE_VAX8200) : @"vax8200",
+                @(CPU_SUBTYPE_VAX8500) : @"vax8500",
+                @(CPU_SUBTYPE_VAX8600) : @"vax8600",
+                @(CPU_SUBTYPE_VAX8650) : @"vax8650",
+                @(CPU_SUBTYPE_VAX8800) : @"vax8800",
+                @(CPU_SUBTYPE_UVAXIII) : @"uvaxiii"
+        },
+        @(CPU_TYPE_MC680x0) : @{
+                @(CPU_SUBTYPE_MC68030) : @"mc68030",
+                @(CPU_SUBTYPE_MC68040) : @"mc68040",
+                @(CPU_SUBTYPE_MC68030_ONLY) : @"mc68030only"
+        },
+        @(CPU_TYPE_I386) : @{
+                @(CPU_SUBTYPE_I386_ALL) : @"i386",
+                @(CPU_SUBTYPE_486) : @"486",
+                @(CPU_SUBTYPE_486SX) : @"486sx",
+                @(CPU_SUBTYPE_586 /* CPU_SUBTYPE_PENT */) : @"586/pent",
+                @(CPU_SUBTYPE_PENTPRO) : @"pentpro",
+                @(CPU_SUBTYPE_PENTII_M3) : @"pentii_m3",
+                @(CPU_SUBTYPE_PENTII_M5) : @"pentii_m5",
+                @(CPU_SUBTYPE_CELERON) : @"celeron",
+                @(CPU_SUBTYPE_CELERON_MOBILE) : @"celeron_mobile",
+                @(CPU_SUBTYPE_PENTIUM_3) : @"pentium_3",
+                @(CPU_SUBTYPE_PENTIUM_3_M) : @"pentium_3",
+                @(CPU_SUBTYPE_PENTIUM_3_XEON) : @"pentium_3_xeon",
+                @(CPU_SUBTYPE_PENTIUM_M) : @"pentium_m",
+                @(CPU_SUBTYPE_PENTIUM_4) : @"pentium_4",
+                @(CPU_SUBTYPE_PENTIUM_4_M) : @"pentium_4_m",
+                @(CPU_SUBTYPE_ITANIUM) : @"itanium",
+                @(CPU_SUBTYPE_ITANIUM_2) : @"itanium_2",
+                @(CPU_SUBTYPE_XEON) : @"xeon",
+                @(CPU_SUBTYPE_XEON_MP) : @"xeon_mp"
+        },
+        @(CPU_TYPE_X86_64) : @{
+                @(CPU_SUBTYPE_X86_64_ALL) : @"x86_64",
+                @(CPU_SUBTYPE_X86_ARCH1) : @"x86_arch1",
+                @(CPU_SUBTYPE_X86_64_H) : @"x86_64_h"
+        },
+        @(CPU_TYPE_MC98000) : @{
+                @(CPU_SUBTYPE_MC98000_ALL) : @"mc98000",
+                @(CPU_SUBTYPE_MC98601) : @"mc98601"
+        },
+        @(CPU_TYPE_HPPA) : @{
+                @(CPU_SUBTYPE_HPPA_7100) : @"hppa_7100",
+                @(CPU_SUBTYPE_HPPA_7100LC) : @"hppa_7100lc"
+        },
+        @(CPU_TYPE_ARM) : @{
+                @(CPU_SUBTYPE_ARM_ALL) : @"arm",
+                @(CPU_SUBTYPE_ARM_V4T) : @"arm_v4t",
+                @(CPU_SUBTYPE_ARM_V6) : @"arm_v6",
+                @(CPU_SUBTYPE_ARM_V5TEJ) : @"arm_v5tej",
+                @(CPU_SUBTYPE_ARM_XSCALE) : @"arm_xscale",
+                @(CPU_SUBTYPE_ARM_V7) : @"arm_v7",
+                @(CPU_SUBTYPE_ARM_V7F) : @"arm_v7f",
+                @(CPU_SUBTYPE_ARM_V7S) : @"arm_v7s",
+                @(CPU_SUBTYPE_ARM_V7K) : @"arm_v7k",
+                @(CPU_SUBTYPE_ARM_V6M) : @"arm_v6m",
+                @(CPU_SUBTYPE_ARM_V7M) : @"arm_v7m",
+                @(CPU_SUBTYPE_ARM_V7EM) : @"arm_v7em",
+                @(CPU_SUBTYPE_ARM_V8) : @"arm_v8"
+        },
+        @(CPU_TYPE_ARM64) : @{
+                @(CPU_SUBTYPE_ARM64_ALL) : @"arm64",
+                @(CPU_SUBTYPE_ARM64_V8) : @"arm64_v8"
+        },
+        @(CPU_TYPE_MC88000) : @{
+                @(CPU_SUBTYPE_MC88000_ALL) : @"mc88000",
+                @(CPU_SUBTYPE_MC88100) : @"mc88100",
+                @(CPU_SUBTYPE_MC88110) : @"mc88110"
+        },
+        @(CPU_TYPE_SPARC) : @{
+                @(CPU_SUBTYPE_SPARC_ALL) : @"sparc"
+        },
+        @(CPU_TYPE_I860) : @{
+                @(CPU_SUBTYPE_I860_ALL) : @"i860",
+                @(CPU_SUBTYPE_I860_860) : @"i860_860"
+        },
+        @(CPU_TYPE_POWERPC) : @{
+                @(CPU_SUBTYPE_POWERPC_ALL) : @"powerpc",
+                @(CPU_SUBTYPE_POWERPC_601) : @"powerpc_601",
+                @(CPU_SUBTYPE_POWERPC_602) : @"powerpc_602",
+                @(CPU_SUBTYPE_POWERPC_603) : @"powerpc_603",
+                @(CPU_SUBTYPE_POWERPC_603e) : @"powerpc_603e",
+                @(CPU_SUBTYPE_POWERPC_603ev) : @"powerpc_603ev",
+                @(CPU_SUBTYPE_POWERPC_604) : @"powerpc_604",
+                @(CPU_SUBTYPE_POWERPC_604e) : @"powerpc_604e",
+                @(CPU_SUBTYPE_POWERPC_620) : @"powerpc_620",
+                @(CPU_SUBTYPE_POWERPC_750) : @"powerpc_750",
+                @(CPU_SUBTYPE_POWERPC_7400) : @"powerpc_7400",
+                @(CPU_SUBTYPE_POWERPC_7450) : @"powerpc_7450",
+                @(CPU_SUBTYPE_POWERPC_970) : @"powerpc_970"
+        },
+        @(CPU_TYPE_POWERPC64) : @{}
+    };
     NSDictionary *cpuSubtypeStringDictionary = cpuSubtypeStringDictionaryDictionary[@(self.cpuType)];
     NSString *string = cpuSubtypeStringDictionary[@(self.cpuSubtype)];
     NSString *cpuSubtypeString = string ?: @(self.cpuSubtype).stringValue;

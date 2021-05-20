@@ -12,7 +12,7 @@
 #import "NSObject+PDLMethod.h"
 #import "pdl_security.h"
 
-void PDLDebugThreadSafe(NSUInteger threadCount, NSUInteger loopCount, void(^action)(NSUInteger threadIndex, NSUInteger loopIndex), void(^completion)(NSTimeInterval duration)) {
+void pdl_debugThreadSafe(NSUInteger threadCount, NSUInteger loopCount, void(^action)(NSUInteger threadIndex, NSUInteger loopIndex), void(^completion)(NSTimeInterval duration)) {
     if (!action) {
         return;
     }
