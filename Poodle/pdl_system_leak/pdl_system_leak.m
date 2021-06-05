@@ -147,7 +147,7 @@ BOOL pdl_system_leak_enable_NEHotspotNetwork(void) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         pdl_common_init();
-        pdl_enabled_NEHotspotNetwork = [object_getClass([NEHotspotNetwork class]) pdl_interceptSelector:@selector(fetchCurrentWithCompletionHandler:) withInterceptorImplementation:(IMP)&pdl_NEHotspotNetworkFetchCurrentWithCompletionHandler];
+        pdl_enabled_NEHotspotNetwork = [object_getClass([NEHotspotNetwork class]) pdl_interceptSelector:sel_registerName("fetchCurrentWithCompletionHandler:") withInterceptorImplementation:(IMP)&pdl_NEHotspotNetworkFetchCurrentWithCompletionHandler];
     });
     return pdl_enabled_NEHotspotNetwork;
 }
