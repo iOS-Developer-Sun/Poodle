@@ -15,6 +15,7 @@ extern "C" {
 @interface NSObject (PDLDebug)
 
 @property (class, readonly) NSArray *pdl_subclasses;
+@property (class, readonly) NSArray *pdl_directSubclasses;
 @property (class, readonly) NSArray *pdl_ivars;
 @property (class, readonly) NSArray *pdl_classMethods;
 @property (class, readonly) NSArray *pdl_instanceMethods;
@@ -38,6 +39,7 @@ extern "C" {
 - (instancetype)pdl_autoreleaseRetained;
 
 extern NSArray *pdl_class_subclasses(Class aClass);
+extern NSArray *pdl_class_directSubclasses(Class aClass);
 extern NSArray *pdl_class_ivars(Class aClass);
 extern NSArray *pdl_class_classMethods(Class aClass);
 extern NSArray *pdl_class_instanceMethods(Class aClass);
