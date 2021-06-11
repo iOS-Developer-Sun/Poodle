@@ -19,6 +19,10 @@
     return pdl_class_subclasses(self);
 }
 
++ (NSArray *)pdl_directSubclasses {
+    return pdl_class_directSubclasses(self);
+}
+
 + (NSArray *)pdl_ivars {
     return pdl_class_ivars(self);
 }
@@ -119,6 +123,25 @@ NSDictionary *pdl_propertiesDescriptionForClass(id self, Class aClass) {
 }
 
 NSArray *pdl_class_subclasses(Class aClass) {
+    NSMutableArray *subclasses = [NSMutableArray array];
+    unsigned int outCount = 0;
+    Class *classList = objc_copyClassList(&outCount);
+    for (unsigned int i = 0; i < outCount; i++) {
+        Class eachClass = classList[i];
+        Class superclass = class_getSuperclass(eachClass);
+        while (superclass) {
+            if (superclass == aClass) {
+                [subclasses addObject:@(class_getName(eachClass))];
+                break;;
+            }
+            superclass = class_getSuperclass(superclass);
+        }
+    }
+    free(classList);
+    return [subclasses copy];
+}
+
+NSArray *pdl_class_directSubclasses(Class aClass) {
     NSMutableArray *subclasses = [NSMutableArray array];
     unsigned int outCount = 0;
     Class *classList = objc_copyClassList(&outCount);
