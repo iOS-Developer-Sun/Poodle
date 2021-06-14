@@ -63,7 +63,7 @@
     NSDictionary *superclassDictionary = @{@"title" : @"superclass", @"data" : @[@(superClassName)]};
 
     NSMutableArray *subclasses = [NSMutableArray array];
-    for (NSString *subclass in pdl_class_subclasses(aClass)) {
+    for (NSString *subclass in pdl_class_directSubclasses(aClass)) {
         [subclasses addObject:subclass];
     }
     NSDictionary *subclassesDictionary = @{@"title" : @"subclasses", @"data" : subclasses};
