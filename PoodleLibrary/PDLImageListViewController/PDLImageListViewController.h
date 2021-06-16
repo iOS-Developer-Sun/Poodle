@@ -6,8 +6,8 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import "PDLViewController.h"
+#import "PDLSearchBarTableViewController.h"
 
-@interface PDLImageListViewController : PDLViewController
+@interface PDLImageListViewController : PDLSearchBarTableViewController
 
 @end

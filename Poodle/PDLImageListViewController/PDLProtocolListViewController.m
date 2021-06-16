@@ -10,88 +10,23 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 #import "PDLProtocolViewController.h"
-#import "PDLKeyboardNotificationObserver.h"
 
-@interface PDLProtocolListViewController () <UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, PDLKeyboardNotificationObserver>
-
-@property (nonatomic, weak) UITableView *tableView;
-@property (nonatomic, weak) UISearchBar *searchBar;
-@property (nonatomic, weak) UITapGestureRecognizer *tapGestureRecognizer;
-@property (nonatomic, copy) NSArray *protocols;
-@property (nonatomic, copy) NSArray *filteredProtocols;
+@interface PDLProtocolListViewController ()
 
 @end
 
 @implementation PDLProtocolListViewController
-
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        ;
-    }
-    return self;
-}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
     self.title = @"Protocols";
-
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
-    searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    searchBar.delegate = self;
-    searchBar.keyboardType = UIKeyboardTypeASCIICapable;
-    [self.view addSubview:searchBar];
-    self.searchBar = searchBar;
-
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, searchBar.frame.origin.y + searchBar.frame.size.height, self.view.frame.size.width, self.view.frame.size.height - (searchBar.frame.origin.y + searchBar.frame.size.height)) style:UITableViewStylePlain];
-    tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:tableView];
-    self.tableView = tableView;
-
-    UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)];
-    tapGestureRecognizer.enabled = NO;
-    [self.view addGestureRecognizer:tapGestureRecognizer];
-    self.tapGestureRecognizer = tapGestureRecognizer;
-
-    [self loadProtocols];
-    [self filterWithString:nil];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)loadData {
+    [super loadData];
 
-    [[PDLKeyboardNotificationObserver observerForDelegate:self] startObserving];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-
-    [[PDLKeyboardNotificationObserver observerForDelegate:self] stopObserving];
-}
-
-- (void)dealloc {
-    _tableView.dataSource = nil;
-    _tableView.delegate = nil;
-}
-
-- (void)keyboardShowAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
-    self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.view.frame.size.height - (self.searchBar.frame.origin.y + self.searchBar.frame.size.height) - keyboardHeight);
-}
-
-- (void)keyboardHideAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
-    self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.view.frame.size.height - (self.searchBar.frame.origin.y + self.searchBar.frame.size.height));
-}
-
-- (void)tap {
-    [self.searchBar resignFirstResponder];
-}
-
-- (void)loadProtocols {
     unsigned int outCount = 0;
     NSMutableArray *protocolArray = [NSMutableArray array];
     Protocol * __unsafe_unretained *protocolList = objc_copyProtocolList(&outCount);
@@ -100,18 +35,20 @@
         [protocolArray addObject:@(protocol_getName(protocol))];
     }
     free(protocolList);
-    self.protocols = protocolArray;
-    self.title = [@"Protocols" stringByAppendingFormat:@"(%@)", @(self.protocols.count)];
+    self.data = protocolArray;
+    self.title = [@"Protocols" stringByAppendingFormat:@"(%@)", @(self.data.count)];
 }
 
 - (void)filterWithString:(NSString *)string {
+    [super filterWithString:string];
+
     if (string.length == 0) {
-        self.filteredProtocols = self.protocols;
+        self.filteredData = self.data;
         return;
     }
 
     NSMutableArray *filteredProtocols = [NSMutableArray array];
-    for (NSString *protocolName in self.protocols) {
+    for (NSString *protocolName in self.data) {
         NSRange range = [protocolName rangeOfString:string options:NSCaseInsensitiveSearch];
         if (range.location == 0 && range.length == protocolName.length) {
             [filteredProtocols insertObject:protocolName atIndex:0];
@@ -119,23 +56,10 @@
             [filteredProtocols addObject:protocolName];
         }
     }
-    self.filteredProtocols = filteredProtocols;
+    self.filteredData = filteredProtocols;
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
-
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger numbers = self.filteredProtocols.count;
-    return numbers;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 44;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewAutomaticDimension;
-}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     NSString *identifier = @"";
@@ -145,66 +69,17 @@
         cell.textLabel.numberOfLines = 0;
         cell.textLabel.font = [UIFont systemFontOfSize:10];
     }
-    NSString *imageName = self.filteredProtocols[indexPath.row];
+    NSString *imageName = self.filteredData[indexPath.row];
     cell.textLabel.text = imageName;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    [self.searchBar resignFirstResponder];
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
 
-    NSString *protocolName = self.filteredProtocols[indexPath.row];
+    NSString *protocolName = self.filteredData[indexPath.row];
     PDLProtocolViewController *viewController = [[PDLProtocolViewController alloc] initWithProtocolName:protocolName];
     [self.navigationController pushViewController:viewController animated:YES];
-}
-
-#pragma mark - UISearchviewControllerhBarDelegate
-
-- (BOOL)searchBarShouldBeginEditing:(UISearchBar *)searchBar {
-    return YES;
-}
-
-- (void)searchBarTextDidBeginEditing:(UISearchBar *)searchBar {
-    self.tapGestureRecognizer.enabled = YES;
-}
-
-- (BOOL)searchBarShouldEndEditing:(UISearchBar *)searchBar {
-    return YES;
-}
-
-- (void)searchBarTextDidEndEditing:(UISearchBar *)searchBar {
-    self.tapGestureRecognizer.enabled = NO;
-}
-
-- (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
-    NSString *text = searchBar.text;
-    [self filterWithString:text];
-    [self.tableView reloadData];
-}
-
-- (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {
-    return YES;
-}
-
-- (void)searchBarSearchButtonClicked:(UISearchBar *)searchBar {
-    [searchBar resignFirstResponder];
-}
-
-- (void)searchBarBookmarkButtonClicked:(UISearchBar *)searchBar {
-    ;
-}
-
-- (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar {
-    ;
-}
-
-- (void)searchBarResultsListButtonClicked:(UISearchBar *)searchBar {
-    ;
-}
-
-- (void)searchBar:(UISearchBar *)searchBar selectedScopeButtonIndexDidChange:(NSInteger)selectedScope {
-    ;
 }
 
 @end

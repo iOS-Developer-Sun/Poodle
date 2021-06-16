@@ -10,12 +10,9 @@
 #import <objc/runtime.h>
 #import "NSObject+PDLDebug.h"
 
-@interface PDLClassViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface PDLClassViewController ()
 
 @property (nonatomic, copy) NSString *className;
-
-@property (nonatomic, weak) UITableView *tableView;
-@property (nonatomic, copy) NSArray <NSDictionary *>*dataSource;
 
 @end
 
@@ -35,23 +32,11 @@
 
     Class aClass = NSClassFromString(self.className);
     self.title = [NSString stringWithFormat:@"%@(%@)", self.className, @(class_getInstanceSize(aClass))];
-
-    UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    [self.view addSubview:tableView];
-    self.tableView = tableView;
-
-    [self loadClass];
 }
 
-- (void)dealloc {
-    _tableView.dataSource = nil;
-    _tableView.delegate = nil;
-}
+- (void)loadData {
+    [super loadData];
 
-- (void)loadClass {
     Class aClass = NSClassFromString(self.className);
     if (aClass == Nil) {
         return;
@@ -68,6 +53,13 @@
     }
     NSDictionary *subclassesDictionary = @{@"title" : @"subclasses", @"data" : subclasses};
 
+    NSMutableArray *protocols = [NSMutableArray array];
+    for (NSDictionary *dictionary in pdl_class_protocols(aClass)) {
+        NSString *string = dictionary.description;
+        [protocols addObject:string];
+    }
+    NSDictionary *protocolsDictionary = @{@"title" : @"protocols", @"data" : protocols};
+
     NSMutableArray *ivars = [NSMutableArray array];
     for (NSDictionary *dictionary in pdl_class_ivars(aClass)) {
         NSString *string = dictionary.description;
@@ -81,13 +73,6 @@
         [properties addObject:string];
     }
     NSDictionary *propertiesDictionary = @{@"title" : @"properties", @"data" : properties};
-
-    NSMutableArray *protocols = [NSMutableArray array];
-    for (NSDictionary *dictionary in pdl_class_protocols(aClass)) {
-        NSString *string = dictionary.description;
-        [protocols addObject:string];
-    }
-    NSDictionary *protocolsDictionary = @{@"title" : @"protocols", @"data" : protocols};
 
     NSMutableArray *classMethods = [NSMutableArray array];
     for (NSDictionary *dictionary in pdl_class_classMethods(aClass)) {
@@ -103,32 +88,49 @@
     }
     NSDictionary *instanceMethodsDictionary = @{@"title" : @"instance methods", @"data" : instanceMethods};
 
-    self.dataSource = @[superclassDictionary, subclassesDictionary, ivarsDictionary, propertiesDictionary, protocolsDictionary, classMethodsDictionary, instanceMethodsDictionary];
+    self.data = @[superclassDictionary, subclassesDictionary, protocolsDictionary, ivarsDictionary, propertiesDictionary, classMethodsDictionary, instanceMethodsDictionary];
+}
+
+- (void)filterWithString:(NSString *)string {
+    [super filterWithString:string];
+
+    if (string.length == 0) {
+        self.filteredData = self.data;
+        return;
+    }
+
+    NSMutableArray *filteredData = [NSMutableArray array];
+    for (NSDictionary *dictionary in self.data) {
+        NSMutableDictionary *result = [dictionary mutableCopy];
+        NSMutableArray *items = [NSMutableArray array];
+        for (id item in dictionary[@"data"]) {
+            NSString *text = [item description];
+            NSRange range = [text rangeOfString:string options:NSCaseInsensitiveSearch];
+            if (range.location != NSNotFound) {
+                [items addObject:item];
+            }
+        }
+        result[@"data"] = items;
+        [filteredData addObject:result];
+    }
+    self.filteredData = filteredData;
 }
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
-    return self.dataSource[section][@"title"];
+    return self.filteredData[section][@"title"];
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
-    NSInteger numbers = self.dataSource.count;
+    NSInteger numbers = self.filteredData.count;
     return numbers;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSArray *data = self.dataSource[section][@"data"];
+    NSArray *data = self.filteredData[section][@"data"];
     NSInteger numbers = data.count;
     return numbers;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return 44;
-}
-
-- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-    return UITableViewAutomaticDimension;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -139,13 +141,13 @@
         cell.textLabel.numberOfLines = 0;
         cell.textLabel.font = [UIFont systemFontOfSize:10];
     }
-    NSDictionary *dictionary = self.dataSource[indexPath.section][@"data"][indexPath.row];
+    NSDictionary *dictionary = self.filteredData[indexPath.section][@"data"][indexPath.row];
     cell.textLabel.text = dictionary.description;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
 
     if (indexPath.section == 0) {
         Class aClass = NSClassFromString(self.className);
@@ -155,10 +157,27 @@
             [self.navigationController pushViewController:viewController animated:YES];
         }
     } else if (indexPath.section == 1) {
-        NSString *subclassString = self.dataSource[indexPath.section][@"data"][indexPath.row];
+        NSString *subclassString = self.filteredData[indexPath.section][@"data"][indexPath.row];
         PDLClassViewController *viewController = [[self.class alloc] initWithClassName:subclassString];
         [self.navigationController pushViewController:viewController animated:YES];
     }
 }
+
+- (NSArray *)sectionIndexTitlesForTableView:(UITableView *)tableView {
+    return @[
+        @":",
+        @"::",
+        @"<>",
+        @"_",
+        @"@",
+        @"+",
+        @"-",
+    ];
+}
+
+- (NSInteger)tableView:(UITableView *)tableView sectionForSectionIndexTitle:(NSString *)title atIndex:(NSInteger)index {
+    return index;
+}
+
 
 @end

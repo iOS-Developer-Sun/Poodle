@@ -6,9 +6,9 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#import "PDLViewController.h"
+#import "PDLSearchBarTableViewController.h"
 
-@interface PDLClassListViewController : PDLViewController
+@interface PDLClassListViewController : PDLSearchBarTableViewController
 
 - (instancetype)initWithImageName:(NSString *)imageName;
 
