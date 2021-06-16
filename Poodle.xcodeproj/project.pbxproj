@@ -37,6 +37,8 @@
 		B83CAA78248B487E009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA82248B49C9009C784A /* pdl_security.c in Sources */ = {isa = PBXBuildFile; fileRef = B83CAA77248B487E009C784A /* pdl_security.c */; };
 		B83CAA83248B49D1009C784A /* pdl_security.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B83CAA74248B4830009C784A /* pdl_security.h */; };
+		B842DD89267A0A0E00DD5A5F /* PDLSearchBarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B842DD88267A0A0E00DD5A5F /* PDLSearchBarTableViewController.m */; };
+		B842DD8A267A0A2000DD5A5F /* PDLSearchBarTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B842DD88267A0A0E00DD5A5F /* PDLSearchBarTableViewController.m */; };
 		B847222025524C5A00387EB4 /* PDLRunLoopObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528188255132CA00B74F87 /* PDLRunLoopObserver.m */; };
 		B847222125524C5A00387EB4 /* PDLRunLoopObserverLoop.m in Sources */ = {isa = PBXBuildFile; fileRef = B8528187255132CA00B74F87 /* PDLRunLoopObserverLoop.m */; };
 		B847227725524C6400387EB4 /* PDLRunLoopObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8528186255132CA00B74F87 /* PDLRunLoopObserver.h */; };
@@ -2232,6 +2234,8 @@
 		B83CAA77248B487E009C784A /* pdl_security.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_security.c; sourceTree = "<group>"; };
 		B83CAA81248B49B4009C784A /* libpdl_security.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_security.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B83CAA8B248BA622009C784A /* pdl_thread_define.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_thread_define.h; sourceTree = "<group>"; };
+		B842DD87267A0A0E00DD5A5F /* PDLSearchBarTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLSearchBarTableViewController.h; sourceTree = "<group>"; };
+		B842DD88267A0A0E00DD5A5F /* PDLSearchBarTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLSearchBarTableViewController.m; sourceTree = "<group>"; };
 		B84C805425CD1E280086CD36 /* PDLCrashViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLCrashViewController.h; sourceTree = "<group>"; };
 		B84C805525CD1E280086CD36 /* PDLCrashViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLCrashViewController.m; sourceTree = "<group>"; };
 		B84C81E325CD3B580086CD36 /* libPDLCrash.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLCrash.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4380,6 +4384,8 @@
 				B8E56E9923D70019008D2DA1 /* PDLProtocolListViewController.m */,
 				B8E56E9823D70019008D2DA1 /* PDLProtocolViewController.h */,
 				B8E56E9D23D70019008D2DA1 /* PDLProtocolViewController.m */,
+				B842DD87267A0A0E00DD5A5F /* PDLSearchBarTableViewController.h */,
+				B842DD88267A0A0E00DD5A5F /* PDLSearchBarTableViewController.m */,
 			);
 			path = PDLImageListViewController;
 			sourceTree = "<group>";
@@ -8534,6 +8540,7 @@
 			files = (
 				B8E56F8323D704A8008D2DA1 /* PDLProtocolListViewController.m in Sources */,
 				B8E56F8423D704A8008D2DA1 /* PDLProtocolViewController.m in Sources */,
+				B842DD8A267A0A2000DD5A5F /* PDLSearchBarTableViewController.m in Sources */,
 				B8E56F8123D704A1008D2DA1 /* PDLClassListViewController.m in Sources */,
 				B8E56F8223D704A1008D2DA1 /* PDLClassViewController.m in Sources */,
 				B8E56F7F23D70483008D2DA1 /* PDLImageListViewController.m in Sources */,
@@ -8705,6 +8712,7 @@
 				B85D4625240E861A00CBF758 /* PDLDirectoryViewControllerResources.c in Sources */,
 				B85D4619240E85B000CBF758 /* dsc_extractor.cpp in Sources */,
 				B85D461A240E85B000CBF758 /* dsc_iterator.cpp in Sources */,
+				B842DD89267A0A0E00DD5A5F /* PDLSearchBarTableViewController.m in Sources */,
 				B85D4605240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-arm.s in Sources */,
 				B85D4606240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-arm64.s in Sources */,
 				B80A5AA0262527E0003EAA7D /* PDLDebug.m in Sources */,
