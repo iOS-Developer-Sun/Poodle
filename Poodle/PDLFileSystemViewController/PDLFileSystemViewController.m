@@ -43,9 +43,20 @@
     [tableHeaderView addSubview:textView];
     self.inputView = textView;
     
-    self.directories = @[@{@"name" : @"App", @"path" : [[NSBundle mainBundle] bundlePath]},
-                         @{@"name" : @"Sandbox", @"path" : NSHomeDirectory()}
-                         ];
+    self.directories = @[
+        @{
+            @"name" : @"App",
+            @"path" : [[NSBundle mainBundle] bundlePath],
+        },
+        @{
+            @"name" : @"Sandbox",
+            @"path" : NSHomeDirectory(),
+        },
+        @{
+            @"name" : @"Library",
+            @"path" : @"/System/Library/",
+        },
+    ];
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Go" style:UIBarButtonItemStylePlain target:self action:@selector(gotoCustomPath)];
 }
