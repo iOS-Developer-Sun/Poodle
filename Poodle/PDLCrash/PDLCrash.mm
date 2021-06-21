@@ -291,6 +291,10 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return NO;
     }
 
+    if (strcmp(sname, "<redacted>") == 0) {
+        ;
+    }
+
     if (symbolicatedLine) {
         NSString *symbolicatedSymbol = [self.class demangle:@(sname)] ?: @(sname);
         uintptr_t currentOffset = current - (uintptr_t)info.dli_saddr;
