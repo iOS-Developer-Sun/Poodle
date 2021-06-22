@@ -11,6 +11,7 @@
 #import <dlfcn.h>
 #import <cxxabi.h>
 #import "PDLSystemImage.h"
+#import "PDLSharedCache.h"
 
 typedef NS_ENUM(NSUInteger, PDLCrashType) {
     PDLCrashTypeCrash,
@@ -291,12 +292,18 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return NO;
     }
 
+    NSString *snameString = @(sname);
     if (strcmp(sname, "<redacted>") == 0) {
-        ;
+        PDLSharedCacheImage *sharedCacheImage = [[PDLSharedCache sharedInstance] sharedCacheImageWithImageName:name];
+        PDLSharedCacheSymbol *sharedCacheSymbol = [sharedCacheImage symbolOfAddress:offset];
+        snameString = sharedCacheSymbol.name;
+        if (snameString.length > 1 && [snameString hasPrefix:@"_"]) {
+            snameString = [snameString substringFromIndex:1];
+        }
     }
 
     if (symbolicatedLine) {
-        NSString *symbolicatedSymbol = [self.class demangle:@(sname)] ?: @(sname);
+        NSString *symbolicatedSymbol = [self.class demangle:snameString] ?: snameString;
         uintptr_t currentOffset = current - (uintptr_t)info.dli_saddr;
         NSString *prefix = [line substringToIndex:symbolBegin];
         NSString *result = [NSString stringWithFormat:@"%@ %@ + %@", prefix, symbolicatedSymbol, @(currentOffset)];
