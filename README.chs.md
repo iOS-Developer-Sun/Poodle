@@ -136,8 +136,6 @@ hook该属性的setter/getter到总setter/getter入口，getter入口内调用lo
 
 公开系统image的stub和sect类型的symbol，为其他组件提供支持
 
-dyld_shared_cache在iOS系统中解压，并解析指定image，获取调试符号的地址偏移量
-
 ## pdl_mach_o_symbol_pointer
 
 提供指定名称的symbol偏移量，先在加载的image中查找，然后在dyld_shared_cache中查找
@@ -152,7 +150,7 @@ mach-o文件解析工具
 
 ## pdl_malloc
 
-像Malloc stack logging一样，提供内存的的live、free信息，以及提供查询指定地址的堆内存header地址、分配大小信息的功能，
+查询指定地址的堆内存header地址、分配大小信息的功能
 
 ## pdl_objc_message
 
@@ -409,6 +407,10 @@ hook语法糖的类方法和所有子类的读取方法，并进行越界/非空
 ## PDLSessionTaskStatisticsManager
 
 网络请求统计
+
+## PDLSharedCache
+
+dyld_shared_cache在iOS系统中解压，并根据地址查找符号
 
 ## PDLSystemImage
 
