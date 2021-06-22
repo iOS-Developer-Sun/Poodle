@@ -9,11 +9,64 @@
 #import "PDLSharedCache.h"
 #import "dsc_extractor.h"
 #import "pdl_mach_object.h"
+#import "pdl_mach_o_symbols.h"
+
+@implementation PDLSharedCacheSymbol
+
+- (NSString *)description {
+    NSString *description = [super description];
+    return [description stringByAppendingFormat:@"name: %@, offset: %p, n_type: %@, n_sect: %@, n_desc: %@, n_value: %@", self.name, (void *)self.offset, @(self.n_type), @(self.n_sect), @(self.n_desc), @(self.n_value)];
+}
+
+@end
+
+@interface PDLSharedCacheImage ()
+
+@property (nonatomic, copy) NSArray <PDLSharedCacheSymbol *>*symbols;
+@property (nonatomic, assign) uintptr_t endAddress;
+
+@end
+
+@implementation PDLSharedCacheImage
+
++ (PDLSharedCacheSymbol *)symbol:(NSArray <PDLSharedCacheSymbol *>*)symbols address:(uintptr_t)address {
+    PDLSharedCacheSymbol *symbol = nil;
+    if (symbols.count == 1) {
+        symbol = symbols[0];
+    } else if (symbols.count == 2) {
+        PDLSharedCacheSymbol *first = symbols[0];
+        PDLSharedCacheSymbol *last = symbols[1];
+        if (address >= first.offset && address < last.offset) {
+            symbol = first;
+        } else {
+            symbol = last;
+        }
+    } else {
+        PDLSharedCacheSymbol *middle = symbols[symbols.count / 2];
+        if (address < middle.offset) {
+            symbol = [self symbol:[symbols subarrayWithRange:NSMakeRange(0, symbols.count / 2)] address:address];
+        } else {
+            symbol = [self symbol:[symbols subarrayWithRange:NSMakeRange(symbols.count / 2, symbols.count - symbols.count / 2)] address:address];
+        }
+    }
+    return symbol;
+}
+
+- (PDLSharedCacheSymbol *)symbolOfAddress:(uintptr_t)address {
+    if (address >= self.endAddress) {
+        return nil;
+    }
+
+    return [self.class symbol:self.symbols address:address];
+}
+
+@end
 
 @interface PDLSharedCache ()
 
 @property (nonatomic, copy, readonly) NSString *systemCacheFile;
 @property (nonatomic, copy, readonly) NSString *cachePath;
+@property (nonatomic, strong) NSMutableDictionary *images;
 
 @end
 
@@ -64,6 +117,8 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
+        _images = [NSMutableDictionary dictionary];
+
         NSString *systemCachePath = @"/System/Library/Caches/com.apple.dyld";
         NSError *error = nil;
         NSArray *filenames = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:systemCachePath error:&error];
@@ -97,6 +152,18 @@
     return self;
 }
 
+- (BOOL)extract:(NSString *)imageName {
+    if (!imageName) {
+        return NO;
+    }
+
+    const char *imageNames[2];
+    imageNames[0] = imageName.UTF8String;
+    imageNames[1] = NULL;
+    int ret = dyld_shared_cache_extract_dylibs(self.systemCacheFile.UTF8String, self.cachePath.UTF8String, imageNames);
+    return ret == 0;
+}
+
 - (NSString *)sharedCachePathWithImageName:(NSString *)imageName {
     NSString *path = [self.cachePath stringByAppendingPathComponent:imageName];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -111,16 +178,131 @@
     return nil;
 }
 
-- (BOOL)extract:(NSString *)imageName {
-    if (!imageName) {
-        return NO;
+- (PDLSharedCacheImage *)sharedCacheImageWithImageName:(NSString *)imageName {
+    if (imageName.length == 0) {
+        return nil;
     }
 
-    const char *imageNames[2];
-    imageNames[0] = imageName.UTF8String;
-    imageNames[1] = NULL;
-    int ret = dyld_shared_cache_extract_dylibs(self.systemCacheFile.UTF8String, self.cachePath.UTF8String, imageNames);
-    return ret == 0;
+    @synchronized (self.images) {
+        PDLSharedCacheImage *image = self.images[imageName];
+        if (image) {
+            return image;
+        }
+
+        NSString *path = [self sharedCachePathWithImageName:imageName];
+        if (!path) {
+            return nil;
+        }
+
+        NSData *data = [NSData dataWithContentsOfFile:path];
+        struct mach_header *live = pdl_mach_o_image(imageName.UTF8String);
+        cpu_type_t my_cputype = live->cputype;
+        cpu_subtype_t my_cpusubtype = live->cpusubtype;
+
+        struct mach_header *header = NULL;
+        pdl_fat_object object;
+        pdl_fat_object *fat_object = &object;
+        bool isFat = pdl_get_fat_object_with_header((const struct fat_header *)data.bytes, fat_object);
+        if (isFat) {
+            uint32_t archCount = fat_object->arch_count;
+            if (fat_object->swaps) {
+                archCount = OSSwapInt32(archCount);
+            }
+            for (uint32_t i = 0; i < archCount; i++) {
+                cpu_type_t cpuType;
+                cpu_subtype_t cpuSubtype;
+                uint64_t offset;
+                if (fat_object->is64 == false) {
+                    struct fat_arch *arch = &fat_object->arch_list[i];
+                    cpuType = arch->cputype;
+                    cpuSubtype = arch->cpusubtype;
+                    offset = arch->offset;
+                } else {
+                    struct fat_arch_64 *arch = &((pdl_fat_object_64 *)fat_object)->arch_list[i];
+                    cpuType = arch->cputype;
+                    cpuSubtype = arch->cpusubtype;
+                    offset = arch->offset;
+                }
+
+                if (fat_object->swaps) {
+                    cpuType = OSSwapInt32(cpuType);
+                    cpuSubtype = OSSwapInt32(cpuSubtype);
+                    if (fat_object->is64 == false) {
+                        offset = OSSwapInt32((uint32_t)offset);
+                    } else {
+                        offset = OSSwapInt64(offset);
+                    }
+                }
+
+                if (cpuType == my_cputype && cpuSubtype == my_cpusubtype) {
+                    header = (struct mach_header *)(((char *)fat_object->header) + offset);
+                    break;
+                }
+            }
+        } else {
+            header = (struct mach_header *)data.bytes;
+        }
+
+        if (header == NULL) {
+            return nil;
+        }
+
+        pdl_mach_object mach_object;
+        bool result = pdl_get_mach_object_with_header(header, -1, imageName.UTF8String, &mach_object);
+        if (!result) {
+            return nil;
+        }
+
+        image = [[PDLSharedCacheImage alloc] init];
+        uintptr_t vmaddr = mach_object.vmaddr;
+        uint32_t symtab_count = mach_object.symtab_count;
+        const struct nlist *symtab_list = mach_object.symtab_list;
+        const char *strtab = mach_object.strtab;
+        NSMutableArray *symbols = [NSMutableArray array];
+        for (uint32_t i = 0; i < symtab_count; i++) {
+            uint32_t strx = 0;
+            uint8_t type = 0;
+            uint8_t sect = 0;
+            int16_t desc = 0;
+            u_long value = 0;
+            if (mach_object.is64 == false) {
+                const struct nlist *symtab = &symtab_list[i];
+                strx = symtab->n_un.n_strx;
+                type = symtab->n_type;
+                sect = symtab->n_sect;
+                desc = symtab->n_desc;
+                value = symtab->n_value;
+            } else {
+                const struct nlist_64 *symtab = &((struct nlist_64 *)symtab_list)[i];
+                strx = symtab->n_un.n_strx;
+                type = symtab->n_type;
+                sect = symtab->n_sect;
+                desc = symtab->n_desc;
+                value = (u_long)symtab->n_value;
+            }
+
+            const char *str = strtab + strx;
+            uintptr_t offset = value - vmaddr;
+
+            PDLSharedCacheSymbol *symbol = [[PDLSharedCacheSymbol alloc] init];
+            symbol.n_type = type;
+            symbol.n_desc = desc;
+            symbol.n_sect = sect;
+            symbol.n_value = value;
+            symbol.offset = offset;
+            symbol.name = @(str);
+            [symbols addObject:symbol];
+        }
+        [symbols sortUsingComparator:^NSComparisonResult(PDLSharedCacheSymbol *obj1, PDLSharedCacheSymbol *obj2) {
+            return [@(obj1.offset) compare:@(obj2.offset)];
+        }];
+
+        image.symbols = symbols;
+        image.endAddress = vmaddr + mach_object.vmsize;
+        self.images[imageName] = image;
+
+        return image;
+    }
 }
 
 @end

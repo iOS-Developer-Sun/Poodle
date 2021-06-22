@@ -643,6 +643,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'PDLCrash/' + librariy_files
             ss.frameworks = 'Foundation'
             ss.dependency pod_name + '/PDLSystemImage'
+            ss.dependency pod_name + '/PDLSharedCache'
         end
 
         s.subspec 'PDLDebug' do |ss|
