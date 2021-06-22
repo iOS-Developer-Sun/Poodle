@@ -243,6 +243,8 @@
 		B888660D24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B888660B24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.m */; };
 		B888660E24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = B888660B24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.m */; };
 		B888660F24C043A300D58BC7 /* NSObject+PDLThreadSafetifyMethod.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B888660C24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.h */; };
+		B88E95952682121B008CDA4D /* PDLSharedCache.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8220D392681DFFE002018D8 /* PDLSharedCache.h */; };
+		B88E959626821222008CDA4D /* PDLSharedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B8220D3A2681DFFE002018D8 /* PDLSharedCache.m */; };
 		B890851D24AF48C700DAC261 /* pdl_dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = B890851B24AF48C700DAC261 /* pdl_dispatch.m */; };
 		B890852724AF493400DAC261 /* pdl_dispatch.m in Sources */ = {isa = PBXBuildFile; fileRef = B890851B24AF48C700DAC261 /* pdl_dispatch.m */; };
 		B890852824AF493D00DAC261 /* pdl_dispatch.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B890851C24AF48C700DAC261 /* pdl_dispatch.h */; };
@@ -1281,6 +1283,7 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				B88E95952682121B008CDA4D /* PDLSharedCache.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8695,6 +8698,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B88E959626821222008CDA4D /* PDLSharedCache.m in Sources */,
 				B8220D372681DFE1002018D8 /* dsc_extractor.cpp in Sources */,
 				B8220D382681DFE1002018D8 /* dsc_iterator.cpp in Sources */,
 			);
