@@ -2372,6 +2372,8 @@
 		B888660B24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLThreadSafetifyMethod.m"; sourceTree = "<group>"; };
 		B888660C24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+PDLThreadSafetifyMethod.h"; sourceTree = "<group>"; };
 		B88DB4C722EAF14B003D20F6 /* libPoodleLibrary.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPoodleLibrary.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B88E959326820FC3008CDA4D /* README.chs.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.chs.md; sourceTree = "<group>"; };
+		B88E959426820FC3008CDA4D /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		B890851B24AF48C700DAC261 /* pdl_dispatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_dispatch.m; sourceTree = "<group>"; };
 		B890851C24AF48C700DAC261 /* pdl_dispatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_dispatch.h; sourceTree = "<group>"; };
 		B890852624AF490900DAC261 /* libpdl_dispatch.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_dispatch.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3857,9 +3859,19 @@
 				B8FC6AFB22EF01C9005B91DE /* Poodle */,
 				B85D459E240E7CF100CBF758 /* PoodleLibrary */,
 				B879143A235233EE00FC63C1 /* PoodlePodSpecs */,
+				B88E959226820F78008CDA4D /* Readme */,
 				B879143B235237F500FC63C1 /* Shells */,
 			);
 			name = Poodle;
+			sourceTree = "<group>";
+		};
+		B88E959226820F78008CDA4D /* Readme */ = {
+			isa = PBXGroup;
+			children = (
+				B88E959326820FC3008CDA4D /* README.chs.md */,
+				B88E959426820FC3008CDA4D /* README.md */,
+			);
+			name = Readme;
 			sourceTree = "<group>";
 		};
 		B890851A24AF48C700DAC261 /* pdl_dispatch */ = {
