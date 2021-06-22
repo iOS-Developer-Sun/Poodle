@@ -358,9 +358,9 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.source_files = base + 'pdl_mach_o_const_symbols/' + source_files
             ss.vendored_library = base + 'pdl_mach_o_const_symbols/' + librariy_files
             ss.frameworks = 'Foundation'
-            ss.libraries = 'c++'
             ss.dependency pod_name + '/pdl_mach_object'
             ss.dependency pod_name + '/pdl_mach_o_symbols'
+            ss.dependency pod_name + '/PDLSharedCache'
         end
 
         s.subspec 'pdl_mach_o_symbol_pointer' do |ss|
@@ -899,6 +899,16 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'Foundation'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/PDLProcessInfo'
+        end
+
+        s.subspec 'PDLSharedCache' do |ss|
+            ss.platform = platform_ios
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'PDLSharedCache/' + source_files
+            ss.vendored_library = base + 'PDLSharedCache/' + librariy_files
+            ss.frameworks = 'Foundation'
+            ss.libraries = 'c++'
+            ss.dependency pod_name + '/pdl_mach_object'
         end
 
         s.subspec 'PDLSystemImage' do |ss|

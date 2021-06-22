@@ -11,8 +11,8 @@
 #import <mach-o/ldsyms.h>
 #import <dlfcn.h>
 #import "pdl_mach_o_symbols.h"
-#import "dsc_extractor.h"
 #import "pdl_mach_object.h"
+#import "PDLSharedCache.h"
 
 #if !TARGET_IPHONE_SIMULATOR
 
@@ -226,7 +226,6 @@
 }
 
 - (NSDictionary *)createTable:(NSDictionary *)task forArch:(NSString *)arch {
-    NSString *tmp = NSTemporaryDirectory();
     NSArray *allKeys = task.allKeys;
     NSInteger count = allKeys.count;
     const char *imageNames[count + 1];
@@ -242,17 +241,11 @@
     }
 
     NSLog(@"PDLConstSymbols task created.");
-    int ret = dyld_shared_cache_extract_dylibs(path.UTF8String, tmp.UTF8String, imageNames);
-    if (ret != 0) {
-        NSLog(@"PDLConstSymbols failed to get symbols: failed to extract, error is %d.", ret);
-        return nil;
-    }
-
     NSMutableDictionary *table = [NSMutableDictionary dictionary];
     for (NSString *imageName in task) {
         @autoreleasepool {
             NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
-            NSString *path = [tmp stringByAppendingPathComponent:imageName];
+            NSString *path = [[PDLSharedCache sharedInstance] sharedCachePathWithImageName:imageName];
             NSData *data = [NSData dataWithContentsOfFile:path];
 
             struct mach_header *live = pdl_mach_o_image(imageName.UTF8String);

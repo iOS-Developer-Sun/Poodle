@@ -524,6 +524,8 @@ int dyld_shared_cache_extract_dylibs(const char* shared_cache_file_path, const c
 		dylib_create_func = dylib_maker<arm>;
 	else if ( strcmp((char*)mapped_cache, "dyld_v1   arm64") == 0 ) 
 		dylib_create_func = dylib_maker<arm64>;
+    else if ( strcmp((char*)mapped_cache, "dyld_v1  arm64e") == 0 )
+        dylib_create_func = dylib_maker<arm64>;
 	else {
 		fprintf(stderr, "Error: unrecognized dyld shared cache magic.\n");
         munmap(mapped_cache, (size_t)statbuf.st_size);
