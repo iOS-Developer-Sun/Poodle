@@ -33,6 +33,10 @@
 		B8220D382681DFE1002018D8 /* dsc_iterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8220D272681DFA4002018D8 /* dsc_iterator.cpp */; };
 		B8220D3B2681DFFE002018D8 /* PDLSharedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B8220D3A2681DFFE002018D8 /* PDLSharedCache.m */; };
 		B828C1E32682DF930067A90A /* PDLSearchBarTableViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B842DD87267A0A0E00DD5A5F /* PDLSearchBarTableViewController.h */; };
+		B828C1E42682E6340067A90A /* PDLClassListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E9723D70019008D2DA1 /* PDLClassListViewController.h */; };
+		B828C1E52682E6340067A90A /* PDLClassViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E9623D70019008D2DA1 /* PDLClassViewController.h */; };
+		B828C1E62682E6340067A90A /* PDLProtocolListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E9423D70019008D2DA1 /* PDLProtocolListViewController.h */; };
+		B828C1E72682E6340067A90A /* PDLProtocolViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E9823D70019008D2DA1 /* PDLProtocolViewController.h */; };
 		B8300F2225BEB61600A02412 /* PDLScrollPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */; };
 		B8300FD125BEB61D00A02412 /* PDLScrollPageViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8300F2125BEB61600A02412 /* PDLScrollPageViewController.h */; };
 		B830102925BEB62200A02412 /* PDLScrollPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */; };
@@ -1206,6 +1210,10 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				B828C1E42682E6340067A90A /* PDLClassListViewController.h in CopyFiles */,
+				B828C1E52682E6340067A90A /* PDLClassViewController.h in CopyFiles */,
+				B828C1E62682E6340067A90A /* PDLProtocolListViewController.h in CopyFiles */,
+				B828C1E72682E6340067A90A /* PDLProtocolViewController.h in CopyFiles */,
 				B828C1E32682DF930067A90A /* PDLSearchBarTableViewController.h in CopyFiles */,
 				B8E56F8023D70488008D2DA1 /* PDLImageListViewController.h in CopyFiles */,
 			);
@@ -11167,6 +11175,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;
@@ -11231,6 +11240,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
 				CLANG_WARN_STRICT_PROTOTYPES = YES;
 				CLANG_WARN_SUSPICIOUS_MOVE = YES;

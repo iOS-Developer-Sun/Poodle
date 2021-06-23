@@ -109,7 +109,9 @@
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
+#if TARGET_OS_IPHONE
         sharedInstance = [[self alloc] init];
+#endif
     });
     return sharedInstance;
 }
@@ -254,7 +256,7 @@
         }
 
         image = [[PDLSharedCacheImage alloc] init];
-        uintptr_t vmaddr = mach_object.vmaddr;
+        uintptr_t vmaddr = (uintptr_t)mach_object.vmaddr;
         uint32_t symtab_count = mach_object.symtab_count;
         const struct nlist *symtab_list = mach_object.symtab_list;
         const char *strtab = mach_object.strtab;
@@ -298,7 +300,7 @@
         }];
 
         image.symbols = symbols;
-        image.endAddress = vmaddr + mach_object.vmsize;
+        image.endAddress = vmaddr + (uintptr_t)mach_object.vmsize;
         self.images[imageName] = image;
 
         return image;

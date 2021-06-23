@@ -903,8 +903,9 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
         end
 
         s.subspec 'PDLSharedCache' do |ss|
-            ss.platform = platform_ios
+            ss.platform = platform_universal
             ss.ios.deployment_target  = '9.0'
+            ss.osx.deployment_target  = '10.10'
             ss.source_files = base + 'PDLSharedCache/' + source_files
             ss.vendored_library = base + 'PDLSharedCache/' + librariy_files
             ss.frameworks = 'Foundation'
