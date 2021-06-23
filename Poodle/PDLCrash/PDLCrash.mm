@@ -219,6 +219,10 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 }
 
 - (BOOL)symbolicateCrashLine:(NSString *)line symbolicatedLine:(NSString **)symbolicatedLine symbolicatedLocations:(NSArray **)symbolicatedLocations imagesMap:(NSDictionary *)imagesMap crashImagesMap:(NSDictionary *)crashImagesMap {
+    if ([line hasPrefix:@"("] && [line hasSuffix:@")"]) {
+        // Last Exception Backtrace
+    }
+
     NSScanner *scanner = [NSScanner scannerWithString:line];
     int frame = 0;
     if (![scanner scanInt:&frame]) {
@@ -293,7 +297,7 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     }
 
     NSString *snameString = @(sname);
-    if (strcmp(sname, "<redacted>") == 0) {
+    if ([snameString isEqualToString:@"<redacted>"]) {
         PDLSharedCacheImage *sharedCacheImage = [[PDLSharedCache sharedInstance] sharedCacheImageWithImageName:name];
         PDLSharedCacheSymbol *sharedCacheSymbol = [sharedCacheImage symbolOfAddress:offset];
         snameString = sharedCacheSymbol.name;
@@ -453,8 +457,18 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return NO;
     }
 
+    NSString *snameString = @(sname);
+    if ([snameString isEqualToString:@"<redacted>"]) {
+        PDLSharedCacheImage *sharedCacheImage = [[PDLSharedCache sharedInstance] sharedCacheImageWithImageName:name];
+        PDLSharedCacheSymbol *sharedCacheSymbol = [sharedCacheImage symbolOfAddress:offset];
+        snameString = sharedCacheSymbol.name;
+        if (snameString.length > 1 && [snameString hasPrefix:@"_"]) {
+            snameString = [snameString substringFromIndex:1];
+        }
+    }
+
     if (symbolicatedLine) {
-        NSString *symbolicatedSymbol = [self.class demangle:@(sname)] ?: @(sname);
+        NSString *symbolicatedSymbol = [self.class demangle:snameString] ?: snameString;
         uintptr_t currentOffset = current - (uintptr_t)info.dli_saddr;
         NSString *symbolicatedSymbolString = [NSString stringWithFormat:@"%@ + %@", symbolicatedSymbol, @(currentOffset)];
         NSString *result = line;
