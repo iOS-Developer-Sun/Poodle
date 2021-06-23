@@ -32,6 +32,7 @@
 		B8220D372681DFE1002018D8 /* dsc_extractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8220D282681DFA4002018D8 /* dsc_extractor.cpp */; };
 		B8220D382681DFE1002018D8 /* dsc_iterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8220D272681DFA4002018D8 /* dsc_iterator.cpp */; };
 		B8220D3B2681DFFE002018D8 /* PDLSharedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B8220D3A2681DFFE002018D8 /* PDLSharedCache.m */; };
+		B828C1E32682DF930067A90A /* PDLSearchBarTableViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B842DD87267A0A0E00DD5A5F /* PDLSearchBarTableViewController.h */; };
 		B8300F2225BEB61600A02412 /* PDLScrollPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */; };
 		B8300FD125BEB61D00A02412 /* PDLScrollPageViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8300F2125BEB61600A02412 /* PDLScrollPageViewController.h */; };
 		B830102925BEB62200A02412 /* PDLScrollPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8300F2025BEB61600A02412 /* PDLScrollPageViewController.m */; };
@@ -1205,6 +1206,7 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				B828C1E32682DF930067A90A /* PDLSearchBarTableViewController.h in CopyFiles */,
 				B8E56F8023D70488008D2DA1 /* PDLImageListViewController.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
