@@ -100,7 +100,7 @@
     [self presentViewController:alertController animated:YES completion:nil];
 }
 
-- (void)finishSymbolication:(PDLCrash *)crash {
+- (void)finishSymbolication:(PDLCrash *)crash duration:(NSTimeInterval)duration {
     self.navigationItem.rightBarButtonItem.enabled = YES;
     NSString *title = nil;
     NSString *message = nil;
@@ -113,7 +113,7 @@
                 title = [title stringByAppendingString:@"(UUID mismatched)"];
             }
         }
-        message = @(crash.symbolicatedCount).stringValue;
+        message = [NSString stringWithFormat:@"%@, %.1fs", @(crash.symbolicatedCount), duration];
         NSString *symbolicatedString = crash.symbolicatedString;
         UIColor *highlightedColor = [UIColor redColor];
         UIColor *color = self.textView.textColor;
@@ -146,6 +146,7 @@
 - (void)symbolicate {
     self.navigationItem.rightBarButtonItem.enabled = NO;
 
+    NSDate *begin = [NSDate date];
     __weak __typeof(self) weakSelf = self;
     [self symbolicate:NO completion:^(PDLCrash *crash) {
         __strong __typeof(self) self = weakSelf;
@@ -154,7 +155,9 @@
         }
 
         if (crash.symbolicatedCount > 0) {
-            [self finishSymbolication:crash];
+            NSDate *end = [NSDate date];
+            NSTimeInterval diff = [end timeIntervalSinceDate:begin];
+            [self finishSymbolication:crash duration:diff];
         } else {
             [self symbolicate:YES completion:^(PDLCrash *crash) {
                 __strong __typeof(self) self = weakSelf;
@@ -162,7 +165,9 @@
                     return;
                 }
 
-                [self finishSymbolication:crash];
+                NSDate *end = [NSDate date];
+                NSTimeInterval diff = [end timeIntervalSinceDate:begin];
+                [self finishSymbolication:crash duration:diff];
             }];
         }
     }];
