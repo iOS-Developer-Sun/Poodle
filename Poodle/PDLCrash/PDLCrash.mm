@@ -146,6 +146,10 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 
 @interface PDLCrash ()
 
+@property (copy) NSArray *binaryImages;
+@property (copy) NSDictionary *imagesMap;
+@property (copy) NSDictionary *crashImagesMap;
+
 @property (copy) NSString *symbolicatedString;
 @property (copy) NSArray *symbolicatedLocations;
 @property (assign) NSInteger symbolicatedCount;
@@ -218,12 +222,127 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     return [binaryImages copy];
 }
 
-- (BOOL)symbolicateCrashLine:(NSString *)line symbolicatedLine:(NSString **)symbolicatedLine symbolicatedLocations:(NSArray **)symbolicatedLocations imagesMap:(NSDictionary *)imagesMap crashImagesMap:(NSDictionary *)crashImagesMap {
+- (BOOL)symbolicateCrashLine:(NSString *)line symbolicatedLine:(NSString **)symbolicatedLine symbolicatedLocations:(NSArray **)symbolicatedLocations {
+    NSDictionary *imagesMap = self.imagesMap;
+    NSDictionary *crashImagesMap = self.crashImagesMap;
+    NSArray *binaryImages = self.binaryImages;
+    NSScanner *scanner = [NSScanner scannerWithString:line];
     if ([line hasPrefix:@"("] && [line hasSuffix:@")"]) {
         // Last Exception Backtrace
+        NSMutableArray *locations = [NSMutableArray array];
+        NSMutableString *result = [NSMutableString string];
+        NSInteger lineNumber = 0;
+
+        [scanner scanString:@"(" intoString:NULL];
+        NSInteger symbolBegin = scanner.scanLocation;
+        NSInteger length = 0;
+        uintptr_t address = 0;
+        while ([scanner scanHexLongLong:(unsigned long long *)&address]) {
+            length = scanner.scanLocation - symbolBegin;
+            NSLog(@"%p, %@-%@", (void *)address, @(symbolBegin), @(length + symbolBegin));
+            symbolBegin = scanner.scanLocation;
+            NSMutableString *lineNumberString = [@(lineNumber).stringValue mutableCopy];
+            if (lineNumberString.length < 4) {
+                while (lineNumberString.length < 4) {
+                    [lineNumberString appendString:@" "];
+                }
+            } else {
+                [lineNumberString appendString:@"\t"];
+            }
+            lineNumber++;
+
+            PDLCrashBinaryImage *image = nil;
+            NSInteger left = 0;
+            NSInteger right = binaryImages.count - 1;
+            while (right - left > 1) {
+                NSInteger middle = (left + right) / 2;
+                PDLCrashBinaryImage *middleImage = binaryImages[middle];
+                if (address < middleImage.address) {
+                    right = middle - 1;
+                } else {
+                    left = middle;
+                }
+            }
+
+            PDLCrashBinaryImage *leftImage = binaryImages[left];
+            if (address >= leftImage.address && address < leftImage.endAddress) {
+                image = leftImage;
+            } else if (left != right) {
+                PDLCrashBinaryImage *rightImage = binaryImages[right];
+                if (address >= rightImage.address && address < rightImage.endAddress) {
+                    image = rightImage;
+                }
+            }
+
+            NSString *resultLine = nil;
+            do {
+                if (!image) {
+                    break;
+                }
+
+                NSString *name = image.name;
+                PDLSystemImage *systemImage = self.imagesMap[name];
+                if (!systemImage) {
+                    break;
+                }
+
+                uintptr_t offset = address - image.address;
+                uintptr_t current = systemImage.address + offset;
+                Dl_info info = {0};
+                int ret = dladdr((void *)current, &info);
+                if (!ret) {
+                    break;
+                }
+
+                if (!info.dli_fname) {
+                    break;
+                }
+
+                if (![@(info.dli_fname).lastPathComponent isEqualToString:name]) {
+                    break;
+                }
+
+                if ((uintptr_t)info.dli_fbase != systemImage.address) {
+                    break;
+                }
+
+                const char *sname = info.dli_sname;
+                if (!sname) {
+                    break;
+                }
+
+                NSString *snameString = @(sname);
+                if ([snameString isEqualToString:@"<redacted>"]) {
+                    PDLSharedCacheImage *sharedCacheImage = [[PDLSharedCache sharedInstance] sharedCacheImageWithImageName:name];
+                    PDLSharedCacheSymbol *sharedCacheSymbol = [sharedCacheImage symbolOfAddress:offset];
+                    snameString = sharedCacheSymbol.name;
+                    if (snameString.length > 1 && [snameString hasPrefix:@"_"]) {
+                        snameString = [snameString substringFromIndex:1];
+                    }
+                }
+
+                NSString *symbolicatedSymbol = [self.class demangle:snameString] ?: snameString;
+                uintptr_t currentOffset = current - (uintptr_t)info.dli_saddr;
+                NSString *resultPart1 = [NSString stringWithFormat:@"%@%@                \t%p ", lineNumberString, name, (void *)address];
+                NSString *resultPart2 = [NSString stringWithFormat:@"%@ + %@\n", symbolicatedSymbol, @(currentOffset)];
+                [locations addObject:[NSValue valueWithRange:NSMakeRange(result.length + resultPart1.length, resultPart2.length)]];
+                resultLine = [NSString stringWithFormat:@"%@%@", resultPart1, resultPart2];
+            } while (NO);
+
+            if (!resultLine) {
+                resultLine = [NSString stringWithFormat:@"%@%p\n", lineNumberString, (void *)address];
+            }
+
+            [result appendString:resultLine];
+        }
+        if (symbolicatedLocations) {
+            *symbolicatedLocations = locations;
+        }
+        if (symbolicatedLine) {
+            *symbolicatedLine = result;
+        }
     }
 
-    NSScanner *scanner = [NSScanner scannerWithString:line];
     int frame = 0;
     if (![scanner scanInt:&frame]) {
         return NO;
@@ -320,7 +439,7 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     return YES;
 }
 
-- (BOOL)symbolicateEventLine:(NSString *)line symbolicatedLine:(NSString **)symbolicatedLine symbolicatedLocations:(NSArray **)symbolicatedLocations imagesMap:(NSDictionary *)imagesMap crashImagesMap:(NSDictionary *)crashImagesMap {
+- (BOOL)symbolicateEventLine:(NSString *)line symbolicatedLine:(NSString **)symbolicatedLine symbolicatedLocations:(NSArray **)symbolicatedLocations {
     NSScanner *scanner = [NSScanner scannerWithString:line];
     uintptr_t frame = 0;
     if (![scanner scanHexLongLong:(unsigned long long *)&frame]) {
@@ -332,6 +451,9 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     if (![scanner scanUpToString:@" " intoString:&symbol]) {
         return NO;
     }
+
+    NSDictionary *imagesMap = self.imagesMap;
+    NSDictionary *crashImagesMap = self.crashImagesMap;
 
     if (![symbol isEqualToString:unknown]) {
         if ([symbol isEqualToString:@"-"]) {
@@ -510,6 +632,8 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return NO;
     }
 
+    self.binaryImages = binaryImages;
+
     PDLSystemImage *systemImage = [PDLSystemImage executeSystemImage];
     BOOL UUIDMismatched = ![systemImage.uuidString isEqualToString:image.uuidString];
     self.UUIDMismatched = UUIDMismatched;
@@ -527,11 +651,13 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         imagesMap[systemImage.name] = systemImage;
         imagesMap[systemImage.uuidString] = systemImage;
     }
+    self.imagesMap = imagesMap;
 
     NSMutableDictionary *crashImagesMap = [NSMutableDictionary dictionary];
     for (PDLCrashBinaryImage *binaryImage in binaryImages) {
         crashImagesMap[binaryImage.name] = binaryImage;
     }
+    self.crashImagesMap = crashImagesMap;
 
     if (crashType == PDLCrashTypeEvent) {
         image.name = command;
@@ -546,9 +672,9 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         BOOL symbolicated = NO;
         NSArray *locations = nil;
         if (crashType == PDLCrashTypeCrash) {
-            symbolicated = [self symbolicateCrashLine:line symbolicatedLine:&symbolicateLine symbolicatedLocations:&locations imagesMap:imagesMap crashImagesMap:crashImagesMap];
+            symbolicated = [self symbolicateCrashLine:line symbolicatedLine:&symbolicateLine symbolicatedLocations:&locations];
         } else if (crashType == PDLCrashTypeEvent) {
-            symbolicated = [self symbolicateEventLine:line symbolicatedLine:&symbolicateLine symbolicatedLocations:&locations imagesMap:imagesMap crashImagesMap:crashImagesMap];
+            symbolicated = [self symbolicateEventLine:line symbolicatedLine:&symbolicateLine symbolicatedLocations:&locations];
         }
         for (NSValue *rangeValue in locations) {
             NSRange range = rangeValue.rangeValue;
