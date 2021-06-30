@@ -36,6 +36,17 @@ typedef struct encryption_info_command pdl_encryption_info_command;
 typedef struct fat_header pdl_fat_header;
 #endif
 
+typedef struct pdl_crash_info {
+    __attribute__((aligned(8))) unsigned version;
+    __attribute__((aligned(8))) const char* message;
+    __attribute__((aligned(8))) const char* signature;
+    __attribute__((aligned(8))) const char* backtrace;
+    __attribute__((aligned(8))) const char* message2;
+    __attribute__((aligned(8))) void* reserved;
+    __attribute__((aligned(8))) void* reserved2;
+    __attribute__((aligned(8))) void* reserved3; // First introduced in version 5
+} pdl_crash_info;
+
 typedef struct pdl_mach_object {
     bool is64;
     bool swaps;
