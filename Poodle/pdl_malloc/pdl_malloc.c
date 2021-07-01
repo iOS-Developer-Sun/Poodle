@@ -8,6 +8,7 @@
 
 #include "pdl_malloc.h"
 #include <malloc/malloc.h>
+#include <mach/mach.h>
 #include "pdl_malloc_zone.h"
 
 typedef struct {
@@ -73,4 +74,43 @@ void pdl_malloc_find_print(uintptr_t address) {
     void *header = NULL;
     pdl_malloc_find((void *)address, &size, &header);
     malloc_printf("%p:\nsize:%ld, header:%p\n", address, size, header);
+}
+
+extern kern_return_t __mach_stack_logging_get_frames(mach_port_t task, mach_vm_address_t address, mach_vm_address_t *stack_frames_buffer, uint32_t max_stack_frames, uint32_t *count);
+
+bool pdl_malloc_frames(uintptr_t address, uintptr_t *frames, unsigned int *count) {
+    mach_port_t task = mach_task_self();
+    unsigned int frame_count = 128;
+    if (count) {
+        frame_count = *count;
+    }
+    kern_return_t ret = __mach_stack_logging_get_frames(task, address, (mach_vm_address_t *)frames, frame_count, &frame_count);
+    if (ret != KERN_SUCCESS) {
+        return false;
+    }
+
+    if (count) {
+        *count = frame_count;
+    }
+
+    return true;
+}
+
+void pdl_malloc_frames_print(uintptr_t address) {
+    unsigned int count = 128;
+    uintptr_t frames[count];
+    bool ret = pdl_malloc_frames(address, frames, &count);
+    if (!ret) {
+        malloc_printf("failed to get malloc frames of %p\n", (void *)address);
+        return;
+    }
+
+    malloc_printf("malloc frames of %p:\n", (void *)address);
+    for (int i = 0; i < count; i++) {
+        uintptr_t frame = frames[i];
+        if (!frame) {
+            break;
+        }
+        malloc_printf("%d\t%p\n", i + 1, (void *)frame);
+    }
 }
