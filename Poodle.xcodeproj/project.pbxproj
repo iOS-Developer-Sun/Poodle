@@ -196,9 +196,10 @@
 		B8672D37259B3E2E008082E5 /* PDLSessionTaskStatistics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8672A5C259B1014008082E5 /* PDLSessionTaskStatistics.h */; };
 		B8672D8E259B3F24008082E5 /* PDLSessionTaskStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = B8672A59259B1014008082E5 /* PDLSessionTaskStatistics.m */; };
 		B86BE6922692B65F00E90F06 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6902692B65F00E90F06 /* JPEngine.m */; };
-		B86BE6932692B65F00E90F06 /* JSPatch.js in Resources */ = {isa = PBXBuildFile; fileRef = B86BE6912692B65F00E90F06 /* JSPatch.js */; };
 		B86BE6982692B70700E90F06 /* PDLPudding.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6972692B70700E90F06 /* PDLPudding.m */; };
 		B86BE6992692B70700E90F06 /* PDLPudding.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6972692B70700E90F06 /* PDLPudding.m */; };
+		B86BE69D2693040800E90F06 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6902692B65F00E90F06 /* JPEngine.m */; };
+		B86BE69E2693044A00E90F06 /* PDLPudding.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B86BE6962692B70700E90F06 /* PDLPudding.h */; };
 		B877A617257F6FE000580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A8BC257F70EA00580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A911257F70F100580C6E /* UIViewController+PDLExtension.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B877A615257F6FE000580C6E /* UIViewController+PDLExtension.h */; };
@@ -1510,6 +1511,7 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				B86BE69E2693044A00E90F06 /* PDLPudding.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6939,7 +6941,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B86BE6932692B65F00E90F06 /* JSPatch.js in Resources */,
 				B85D45B5240E84DC00CBF758 /* LaunchScreen.storyboard in Resources */,
 				B85D45B2240E84DC00CBF758 /* Assets.xcassets in Resources */,
 			);
@@ -9153,6 +9154,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B86BE6992692B70700E90F06 /* PDLPudding.m in Sources */,
+				B86BE69D2693040800E90F06 /* JPEngine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10730,14 +10732,14 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6BA56S5JAW;
+				DEVELOPMENT_TEAM = SQ6W2CNQ39;
 				INFOPLIST_FILE = PoodleApplication/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = pdl.PoodleApplication;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kwaikd.ios.pearl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -10748,13 +10750,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 6BA56S5JAW;
+				DEVELOPMENT_TEAM = SQ6W2CNQ39;
 				INFOPLIST_FILE = PoodleApplication/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = pdl.PoodleApplication;
+				PRODUCT_BUNDLE_IDENTIFIER = com.kwaikd.ios.pearl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
