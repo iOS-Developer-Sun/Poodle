@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLPudding : NSObject
 
 // + (JSValue *)evaluateScript:(NSString *)script;
-+ (id)evaluate:(NSString *)script;
++ (id)e:(NSString *)script;
 
 @end
 

@@ -26,11 +26,11 @@
 
 @implementation PDLPudding
 
-+ (id)evaluate:(NSString *)script {
++ (id)e:(NSString *)script {
     return [JPEngine evaluateScript:script];
 }
 
-#if 1
+#if 0
 
 - (void)test {
     assert(0);
@@ -44,7 +44,7 @@
         @"console.log('PDLPudding test')\n"
         @"}\n"
         @"})";
-        [PDLPudding evaluate:js];
+        [PDLPudding e:js];
         [[[PDLPudding alloc] init] test];
     });
 }
