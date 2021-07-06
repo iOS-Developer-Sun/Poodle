@@ -13,7 +13,9 @@ NS_ASSUME_NONNULL_BEGIN
 #define PDLPuddingCString(string) PDLPuddingString_##string()
 #define PDLPuddingCFString(string) PDLPuddingString_##string()
 
-extern char *PDLPuddingString_ORIGforwardInvocation(void);
+extern char *PDLPuddingString_getProp_(void);
+extern char *PDLPuddingString_setProp_forKey_(void);
+extern char *PDLPuddingString_ORIGforwardInvocation_(void);
 
 extern NSString *PDLPuddingString_regexStr(void);
 extern NSString *PDLPuddingString_replaceStr(void);
@@ -66,7 +68,7 @@ extern NSString *PDLPuddingString_SUPER_(void);
 extern NSString *PDLPuddingString_ORIG(void);
 extern NSString *PDLPuddingString_NSBlock(void);
 
-extern NSString *const PDLPuddingStringCore;
+extern char *const PDLPuddingStringCore;
 extern NSString *PDLPuddingStringBlockClassName(void);
 
 extern NSString *PDLPuddingStringJP(void);

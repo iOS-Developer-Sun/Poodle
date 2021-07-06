@@ -30,25 +30,4 @@
     return [JPEngine evaluateScript:script];
 }
 
-#if 0
-
-- (void)test {
-    assert(0);
-}
-
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        NSString *js = @"defineClass('PDLPudding', {\n"
-        @"test: function() {\n"
-        @"console.log('PDLPudding test')\n"
-        @"}\n"
-        @"})";
-        [PDLPudding e:js];
-        [[[PDLPudding alloc] init] test];
-    });
-}
-
-#endif
-
 @end
