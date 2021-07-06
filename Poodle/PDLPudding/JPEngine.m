@@ -360,7 +360,7 @@ __attribute__((objc_direct_members))
     }
 
 #else
-    [_context evaluateScript:[[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:PDLPuddingStringCore options:0] encoding:NSUTF8StringEncoding]];
+    [_context evaluateScript:[[NSString alloc] initWithData:[[NSData alloc] initWithBase64EncodedString:@(PDLPuddingStringCore) options:0] encoding:NSUTF8StringEncoding]];
 #endif
 }
 
@@ -663,9 +663,12 @@ static NSDictionary *defineClass(NSString *classDeclaration, JSValue *instanceMe
             }
         }
     }
-    
-    class_addMethod(cls, @selector(getProp:), (IMP)getPropIMP, "@@:@");
-    class_addMethod(cls, @selector(setProp:forKey:), (IMP)setPropIMP, "v@:@@");
+
+    // Poodle 7
+//    class_addMethod(cls, @selector(getProp:), (IMP)getPropIMP, "@@:@");
+//    class_addMethod(cls, @selector(setProp:forKey:), (IMP)setPropIMP, "v@:@@");
+    class_addMethod(cls, sel_registerName(PDLPuddingCString(getProp_)), (IMP)getPropIMP, "@@:@");
+    class_addMethod(cls, sel_registerName(PDLPuddingCString(setProp_forKey_)), (IMP)setPropIMP, "v@:@@");
 
     return @{PDLPuddingCFString(cls): className, PDLPuddingCFString(superCls): superClassName};
 }
@@ -969,7 +972,7 @@ static void JPExecuteORIGForwardInvocation(id slf, SEL selector, NSInvocation *i
 {
     // Poodle 7
 //    SEL origForwardSelector = @selector(ORIGforwardInvocation:);
-    SEL origForwardSelector = sel_registerName(PDLPuddingCString(ORIGforwardInvocation));
+    SEL origForwardSelector = sel_registerName(PDLPuddingCString(ORIGforwardInvocation_));
 
     if ([slf respondsToSelector:origForwardSelector]) {
         NSMethodSignature *methodSignature = [slf methodSignatureForSelector:origForwardSelector];
@@ -1031,7 +1034,7 @@ static void overrideMethod(Class cls, NSString *selectorName, JSValue *function,
         if (originalForwardImp) {
             // Poodle 7
 //            class_addMethod(cls, @selector(ORIGforwardInvocation:), originalForwardImp, "v@:@");
-            class_addMethod(cls, sel_registerName(PDLPuddingCString(ORIGforwardInvocation)), originalForwardImp, "v@:@");
+            class_addMethod(cls, sel_registerName(PDLPuddingCString(ORIGforwardInvocation_)), originalForwardImp, "v@:@");
         }
     }
 
