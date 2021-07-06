@@ -200,6 +200,8 @@
 		B86BE6992692B70700E90F06 /* PDLPudding.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6972692B70700E90F06 /* PDLPudding.m */; };
 		B86BE69D2693040800E90F06 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6902692B65F00E90F06 /* JPEngine.m */; };
 		B86BE69E2693044A00E90F06 /* PDLPudding.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B86BE6962692B70700E90F06 /* PDLPudding.h */; };
+		B86BE6A32693390700E90F06 /* PDLPuddingString.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6A12693390700E90F06 /* PDLPuddingString.m */; };
+		B86BE6A42693390700E90F06 /* PDLPuddingString.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6A12693390700E90F06 /* PDLPuddingString.m */; };
 		B877A617257F6FE000580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A8BC257F70EA00580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A911257F70F100580C6E /* UIViewController+PDLExtension.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B877A615257F6FE000580C6E /* UIViewController+PDLExtension.h */; };
@@ -2364,6 +2366,8 @@
 		B86BE6912692B65F00E90F06 /* JSPatch.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = JSPatch.js; sourceTree = "<group>"; };
 		B86BE6962692B70700E90F06 /* PDLPudding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLPudding.h; sourceTree = "<group>"; };
 		B86BE6972692B70700E90F06 /* PDLPudding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLPudding.m; sourceTree = "<group>"; };
+		B86BE6A12693390700E90F06 /* PDLPuddingString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLPuddingString.m; sourceTree = "<group>"; };
+		B86BE6A22693390700E90F06 /* PDLPuddingString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLPuddingString.h; sourceTree = "<group>"; };
 		B8724BB823AB9EDF003A4D2A /* libpdl_lldb_hook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_lldb_hook.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B877A615257F6FE000580C6E /* UIViewController+PDLExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLExtension.h"; sourceTree = "<group>"; };
 		B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLExtension.m"; sourceTree = "<group>"; };
@@ -3651,6 +3655,8 @@
 				B86BE6912692B65F00E90F06 /* JSPatch.js */,
 				B86BE6962692B70700E90F06 /* PDLPudding.h */,
 				B86BE6972692B70700E90F06 /* PDLPudding.m */,
+				B86BE6A22693390700E90F06 /* PDLPuddingString.h */,
+				B86BE6A12693390700E90F06 /* PDLPuddingString.m */,
 			);
 			path = PDLPudding;
 			sourceTree = "<group>";
@@ -8953,6 +8959,7 @@
 				B8220D3B2681DFFE002018D8 /* PDLSharedCache.m in Sources */,
 				B85D45C8240E859000CBF758 /* NSObject+PDLImplementationInterceptor.m in Sources */,
 				B8079BBF261C785D007E7A17 /* pdl_system_leak.m in Sources */,
+				B86BE6A32693390700E90F06 /* PDLPuddingString.m in Sources */,
 				B85D45C9240E859000CBF758 /* NSObject+PDLSelectorProxy.m in Sources */,
 				B8A6F5042546CA4000426AD1 /* PDLPageController.m in Sources */,
 				B85D45CA240E859000CBF758 /* NSObject+PDLThreadSafetifyProperty.m in Sources */,
@@ -9153,6 +9160,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B86BE6A42693390700E90F06 /* PDLPuddingString.m in Sources */,
 				B86BE6992692B70700E90F06 /* PDLPudding.m in Sources */,
 				B86BE69D2693040800E90F06 /* JPEngine.m in Sources */,
 			);
