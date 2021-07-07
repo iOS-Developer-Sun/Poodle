@@ -195,13 +195,13 @@
 		B8672C6B259B10A0008082E5 /* PDLSessionTaskStatisticsManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8672A5A259B1014008082E5 /* PDLSessionTaskStatisticsManager.h */; };
 		B8672D37259B3E2E008082E5 /* PDLSessionTaskStatistics.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8672A5C259B1014008082E5 /* PDLSessionTaskStatistics.h */; };
 		B8672D8E259B3F24008082E5 /* PDLSessionTaskStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = B8672A59259B1014008082E5 /* PDLSessionTaskStatistics.m */; };
-		B86BE6922692B65F00E90F06 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6902692B65F00E90F06 /* JPEngine.m */; };
 		B86BE6982692B70700E90F06 /* PDLPudding.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6972692B70700E90F06 /* PDLPudding.m */; };
 		B86BE6992692B70700E90F06 /* PDLPudding.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6972692B70700E90F06 /* PDLPudding.m */; };
-		B86BE69D2693040800E90F06 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6902692B65F00E90F06 /* JPEngine.m */; };
 		B86BE69E2693044A00E90F06 /* PDLPudding.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B86BE6962692B70700E90F06 /* PDLPudding.h */; };
 		B86BE6A32693390700E90F06 /* PDLPuddingString.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6A12693390700E90F06 /* PDLPuddingString.m */; };
 		B86BE6A42693390700E90F06 /* PDLPuddingString.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6A12693390700E90F06 /* PDLPuddingString.m */; };
+		B86BE6B1269556C000E90F06 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6AE269556C000E90F06 /* JPEngine.m */; };
+		B86BE6B3269556EA00E90F06 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6AE269556C000E90F06 /* JPEngine.m */; };
 		B877A617257F6FE000580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A8BC257F70EA00580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A911257F70F100580C6E /* UIViewController+PDLExtension.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B877A615257F6FE000580C6E /* UIViewController+PDLExtension.h */; };
@@ -2361,13 +2361,13 @@
 		B8672B11259B108D008082E5 /* libPDLSessionTaskStatisticsManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLSessionTaskStatisticsManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B86A6BAD23BB55E500715650 /* libPDLViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B86BE68D2692B5AF00E90F06 /* libPDLPudding.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLPudding.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B86BE68F2692B65F00E90F06 /* JPEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPEngine.h; sourceTree = "<group>"; };
-		B86BE6902692B65F00E90F06 /* JPEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPEngine.m; sourceTree = "<group>"; };
-		B86BE6912692B65F00E90F06 /* JSPatch.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = JSPatch.js; sourceTree = "<group>"; };
 		B86BE6962692B70700E90F06 /* PDLPudding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLPudding.h; sourceTree = "<group>"; };
 		B86BE6972692B70700E90F06 /* PDLPudding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLPudding.m; sourceTree = "<group>"; };
 		B86BE6A12693390700E90F06 /* PDLPuddingString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLPuddingString.m; sourceTree = "<group>"; };
 		B86BE6A22693390700E90F06 /* PDLPuddingString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLPuddingString.h; sourceTree = "<group>"; };
+		B86BE6AE269556C000E90F06 /* JPEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPEngine.m; sourceTree = "<group>"; };
+		B86BE6AF269556C000E90F06 /* JPEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPEngine.h; sourceTree = "<group>"; };
+		B86BE6B0269556C000E90F06 /* JSPatch.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = JSPatch.js; sourceTree = "<group>"; };
 		B8724BB823AB9EDF003A4D2A /* libpdl_lldb_hook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_lldb_hook.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B877A615257F6FE000580C6E /* UIViewController+PDLExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLExtension.h"; sourceTree = "<group>"; };
 		B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLExtension.m"; sourceTree = "<group>"; };
@@ -3650,15 +3650,31 @@
 		B86BE68E2692B61D00E90F06 /* PDLPudding */ = {
 			isa = PBXGroup;
 			children = (
-				B86BE68F2692B65F00E90F06 /* JPEngine.h */,
-				B86BE6902692B65F00E90F06 /* JPEngine.m */,
-				B86BE6912692B65F00E90F06 /* JSPatch.js */,
+				B86BE6AC269556C000E90F06 /* JSPatch */,
 				B86BE6962692B70700E90F06 /* PDLPudding.h */,
 				B86BE6972692B70700E90F06 /* PDLPudding.m */,
 				B86BE6A22693390700E90F06 /* PDLPuddingString.h */,
 				B86BE6A12693390700E90F06 /* PDLPuddingString.m */,
 			);
 			path = PDLPudding;
+			sourceTree = "<group>";
+		};
+		B86BE6AC269556C000E90F06 /* JSPatch */ = {
+			isa = PBXGroup;
+			children = (
+				B86BE6AD269556C000E90F06 /* JSPatch */,
+			);
+			path = JSPatch;
+			sourceTree = "<group>";
+		};
+		B86BE6AD269556C000E90F06 /* JSPatch */ = {
+			isa = PBXGroup;
+			children = (
+				B86BE6AF269556C000E90F06 /* JPEngine.h */,
+				B86BE6AE269556C000E90F06 /* JPEngine.m */,
+				B86BE6B0269556C000E90F06 /* JSPatch.js */,
+			);
+			path = JSPatch;
 			sourceTree = "<group>";
 		};
 		B877A614257F6FCD00580C6E /* UIViewController+PDLExtension */ = {
@@ -8932,6 +8948,7 @@
 				B85D4610240E85A600CBF758 /* pdl_die-x86_64.s in Sources */,
 				B85D4611240E85A600CBF758 /* pdl_objc_message-arm.s in Sources */,
 				B85D4612240E85A600CBF758 /* pdl_objc_message-arm64.s in Sources */,
+				B86BE6B1269556C000E90F06 /* JPEngine.m in Sources */,
 				B85D4613240E85A600CBF758 /* pdl_objc_message-i386.s in Sources */,
 				B85B447A24A0EC6200B25A3E /* pdl_allocation.m in Sources */,
 				B85D4614240E85A600CBF758 /* pdl_objc_message-x86_64.s in Sources */,
@@ -9058,7 +9075,6 @@
 				B8528194255132CA00B74F87 /* PDLBacktraceRecord.m in Sources */,
 				B85D45FD240E859000CBF758 /* PDLPropertyDebugger.m in Sources */,
 				B85D45FE240E859000CBF758 /* PDLRectPropertyDebugger.m in Sources */,
-				B86BE6922692B65F00E90F06 /* JPEngine.m in Sources */,
 				B85D45FF240E859000CBF758 /* PDLSystemImage.m in Sources */,
 				B85D4600240E859000CBF758 /* PDLViewController.m in Sources */,
 				B85D4601240E859000CBF758 /* UINavigationController+PDLLongPressPop.m in Sources */,
@@ -9160,9 +9176,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B86BE6B3269556EA00E90F06 /* JPEngine.m in Sources */,
 				B86BE6A42693390700E90F06 /* PDLPuddingString.m in Sources */,
 				B86BE6992692B70700E90F06 /* PDLPudding.m in Sources */,
-				B86BE69D2693040800E90F06 /* JPEngine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
