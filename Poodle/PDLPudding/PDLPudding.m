@@ -20,7 +20,7 @@
  6 JP strings
  7 const strings
  8 optimize
- 9 disable JPExtension
+ 9 disable JPExtension JPBlock
 
  */
 
