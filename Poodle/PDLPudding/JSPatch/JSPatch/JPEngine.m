@@ -395,6 +395,9 @@ __attribute__((objc_direct_members))
     }
 //    NSString *formatedScript = [NSString stringWithFormat:@";(function(){try{\n%@\n}catch(e){_OC_catch(e.message, e.stack)}})();", [_regex stringByReplacingMatchesInString:script options:0 range:NSMakeRange(0, script.length) withTemplate:_replaceStr]];
     NSString *formatedScript = [NSString stringWithFormat:PDLPuddingCFString(formatedScript), [_regex stringByReplacingMatchesInString:script options:0 range:NSMakeRange(0, script.length) withTemplate:PDLPuddingCFString(replaceStr)]];
+    // Poodle 8
+    return [_context evaluateScript:formatedScript withSourceURL:resourceURL];
+#if 0
     @try {
         if ([_context respondsToSelector:@selector(evaluateScript:withSourceURL:)]) {
             return [_context evaluateScript:formatedScript withSourceURL:resourceURL];
@@ -406,6 +409,7 @@ __attribute__((objc_direct_members))
         _exceptionBlock([NSString stringWithFormat:@"%@", exception]);
     }
     return nil;
+#endif
 }
 
 + (JSContext *)context
@@ -1264,6 +1268,10 @@ static id callSelector(NSString *className, NSString *selectorName, JSValue *arg
                     break;
                 }
                 if ([(JSValue *)arguments[i-2] hasProperty:PDLPuddingCFString(__isBlock)]) {
+                    // Poodle 9
+                    __autoreleasing id cb = genCallbackBlock(arguments[i-2]);
+                    [invocation setArgument:&cb atIndex:i];
+#if 0
                     JSValue *blkJSVal = arguments[i-2];
                     // Poodle 6
                     Class JPBlockClass = NSClassFromString(PDLPuddingStringBlockClassName());
@@ -1274,6 +1282,7 @@ static id callSelector(NSString *className, NSString *selectorName, JSValue *arg
                         __autoreleasing id cb = genCallbackBlock(arguments[i-2]);
                         [invocation setArgument:&cb atIndex:i];
                     }
+#endif
                 } else {
                     [invocation setArgument:&valObj atIndex:i];
                 }
@@ -1743,6 +1752,9 @@ static id formatJSToOC(JSValue *jsval)
             return NSClassFromString(obj[PDLPuddingCFString(__clsName)]);
         }
         if (obj[PDLPuddingCFString(__isBlock)]) {
+            // Poodle 9
+            return genCallbackBlock(jsval);
+#if 0
             // Poodle 6
             Class JPBlockClass = NSClassFromString(PDLPuddingStringBlockClassName());
             if (JPBlockClass && ![jsval[PDLPuddingCFString(blockObj)] isUndefined]) {
@@ -1750,6 +1762,7 @@ static id formatJSToOC(JSValue *jsval)
             } else {
                 return genCallbackBlock(jsval);
             }
+#endif
         }
         NSMutableDictionary *newDict = [[NSMutableDictionary alloc] init];
         for (NSString *key in [obj allKeys]) {
