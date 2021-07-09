@@ -29,7 +29,7 @@ char *PDLPuddingString_getProp_(void) {
         s[7] = ':';
         s[8] = '\0';
         initialized = true;
-        PDLPuddingString_ASSERT(strcmp(s, "getProp:") == 0);
+        PDLPuddingString_ASSERT(strcmp((char *)s, "getProp:") == 0);
     }
     return (char *)s;
 }
@@ -56,7 +56,7 @@ char *PDLPuddingString_setProp_forKey_(void) {
         s[14] = ':';
         s[15] = '\0';
         initialized = true;
-        PDLPuddingString_ASSERT(strcmp(s, "setProp:forKey:") == 0);
+        PDLPuddingString_ASSERT(strcmp((char *)s, "setProp:forKey:") == 0);
     }
     return (char *)s;
 }
@@ -90,7 +90,7 @@ char *PDLPuddingString_ORIGforwardInvocation_(void) {
         s[21] = ':';
         s[22] = '\0';
         initialized = true;
-        PDLPuddingString_ASSERT(strcmp(s, "ORIGforwardInvocation:") == 0);
+        PDLPuddingString_ASSERT(strcmp((char *)s, "ORIGforwardInvocation:") == 0);
     }
     return (char *)s;
 }
