@@ -225,10 +225,6 @@ static void pdl_allocation_create(__unsafe_unretained id object) {
         return;
     }
 
-    if (_policy == pdl_allocation_policy_zombie_only) {
-        return;
-    }
-
     pdl_allocation_lock();
 
     pdl_allocation_info *info = pdl_allocation_map_get(object);
@@ -262,10 +258,6 @@ static void pdl_allocation_destroy(__unsafe_unretained id object) {
 
     if (malloc_size(object) == 0) {
         assert(0);
-    }
-
-    if (_policy == pdl_allocation_policy_zombie_only) {
-        return;
     }
 
     pdl_allocation_lock();
@@ -334,54 +326,6 @@ pdl_backtrace_t pdl_deallocation_backtrace(__unsafe_unretained id object) {
     return backtrace;
 }
 
-#pragma mark - zombie
-
-static bool _pdl_zombie_available = false;
-static unsigned int _pdl_allocation_zombie_duration = 0;
-unsigned int pdl_allocation_zombie_duration(void) {
-    return _pdl_allocation_zombie_duration;
-}
-
-void pdl_allocation_set_zombie_duration(unsigned int zombie_duration) {
-    _pdl_allocation_zombie_duration = zombie_duration;
-}
-
-static dispatch_queue_t _pdl_allocation_zombie_queue = NULL;
-static dispatch_queue_t pdl_allocation_zombie_queue(void) {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        _pdl_allocation_zombie_queue = dispatch_queue_create("pdl_allocation_zombie_queue", DISPATCH_QUEUE_SERIAL);
-        if (!_pdl_allocation_zombie_queue) {
-            _pdl_allocation_zombie_queue = dispatch_get_global_queue(0, 0);
-        }
-    });
-    return _pdl_allocation_zombie_queue;
-}
-
-static void pdl_allocation_make_zombie(void *object) {
-    Class cls = object_getClass(object);
-    const char *class_name = class_getName(cls);
-    char *root_zombie_class_name = "_NSZombie_";
-    Class root_zombie_class = objc_lookUpClass(root_zombie_class_name);
-    unsigned long len = strlen(root_zombie_class_name) + strlen(class_name) + 1;
-    char zombie_class_name[len];
-    zombie_class_name[0] = '\0';
-    strcat(zombie_class_name, root_zombie_class_name);
-    strcat(zombie_class_name, class_name);
-    Class zombie_class = objc_lookUpClass(zombie_class_name);
-    if (!zombie_class) {
-        zombie_class = objc_duplicateClass(root_zombie_class, zombie_class_name, 0);
-    }
-    objc_destructInstance(object);
-    object_setClass(object, zombie_class);
-}
-
-bool pdl_allocation_is_zombie(__unsafe_unretained id object) {
-    Class cls = object_getClass(object);
-    const char *name = class_getName(cls);
-    return strncmp(name, "_NSZombie_", strlen("_NSZombie_")) == 0;
-}
-
 #pragma mark - hook
 
 __unused static id pdl_alloc(__unsafe_unretained id self, SEL _cmd) {
@@ -441,36 +385,6 @@ __unused static void pdl_dealloc(__unsafe_unretained id self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
     __unsafe_unretained id object = self;
     pdl_allocation_destroy(object);
-
-    unsigned int zombie_duration = _pdl_allocation_zombie_duration;
-    if (_pdl_zombie_available && zombie_duration > 0) {
-        pdl_allocation_make_zombie(object);
-        dispatch_block_t block = ^{
-            if (_imp) {
-                ((void (*)(id, SEL))_imp)(self, _cmd);
-            } else {
-                struct objc_super su = {self, class_getSuperclass(_class)};
-                ((void (*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);
-            }
-        };
-        dispatch_source_t timer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, pdl_allocation_zombie_queue());
-        dispatch_source_set_timer(timer, DISPATCH_TIME_NOW, zombie_duration * NSEC_PER_SEC, 1 * NSEC_PER_SEC);
-        __block bool start = NO;
-        dispatch_source_set_event_handler(timer, ^{
-            if (!start) {
-                start = YES;
-                return;
-            }
-
-            block();
-            dispatch_source_cancel(timer);
-            dispatch_release(timer);
-        });
-        dispatch_resume(timer);
-
-        return;
-    }
-
     if (_imp) {
         ((void (*)(id, SEL))_imp)(self, _cmd);
     } else {
@@ -488,7 +402,6 @@ bool pdl_allocation_enable(pdl_allocation_policy policy) {
         _policy = policy;
         pdl_allocation_lock();
         _pdl_allocation_class = [pdl_allocation class];
-        _pdl_zombie_available = objc_lookUpClass("_NSZombie_") != nil;
 
         Class cls = [NSObject class];
         id meta = object_getClass(cls);
