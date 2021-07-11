@@ -10,7 +10,7 @@
 
 @interface PDLBacktrace ()
 
-@property (nonatomic, assign) pdl_backtrace_t backtrace;
+@property (assign) pdl_backtrace_t backtrace;
 
 @end
 
@@ -100,6 +100,12 @@
 
 - (void)hide {
     pdl_backtrace_thread_hide(self.backtrace);
+}
+
+- (void)execute:(void *(*)(void *))start arg:(void *)arg hidden_count:(int)hidden_count {
+    if (self.backtrace) {
+        pdl_backtrace_thread_execute(self.backtrace, start, arg, hidden_count);
+    }
 }
 
 @end

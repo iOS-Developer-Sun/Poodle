@@ -23,5 +23,6 @@
 - (void)showWithoutWaiting;
 - (void)showWithThreadStart:(int (*)(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *))thread_create;
 - (void)hide;
+- (void)execute:(void *(*)(void *))start arg:(void *)arg hidden_count:(int)hidden_count;
 
 @end
