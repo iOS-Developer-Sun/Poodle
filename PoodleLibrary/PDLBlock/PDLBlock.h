@@ -7,19 +7,11 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "pdl_array.h"
 
-NS_ASSUME_NONNULL_BEGIN
+extern BOOL PDLBlockCheckEnable(BOOL(*blockFilter)(void *block), BOOL(*objectFilter)(void *block, void *object));
+extern BOOL PDLBlockCheck(Class aClass, void (^callback)(void *block, void *object));
 
-extern BOOL PDLBlockCopying(void);
-extern pdl_array_t PDLBlockCopyingBlocks(void);
-
-extern BOOL PDLBlockCopyRecordEnable(BOOL(*_Nullable filter)(void *block));
-
-@interface NSObject (PDLBlock)
-
-+ (BOOL)pdl_enableBlockCheck:(void(^)(void *object, void *block))callback;
-
-@end
-
-NS_ASSUME_NONNULL_END
+extern void PDLBlockCheckIgnoreBegin(id object);
+extern void PDLBlockCheckIgnoreEnd(id object);
+extern void PDLBlockCheckIgnoreAllBegin(void);
+extern void PDLBlockCheckIgnoreAllEnd(void);
