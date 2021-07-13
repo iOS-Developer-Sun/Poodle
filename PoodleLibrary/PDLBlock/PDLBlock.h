@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-extern BOOL PDLBlockCheckEnable(BOOL(*blockFilter)(void *block), BOOL(*objectFilter)(void *block, void *object));
+extern NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol));
 extern BOOL PDLBlockCheck(Class aClass, void (^callback)(void *block, void *object));
 
 extern void PDLBlockCheckIgnoreBegin(id object);

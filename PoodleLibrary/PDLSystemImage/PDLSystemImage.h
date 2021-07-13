@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <mach-o/loader.h>
 #import <mach/machine.h>
+#import "pdl_mach_object.h"
 
 @interface PDLSystemImage : NSObject
 
@@ -43,6 +44,7 @@
 + (NSArray *)systemImages;
 
 - (void)enumerateLazySymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action;
+- (void)enumerateSymbolPointers:(void(^)(PDLSystemImage *systemImage, pdl_nlist *nlist, const char *symbol, void **address))action;
 
 - (BOOL)dump:(NSString *)path;
 

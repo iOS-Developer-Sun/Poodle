@@ -11,15 +11,13 @@
 #import "NSObject+PDLImplementationInterceptor.h"
 #import "pdl_thread_storage.h"
 #import "NSObject+PDLDebug.h"
-#import "pdl_hook.h"
 #import "PDLBacktrace.h"
 #import "PDLSystemImage.h"
 
 @interface PDLBlockTracker : NSObject
 
 @property (nonatomic, weak) id object;
-@property (nonatomic, weak) id stackBlock;
-@property (nonatomic, weak) id mallocBlock;
+@property (nonatomic, weak) id block;
 @property (nonatomic, copy) void(^callback)(void *, void *);
 @property (nonatomic, strong) PDLBacktrace *backtrace;
 
@@ -34,16 +32,16 @@
 
 static void *start(void *arg) {
     PDLBlockTracker *self = (__bridge PDLBlockTracker *)(arg);
-    self.callback((__bridge void *)(self.mallocBlock), (__bridge void *)(self.object));
+    self.callback((__bridge void *)(self->_block), (__bridge void *)(self->_object));
     return NULL;
 }
 
 - (void)dealloc {
-    if (!self.mallocBlock) {
+    if (!_block) {
         return;
     }
 
-    if (!self.object) {
+    if (!_object) {
         return;
     }
 
@@ -54,10 +52,10 @@ static void *start(void *arg) {
 
 @interface PDLBlockThreadData : NSObject
 
-@property (nonatomic, strong) NSMutableArray *retainedBlocks;
-@property (nonatomic, strong) NSMutableArray *copiedBlocks;
+@property (nonatomic, strong) NSMutableArray *blocks;
 @property (nonatomic, strong) NSMapTable *trackers;
 @property (nonatomic, strong) NSMapTable *ignoredObjects;
+@property (nonatomic, strong) NSMutableArray *ignoredBlocks;
 @property (nonatomic, assign) NSInteger ignoreCount;
 @property (nonatomic, strong) id active;
 
@@ -68,54 +66,53 @@ static void *start(void *arg) {
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _retainedBlocks = [NSMutableArray array];
-        _copiedBlocks = [NSMutableArray array];
+        _blocks = [NSMutableArray array];
         _trackers = [NSMapTable strongToStrongObjectsMapTable];
         _ignoredObjects = [NSMapTable weakToStrongObjectsMapTable];
+        _ignoredBlocks = [NSMutableArray array];
         _active = self;
     }
     return self;
 }
 
-- (void)pushCopy:(void *)block {
-    NSMutableArray *blocks = self.copiedBlocks;
+- (void)addTracker:(PDLBlockTracker *)tracker {
+    NSMapTable *map = self.trackers;
+    void *block = [self last];
+    NSUInteger blockValue = (NSUInteger)block;
+    id key = @(blockValue);
+    NSMutableSet *set = [map objectForKey:key];
+    if (!set) {
+        set = [NSMutableSet set];
+        [map setObject:set forKey:key];
+    }
+    [set addObject:tracker];
+}
+
+- (void)removeTrackers:(void *)block {
+    NSMapTable *map = self.trackers;
+    NSUInteger blockValue = (NSUInteger)block;
+    id key = @(blockValue);
+    [map removeObjectForKey:key];
+}
+
+- (void)push:(void *)block {
+    NSMutableArray *blocks = self.blocks;
     uintptr_t value = (uintptr_t)block;
     [blocks addObject:@(value)];
 }
 
-- (void *)popCopy {
-    NSMutableArray *blocks = self.copiedBlocks;
+- (void *)pop {
+    NSMutableArray *blocks = self.blocks;
     assert(blocks.count > 0);
     NSNumber *value = blocks.lastObject;
     [blocks removeLastObject];
     void *block = (void *)value.unsignedLongValue;
+    [self removeTrackers:block];
     return block;
 }
 
-- (void *)lastCopy {
-    NSMutableArray *blocks = self.copiedBlocks;
-    NSNumber *value = blocks.lastObject;
-    void *block = (void *)value.unsignedLongValue;
-    return block;
-}
-
-- (void)pushRetain:(void *)block {
-    NSMutableArray *blocks = self.retainedBlocks;
-    uintptr_t value = (uintptr_t)block;
-    [blocks addObject:@(value)];
-}
-
-- (void *)popRetain {
-    NSMutableArray *blocks = self.retainedBlocks;
-    assert(blocks.count > 0);
-    NSNumber *value = blocks.lastObject;
-    [blocks removeLastObject];
-    void *block = (void *)value.unsignedLongValue;
-    return block;
-}
-
-- (void *)lastRetain {
-    NSMutableArray *blocks = self.retainedBlocks;
+- (void *)last {
+    NSMutableArray *blocks = self.blocks;
     NSNumber *value = blocks.lastObject;
     void *block = (void *)value.unsignedLongValue;
     return block;
@@ -123,6 +120,30 @@ static void *start(void *arg) {
 
 - (void)invalidate {
     _active = nil;
+}
+
+- (BOOL)ignoredBlock:(__unsafe_unretained id)object {
+    NSUInteger key = (NSUInteger)object;
+    return [self.ignoredBlocks containsObject:@(key)];
+}
+
+- (void)ignoreBlockBegin:(__unsafe_unretained id)object {
+    NSUInteger key = (NSUInteger)object;
+    [self.ignoredBlocks addObject:@(key)];
+}
+
+- (void)ignoreBlockEnd:(__unsafe_unretained id)object {
+    NSUInteger key = (NSUInteger)object;
+    NSInteger index = NSNotFound;
+    for (NSInteger i = self.ignoredBlocks.count - 1; i >= 0; i--) {
+        NSNumber *value = self.ignoredBlocks[i];
+        if (value.unsignedLongValue == key) {
+            index = i;
+            break;
+        }
+    }
+    assert(index != NSNotFound);
+    [self.ignoredBlocks removeObjectAtIndex:index];
 }
 
 - (BOOL)ignored:(__unsafe_unretained id)object {
@@ -147,9 +168,6 @@ static void *start(void *arg) {
 
 @end
 
-static BOOL(*PDLBlockBlockFilter)(void *block) = NULL;
-static BOOL(*PDLBlockObjectFilter)(void *block, void *object) = NULL;
-
 static void *PDLBlockThreadDataKey = &PDLBlockThreadDataKey;
 
 static void PDLBlockDestroy(void *arg) {
@@ -172,121 +190,6 @@ static PDLBlockThreadData *PDLBlockCurretThreadData(void) {
     return ret;
 }
 
-static NSSet *PDLBlockTrackers(__unsafe_unretained id block) {
-    NSMapTable *map = PDLBlockCurretThreadData().trackers;
-    NSUInteger blockValue = (NSUInteger)(__bridge void *)block;
-    id key = @(blockValue);
-    NSMutableSet *set = [map objectForKey:key];
-    return [set copy];
-}
-
-static void PDLBlockAddTracker(__unsafe_unretained id block, PDLBlockTracker *tracker) {
-    NSMapTable *map = PDLBlockCurretThreadData().trackers;
-    NSUInteger blockValue = (NSUInteger)(__bridge void *)block;
-    id key = @(blockValue);
-    NSMutableSet *set = [map objectForKey:key];
-    if (!set) {
-        set = [NSMutableSet set];
-        [map setObject:set forKey:key];
-    }
-    [set addObject:tracker];
-}
-
-static void PDLBlockRemoveTrackers(__unsafe_unretained id block) {
-    NSMapTable *map = PDLBlockCurretThreadData().trackers;
-    NSUInteger blockValue = (NSUInteger)(__bridge void *)block;
-    id key = @(blockValue);
-    [map removeObjectForKey:key];
-}
-
-static void *PDLBlockCopy(__unsafe_unretained id self, SEL _cmd) {
-    PDLImplementationInterceptorRecover(_cmd);
-    void *block = (__bridge void *)self;
-    PDLBlockThreadData *threadData = PDLBlockCurretThreadData();
-    BOOL valid = YES;
-    if (PDLBlockBlockFilter) {
-        valid = PDLBlockBlockFilter(block);
-    }
-    if (valid) {
-        [threadData pushCopy:block];
-    }
-    void *object = NULL;
-    if (_imp) {
-        object = ((void *(*)(id, SEL))_imp)(self, _cmd);
-    } else {
-        struct objc_super su = {self, class_getSuperclass(_class)};
-        object = ((void *(*)(struct objc_super *, SEL))objc_msgSendSuper)(&su, _cmd);
-    }
-    if (valid) {
-        void *popped = [threadData popCopy];
-        assert(block == popped);
-    }
-    return object;
-}
-
-static void *PDLBlockCopyWithZone(__unsafe_unretained id self, SEL _cmd, struct _NSZone *zone) {
-    PDLImplementationInterceptorRecover(_cmd);
-    void *block = (__bridge void *)self;
-    PDLBlockThreadData *threadData = PDLBlockCurretThreadData();
-    BOOL valid = YES;
-    if (PDLBlockBlockFilter) {
-        valid = PDLBlockBlockFilter(block);
-    }
-    if (valid) {
-        [threadData pushCopy:block];
-    }
-    void *object = NULL;
-    if (_imp) {
-        object = ((void *(*)(id, SEL, struct _NSZone *))_imp)(self, _cmd, zone);
-    } else {
-        struct objc_super su = {self, class_getSuperclass(_class)};
-        object = ((void *(*)(struct objc_super *, SEL, struct _NSZone *))objc_msgSendSuper)(&su, _cmd, zone);
-    }
-    if (valid) {
-        void *popped = [threadData popCopy];
-        assert(block == popped);
-    }
-    return object;
-}
-
-void PDLBlockRetainBlockBegin(void *block) {
-    BOOL valid = YES;
-    if (PDLBlockBlockFilter) {
-        valid = PDLBlockBlockFilter(block);
-    }
-    if (valid) {
-        [PDLBlockCurretThreadData() pushRetain:block];
-    }
-}
-
-void PDLBlockRetainBlockEnd(void *block, void *mallocBlock) {
-    BOOL valid = YES;
-    if (PDLBlockBlockFilter) {
-        valid = PDLBlockBlockFilter(block);
-    }
-    if (valid) {
-        void *popped = [PDLBlockCurretThreadData() popRetain];
-        assert(block == popped);
-        NSSet *trackers = PDLBlockTrackers((__bridge id)(block));
-        for (PDLBlockTracker *tracker in trackers) {
-            tracker.mallocBlock = (__bridge id)(mallocBlock);
-        }
-        PDLBlockRemoveTrackers((__bridge id)block);
-    }
-}
-
-static void *(*pdl_objc_retainBlock_original)(void *block);
-static void *pdl_objc_retainBlock(void *block) {
-    if (![(__bridge id)block isKindOfClass:objc_getClass("__NSStackBlock__")]) {
-        return pdl_objc_retainBlock_original(block);
-    }
-
-    PDLBlockRetainBlockBegin(block);
-    void *ret = pdl_objc_retainBlock_original(block);
-    PDLBlockRetainBlockEnd(block, ret);
-    return ret;
-}
-
 static BOOL PDLBlockIgnored(__unsafe_unretained id object) {
     PDLBlockThreadData *threadData = PDLBlockCurretThreadData();
     if (threadData.ignoreCount > 0) {
@@ -296,11 +199,6 @@ static BOOL PDLBlockIgnored(__unsafe_unretained id object) {
         return YES;
     }
     return NO;
-}
-
-static BOOL PDLBlockIsSystemBlock(void *frame) {
-    PDLSystemImage *systemImage = [PDLSystemImage systemImageWithName:@"libsystem_blocks.dylib"];
-    return ((uintptr_t)frame >= systemImage.address && (uintptr_t)frame <= systemImage.endAddress);
 }
 
 static BOOL PDLBlockIsCustomBlock(void *frame) {
@@ -334,119 +232,91 @@ static void *PDLBlockRetainObject(__unsafe_unretained id self, SEL _cmd) {
         }
 
         PDLBlockThreadData *threadData = PDLBlockCurretThreadData();
-        BOOL isCallbacked = NO;
-        do {
-            void *block = [threadData lastCopy];
-            BOOL valid = PDLBlockCheckBlockFilter(block);
-            if (!valid) {
-                break;
-            }
-
-            if (PDLBlockObjectFilter && !PDLBlockObjectFilter(block, object)) {
-                break;
-            }
-
-            void(^callback)(void *, void *) = (__bridge void (^)(void *, void *))(_data);
-            if (callback) {
-                callback((__bridge void *)self, block);
-            }
-            isCallbacked = YES;
-        } while (NO);
-        if (isCallbacked) {
+        void *block = [threadData last];
+        BOOL valid = PDLBlockCheckBlockFilter(block);
+        if (!valid) {
             break;
         }
 
-        do {
-            void *block = [threadData lastRetain];
-            BOOL valid = PDLBlockCheckBlockFilter(block);
-            if (!valid) {
-                break;
-            }
+        void(^callback)(void *, void *) = (__bridge void (^)(void *, void *))(_data);
+        PDLBlockTracker *tracker = [PDLBlockTracker tracker];
+        tracker.callback = callback;
+        tracker.block = (__bridge id)(block);
+        tracker.object = self;
+        PDLBacktrace *backtrace = [[PDLBacktrace alloc] init];
+        [backtrace record];
+        tracker.backtrace = backtrace;
 
-            if (PDLBlockObjectFilter && !PDLBlockObjectFilter(block, object)) {
-                break;
-            }
-
-            void(^callback)(void *, void *) = (__bridge void (^)(void *, void *))(_data);
-            PDLBlockTracker *tracker = [PDLBlockTracker tracker];
-            tracker.callback = callback;
-            tracker.stackBlock = (__bridge id)(block);
-            tracker.object = self;
-            PDLBlockAddTracker((__bridge id)block, tracker);
-            PDLBacktrace *backtrace = [[PDLBacktrace alloc] init];
-            [backtrace record];
-            tracker.backtrace = backtrace;
-            isCallbacked = YES;
-        } while (NO);
-        if (isCallbacked) {
-            break;
-        }
-
-        {
-            int frameCount = 5;
-            void *lr = pdl_builtin_return_address(1);
-            void *fp = pdl_builtin_frame_address(0);
-            void *frames[frameCount];
-            pdl_thread_frames(lr, fp, frames, frameCount);
-            void *copyFrame = NULL;
-            for (int i = 0; i < frameCount; i++) {
-                void *frame = frames[i];
-                if (!frame) {
-                    break;
-                }
-
-                if (PDLBlockIsSystemBlock(frame)) {
-                    copyFrame = frames[i - 1];
-                    break;
-                }
-            }
-
-            if (!PDLBlockIsCustomBlock(copyFrame)) {
-                break;
-            }
-
-            if (PDLBlockObjectFilter && !PDLBlockObjectFilter(NULL, object)) {
-                break;
-            }
-
-            void(^callback)(void *, void *) = (__bridge void (^)(void *, void *))(_data);
-            if (callback) {
-                callback(NULL, (__bridge void *)self);
-            }
-        }
+        [threadData addTracker:tracker];
     } while (NO);
 
     return object;
 }
 
-BOOL PDLBlockCheckEnable(BOOL(*blockFilter)(void *block), BOOL(*objectFilter)(void *block, void *object)) {
-    size_t count = 1;
-    pdl_hook_item items[count];
-    {
-        pdl_hook_item *item = items + 0;
-        item->name = "objc_retainBlock";
-        extern void *objc_retainBlock(void *);
-        item->external = &objc_retainBlock;
-        item->custom = &pdl_objc_retainBlock;
-        item->original = (void **)&pdl_objc_retainBlock_original;
-    }
-    int hooked = pdl_hook(items, count);
-    assert(hooked == count);
+static NSMutableDictionary *PDLBlockCopyMap = nil;
+static void PDLBlockDescCopy(pdl_block *toBlock, pdl_block *fromBlock) {
+    unsigned long key = (unsigned long)(fromBlock->Desc);
+    unsigned long value = [PDLBlockCopyMap[@(key)] unsignedLongValue];
+    assert(value);
 
-    pdl_thread_storage_register(PDLBlockThreadDataKey, &PDLBlockDestroy);
-
-    if (!pdl_thread_storage_enabled()) {
-        return NO;
+    void *block = toBlock;
+    PDLBlockThreadData *threadData = PDLBlockCurretThreadData();
+    BOOL valid = ![threadData ignoredBlock:(__bridge id)(fromBlock)];
+    if (valid) {
+        [threadData push:block];
     }
 
-    PDLBlockBlockFilter = blockFilter;
-    PDLBlockObjectFilter = objectFilter;
-    Class stackBlockClass = objc_getClass("__NSStackBlock__");
-    SEL copySelector = sel_registerName("copy");
-    SEL copyWithZoneSelector = sel_registerName("copyWithZone:");
-    BOOL ret = [stackBlockClass pdl_interceptSelector:copySelector withInterceptorImplementation:(IMP)&PDLBlockCopy isStructRet:@(NO) addIfNotExistent:YES data:NULL];
-    ret = ret && [stackBlockClass pdl_interceptSelector:copyWithZoneSelector withInterceptorImplementation:(IMP)&PDLBlockCopyWithZone isStructRet:@(NO) addIfNotExistent:YES data:NULL];
-    return ret;
+    typeof(&PDLBlockDescCopy) copy = (typeof(&PDLBlockDescCopy))value;
+    copy(toBlock, fromBlock);
+
+    if (valid) {
+        void *popped = [threadData pop];
+        assert(block == popped);
+    }
+}
+
+NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol)) {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        pdl_thread_storage_register(PDLBlockThreadDataKey, &PDLBlockDestroy);
+        if (pdl_thread_storage_enabled()) {
+            NSMutableDictionary *map = [NSMutableDictionary dictionary];
+            PDLBlockCopyMap = map;
+            [[PDLSystemImage executeSystemImage] enumerateSymbolPointers:^(PDLSystemImage *systemImage, pdl_nlist *nlist, const char *symbol, void **address) {
+                if (!nlist->n_sect) {
+                    return;
+                }
+
+                unsigned long key = (unsigned long)address;
+                if (map[@(key)] != nil) {
+                    return;
+                }
+
+                NSString *symbolString = @(symbol);
+                if (![symbolString hasPrefix:@"___block_descriptor"]) {
+                    return;
+                }
+
+                pdl_block_desc *desc = (pdl_block_desc *)address;
+                void *copy = desc->copy;
+                if (!copy) {
+                    return;
+                }
+
+                if (descriptorFilter) {
+                    if (!descriptorFilter(symbolString)) {
+                        return;
+                    }
+                }
+
+                unsigned long value = (unsigned long)copy;
+                map[@(key)] = @(value);
+                desc->copy = (typeof(desc->copy))&PDLBlockDescCopy;
+            }];
+        }
+    });
+
+    return PDLBlockCopyMap.count;
 }
 
 BOOL PDLBlockCheck(Class aClass, void (^callback)(void *block, void *object)) {
@@ -454,14 +324,24 @@ BOOL PDLBlockCheck(Class aClass, void (^callback)(void *block, void *object)) {
     return ret;
 }
 
+#pragma mark - ignore
+
 void PDLBlockCheckIgnoreBegin(__unsafe_unretained id object) {
     PDLBlockThreadData *threadData = PDLBlockCurretThreadData();
-    [threadData ignoreBegin:object];
+    if ([object isKindOfClass:objc_getClass("NSBlock")]) {
+        [threadData ignoreBlockBegin:object];
+    } else {
+        [threadData ignoreBegin:object];
+    }
 }
 
 void PDLBlockCheckIgnoreEnd(__unsafe_unretained id object) {
     PDLBlockThreadData *threadData = PDLBlockCurretThreadData();
-    [threadData ignoreEnd:object];
+    if ([object isKindOfClass:objc_getClass("NSBlock")]) {
+        [threadData ignoreBlockEnd:object];
+    } else {
+        [threadData ignoreEnd:object];
+    }
 }
 
 void PDLBlockCheckIgnoreAllBegin(void) {
