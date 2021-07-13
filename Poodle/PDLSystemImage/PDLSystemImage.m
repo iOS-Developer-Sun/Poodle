@@ -10,7 +10,6 @@
 #import <mach-o/dyld.h>
 #import <dlfcn.h>
 #import <mach/mach.h>
-#import "pdl_mach_object.h"
 
 @interface PDLSystemImage () {
     pdl_mach_object _mach_object;
@@ -419,6 +418,24 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
             }];
         }
     }];
+}
+
+- (void)enumerateSymbolPointers:(void(^)(PDLSystemImage *systemImage, pdl_nlist *nlist, const char *symbol, void **address))action {
+    if (!action) {
+        return;
+    }
+
+    pdl_mach_object_t *machObject = (pdl_mach_object_t *)self.machObject;
+    const pdl_nlist *symtab = machObject->symtab_list;
+    const char *strtab = machObject->strtab;
+    for (uint32_t i = 0; i < machObject->symtab_count; i++) {
+        pdl_nlist *nlist = (pdl_nlist *)&symtab[i];
+        uint32_t strx = nlist->n_un.n_strx;
+        u_long value = nlist->n_value;
+        const char *symbol = strtab + strx;
+        void *address = (void *)(value - machObject->vmaddr + (void *)machObject->header);
+        action(self, nlist, symbol, address);
+    }
 }
 
 - (BOOL)dump:(NSString *)path {
