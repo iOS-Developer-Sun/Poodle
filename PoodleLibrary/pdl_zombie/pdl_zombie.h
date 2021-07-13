@@ -8,11 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-NS_ASSUME_NONNULL_BEGIN
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 extern unsigned int pdl_zombie_duration(void);
 extern void pdl_zombie_set_zombie_duration(unsigned int zombie_duration);
 extern bool pdl_zombie_is_zombie(__unsafe_unretained id object);
 extern bool pdl_zombie_enable(bool(*filter)(__unsafe_unretained id object));
 
-NS_ASSUME_NONNULL_END
+#ifdef __cplusplus
+}
+#endif
