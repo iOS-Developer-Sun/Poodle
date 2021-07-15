@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-extern void pdl_disableCategoryLoad(bool(*filter)(void *image_header, const char *image_name, Class cls, const char *category_name));
+extern void pdl_disableCategoryLoad(void *image_header, bool(*filter)(Class cls, const char *category_name));
 
 #ifdef __cplusplus
 }
