@@ -254,9 +254,13 @@ static void *PDLBlockRetainObject(__unsafe_unretained id self, SEL _cmd) {
 }
 
 static NSMutableDictionary *PDLBlockCopyMap = nil;
+static __weak id PDLBlockCopyMapLock = nil;
 static void PDLBlockDescCopy(pdl_block *toBlock, pdl_block *fromBlock) {
     unsigned long key = (unsigned long)(fromBlock->Desc);
-    unsigned long value = [PDLBlockCopyMap[@(key)] unsignedLongValue];
+    unsigned long value = 0;
+    @synchronized (PDLBlockCopyMapLock) {
+        value = [PDLBlockCopyMap[@(key)] unsignedLongValue];
+    }
     assert(value);
 
     void *block = toBlock;
@@ -276,12 +280,14 @@ static void PDLBlockDescCopy(pdl_block *toBlock, pdl_block *fromBlock) {
 }
 
 NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol)) {
+    __block NSUInteger ret = 0;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         pdl_thread_storage_register(PDLBlockThreadDataKey, &PDLBlockDestroy);
         if (pdl_thread_storage_enabled()) {
             NSMutableDictionary *map = [NSMutableDictionary dictionary];
             PDLBlockCopyMap = map;
+            PDLBlockCopyMapLock = map;
             [[PDLSystemImage executeSystemImage] enumerateSymbolPointers:^(PDLSystemImage *systemImage, pdl_nlist *nlist, const char *symbol, void **address) {
                 if (!nlist->n_sect) {
                     return;
@@ -310,13 +316,17 @@ NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol)) {
                 }
 
                 unsigned long value = (unsigned long)copy;
-                map[@(key)] = @(value);
+                @synchronized (PDLBlockCopyMapLock) {
+                    map[@(key)] = @(value);
+                }
                 desc->copy = (typeof(desc->copy))&PDLBlockDescCopy;
             }];
+            ret = PDLBlockCopyMap.count;
+            PDLBlockCopyMapLock = nil;
         }
     });
 
-    return PDLBlockCopyMap.count;
+    return ret;
 }
 
 BOOL PDLBlockCheck(Class aClass, void (^callback)(void *block, void *object)) {
