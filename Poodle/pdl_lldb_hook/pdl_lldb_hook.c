@@ -140,8 +140,8 @@ static uintptr_t *lldb_entry_original_with_offsets[PDL_LLDB_HOOK_MAX_COUNT] = {
 
 static int get_branch_instructions_count(uintptr_t from, uintptr_t to) {
     intptr_t diff = to - from;
-    if (diff == 0) {
-        return 0;
+    if ((diff < 0x8000000 && diff >= -0x8000000) && ((diff & 0b11) == 0)) {
+        return 1;
     }
 
     if (diff < 0x100000 && diff >= -0x100000) {
@@ -160,7 +160,15 @@ static void generate_branch_instructions(uintptr_t from, uintptr_t to, unsigned 
     unsigned int reg = 9;
 
     intptr_t diff = to - from;
-    if (branch_instructions_count == 2 && diff < 0x100000 && diff >= -0x100000) {
+    if ((diff < 0x8000000 && diff >= -0x8000000) && ((diff & 0b11) == 0)) {
+        unsigned int b = 0b00010100000000000000000000000000;
+        unsigned int imm = (diff >> 2) & 0b11111111111111111111111111;
+        b |= imm;
+        branch_to_custom_function[0] = b;
+        return;
+    }
+
+    if (diff < 0x100000 && diff >= -0x100000) {
         unsigned int adr = 0b00010000000000000000000000000000;
         const int immloshift = 29;
         const int immhishift = 5;
@@ -168,7 +176,7 @@ static void generate_branch_instructions(uintptr_t from, uintptr_t to, unsigned 
         unsigned int immhi = ((diff & ~0b11) >> 2) & 0b1111111111111111111;
         adr |= immlo << immloshift;
         adr |= immhi << immhishift;
-        adr += reg;
+        adr |= reg;
         branch_to_custom_function[0] = adr;
     } else {
         uintptr_t frompage = from & ~4095;
@@ -181,7 +189,7 @@ static void generate_branch_instructions(uintptr_t from, uintptr_t to, unsigned 
         unsigned int immhi = ((diff & ~0b11) >> 2) & 0b1111111111111111111;
         adrp |= immlo << immloshift;
         adrp |= immhi << immhishift;
-        adrp += reg;
+        adrp |= reg;
         branch_to_custom_function[0] = adrp;
 
         unsigned int offset = (unsigned int)(to - topage);
@@ -190,7 +198,7 @@ static void generate_branch_instructions(uintptr_t from, uintptr_t to, unsigned 
             const int immshift = 10;
             unsigned int imm = offset & 0b111111111111;
             add |= imm << immshift;
-            add |= (reg << 5) + reg;
+            add |= (reg << 5) | reg;
             branch_to_custom_function[1] = add;
         }
     }
@@ -244,15 +252,15 @@ static int first_empty_index_of_hook_table(void) {
     return -1;
 }
 
-static bool lldb_hook(uintptr_t hooked_function, uintptr_t custom_function) {
+static int lldb_hook(uintptr_t hooked_function, uintptr_t custom_function) {
     int index = index_of_hook_table(custom_function);
     if (index != -1) {
-        return false;
+        return -1;
     }
 
     int first_empty_index = first_empty_index_of_hook_table();
     if (first_empty_index == -1) {
-        return false;
+        return -2;
     }
 
     int branch_instructions_count = get_branch_instructions_count(hooked_function, custom_function);
@@ -264,12 +272,12 @@ static bool lldb_hook(uintptr_t hooked_function, uintptr_t custom_function) {
     uintptr_t entry = (uintptr_t)lldb_entrys[first_empty_index];
     print_lldb_command(hooked_function, custom_function, entry, branch_instructions_count);
 
-    return true;
+    return branch_instructions_count;
 }
 
-bool pdl_lldb_hook(IMP hooked_function, IMP custom_function) {
+int pdl_lldb_hook(IMP hooked_function, IMP custom_function) {
     if (hooked_function == NULL || custom_function == NULL || hooked_function == custom_function) {
-        return false;
+        return 0;
     }
 
     return lldb_hook((uintptr_t)hooked_function, (uintptr_t)custom_function);
@@ -290,8 +298,8 @@ IMP pdl_lldb_hooked_function_new_entry(IMP custom_function) {
 
 #else
 
-bool pdl_lldb_hook(IMP hooked_function, IMP custom_function) {
-    return false;
+int pdl_lldb_hook(IMP hooked_function, IMP custom_function) {
+    return 0;
 }
 
 char *pdl_lldb_command(void) {
