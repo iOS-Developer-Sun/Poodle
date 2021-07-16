@@ -53,6 +53,15 @@ pdl_objc_runtime_category *pdl_objc_runtime_categories(const void *header, size_
     return data;
 }
 
+pdl_objc_runtime_category *pdl_objc_runtime_nonlazy_categories(const void *header, size_t *count) {
+    size_t size = 0;
+    pdl_objc_runtime_category *data = (pdl_objc_runtime_category *)getDataSection(header, "__objc_nlcatlist", &size);
+    if (count) {
+        *count = size / sizeof(struct category_t *);
+    }
+    return data;
+}
+
 const char *pdl_objc_runtime_category_get_name(pdl_objc_runtime_category category) {
     struct category_t *c = (struct category_t *)category;
     return c->name;

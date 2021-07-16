@@ -22,7 +22,7 @@ void pdl_disableCategoryLoad(void *image_header, bool(*filter)(Class cls, const 
     }
 
     size_t count = 0;
-    pdl_objc_runtime_category *categories = pdl_objc_runtime_categories(image_header, &count);
+    pdl_objc_runtime_category *categories = pdl_objc_runtime_nonlazy_categories(image_header, &count);
     for (size_t i = 0; i < count; i++) {
         pdl_objc_runtime_category *category = categories[i];
         if (!category) {
@@ -37,17 +37,14 @@ void pdl_disableCategoryLoad(void *image_header, bool(*filter)(Class cls, const 
         }
 
         uint32_t method_list_count = pdl_objc_runtime_method_list_get_count(method_list);
+        SEL loadSel = sel_registerName("load");
         for (uint32_t j = 0; j < method_list_count; j++) {
             Method method = pdl_objc_runtime_method_list_get_method(method_list, j);
             SEL sel = method_getName(method);
             if (!sel) {
                 continue;
             }
-            const char *n1 = sel_getName(sel);
-            if (!n1) {
-                continue;
-            }
-            if (strcmp(n1, "load") != 0) {
+            if ((!sel_isEqual(loadSel, sel)) && (strcmp(sel_getName(sel), sel_getName(loadSel)) != 0)) {
                 continue;
             }
 
