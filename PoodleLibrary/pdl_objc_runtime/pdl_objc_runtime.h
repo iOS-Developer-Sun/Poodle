@@ -16,6 +16,7 @@ typedef void *pdl_objc_runtime_category;
 typedef void *pdl_objc_runtime_method_list;
 
 extern pdl_objc_runtime_category *pdl_objc_runtime_categories(const void *header, size_t *count);
+extern pdl_objc_runtime_category *pdl_objc_runtime_nonlazy_categories(const void *header, size_t *count);
 
 extern const char *pdl_objc_runtime_category_get_name(pdl_objc_runtime_category category);
 extern Class pdl_objc_runtime_category_get_class(pdl_objc_runtime_category category);
