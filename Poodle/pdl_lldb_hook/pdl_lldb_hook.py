@@ -136,9 +136,16 @@ def pdl_hook(debugger, command, result, dict):
     if not value:
         return;
 
-    ret = value.GetValueAsSigned();
-    if not ret:
-        print(cmd + ' returns false');
+    hookret = value.GetValueAsSigned();
+    if hookret <= 0:
+        if hookret == 0:
+            print('same address');
+        elif hookret == -1:
+            print(hookedFunction + '(' + hex(hookedFunctionAddr) + ') is already hooked');
+        elif hookret == -2:
+            print('no entry available');
+        else :
+            print('unknown error');
         return;
 
     # pdl_lldb_command
@@ -176,7 +183,7 @@ def pdl_hook(debugger, command, result, dict):
         if error:
             print(error);
             return;
-    print('pdl_hook ' + hookedFunction + '(' + hex(hookedFunctionAddr) + ') with ' + customFunction + '(' + hex(customFunctionAddr) + ') succeeded');
+    print('pdl_hook ' + hookedFunction + '(' + hex(hookedFunctionAddr) + ') with ' + customFunction + '(' + hex(customFunctionAddr) + ') succeeded[' + str(hookret) + ']');
     return;
 
 def __lldb_init_module(debugger, internal_dict):
