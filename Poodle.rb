@@ -679,7 +679,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLDatabase/' + source_files
+            ss.source_files = base + 'PDLDatabase/' + '*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'
             ss.vendored_library = base + 'PDLDatabase/' + librariy_files
             ss.frameworks = 'Foundation'
         end

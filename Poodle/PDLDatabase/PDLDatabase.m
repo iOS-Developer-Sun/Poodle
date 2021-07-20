@@ -9,10 +9,54 @@
 #import "PDLDatabase.h"
 #import <objc/message.h>
 #import <sqlite3.h>
+
+#if 0
+
 #import "FMDatabase.h"
 #import "FMDatabaseAdditions.h"
 #import "FMDatabaseQueue.h"
 #import "FMResultSet.h"
+
+#else
+
+@interface PDLDatabaseFmdb : NSObject
+
+@end
+
+@compatibility_alias FMDatabaseQueue PDLDatabaseFmdb;
+@compatibility_alias FMDatabase PDLDatabaseFmdb;
+@compatibility_alias FMResultSet PDLDatabaseFmdb;
+
+@interface PDLDatabaseFmdb (Fake)
+
+// FMDatabaseQueue
++ (nullable instancetype)databaseQueueWithPath:(NSString * _Nullable)aPath flags:(int)openFlags;
+- (void)inDatabase:(__attribute__((noescape)) void (^)(FMDatabase *db))block;
+
+// FMDatabase
+@property (nonatomic) NSTimeInterval maxBusyRetryTimeInterval;
+@property (atomic, assign) BOOL logsErrors;
+- (void)closeOpenResultSets;
+- (void)close;
+- (BOOL)executeUpdate:(NSString*)sql values:(NSArray * _Nullable)values error:(NSError * _Nullable __autoreleasing *)error;
+- (FMResultSet * _Nullable)executeQuery:(NSString*)sql, ...;
+- (BOOL)executeUpdate:(NSString*)sql, ...;
+- (BOOL)beginTransaction;
+- (BOOL)commit;
+- (BOOL)rollback;
+
+// FMResultSet
+@property (nonatomic, readonly, nullable) NSDictionary *resultDictionary;
+- (BOOL)next;
+- (NSError *)lastError;
+- (int)intForColumn:(NSString*)columnName;
+- (NSString * _Nullable)columnNameForIndex:(int)columnIdx;
+- (NSString * _Nullable)stringForColumn:(NSString*)columnName;
+- (int)intForColumnIndex:(int)columnIdx;
+
+@end
+
+#endif
 
 @interface PDLDatabase ()
 
