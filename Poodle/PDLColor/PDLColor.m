@@ -35,3 +35,10 @@ UIColor *PDLColorBackgroundColor(void) {
     }
     return backgroundColor;
 }
+
+UIColor *PDLColorRandomColor(void) {
+    CGFloat r = arc4random() % 256 / 255.0;
+    CGFloat g = arc4random() % 256 / 255.0;
+    CGFloat b = arc4random() % 256 / 255.0;
+    return [UIColor colorWithRed:r green:g blue:b alpha:1];
+}

@@ -14,6 +14,7 @@ extern "C" {
 
 extern UIColor *PDLColorTextColor(void);
 extern UIColor *PDLColorBackgroundColor(void);
+extern UIColor *PDLColorRandomColor(void);
 
 #ifdef __cplusplus
 }
