@@ -8,6 +8,7 @@
 
 #import "PDLFormView.h"
 #import "PDLFormViewCell.h"
+#import "NSMapTable+PDLExtension.h"
 
 @interface PDLFormView () {
     BOOL _delegateRespondsViewForColumnRow;
@@ -363,7 +364,7 @@
 - (void)removeVisibleViewAtColumn:(NSInteger)column row:(NSInteger)row forced:(BOOL)forced {
     NSIndexPath *destinationIndexPath = [self destinationIndexPathWithIndexPath:[NSIndexPath indexPathForRow:row inSection:column]];
     UIView *view = self.visibleViews[destinationIndexPath];
-    PDLFormViewCell *cell = [self.viewCellMapTable objectForKey:view];
+    PDLFormViewCell *cell = self.viewCellMapTable[view];
     if (!forced) {
         BOOL intersects = CGRectIntersectsRect(cell.frame, CGRectMake(self.contentOffset.x, self.contentOffset.y, self.bounds.size.width, self.bounds.size.height));
         if (intersects) {
@@ -401,12 +402,12 @@
     self.visibleViews[destinationIndexPath] = view;
 
     CGRect frame = [self viewFrameInColumn:column row:row];
-    PDLFormViewCell *cell = [self.viewCellMapTable objectForKey:view];
+    PDLFormViewCell *cell = self.viewCellMapTable[view];
     if (cell == nil) {
         cell = [[PDLFormViewCell alloc] initWithFrame:frame];
         [cell.contentView addSubview:view];
         cell.view = view;
-        [self.viewCellMapTable setObject:cell forKey:view];
+        self.viewCellMapTable[view] = cell;
     } else {
         cell.frame = frame;
     }
@@ -459,7 +460,7 @@
         return;
     }
 
-    PDLFormViewCell *cell = [self.viewCellMapTable objectForKey:view];
+    PDLFormViewCell *cell = self.viewCellMapTable[view];
     if (cell == nil) {
         return;
     }
@@ -665,12 +666,12 @@
 }
 
 - (NSString *)reuseIdentifierForView:(UIView *)view {
-    NSString *reuseIdentifier = [self.reuseIdentifierMapTable objectForKey:view];
+    NSString *reuseIdentifier = self.reuseIdentifierMapTable[view];
     return reuseIdentifier;
 }
 
 - (void)setReuseIdentifier:(NSString *)identifier forView:(UIView *)view {
-    [self.reuseIdentifierMapTable setObject:[identifier copy] forKey:view];
+    self.reuseIdentifierMapTable[view] = [identifier copy];
 }
 
 - (void)enqueue:(UIView *)view {

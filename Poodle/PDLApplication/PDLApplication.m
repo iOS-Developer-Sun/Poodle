@@ -9,6 +9,7 @@
 #import "PDLApplication.h"
 #import "NSObject+PDLImplementationInterceptor.h"
 #import "CAAnimation+PDLExtension.h"
+#import "NSMapTable+PDLExtension.h"
 
 @implementation PDLApplication
 
@@ -420,19 +421,19 @@ static NSMutableArray *pdl_colors(void) {
 
 static UIColor *pdl_colorForTouch(UITouch *touch) {
     NSMapTable *touchColors = pdl_touchColors();
-    UIColor *color = [touchColors objectForKey:touch];
+    UIColor *color = touchColors[touch];
     NSMutableArray *colors = pdl_colors();
     if (touch.phase == UITouchPhaseBegan) {
         if (!color) {
             NSInteger index = 0;
             color = colors[index];
             [colors removeObjectAtIndex:index];
-            [touchColors setObject:color forKey:touch];
+            touchColors[touch] = color;
         }
     } else {
         if ((touch.phase == UITouchPhaseEnded) || (touch.phase == UITouchPhaseCancelled)) {
             if (color) {
-                [touchColors removeObjectForKey:touch];
+                touchColors[touch] = nil;
                 [colors addObject:color];
             }
         }

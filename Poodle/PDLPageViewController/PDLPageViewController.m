@@ -8,6 +8,7 @@
 
 #import "PDLPageViewController.h"
 #import "PDLPageController.h"
+#import "NSMapTable+PDLExtension.h"
 
 @interface PDLPageViewControllerItem : NSObject
 
@@ -136,11 +137,11 @@
 #pragma mark - Private methods
 
 - (PDLPageViewControllerItem *)itemForView:(UIView *)view {
-    return [self.items objectForKey:view];
+    return self.items[view];
 }
 
 - (void)setItem:(PDLPageViewControllerItem *)item forView:(UIView *)view {
-    [self.items setObject:item forKey:view];
+    self.items[view] = item;
 }
 
 #pragma mark - Public properties
