@@ -8,6 +8,7 @@
 
 #import "UIViewController+PDLExtension.h"
 #import "NSObject+PDLImplementationInterceptor.h"
+#import "NSMapTable+PDLExtension.h"
 
 typedef NS_ENUM(NSUInteger, PDLViewControllerExtensionControllerType) {
     PDLViewControllerExtensionControllerTypeViewWillAppear,
@@ -37,7 +38,7 @@ typedef NS_ENUM(NSUInteger, PDLViewControllerExtensionControllerType) {
 - (void)act:(UIViewController *)viewController {
     NSMapTable *actions = _actions;
     for (id key in actions) {
-        void(^action)(__kindof UIViewController *, id key) = [actions objectForKey:key];
+        void(^action)(__kindof UIViewController *, id key) = actions[key];
         action(viewController, key);
     }
 
@@ -49,19 +50,19 @@ typedef NS_ENUM(NSUInteger, PDLViewControllerExtensionControllerType) {
 }
 
 - (void (^)(__kindof UIViewController * _Nonnull))actionForKey:(id)key {
-    return [self.actions objectForKey:key];
+    return self.actions[key];
 }
 
 - (void)setAction:(void (^)(__kindof UIViewController * _Nonnull, id _Nonnull))action forKey:(id)key {
-    [self.actions setObject:action forKey:key];
+    self.actions[key] = action;
 }
 
 - (void(^_Nullable)(__kindof UIViewController *))actionForWeakKey:(id)key {
-    return [self.weakActions objectForKey:key];
+    return self.weakActions[key];
 }
 
 - (void)setAction:(void(^_Nullable)(__kindof UIViewController *viewController, id key))action forWeakKey:(id)key {
-    [self.weakActions setObject:action forKey:key];
+    self.weakActions[key] = action;
 }
 
 @end

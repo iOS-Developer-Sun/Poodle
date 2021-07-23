@@ -147,23 +147,33 @@ static void *start(void *arg) {
 }
 
 - (BOOL)ignored:(__unsafe_unretained id)object {
+    PDLBlockCheckIgnoreAllBegin();
     NSNumber *value = [self.ignoredObjects objectForKey:object];
+    PDLBlockCheckIgnoreAllEnd();
     return value.integerValue > 0;
 }
 
 - (void)ignoreBegin:(__unsafe_unretained id)object {
+    PDLBlockCheckIgnoreAllBegin();
     NSNumber *value = [self.ignoredObjects objectForKey:object];
     value = @(value.integerValue + 1);
     [self.ignoredObjects setObject:value forKey:object];
+    PDLBlockCheckIgnoreAllEnd();
 }
 
 - (void)ignoreEnd:(__unsafe_unretained id)object {
+    PDLBlockCheckIgnoreAllBegin();
     NSNumber *value = [self.ignoredObjects objectForKey:object];
     value = @(value.integerValue - 1);
     if (value.integerValue == 0) {
         value = nil;
     }
-    [self.ignoredObjects setObject:value forKey:object];
+    if (value) {
+        [self.ignoredObjects setObject:value forKey:object];
+    } else {
+        [self.ignoredObjects removeObjectForKey:object];
+    }
+    PDLBlockCheckIgnoreAllEnd();
 }
 
 @end

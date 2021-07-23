@@ -590,6 +590,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'PDLApplication/' + librariy_files
             ss.frameworks = 'UIKit'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+            ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
         s.subspec 'PDLBacktrace' do |ss|
@@ -620,6 +621,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'PDLBacktraceRecordsItem/' + librariy_files
             ss.frameworks = 'Foundation'
             ss.dependency pod_name + '/PDLBacktraceRecorder'
+            ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
         s.subspec 'PDLBlock' do |ss|
@@ -721,6 +723,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.source_files = base + 'PDLFormView/' + source_files
             ss.vendored_library = base + 'PDLFormView/' + librariy_files
             ss.frameworks = 'UIKit'
+            ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
         s.subspec 'PDLImageListViewController' do |ss|
@@ -836,6 +839,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'PDLPageViewController/' + librariy_files
             ss.frameworks = 'UIKit'
             ss.dependency pod_name + '/PDLPageController'
+            ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
         s.subspec 'PDLProcessInfo' do |ss|
@@ -880,6 +884,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.source_files = base + 'PDLReuseItemManager/' + source_files
             ss.vendored_library = base + 'PDLReuseItemManager/' + librariy_files
             ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
         s.subspec 'PDLRunLoopObserver' do |ss|
@@ -1009,6 +1014,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'UIViewController+PDLExtension/' + librariy_files
             ss.frameworks = 'UIKit'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+            ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
         s.subspec 'UIViewController+PDLNavigationBar' do |ss|

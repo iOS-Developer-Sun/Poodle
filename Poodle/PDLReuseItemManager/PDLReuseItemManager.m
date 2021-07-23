@@ -7,6 +7,7 @@
 //
 
 #import "PDLReuseItemManager.h"
+#import "NSMapTable+PDLExtension.h"
 
 @interface PDLReuseItemManager ()
 
@@ -27,12 +28,12 @@
 }
 
 - (NSString *)reuseIdentifierForItem:(id)item {
-    NSString *reuseIdentifier = [self.reuseIdentifierMapTable objectForKey:item];
+    NSString *reuseIdentifier = self.reuseIdentifierMapTable[item];
     return reuseIdentifier;
 }
 
 - (void)setReuseIdentifier:(NSString *)identifier forItem:(id)item {
-    [self.reuseIdentifierMapTable setObject:[identifier copy] forKey:item];
+    self.reuseIdentifierMapTable[item] = [identifier copy];
 }
 
 - (void)enqueue:(id)item {

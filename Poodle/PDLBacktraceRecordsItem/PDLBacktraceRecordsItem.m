@@ -7,6 +7,7 @@
 //
 
 #import "PDLBacktraceRecordsItem.h"
+#import "NSMapTable+PDLExtension.h"
 
 @interface PDLBacktraceRecordsItem ()
 
@@ -37,10 +38,10 @@
                 record.backtrace = firstBacktrace;
             }
 
-            NSMutableArray *times = [timesTable objectForKey:firstBacktrace];
+            NSMutableArray *times = timesTable[firstBacktrace];
             if (!times) {
                 times = [NSMutableArray array];
-                [timesTable setObject:times forKey:backtrace];
+                timesTable[backtrace] = times;
             }
             [times addObject:@(record.time)];
         }
