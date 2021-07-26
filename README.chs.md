@@ -90,7 +90,7 @@ hook该属性的setter/getter到总setter/getter入口，getter入口内调用lo
 
 ## pdl_allocation
 
-像Malloc stack logging一样，提供对象的的live、free信息；可以开启对象的zombie延迟free功能
+像Malloc stack logging一样，提供对象的的live、free信息
 
 ## pdl_asm
 
@@ -248,6 +248,10 @@ c字典数组链表数据结构
 
 获取指定地址的读写执行权限、安全方式写入指定地址
 
+## pdl_zombie
+
+zombie支持
+
 ## PDLAddressQueryViewController
 
 封装dladdr，提供地址查询功能
@@ -274,7 +278,7 @@ PDLBacktraceRecord的结果处理
 
 提供block引用指定类的对象的工具，用于循环引用检查
 
-hook __NSMallocBlock__和__NSStackBlock__的copyWithZone:方法，对当前copy操作进行记录（tls），hook指定类的retain，查看是否在调用block的copy
+hook image的所有block的copy函数，对当前copy操作进行记录（tls），hook指定类的retain，查看是否在调用block的copy
 
 ## PDLCollectionViewFlowLayout
 
@@ -282,13 +286,13 @@ hook __NSMallocBlock__和__NSStackBlock__的copyWithZone:方法，对当前copy�
 
 ## PDLColor
 
-支持Dark模式的工具颜色
+支持Dark模式的工具颜色、随机颜色
 
 ## PDLCrash
 
 app内crash解析
 
-解析crash文件，根据bundle id、image的uuid等信息，自动解析crash文件
+解析crash文件，根据bundle id、image的uuid、dyld_shared_cache等信息，自动解析crash文件
 
 封装的dladdr
 
@@ -310,7 +314,7 @@ fmdb的oc方法
 
 ## PDLFontViewController
 
-字体试图
+字体列表视图
 
 ## PDLFormView
 
