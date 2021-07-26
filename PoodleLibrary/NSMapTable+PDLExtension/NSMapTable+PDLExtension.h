@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+__attribute__((objc_direct_members))
 @interface NSMapTable (PDLExtension)
 
 - (id)objectForKeyedSubscript:(id)key;
