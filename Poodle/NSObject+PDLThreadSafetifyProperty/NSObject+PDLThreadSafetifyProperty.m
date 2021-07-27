@@ -64,21 +64,24 @@ static void pdl_threadSafePropertySetter(__unsafe_unretained id self, SEL _cmd, 
     SEL getter = NULL;
     if (property) {
         name = property_getName(property);
-        const char *attributes = property_getAttributes(property);
-        NSArray *attributeList = [@(attributes) componentsSeparatedByString:@","];
-        for (NSString *attributeString in attributeList) {
-            if ([attributeString hasPrefix:@"G"]) {
-                getterString = [attributeString substringFromIndex:1];
-            }
-            if ([attributeString hasPrefix:@"S"]) {
-                setterString = [attributeString substringFromIndex:1];
-            }
-            if ([attributeString isEqualToString:@"R"]) {
-                readonly = YES;
-            }
+        char *getterValue = property_copyAttributeValue(property, "G");
+        if (getterValue) {
+            getterString = @(getterValue);
+            free(getterValue);
         }
+        char *setterValue = property_copyAttributeValue(property, "S");
+        if (setterValue) {
+            setterString = @(setterValue);
+            free(setterValue);
+        }
+        char *readonlyValue = property_copyAttributeValue(property, "R");
+        if (readonlyValue) {
+            readonly = YES;
+            free(readonlyValue);
+        }
+
         getter = NSSelectorFromString(getterString);
-        if (!setterString) {
+        if (!readonly && !setterString) {
             setterString = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
         }
     } else {

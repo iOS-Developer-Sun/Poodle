@@ -99,7 +99,6 @@ static Class _checker = nil;
     for (unsigned int i = 0; i < count; i++) {
         objc_property_t property = propertyList[i];
         const char *name = property_getName(property);
-        const char *attributes = property_getAttributes(property);
         NSString *propertyName = @(name);
         if (propertyFilter && propertyFilter(propertyName)) {
             continue;
@@ -107,30 +106,54 @@ static Class _checker = nil;
         if ([propertyMapFilter containsObject:propertyName]) {
             continue;
         }
-        NSArray *attributeList = [@(attributes) componentsSeparatedByString:@","];
-        if (![attributeList containsObject:@"&"] && ![attributeList containsObject:@"C"]) {
-            continue;
+
+        char *strongValue = property_copyAttributeValue(property, "&");
+        if (!strongValue) {
+            char *copyValue = property_copyAttributeValue(property, "C");
+            if (!copyValue) {
+                continue;
+            }
+            free(copyValue);
+        } else {
+            free(strongValue);
         }
-        assert(![attributeList containsObject:@"W"]);
-        if (![attributeList containsObject:@"N"]) {
+        assert(!property_copyAttributeValue(property, "W"));
+
+        char *nonatomicValue = property_copyAttributeValue(property, "N");
+        if (!nonatomicValue) {
             continue;
+        } else {
+            free(nonatomicValue);
         }
-        if ([attributeList containsObject:@"R"]) {
-            continue;
-        }
-        if ([attributeList containsObject:@"D"]) {
+
+        char *readonlyValue = property_copyAttributeValue(property, "R");
+        if (readonlyValue) {
+            free(readonlyValue);
             continue;
         }
 
-        NSString *getterString = propertyName;
-        NSString *setterString = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
-        for (NSString *attributeString in attributeList) {
-            if ([attributeString hasPrefix:@"G"]) {
-                getterString = [attributeString substringFromIndex:1];
-            }
-            if ([attributeString hasPrefix:@"S"]) {
-                setterString = [attributeString substringFromIndex:1];
-            }
+        char *dynamicValue = property_copyAttributeValue(property, "D");
+        if (dynamicValue) {
+            free(dynamicValue);
+            continue;
+        }
+
+        NSString *getterString = nil;
+        NSString *setterString = nil;
+        char *getterValue = property_copyAttributeValue(property, "G");
+        if (getterValue) {
+            getterString = @(getterValue);
+            free(getterValue);
+        } else {
+            getterString = propertyName;
+        }
+
+        char *setterValue = property_copyAttributeValue(property, "S");
+        if (setterValue) {
+            setterString = @(setterValue);
+            free(setterValue);
+        } else {
+            setterString = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
         }
 
         SEL getter = NSSelectorFromString(getterString);
