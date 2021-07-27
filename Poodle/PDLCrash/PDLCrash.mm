@@ -239,7 +239,6 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         uintptr_t address = 0;
         while ([scanner scanHexLongLong:(unsigned long long *)&address]) {
             length = scanner.scanLocation - symbolBegin;
-            NSLog(@"%p, %@-%@", (void *)address, @(symbolBegin), @(length + symbolBegin));
             symbolBegin = scanner.scanLocation;
             NSMutableString *lineNumberString = [@(lineNumber).stringValue mutableCopy];
             if (lineNumberString.length < 4) {

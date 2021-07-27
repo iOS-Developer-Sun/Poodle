@@ -109,26 +109,31 @@ static void pdl_weakPropertySetter(__unsafe_unretained id self, SEL _cmd, __unsa
         return NO;
     }
 
-    const char *attributes = property_getAttributes(property);
-    NSArray *attributeList = [@(attributes) componentsSeparatedByString:@","];
-
-    NSString *getterString = propertyName;
-    NSString *setterString = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
     NSString *ivarString = ivarName;
-    for (NSString *attributeString in attributeList) {
-        if ([attributeString hasPrefix:@"G"]) {
-            getterString = [attributeString substringFromIndex:1];
-        }
-        if ([attributeString hasPrefix:@"S"]) {
-            setterString = [attributeString substringFromIndex:1];
-        }
-        if ([attributeString hasPrefix:@"V"] && ivarName == NULL) {
-            ivarString = [attributeString substringFromIndex:1];
+    if (!ivarString) {
+        char *ivarValue = property_copyAttributeValue(property, "V");
+        if (ivarValue) {
+            ivarString = @(ivarValue);
+            free(ivarValue);
         }
     }
 
-    if (!ivarString) {
-        return NO;
+    NSString *getterString = nil;
+    NSString *setterString = nil;
+    char *getterValue = property_copyAttributeValue(property, "G");
+    if (getterValue) {
+        getterString = @(getterValue);
+        free(getterValue);
+    } else {
+        getterString = propertyName;
+    }
+
+    char *setterValue = property_copyAttributeValue(property, "S");
+    if (setterValue) {
+        setterString = @(setterValue);
+        free(setterValue);
+    } else {
+        setterString = [NSString stringWithFormat:@"set%@%@:", [propertyName substringToIndex:1].uppercaseString, [propertyName substringFromIndex:1]];
     }
 
     SEL getter = NSSelectorFromString(getterString);
