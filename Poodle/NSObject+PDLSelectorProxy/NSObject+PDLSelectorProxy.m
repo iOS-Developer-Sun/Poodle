@@ -52,7 +52,7 @@ static BOOL NSObjectSelectorProxyIsObjectSupported(__unsafe_unretained id object
     if (!_CF_IsObjC_ptr) {
         void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
         if (handle) {
-            char symbol[10] = {0};
+            volatile char symbol[10] = {0};
             symbol[0] = '_';
             symbol[1] = 'C';
             symbol[2] = 'F';
@@ -64,9 +64,9 @@ static BOOL NSObjectSelectorProxyIsObjectSupported(__unsafe_unretained id object
             symbol[8] = 'C';
             symbol[9] = '\0';
 #ifdef DEBUG
-            assert([@(symbol) isEqualToString:@"_CFIsObjC"]);
+            assert([@((const char *)symbol) isEqualToString:@"_CFIsObjC"]);
 #endif
-            _CF_IsObjC_ptr = dlsym(handle, symbol);
+            _CF_IsObjC_ptr = dlsym(handle, (const char *)symbol);
             dlclose(handle);
         }
     }

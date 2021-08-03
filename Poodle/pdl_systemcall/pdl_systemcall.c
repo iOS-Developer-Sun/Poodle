@@ -28,7 +28,7 @@ cerror_return_t pdl_systemcall_cerror(int err) {
     if (cerror_ptr == NULL) {
         void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
         if (handle) {
-            char symbol[7] = {0};
+            volatile char symbol[7] = {0};
             symbol[0] = 'c';
             symbol[1] = 'e';
             symbol[2] = 'r';
@@ -37,9 +37,9 @@ cerror_return_t pdl_systemcall_cerror(int err) {
             symbol[5] = 'r';
             symbol[6] = '\0';
 #ifdef DEBUG
-            assert(strcmp(symbol, "cerror") == 0);
+            assert(strcmp((const char *)symbol, "cerror") == 0);
 #endif
-            cerror_ptr = dlsym(handle, symbol);
+            cerror_ptr = dlsym(handle, (const char *)symbol);
             dlclose(handle);
         }
     }
