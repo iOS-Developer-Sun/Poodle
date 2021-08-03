@@ -27,7 +27,7 @@ bool pdl_anti_re(void) {
 
     pdl_systemcall_ptrace(31, 0, 0, 0); // PT_DENY_ATTACH
 
-    char dydl_insert_libraries_string[22] = {0};
+    volatile char dydl_insert_libraries_string[22] = {0};
     dydl_insert_libraries_string[0] = 'D';
     dydl_insert_libraries_string[1] = 'Y';
     dydl_insert_libraries_string[2] = 'L';
@@ -50,7 +50,7 @@ bool pdl_anti_re(void) {
     dydl_insert_libraries_string[19] = 'E';
     dydl_insert_libraries_string[20] = 'S';
     dydl_insert_libraries_string[21] = '\0';
-    char *libs = getenv(dydl_insert_libraries_string);
+    char *libs = getenv((const char *)dydl_insert_libraries_string);
     if (libs && (libs[0] != '\0')) {
         pdl_die(PDL_ANTI_RE_DIE_CODE_INSERTED_LIBRARIES);
     }

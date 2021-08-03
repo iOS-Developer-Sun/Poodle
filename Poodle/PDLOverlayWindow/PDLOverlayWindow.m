@@ -26,7 +26,7 @@ static BOOL _canBecomeKeyWindow(__unsafe_unretained id self, SEL _cmd) {
         Method m = class_getInstanceMethod(self, @selector(hitTestSelfEnabled));
         const char *typeEncoding = method_getTypeEncoding(m);
         {
-            char s[20];
+            volatile char s[20];
             s[0] = '_';
             s[1] = 'c';
             s[2] = 'a';
@@ -47,10 +47,10 @@ static BOOL _canBecomeKeyWindow(__unsafe_unretained id self, SEL _cmd) {
             s[17] = 'o';
             s[18] = 'w';
             s[19] = '\0';
-            class_addMethod(self, sel_registerName(s), (IMP)&_canAffectStatusBarAppearance, typeEncoding);
+            class_addMethod(self, sel_registerName((const char *)s), (IMP)&_canAffectStatusBarAppearance, typeEncoding);
         }
         {
-            char s[30];
+            volatile char s[30];
             s[0] = '_';
             s[1] = 'c';
             s[2] = 'a';
@@ -81,7 +81,7 @@ static BOOL _canBecomeKeyWindow(__unsafe_unretained id self, SEL _cmd) {
             s[27] = 'c';
             s[28] = 'e';
             s[29] = '\0';
-            class_addMethod(self, sel_registerName(s), (IMP)&_canBecomeKeyWindow, typeEncoding);
+            class_addMethod(self, sel_registerName((const char *)s), (IMP)&_canBecomeKeyWindow, typeEncoding);
         }
     }
 }

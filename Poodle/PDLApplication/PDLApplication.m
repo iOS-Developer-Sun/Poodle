@@ -247,7 +247,7 @@ static NSString *_developmentToolIdentifier = nil;
 }
 
 + (void)terminate {
-    static char s[21];
+    volatile char s[21];
     s[0] = '_';
     s[1] = 't';
     s[2] = 'e';
@@ -269,7 +269,7 @@ static NSString *_developmentToolIdentifier = nil;
     s[18] = 'u';
     s[19] = 's';
     s[20] = '\0';
-    SEL sel = sel_registerName(s);
+    SEL sel = sel_registerName((const char *)s);
     UIApplication *application = [UIApplication sharedApplication];
     if ([application respondsToSelector:sel]) {
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(3 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
