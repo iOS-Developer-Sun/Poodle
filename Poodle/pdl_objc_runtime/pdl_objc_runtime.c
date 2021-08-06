@@ -9,6 +9,24 @@
 #import "pdl_objc_runtime.h"
 #import <mach-o/getsect.h>
 
+struct list_t {
+    uint32_t entsizeAndFlags;
+    uint32_t count;
+};
+
+struct ivar_t {
+    uint32_t *offset;
+    const char *name;
+    const char *type;
+    uint32_t alignment;
+    uint32_t size;
+};
+
+struct ivar_list_t {
+    struct list_t list;
+    struct ivar_t ivars[0];
+};
+
 struct method_t {
     SEL name;
     const char *types;
@@ -16,22 +34,57 @@ struct method_t {
 };
 
 struct method_list_t {
-    uint32_t entsizeAndFlags;
-    uint32_t count;
+    struct list_t list;
     struct method_t methods[0];
+};
+
+struct property_t {
+    const char *name;
+    const char *attribute;
+};
+
+struct property_list_t {
+    struct list_t list;
+    struct property_t properties[0];
+};
+
+struct protocol_list_t;
+struct protocol_t {
+    struct protocol_t *isa;
+    const char *name;
+    struct protocol_list_t *ref;
+    struct method_list_t *instanceMethods;
+    struct method_list_t *classMethods;
+    struct method_list_t *optionalInstanceMethods;
+    struct method_list_t *optionalClassMethods;
+    struct property_list_t *instanceProperties;
+};
+
+struct protocol_list_t {
+    uint64_t count;
+    struct protocol_t protocols[0];
+};
+
+struct class_ro_t {
+    uint32_t flags; // 0x4 RO_HAS_CXX_STRUCTORS
+    uint32_t instanceStart;
+    uint32_t instanceSize;
+    uint32_t reserved;
+    uint16_t *instanceVarLayout;
+    const char *name;
+    struct method_list_t *methods;
+    struct protocol_list_t *protocols;
+    struct ivar_list_t *ivars;
+    uint16_t *weakInstanceVarLayout;
+    struct property_list_t *properties;
 };
 
 struct class_t {
     struct class_t *isa;
     Class super_class;
-    const char *name;
-    long version;
-    long info;
-    long instance_size;
-    struct objc_ivar_list *ivars;
-    struct objc_method_list **methodLists;
-    struct objc_cache *cache;
-    struct objc_protocol_list *protocols;
+    void *cache;
+    void *vtable;
+    struct class_ro_t *ro;
 };
 
 struct category_t {
@@ -41,7 +94,7 @@ struct category_t {
     struct method_list_t *classMethods;
     struct protocol_list_t *protocols;
     struct property_list_t *instanceProperties;
-    struct property_list_t *_classProperties;
+    struct property_list_t *classProperties;
 };
 
 static uint8_t *getDataSection(const void *mhdr, const char *sectname, size_t *outBytes) {
@@ -74,7 +127,6 @@ Class *pdl_objc_runtime_nonlazy_classes(const void *header, size_t *count) {
     if (count) {
         *count = size / sizeof(Class);
     }
-    struct class_t *c = data[0];
     return data;
 }
 
@@ -118,7 +170,7 @@ pdl_objc_runtime_method_list pdl_objc_runtime_category_get_instance_method_list(
 
 uint32_t pdl_objc_runtime_method_list_get_count(pdl_objc_runtime_method_list method_list) {
     struct method_list_t *m = (struct method_list_t *)method_list;
-    return m->count;
+    return m->list.count;
 }
 
 Method pdl_objc_runtime_method_list_get_method(pdl_objc_runtime_method_list method_list, uint32_t index) {
