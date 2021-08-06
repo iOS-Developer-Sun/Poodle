@@ -30,7 +30,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLInitialization : NSObject
 
 + (NSUInteger)preloadCount;
-+ (NSUInteger)preload:(BOOL(^_Nullable)(Class aClass, IMP imp))filter;
++ (NSUInteger)preload:(const void *)header filter:(BOOL(^_Nullable)(Class aClass, IMP imp))filter;
 + (NSArray <PDLInitializationLoader *>*)loaders;
 + (NSArray <PDLInitializationLoader *>*)topLoaders;
 

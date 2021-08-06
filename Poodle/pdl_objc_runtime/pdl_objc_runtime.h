@@ -15,6 +15,9 @@ extern "C" {
 typedef void *pdl_objc_runtime_category;
 typedef void *pdl_objc_runtime_method_list;
 
+extern Class *pdl_objc_runtime_classes(const void *header, size_t *count);
+extern Class *pdl_objc_runtime_nonlazy_classes(const void *header, size_t *count);
+
 extern pdl_objc_runtime_category *pdl_objc_runtime_categories(const void *header, size_t *count);
 extern pdl_objc_runtime_category *pdl_objc_runtime_nonlazy_categories(const void *header, size_t *count);
 

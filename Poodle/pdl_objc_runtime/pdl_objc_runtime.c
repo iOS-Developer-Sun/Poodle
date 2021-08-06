@@ -21,6 +21,19 @@ struct method_list_t {
     struct method_t methods[0];
 };
 
+struct class_t {
+    struct class_t *isa;
+    Class super_class;
+    const char *name;
+    long version;
+    long info;
+    long instance_size;
+    struct objc_ivar_list *ivars;
+    struct objc_method_list **methodLists;
+    struct objc_cache *cache;
+    struct objc_protocol_list *protocols;
+};
+
 struct category_t {
     const char *name;
     Class cls;
@@ -40,7 +53,28 @@ static uint8_t *getDataSection(const void *mhdr, const char *sectname, size_t *o
     if (!data) {
         data = getsectiondata(mhdr, "__DATA_DIRTY", sectname, &byteCount);
     }
-    if (outBytes) *outBytes = byteCount;
+    if (outBytes) {
+        *outBytes = byteCount;
+    }
+    return data;
+}
+
+Class *pdl_objc_runtime_classes(const void *header, size_t *count) {
+    size_t size = 0;
+    Class *data = (Class *)getDataSection(header, "__objc_classlist", &size);
+    if (count) {
+        *count = size / sizeof(Class);
+    }
+    return data;
+}
+
+Class *pdl_objc_runtime_nonlazy_classes(const void *header, size_t *count) {
+    size_t size = 0;
+    Class *data = (Class *)getDataSection(header, "__objc_nlclslist", &size);
+    if (count) {
+        *count = size / sizeof(Class);
+    }
+    struct class_t *c = data[0];
     return data;
 }
 

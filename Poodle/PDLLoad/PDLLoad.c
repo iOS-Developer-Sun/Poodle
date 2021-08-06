@@ -7,16 +7,16 @@
 //
 
 #import "PDLLoad.h"
-#import "pdl_objc_runtime.h"
 #import <mach-o/ldsyms.h>
 #import <mach-o/dyld.h>
 #import <string.h>
+#import "pdl_objc_runtime.h"
 
 static void emptyLoad(__unsafe_unretained id self, SEL _cmd) {
     return;
 }
 
-void pdl_disableCategoryLoad(void *image_header, bool(*filter)(Class cls, const char *category_name)) {
+void pdl_disableCategoryLoad(void *image_header, bool(*filter)(Class cls, const char *category_name, IMP imp)) {
     if (!filter) {
         return;
     }
@@ -47,8 +47,8 @@ void pdl_disableCategoryLoad(void *image_header, bool(*filter)(Class cls, const 
             if ((!sel_isEqual(loadSel, sel)) && (strcmp(sel_getName(sel), sel_getName(loadSel)) != 0)) {
                 continue;
             }
-
-            bool disabled = filter(cls, name);
+            IMP imp = method_getImplementation(method);
+            bool disabled = filter(cls, name, imp);
             if (disabled) {
                 method_setImplementation(method, (IMP)&emptyLoad);
             }
