@@ -15,6 +15,7 @@
 #import <dlfcn.h>
 #import "NSObject+PDLImplementationInterceptor.h"
 #import "PDLDebug.h"
+#import "pdl_objc_runtime.h"
 
 @interface PDLInitializationLoader ()
 
@@ -75,18 +76,19 @@ static void pdl_load(id self, SEL _cmd) {
     return _preloadCount;
 }
 
-+ (NSUInteger)preload:(BOOL(^)(Class aClass, IMP imp))filter {
++ (NSUInteger)preload:(const void *)header filter:(BOOL(^)(Class aClass, IMP imp))filter {
     assert(_loaders == nil);
 
     _loaders = [NSMutableArray array];
 
     NSInteger count = 0;
-    unsigned int classCount = 0;
-    Class *classList = objc_copyClassList(&classCount);
+    size_t classCount = 0;
+    Class *classes = pdl_objc_runtime_nonlazy_classes(header, &classCount);
     SEL loadSelector = sel_registerName("load");
     IMP loadImp = (IMP)&pdl_load;
     for (unsigned int i = 0; i < classCount; i++) {
-        Class aClass = classList[i];
+        Class aClass = classes[i];
+        assert(aClass);
         unsigned int methodCount = 0;
         Method *methodList = class_copyMethodList(object_getClass(aClass), &methodCount);
         for (unsigned int i = 0; i < methodCount; i++) {
@@ -116,7 +118,6 @@ static void pdl_load(id self, SEL _cmd) {
         }
         free(methodList);
     }
-    free(classList);
     _preloadCount = count;
     return count;
 }
@@ -184,7 +185,9 @@ static uint8_t *getDataSection(const void *mhdr, const char *sectname, size_t *o
     if (!data) {
         data = getsectiondata(mhdr, "__DATA_DIRTY", sectname, &byteCount);
     }
-    if (outBytes) *outBytes = byteCount;
+    if (outBytes) {
+        *outBytes = byteCount;
+    }
     return data;
 }
 
@@ -230,6 +233,7 @@ void **pdl_initializers(const void *header, size_t *count) {
 
         [_initializerFunctions addObject:@((uintptr_t)initializer)];
         initializers[i] = (IMP)&pdl_initialize;
+        count++;
     }
 
     _preinitializeCount = count;
