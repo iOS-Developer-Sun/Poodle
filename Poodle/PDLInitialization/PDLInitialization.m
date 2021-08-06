@@ -8,7 +8,7 @@
 
 #import "PDLInitialization.h"
 #import <objc/runtime.h>
-#import <QuartzCore/QuartzCore.h>
+#import <mach/mach_time.h>
 #import <mach-o/getsect.h>
 #import <mach-o/dyld.h>
 #import <mach-o/ldsyms.h>
@@ -19,9 +19,10 @@
 
 @interface PDLInitializationLoader ()
 
-@property (nonatomic, assign) CFTimeInterval duration;
+@property (nonatomic, assign) uint64_t diff;
 @property (nonatomic, assign) IMP imp;
 @property (nonatomic, unsafe_unretained) Class aClass;
+@property (nonatomic, assign) const char *category;
 
 @end
 
@@ -29,15 +30,19 @@
 
 - (NSString *)description {
     NSString *durationString = pdl_durationString(self.duration);
-    NSString *description = [NSString stringWithFormat:@" [%@, %p, %@]", self.aClass, self.imp, durationString];
+    NSString *description = [NSString stringWithFormat:@" [%@ %@, %p, %@]", self.aClass, self.category ? [NSString stringWithFormat:@"(%s)", self.category] : @"", self.imp, durationString];
     return [[super description] stringByAppendingString:description];
+}
+
+- (NSTimeInterval)duration {
+    return self.diff * [PDLInitialization hostTimeConversion];
 }
 
 @end
 
 @interface PDLInitializationInitializer ()
 
-@property (nonatomic, assign) CFTimeInterval duration;
+@property (nonatomic, assign) uint64_t diff;
 @property (nonatomic, assign) void *function;
 @property (nonatomic, copy) NSString *imageName;
 @property (nonatomic, copy) NSString *functionName;
@@ -52,6 +57,10 @@
     return [[super description] stringByAppendingString:description];
 }
 
+- (NSTimeInterval)duration {
+    return self.diff * [PDLInitialization hostTimeConversion];
+}
+
 @end
 
 @implementation PDLInitialization
@@ -59,16 +68,29 @@
 static NSMutableArray *_loaders = nil;
 static NSUInteger _preloadCount = 0;
 
++ (NSTimeInterval)hostTimeConversion {
+    static NSTimeInterval _conversion = 0;
+    if (_conversion == 0) {
+        mach_timebase_info_data_t info;
+        kern_return_t err = mach_timebase_info(&info);
+        if (err == 0) {
+            _conversion = 1.0 * 1e-9 * info.numer / info.denom;
+        }
+    }
+    return _conversion;
+}
+
 static void pdl_load(id self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
-    CFTimeInterval begin = CACurrentMediaTime();
+    uint64_t begin = mach_absolute_time();
     ((typeof(&pdl_load))_imp)(self, _cmd);
-    CFTimeInterval end = CACurrentMediaTime();
-    CFTimeInterval diff = end - begin;
+    uint64_t end = mach_absolute_time();
+    uint64_t diff = end - begin;
     PDLInitializationLoader *loader = [[PDLInitializationLoader alloc] init];
-    loader.duration = diff;
+    loader.diff = diff;
     loader.imp = _imp;
     loader.aClass = self;
+    loader.category = _data;
     [_loaders addObject:loader];
 }
 
@@ -76,16 +98,70 @@ static void pdl_load(id self, SEL _cmd) {
     return _preloadCount;
 }
 
-+ (NSUInteger)preload:(const void *)header filter:(BOOL(^)(Class aClass, IMP imp))filter {
++ (NSUInteger)preload:(const void *)header filter:(BOOL(^)(Class aClass, const char *categoryName, IMP imp))filter {
     assert(_loaders == nil);
 
     _loaders = [NSMutableArray array];
+    NSMutableSet *set = [NSMutableSet set];
 
-    NSInteger count = 0;
-    size_t classCount = 0;
-    Class *classes = pdl_objc_runtime_nonlazy_classes(header, &classCount);
     SEL loadSelector = sel_registerName("load");
     IMP loadImp = (IMP)&pdl_load;
+    NSUInteger count = 0;
+
+    size_t categoryCount = 0;
+    pdl_objc_runtime_category *categories = pdl_objc_runtime_nonlazy_categories(header, &categoryCount);
+    for (size_t i = 0; i < categoryCount; i++) {
+        pdl_objc_runtime_category *category = categories[i];
+        if (!category) {
+            continue;
+        }
+
+        const char *name = pdl_objc_runtime_category_get_name(category);
+        Class aClass = pdl_objc_runtime_category_get_class(category);
+        pdl_objc_runtime_method_list method_list = pdl_objc_runtime_category_get_class_method_list(category);
+        if (!method_list) {
+            continue;
+        }
+
+        uint32_t method_list_count = pdl_objc_runtime_method_list_get_count(method_list);
+        SEL loadSel = sel_registerName("load");
+        for (uint32_t j = 0; j < method_list_count; j++) {
+            Method method = pdl_objc_runtime_method_list_get_method(method_list, j);
+            SEL sel = method_getName(method);
+            if (!sel) {
+                continue;
+            }
+
+            if ((!sel_isEqual(loadSel, sel)) && (strcmp(sel_getName(sel), sel_getName(loadSel)) != 0)) {
+                continue;
+            }
+
+            [set addObject:@((unsigned long)(void *)method)];
+
+            IMP imp = method_getImplementation(method);
+
+            BOOL shouldAdd = YES;
+            if (filter) {
+                shouldAdd = filter(aClass, name, imp);
+            }
+            if (!shouldAdd) {
+                continue;
+            }
+
+            BOOL ret = pdl_interceptMethod(aClass, method, @(NO), ^IMP(NSNumber *__autoreleasing *isStructRetNumber, void **data) {
+                *data = (void *)name;
+                return loadImp;
+            });
+            if (ret) {
+                count++;
+            } else {
+                assert(ret);
+            }
+        }
+    }
+
+    size_t classCount = 0;
+    Class *classes = pdl_objc_runtime_nonlazy_classes(header, &classCount);
     for (unsigned int i = 0; i < classCount; i++) {
         Class aClass = classes[i];
         assert(aClass);
@@ -98,10 +174,14 @@ static void pdl_load(id self, SEL _cmd) {
                 continue;
             }
 
+            if ([set containsObject:@((unsigned long)(void *)method)]) {
+                continue;;
+            }
+
             IMP imp = method_getImplementation(method);
             BOOL shouldAdd = YES;
             if (filter) {
-                shouldAdd = filter(aClass, imp);
+                shouldAdd = filter(aClass, NULL, imp);
             }
             if (!shouldAdd) {
                 continue;
@@ -118,6 +198,7 @@ static void pdl_load(id self, SEL _cmd) {
         }
         free(methodList);
     }
+
     _preloadCount = count;
     return count;
 }
@@ -148,10 +229,10 @@ static void pdl_initialize(int argc, const char **argv, const char **envp, const
         _initializerFunctions = nil;
     }
     void *function = (void *)value;
-    CFTimeInterval begin = CACurrentMediaTime();
+    uint64_t begin = mach_absolute_time();
     ((typeof(&pdl_initialize))function)(argc, argv, envp, apple, pvars);
-    CFTimeInterval end = CACurrentMediaTime();
-    CFTimeInterval diff = end - begin;
+    uint64_t end = mach_absolute_time();
+    uint64_t diff = end - begin;
     NSString *imageName = nil;
     NSString *functionName = nil;
     Dl_info info;
@@ -165,7 +246,7 @@ static void pdl_initialize(int argc, const char **argv, const char **envp, const
         }
     }
     PDLInitializationInitializer *initializer = [[PDLInitializationInitializer alloc] init];
-    initializer.duration = diff;
+    initializer.diff = diff;
     initializer.function = function;
     initializer.imageName = imageName;
     initializer.functionName = functionName;
