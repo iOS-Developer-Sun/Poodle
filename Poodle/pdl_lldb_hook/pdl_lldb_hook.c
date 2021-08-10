@@ -138,18 +138,23 @@ static uintptr_t *lldb_entry_original_with_offsets[PDL_LLDB_HOOK_MAX_COUNT] = {
 
 #pragma mark -
 
+// b:       0 0 0 1 0 1 imm26 (+/-128MB)
+// adr:     0 immlo2 1 0 0 0 0 immhi19 Rd5 (+/-1MB)
+// adrp:    1 immlo2 1 0 0 0 0 immhi19 Rd5 (+/-4GB)
+// br:      1 1 0 1 0 1 1 0 0 0 0 1 1 1 1 1 0 0 0 0 0 0 Rn5 0 0 0 0 0
+
 static int get_branch_instructions_count(uintptr_t from, uintptr_t to) {
     intptr_t diff = to - from;
-    if ((diff < 0x8000000 && diff >= -0x8000000) && ((diff & 0b11) == 0)) {
+    if ((diff < (1 << 27) && diff >= -(1 << 27)) && ((diff & ((1 << 2) - 1)) == 0)) {
         return 1;
     }
 
-    if (diff < 0x100000 && diff >= -0x100000) {
+    if (diff < (1 << 20) && diff >= -(1 << 20)) {
         return 2;
     }
 
-    uintptr_t topage = to & ~4095;
-    if (topage == to) {
+    uintptr_t to_page = to & ~((1 << 12) - 1);
+    if (to_page == to) {
         return 2;
     }
 
@@ -160,43 +165,43 @@ static void generate_branch_instructions(uintptr_t from, uintptr_t to, unsigned 
     unsigned int reg = 9;
 
     intptr_t diff = to - from;
-    if ((diff < 0x8000000 && diff >= -0x8000000) && ((diff & 0b11) == 0)) {
+    if ((diff < (1 << 27) && diff >= -(1 << 27)) && ((diff & ((1 << 2) - 1)) == 0)) {
         unsigned int b = 0b00010100000000000000000000000000;
-        unsigned int imm = (diff >> 2) & 0b11111111111111111111111111;
+        unsigned int imm = (diff >> 2) & ((1 << 26) - 1);
         b |= imm;
         branch_to_custom_function[0] = b;
         return;
     }
 
-    if (diff < 0x100000 && diff >= -0x100000) {
+    if (diff < (1 << 20) && diff >= -(1 << 20)) {
         unsigned int adr = 0b00010000000000000000000000000000;
         const int immloshift = 29;
         const int immhishift = 5;
-        unsigned int immlo = diff & 0b11;
-        unsigned int immhi = ((diff & ~0b11) >> 2) & 0b1111111111111111111;
+        unsigned int immlo = diff & ((1 << 2) - 1);
+        unsigned int immhi = ((diff & ~((1 << 2) - 1)) >> 2) & ((1 << 19) - 1);
         adr |= immlo << immloshift;
         adr |= immhi << immhishift;
         adr |= reg;
         branch_to_custom_function[0] = adr;
     } else {
-        uintptr_t frompage = from & ~4095;
-        uintptr_t topage = to & ~4095;
-        diff = ((intptr_t)(topage - frompage)) >> 12;
+        uintptr_t from_page = from & ~((1 << 12) - 1);
+        uintptr_t to_page = to & ~((1 << 12) - 1);
+        diff = ((intptr_t)(to_page - from_page)) >> 12;
         unsigned int adrp = 0b10010000000000000000000000000000;
         const int immloshift = 29;
         const int immhishift = 5;
-        unsigned int immlo = diff & 0b11;
-        unsigned int immhi = ((diff & ~0b11) >> 2) & 0b1111111111111111111;
+        unsigned int immlo = diff & ((1 << 2) - 1);
+        unsigned int immhi = ((diff & ~((1 << 2) - 1)) >> 2) & ((1 << 19) - 1);
         adrp |= immlo << immloshift;
         adrp |= immhi << immhishift;
         adrp |= reg;
         branch_to_custom_function[0] = adrp;
 
-        unsigned int offset = (unsigned int)(to - topage);
+        unsigned int offset = (unsigned int)(to - to_page);
         if (offset > 0) {
             unsigned int add = 0b10010001000000000000000000000000;
             const int immshift = 10;
-            unsigned int imm = offset & 0b111111111111;
+            unsigned int imm = offset & ((1 << 12) - 1);
             add |= imm << immshift;
             add |= (reg << 5) | reg;
             branch_to_custom_function[1] = add;
@@ -205,7 +210,7 @@ static void generate_branch_instructions(uintptr_t from, uintptr_t to, unsigned 
 
     {
         unsigned int br = 0b11010110000111110000000000000000;
-        br += (reg << 5);
+        br |= (reg << 5);
         branch_to_custom_function[branch_instructions_count - 1] = br;
     }
 }
