@@ -12,15 +12,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLInitializationLoader : NSObject
 
-@property (nonatomic, assign, readonly) CFTimeInterval duration;
+@property (nonatomic, assign, readonly) NSTimeInterval duration;
 @property (nonatomic, assign, readonly) IMP imp;
 @property (nonatomic, unsafe_unretained, readonly) Class aClass;
+@property (nonatomic, assign, readonly) const char *category;
 
 @end
 
 @interface PDLInitializationInitializer : NSObject
 
-@property (nonatomic, assign, readonly) CFTimeInterval duration;
+@property (nonatomic, assign, readonly) NSTimeInterval duration;
 @property (nonatomic, assign, readonly) void *function;
 @property (nonatomic, copy, readonly) NSString *imageName;
 @property (nonatomic, copy, readonly) NSString *functionName;
@@ -30,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLInitialization : NSObject
 
 + (NSUInteger)preloadCount;
-+ (NSUInteger)preload:(BOOL(^_Nullable)(Class aClass, IMP imp))filter;
++ (NSUInteger)preload:(const void *)header filter:(BOOL(^_Nullable)(Class aClass, const char *_Nullable categoryName, IMP imp))filter;
 + (NSArray <PDLInitializationLoader *>*)loaders;
 + (NSArray <PDLInitializationLoader *>*)topLoaders;
 
@@ -38,6 +39,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSUInteger)preinitialize:(const void *)header filter:(BOOL(^_Nullable)(NSString *imageName, NSString *functionName, void *function))filter;
 + (NSArray <PDLInitializationInitializer *>*)initializers;
 + (NSArray <PDLInitializationInitializer *>*)topInitializers;
+
++ (NSTimeInterval)hostTimeConversion;
 
 @end
 
