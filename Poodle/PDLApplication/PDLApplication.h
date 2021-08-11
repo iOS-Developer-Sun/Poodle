@@ -32,6 +32,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)exitApplication;
 + (void)terminate;
 
+
++ (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
++ (BOOL)handleUrl:(NSURL *)url;
++ (UIApplicationShortcutItem *)safeModeShortcutItem;
+
 @end
 
 NS_ASSUME_NONNULL_END
