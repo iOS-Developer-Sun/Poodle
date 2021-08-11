@@ -10,6 +10,7 @@
 #include <string.h>
 #include <mach/vm_map.h>
 #include <mach/mach_init.h>
+#include <assert.h>
 #include "pdl_lldb_hook.h"
 #include "pdl_dictionary.h"
 #include "pdl_list.h"
@@ -18,13 +19,6 @@
 
 extern void *pdl_lldb_hook_page_begin;
 extern void *pdl_lldb_hook_page_end;
-
-typedef struct {
-    uintptr_t hooked_function;
-    uintptr_t custom_function;
-    uintptr_t offset;
-    uintptr_t entry;
-} pdl_lldb_hook_item;
 
 typedef struct {
     pdl_list_node node;
@@ -36,6 +30,7 @@ typedef struct {
 
 static const int pdl_branch_instructions_max_count = 3;
 static const int pdl_bytes_per_instruction = 4;
+static const int pdl_instructions_count = 6;
 static char _pdl_lldb_command[1024] = {0};
 static pdl_dictionary_t pdl_hook_table = NULL;
 static pdl_list *pdl_page_list = NULL;
@@ -161,21 +156,30 @@ static uintptr_t lldb_page(void) {
 }
 
 static void lldb_hook_check_page(uintptr_t *data_ptr, uintptr_t *text_ptr) {
+    if (!pdl_page_list) {
+        pdl_page_list = pdl_list_create(NULL, NULL);
+    }
+    if (!pdl_page_list) {
+        *data_ptr = 0;
+        *text_ptr = 0;
+        return;
+    }
+
     pdl_page *page = (pdl_page *)(pdl_page_list->tail);
     if (!page || page->current_index == page->total_count) {
         page = (pdl_page *)pdl_list_create_node(pdl_page_list, sizeof(pdl_page) - sizeof(pdl_list_node));
         if (page) {
-            page->total_count = 10;
-            page->current_index = 0;
             page->page_size = PAGE_MAX_SIZE;
             page->page_begin = lldb_page();
+            page->total_count = PAGE_MAX_SIZE / (pdl_instructions_count * pdl_bytes_per_instruction);
+            page->current_index = 0;
             pdl_list_add_tail(pdl_page_list, (pdl_list_node *)page);
         }
     }
 
     uintptr_t page_begin = page->page_begin;
     if (page_begin) {
-        uintptr_t each_size = pdl_bytes_per_instruction * 6;
+        uintptr_t each_size = pdl_bytes_per_instruction * pdl_instructions_count;
         uintptr_t offset = pdl_bytes_per_instruction * pdl_branch_instructions_max_count;
         uintptr_t data = page_begin + page->current_index * each_size + offset;
         uintptr_t text = page_begin + PAGE_MAX_SIZE + page->current_index * each_size;
@@ -185,25 +189,18 @@ static void lldb_hook_check_page(uintptr_t *data_ptr, uintptr_t *text_ptr) {
     }
 }
 
-static void lldb_hook_initialize(void) {
-    if (pdl_hook_table) {
-        return;
+static int lldb_hook(uintptr_t hooked_function, uintptr_t custom_function) {
+    if (!pdl_hook_table) {
+        pdl_hook_table = pdl_dictionary_create(NULL);
+        assert((uintptr_t)(PAGE_MAX_SIZE - (((uintptr_t)&pdl_lldb_hook_page_end - (uintptr_t)&pdl_lldb_hook_page_begin))) < pdl_instructions_count * pdl_bytes_per_instruction);
+    }
+    if (!pdl_hook_table) {
+        return -2;
     }
 
-    pdl_hook_table = pdl_dictionary_create(NULL);
-    pdl_page_list = pdl_list_create(NULL, NULL);
-}
-
-static int lldb_hook(uintptr_t hooked_function, uintptr_t custom_function) {
-    lldb_hook_initialize();
     void **value = pdl_dictionary_get(pdl_hook_table, (void *)custom_function);
     if (value) {
         return -1;
-    }
-
-    pdl_lldb_hook_item *item = malloc(sizeof(pdl_lldb_hook_item));
-    if (!item) {
-        return -2;
     }
 
     uintptr_t data = 0;
@@ -215,13 +212,9 @@ static int lldb_hook(uintptr_t hooked_function, uintptr_t custom_function) {
 
     int branch_instructions_count = get_branch_instructions_count(hooked_function, custom_function);
 
-    item->custom_function = custom_function;
-    item->hooked_function = hooked_function;
-    item->offset = branch_instructions_count * pdl_bytes_per_instruction;
-    item->entry = text;
     *(uintptr_t *)data = hooked_function + branch_instructions_count * pdl_bytes_per_instruction;
 
-    pdl_dictionary_set(pdl_hook_table, (void *)custom_function, (void **)&item);
+    pdl_dictionary_set(pdl_hook_table, (void *)custom_function, (void **)&text);
 
     print_lldb_command(hooked_function, custom_function, text, branch_instructions_count);
 
@@ -241,11 +234,11 @@ char *pdl_lldb_command(void) {
 }
 
 IMP pdl_lldb_hooked_function_new_entry(IMP custom_function) {
-    pdl_lldb_hook_item **item = (pdl_lldb_hook_item **)pdl_dictionary_get(pdl_hook_table, (void *)custom_function);
-    if (!item) {
+    IMP *imp = (IMP *)pdl_dictionary_get(pdl_hook_table, (void *)custom_function);
+    if (!imp) {
         return NULL;
     }
-    return (IMP)(*item)->entry;
+    return *imp;
 }
 
 #else
