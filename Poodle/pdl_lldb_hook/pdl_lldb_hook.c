@@ -8,133 +8,39 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <mach/vm_map.h>
+#include <mach/mach_init.h>
 #include "pdl_lldb_hook.h"
+#include "pdl_dictionary.h"
+#include "pdl_list.h"
 
 #ifdef __arm64__
 
-static const int branch_instructions_max_count = 3;
-static const int bytes_per_instruction = 4;
-static char lldb_command[1024] = {0};
+extern void *pdl_lldb_hook_page_begin;
+extern void *pdl_lldb_hook_page_end;
 
-#define PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry) \
-static uintptr_t lldb_entry##_original_with_offset = 0;\
-__attribute__((naked, aligned(4))) static void lldb_entry(void) {\
-    __asm__ volatile (\
-                      "nop\n"\
-                      "nop\n"\
-                      "nop\n"\
-                      "adrp x9, _" #lldb_entry "_original_with_offset@PAGE\n"\
-                      "ldr x9, [x9, _" #lldb_entry "_original_with_offset@PAGEOFF]\n"\
-                      "br x9"\
-                      );\
-}
+typedef struct {
+    uintptr_t hooked_function;
+    uintptr_t custom_function;
+    uintptr_t offset;
+    uintptr_t entry;
+} pdl_lldb_hook_item;
+
+typedef struct {
+    pdl_list_node node;
+    uintptr_t page_begin;
+    uintptr_t page_size;
+    int total_count;
+    int current_index;
+} pdl_page;
+
+static const int pdl_branch_instructions_max_count = 3;
+static const int pdl_bytes_per_instruction = 4;
+static char _pdl_lldb_command[1024] = {0};
+static pdl_dictionary_t pdl_hook_table = NULL;
+static pdl_list *pdl_page_list = NULL;
 
 #pragma mark -
-
-#define PDL_LLDB_HOOK_MAX_COUNT 32
-
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_0)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_1)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_2)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_3)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_4)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_5)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_6)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_7)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_8)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_9)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_10)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_11)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_12)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_13)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_14)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_15)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_16)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_17)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_18)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_19)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_20)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_21)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_22)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_23)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_24)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_25)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_26)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_27)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_28)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_29)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_30)
-PDL_LLDB_HOOK_ENTRY_DECL(lldb_entry_31)
-
-static void(*lldb_entrys[PDL_LLDB_HOOK_MAX_COUNT])(void) = {
-    &lldb_entry_0,
-    &lldb_entry_1,
-    &lldb_entry_2,
-    &lldb_entry_3,
-    &lldb_entry_4,
-    &lldb_entry_5,
-    &lldb_entry_6,
-    &lldb_entry_7,
-    &lldb_entry_8,
-    &lldb_entry_9,
-    &lldb_entry_10,
-    &lldb_entry_11,
-    &lldb_entry_12,
-    &lldb_entry_13,
-    &lldb_entry_14,
-    &lldb_entry_15,
-    &lldb_entry_16,
-    &lldb_entry_17,
-    &lldb_entry_18,
-    &lldb_entry_19,
-    &lldb_entry_20,
-    &lldb_entry_21,
-    &lldb_entry_22,
-    &lldb_entry_23,
-    &lldb_entry_24,
-    &lldb_entry_25,
-    &lldb_entry_26,
-    &lldb_entry_27,
-    &lldb_entry_28,
-    &lldb_entry_29,
-    &lldb_entry_30,
-    &lldb_entry_31,
-};
-
-static uintptr_t *lldb_entry_original_with_offsets[PDL_LLDB_HOOK_MAX_COUNT] = {
-    &lldb_entry_0_original_with_offset,
-    &lldb_entry_1_original_with_offset,
-    &lldb_entry_2_original_with_offset,
-    &lldb_entry_3_original_with_offset,
-    &lldb_entry_4_original_with_offset,
-    &lldb_entry_5_original_with_offset,
-    &lldb_entry_6_original_with_offset,
-    &lldb_entry_7_original_with_offset,
-    &lldb_entry_8_original_with_offset,
-    &lldb_entry_9_original_with_offset,
-    &lldb_entry_10_original_with_offset,
-    &lldb_entry_11_original_with_offset,
-    &lldb_entry_12_original_with_offset,
-    &lldb_entry_13_original_with_offset,
-    &lldb_entry_14_original_with_offset,
-    &lldb_entry_15_original_with_offset,
-    &lldb_entry_16_original_with_offset,
-    &lldb_entry_17_original_with_offset,
-    &lldb_entry_18_original_with_offset,
-    &lldb_entry_19_original_with_offset,
-    &lldb_entry_20_original_with_offset,
-    &lldb_entry_21_original_with_offset,
-    &lldb_entry_22_original_with_offset,
-    &lldb_entry_23_original_with_offset,
-    &lldb_entry_24_original_with_offset,
-    &lldb_entry_25_original_with_offset,
-    &lldb_entry_26_original_with_offset,
-    &lldb_entry_27_original_with_offset,
-    &lldb_entry_28_original_with_offset,
-    &lldb_entry_29_original_with_offset,
-    &lldb_entry_30_original_with_offset,
-    &lldb_entry_31_original_with_offset,
-};
 
 #pragma mark -
 
@@ -161,7 +67,7 @@ static int get_branch_instructions_count(uintptr_t from, uintptr_t to) {
     return 3;
 }
 
-static void generate_branch_instructions(uintptr_t from, uintptr_t to, unsigned int branch_to_custom_function[branch_instructions_max_count], int branch_instructions_count) {
+static void generate_branch_instructions(uintptr_t from, uintptr_t to, unsigned int branch_to_custom_function[pdl_branch_instructions_max_count], int branch_instructions_count) {
     unsigned int reg = 9;
 
     intptr_t diff = to - from;
@@ -219,63 +125,105 @@ static void print_lldb_memory_write_command(uintptr_t dst, uintptr_t src, int si
     unsigned int *memory = (unsigned int *)src;
     char buffer[128] = {0};
     for (int i = 0; i < size; i++) {
-        sprintf(buffer, "memory write -s %d 0x%lx 0x%x\n", bytes_per_instruction, dst + i * bytes_per_instruction, memory[i]);
-        strcat(lldb_command, buffer);
+        sprintf(buffer, "memory write -s %d 0x%lx 0x%x\n", pdl_bytes_per_instruction, dst + i * pdl_bytes_per_instruction, memory[i]);
+        strcat(_pdl_lldb_command, buffer);
     }
 }
 
 static void print_lldb_command(uintptr_t hooked_function, uintptr_t custom_function, uintptr_t entry, int branch_instructions_count) {
-    unsigned int branch_to_custom_function[branch_instructions_max_count];
-    lldb_command[0] = '\0';
+    unsigned int branch_to_custom_function[pdl_branch_instructions_max_count];
+    _pdl_lldb_command[0] = '\0';
     generate_branch_instructions(hooked_function, custom_function, branch_to_custom_function, branch_instructions_count);
     print_lldb_memory_write_command(entry, hooked_function, branch_instructions_count);
-    strcat(lldb_command, "\n");
+    strcat(_pdl_lldb_command, "\n");
     print_lldb_memory_write_command(hooked_function, (uintptr_t)branch_to_custom_function, branch_instructions_count);
-    strcat(lldb_command, "\n");
+    strcat(_pdl_lldb_command, "\n");
 }
 
-static uintptr_t hook_table_key[PDL_LLDB_HOOK_MAX_COUNT] = {0};
-static uintptr_t hook_table_value[PDL_LLDB_HOOK_MAX_COUNT] = {0};
-
-static int index_of_hook_table(uintptr_t custom_function) {
-    for (int i = 0; i < PDL_LLDB_HOOK_MAX_COUNT; i++) {
-        uintptr_t key = hook_table_key[i];
-        if (key == custom_function) {
-            return i;
-        }
+static uintptr_t lldb_page(void) {
+    vm_address_t dataAddress = 0;
+    mach_port_t task = mach_task_self();
+    kern_return_t result = vm_allocate(task, &dataAddress, PAGE_MAX_SIZE * 2, VM_FLAGS_ANYWHERE | VM_MAKE_TAG(VM_MEMORY_FOUNDATION));
+    if (result != KERN_SUCCESS) {
+        return 0;
     }
-    return -1;
+
+    vm_address_t codeAddress = dataAddress + PAGE_MAX_SIZE;
+    vm_address_t codePage = (vm_address_t)&pdl_lldb_hook_page_begin;
+    vm_prot_t currentProtection = 0;
+    vm_prot_t maxProtection = 0;
+    result = vm_remap(task, &codeAddress, PAGE_MAX_SIZE, 0, VM_FLAGS_FIXED | VM_FLAGS_OVERWRITE, task, codePage, true, &currentProtection, &maxProtection, VM_INHERIT_SHARE);
+    if (result != KERN_SUCCESS) {
+        return 0;
+    }
+
+    return dataAddress;
 }
 
-static int first_empty_index_of_hook_table(void) {
-    for (int i = 0; i < PDL_LLDB_HOOK_MAX_COUNT; i++) {
-        uintptr_t key = hook_table_key[i];
-        if (key == 0) {
-            return i;
+static void lldb_hook_check_page(uintptr_t *data_ptr, uintptr_t *text_ptr) {
+    pdl_page *page = (pdl_page *)(pdl_page_list->tail);
+    if (!page || page->current_index == page->total_count) {
+        page = (pdl_page *)pdl_list_create_node(pdl_page_list, sizeof(pdl_page) - sizeof(pdl_list_node));
+        if (page) {
+            page->total_count = 10;
+            page->current_index = 0;
+            page->page_size = PAGE_MAX_SIZE;
+            page->page_begin = lldb_page();
+            pdl_list_add_tail(pdl_page_list, (pdl_list_node *)page);
         }
     }
-    return -1;
+
+    uintptr_t page_begin = page->page_begin;
+    if (page_begin) {
+        uintptr_t each_size = pdl_bytes_per_instruction * 6;
+        uintptr_t offset = pdl_bytes_per_instruction * pdl_branch_instructions_max_count;
+        uintptr_t data = page_begin + page->current_index * each_size + offset;
+        uintptr_t text = page_begin + PAGE_MAX_SIZE + page->current_index * each_size;
+        page->current_index++;
+        *data_ptr = data;
+        *text_ptr = text;
+    }
+}
+
+static void lldb_hook_initialize(void) {
+    if (pdl_hook_table) {
+        return;
+    }
+
+    pdl_hook_table = pdl_dictionary_create(NULL);
+    pdl_page_list = pdl_list_create(NULL, NULL);
 }
 
 static int lldb_hook(uintptr_t hooked_function, uintptr_t custom_function) {
-    int index = index_of_hook_table(custom_function);
-    if (index != -1) {
+    lldb_hook_initialize();
+    void **value = pdl_dictionary_get(pdl_hook_table, (void *)custom_function);
+    if (value) {
         return -1;
     }
 
-    int first_empty_index = first_empty_index_of_hook_table();
-    if (first_empty_index == -1) {
+    pdl_lldb_hook_item *item = malloc(sizeof(pdl_lldb_hook_item));
+    if (!item) {
+        return -2;
+    }
+
+    uintptr_t data = 0;
+    uintptr_t text = 0;
+    lldb_hook_check_page(&data, &text);
+    if (!text) {
         return -2;
     }
 
     int branch_instructions_count = get_branch_instructions_count(hooked_function, custom_function);
 
-    hook_table_key[first_empty_index] = custom_function;
-    hook_table_value[first_empty_index] = hooked_function;
-    uintptr_t *shiftedEntry = lldb_entry_original_with_offsets[first_empty_index];
-    *shiftedEntry = hooked_function + branch_instructions_count * bytes_per_instruction;
-    uintptr_t entry = (uintptr_t)lldb_entrys[first_empty_index];
-    print_lldb_command(hooked_function, custom_function, entry, branch_instructions_count);
+    item->custom_function = custom_function;
+    item->hooked_function = hooked_function;
+    item->offset = branch_instructions_count * pdl_bytes_per_instruction;
+    item->entry = text;
+    *(uintptr_t *)data = hooked_function + branch_instructions_count * pdl_bytes_per_instruction;
+
+    pdl_dictionary_set(pdl_hook_table, (void *)custom_function, (void **)&item);
+
+    print_lldb_command(hooked_function, custom_function, text, branch_instructions_count);
 
     return branch_instructions_count;
 }
@@ -289,16 +237,15 @@ int pdl_lldb_hook(IMP hooked_function, IMP custom_function) {
 }
 
 char *pdl_lldb_command(void) {
-    return lldb_command;
+    return _pdl_lldb_command;
 }
 
 IMP pdl_lldb_hooked_function_new_entry(IMP custom_function) {
-    int index = index_of_hook_table((uintptr_t)custom_function);
-    if (index == -1) {
-        return 0;
+    pdl_lldb_hook_item **item = (pdl_lldb_hook_item **)pdl_dictionary_get(pdl_hook_table, (void *)custom_function);
+    if (!item) {
+        return NULL;
     }
-
-    return lldb_entrys[index];
+    return (IMP)(*item)->entry;
 }
 
 #else
