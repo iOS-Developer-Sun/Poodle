@@ -118,26 +118,6 @@ static NSString *_developmentToolIdentifier = nil;
 
 #pragma mark -
 
-+ (BOOL)handleUrl:(NSURL *)url {
-    BOOL safeMode = NO;
-    BOOL ret = [self parseUrl:url safeMode:&safeMode];
-    if (ret) {
-        if (!safeMode && _developmentToolAction) {
-            BOOL handled = _developmentToolAction();
-            if (!handled) {
-                if (!_developmentToolWindow) {
-                    [self showDevelopmentToolWindow:YES completion:nil];
-                }
-            }
-        } else {
-            if (!_developmentToolWindow) {
-                [self showDevelopmentToolWindow:YES completion:nil];
-            }
-        }
-    }
-    return ret;
-}
-
 + (BOOL)parseUrl:(NSURL *)url safeMode:(BOOL *)safeMode {
     if (![url.host isEqualToString:@"debug"]) {
         return NO;
@@ -374,10 +354,46 @@ static void applicationSetDelegate(__unsafe_unretained UIApplication *self, SEL 
 
 static void applicationSetShortcutItems(__unsafe_unretained UIApplication *self, SEL _cmd, NSArray *shortcutItems) {
     PDLImplementationInterceptorRecover(_cmd);
-    UIApplicationShortcutItem *sm = [[UIApplicationShortcutItem alloc] initWithType:@"safemode" localizedTitle:@"安全模式" localizedSubtitle:nil icon:nil userInfo:nil];
+    UIApplicationShortcutItem *safeModeShortcutItem = [PDLApplication safeModeShortcutItem];
     NSArray *items = shortcutItems ?: @[];
-    items = [items arrayByAddingObject:sm];
+    items = [items arrayByAddingObject:safeModeShortcutItem];
     ((typeof(&applicationSetShortcutItems))_imp)(self, _cmd, items);
+}
+
++ (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    BOOL isSafeMode = [PDLApplication isLaunchOptionsSafeMode:launchOptions];
+    if (isSafeMode) {
+        UIWindow *window = [PDLApplication window:isSafeMode];
+        [PDLApplication setMainWindow:window];
+        [window makeKeyAndVisible];
+        return YES;
+    }
+    return NO;
+}
+
++ (BOOL)handleUrl:(NSURL *)url {
+    BOOL safeMode = NO;
+    BOOL ret = [self parseUrl:url safeMode:&safeMode];
+    if (ret) {
+        if (!safeMode && _developmentToolAction) {
+            BOOL handled = _developmentToolAction();
+            if (!handled) {
+                if (!_developmentToolWindow) {
+                    [self showDevelopmentToolWindow:YES completion:nil];
+                }
+            }
+        } else {
+            if (!_developmentToolWindow) {
+                [self showDevelopmentToolWindow:YES completion:nil];
+            }
+        }
+    }
+    return ret;
+}
+
++ (UIApplicationShortcutItem *)safeModeShortcutItem {
+    UIApplicationShortcutItem *safeModeShortcutItem = [[UIApplicationShortcutItem alloc] initWithType:@"safemode" localizedTitle:@"安全模式" localizedSubtitle:nil icon:nil userInfo:nil];
+    return safeModeShortcutItem;
 }
 
 + (BOOL)enableDevelopmentTool {
