@@ -7,6 +7,8 @@
 //
 
 #import "PDLSharedCache.h"
+#import <sys/stat.h>
+#import <sys/mman.h>
 #import "dsc_extractor.h"
 #import "pdl_mach_object.h"
 #import "pdl_mach_o_symbols.h"
@@ -142,6 +144,21 @@
         }
         _systemCacheFile = path;
 
+        const char *shared_cache_file_path = path.UTF8String;
+        struct stat statbuf;
+        if (!stat(shared_cache_file_path, &statbuf)) {
+            int fd = open(shared_cache_file_path, O_RDONLY);
+            if (fd >= 0) {
+                size_t size = (size_t)statbuf.st_size;
+                void *mapped_cache = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
+                if (mapped_cache != MAP_FAILED) {
+                    _enabled = YES;
+                    munmap(mapped_cache, size);
+                }
+                close(fd);
+            }
+        }
+
         NSArray *libraryPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
         NSString *libraryPath = libraryPaths.firstObject;
         NSString *cachePath = [libraryPath stringByAppendingPathComponent:@"PDLSharedCache"];
@@ -167,6 +184,10 @@
 }
 
 - (NSString *)sharedCachePathWithImageName:(NSString *)imageName {
+    if (self.enabled) {
+        return nil;
+    }
+
     NSString *path = [self.cachePath stringByAppendingPathComponent:imageName];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         return path;
