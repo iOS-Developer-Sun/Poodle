@@ -10,6 +10,8 @@
 		B80198A025C7ED5A00C5C1CE /* PDLProcessInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B801989F25C7ED5A00C5C1CE /* PDLProcessInfo.m */; };
 		B8019ABD25C7EDA500C5C1CE /* PDLProcessInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = B801989F25C7ED5A00C5C1CE /* PDLProcessInfo.m */; };
 		B8019B1725C7EDAA00C5C1CE /* PDLProcessInfo.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B801989E25C7ED5A00C5C1CE /* PDLProcessInfo.h */; };
+		B8060E9A26C4062300741C80 /* pdl_lldb_hook-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = B8060E9926C4062300741C80 /* pdl_lldb_hook-arm64.s */; };
+		B8060E9B26C4062300741C80 /* pdl_lldb_hook-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = B8060E9926C4062300741C80 /* pdl_lldb_hook-arm64.s */; };
 		B8079BBF261C785D007E7A17 /* pdl_system_leak.m in Sources */ = {isa = PBXBuildFile; fileRef = B8079BBD261C785D007E7A17 /* pdl_system_leak.m */; };
 		B8079E0D261C7889007E7A17 /* pdl_system_leak.m in Sources */ = {isa = PBXBuildFile; fileRef = B8079BBD261C785D007E7A17 /* pdl_system_leak.m */; };
 		B8079E6F261C788D007E7A17 /* pdl_system_leak.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8079BBE261C785D007E7A17 /* pdl_system_leak.h */; };
@@ -2280,6 +2282,7 @@
 		B802AC9222F3372C00BF028E /* libUINavigationController+PDLLongPressPop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUINavigationController+PDLLongPressPop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B802ACC422F33A3400BF028E /* libPDLImageListViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLImageListViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B802ACD322F33A6A00BF028E /* libPDLFileSystemViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLFileSystemViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8060E9926C4062300741C80 /* pdl_lldb_hook-arm64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "pdl_lldb_hook-arm64.s"; sourceTree = "<group>"; };
 		B8079BBD261C785D007E7A17 /* pdl_system_leak.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_system_leak.m; sourceTree = "<group>"; };
 		B8079BBE261C785D007E7A17 /* pdl_system_leak.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_system_leak.h; sourceTree = "<group>"; };
 		B8079C88261C7866007E7A17 /* libpdl_system_leak.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_system_leak.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4550,6 +4553,7 @@
 		B8E56E8C23D70019008D2DA1 /* pdl_lldb_hook */ = {
 			isa = PBXGroup;
 			children = (
+				B8060E9926C4062300741C80 /* pdl_lldb_hook-arm64.s */,
 				B8E56E8F23D70019008D2DA1 /* pdl_lldb_hook.c */,
 				B8E56E8E23D70019008D2DA1 /* pdl_lldb_hook.h */,
 				B8E56E8D23D70019008D2DA1 /* pdl_lldb_hook.py */,
@@ -9093,6 +9097,7 @@
 				B81E710E2501185A00399E4B /* PDLInitialization.m in Sources */,
 				B8528192255132CA00B74F87 /* PDLRunLoopObserver.m in Sources */,
 				B85D45DC240E859000CBF758 /* PDLDirectoryViewController.m in Sources */,
+				B8060E9A26C4062300741C80 /* pdl_lldb_hook-arm64.s in Sources */,
 				B85D45DD240E859000CBF758 /* PDLFileSystemViewController.m in Sources */,
 				B85D45DE240E859000CBF758 /* PDLPropertyListViewController.m in Sources */,
 				B85D45DF240E859000CBF758 /* PDLTextViewController.m in Sources */,
@@ -9265,6 +9270,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B8060E9B26C4062300741C80 /* pdl_lldb_hook-arm64.s in Sources */,
 				B8E56F3523D70251008D2DA1 /* pdl_lldb_hook.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -1,12 +1,12 @@
 //
-//  pdl_lldb_hook.c
+//  pdl_lldb_hook-arm64.s
 //  Poodle
 //
 //  Created by Poodle on 2019/12/19.
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
-#if __arm64__
+#ifdef __arm64__
 
 #include <mach/vm_param.h>
 
