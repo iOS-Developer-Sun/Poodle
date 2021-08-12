@@ -15,7 +15,7 @@ extern "C" {
 
 extern char *pdl_lldb_command(void);
 extern int pdl_lldb_hook(void *hooked_function, void *custom_function);
-extern void *pdl_lldb_hooked_function_new_entry(void *custom_function);
+extern void *pdl_lldb_hooked_new_entry(void **hooked_function);
 
 #ifdef __cplusplus
 }
