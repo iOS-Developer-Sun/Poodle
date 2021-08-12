@@ -130,7 +130,7 @@ def pdl_hook(debugger, command, result, dict):
         return;
 
     # pdl_lldb_hook
-    cmd = 'pdl_lldb_hook(' + hex(hookedFunctionAddr) + ', ' + hex(customFunctionAddr) + ')';
+    cmd = 'pdl_lldb_hook((void *)' + hex(hookedFunctionAddr) + ', (void *)' + hex(customFunctionAddr) + ')';
     pdl_print(cmd);
     value = pdl_evaluateExpressionValue(cmd);
     if not value:
