@@ -14,10 +14,15 @@
 
 .private_extern _pdl_lldb_hook_page_begin
 .private_extern _pdl_lldb_hook_page_end
+.private_extern _pdl_lldb_hook_current_entry
 
 .align PAGE_MAX_SHIFT
 
 .macro PDL_LLDB_HOOK_ENTRY
+    adr x9, -PAGE_MAX_SIZE
+    fmov d31, x9
+    ldr x9, [x9]
+    br x9
     nop
     nop
     nop
@@ -72,7 +77,6 @@
 
 _pdl_lldb_hook_page_begin:
     PDL_LLDB_HOOK_ENTRY_256
-    PDL_LLDB_HOOK_ENTRY_256
 
     PDL_LLDB_HOOK_ENTRY_16
     PDL_LLDB_HOOK_ENTRY_16
@@ -85,7 +89,6 @@ _pdl_lldb_hook_page_begin:
     PDL_LLDB_HOOK_ENTRY_16
 
     PDL_LLDB_HOOK_ENTRY_16
-    PDL_LLDB_HOOK_ENTRY_16
 
     PDL_LLDB_HOOK_ENTRY
     PDL_LLDB_HOOK_ENTRY
@@ -97,13 +100,18 @@ _pdl_lldb_hook_page_begin:
     PDL_LLDB_HOOK_ENTRY
     PDL_LLDB_HOOK_ENTRY
 
-    PDL_LLDB_HOOK_ENTRY
     PDL_LLDB_HOOK_ENTRY
 
 _pdl_lldb_hook_page_end:
-    nop
-    nop
-    nop
-    nop
+//  nop
+//  nop
+//  nop
+//  nop
+//  nop
+//  nop
+
+_pdl_lldb_hook_current_entry:
+    fmov x0, d31
+    ret
 
 #endif
