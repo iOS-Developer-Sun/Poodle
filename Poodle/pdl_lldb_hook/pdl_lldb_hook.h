@@ -8,16 +8,14 @@
 
 #include <stdlib.h>
 #include <stdbool.h>
-#include <objc/objc.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-extern int pdl_lldb_hook(IMP hooked_function, IMP custom_function);
 extern char *pdl_lldb_command(void);
-
-extern IMP pdl_lldb_hooked_function_new_entry(IMP custom_function);
+extern int pdl_lldb_hook(void *hooked_function, void *custom_function);
+extern void *pdl_lldb_hooked_function_new_entry(void *custom_function);
 
 #ifdef __cplusplus
 }

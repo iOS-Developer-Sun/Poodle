@@ -221,7 +221,7 @@ static int lldb_hook(uintptr_t hooked_function, uintptr_t custom_function) {
     return branch_instructions_count;
 }
 
-int pdl_lldb_hook(IMP hooked_function, IMP custom_function) {
+int pdl_lldb_hook(void *hooked_function, void *custom_function) {
     if (hooked_function == NULL || custom_function == NULL || hooked_function == custom_function) {
         return 0;
     }
@@ -233,8 +233,8 @@ char *pdl_lldb_command(void) {
     return _pdl_lldb_command;
 }
 
-IMP pdl_lldb_hooked_function_new_entry(IMP custom_function) {
-    IMP *imp = (IMP *)pdl_dictionary_get(pdl_hook_table, (void *)custom_function);
+void *pdl_lldb_hooked_function_new_entry(void *custom_function) {
+    void **imp = (void **)pdl_dictionary_get(pdl_hook_table, (void *)custom_function);
     if (!imp) {
         return NULL;
     }
@@ -243,7 +243,7 @@ IMP pdl_lldb_hooked_function_new_entry(IMP custom_function) {
 
 #else
 
-int pdl_lldb_hook(IMP hooked_function, IMP custom_function) {
+int pdl_lldb_hook(void *hooked_function, void *custom_function) {
     return 0;
 }
 
@@ -251,7 +251,7 @@ char *pdl_lldb_command(void) {
     return NULL;
 }
 
-IMP pdl_lldb_hooked_function_new_entry(IMP custom_function) {
+void *pdl_lldb_hooked_function_new_entry(void *custom_function) {
     return NULL;
 }
 
