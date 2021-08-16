@@ -304,9 +304,7 @@
 		B8DEC4C424877D1800DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
 		B8DEC4CE2487807900DB3D0E /* pdl_dispatch_backtrace.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8DEC4C224877D1800DB3D0E /* pdl_dispatch_backtrace.h */; };
 		B8DEC4CF2487807E00DB3D0E /* pdl_dispatch_backtrace.m in Sources */ = {isa = PBXBuildFile; fileRef = B8DEC4C324877D1800DB3D0E /* pdl_dispatch_backtrace.m */; };
-		B8E3997225CA758C004096FF /* pdl_block.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E3997125CA758C004096FF /* pdl_block.m */; };
 		B8E39BEF25CA77BB004096FF /* pdl_block.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E3997025CA758C004096FF /* pdl_block.h */; };
-		B8E39C4A25CA77C2004096FF /* pdl_block.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E3997125CA758C004096FF /* pdl_block.m */; };
 		B8E54554253823EB004C1033 /* pdl_objc_message_hook.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E54553253823EB004C1033 /* pdl_objc_message_hook.m */; };
 		B8E5455E25382423004C1033 /* pdl_objc_message_hook.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E54553253823EB004C1033 /* pdl_objc_message_hook.m */; };
 		B8E5455F2538242A004C1033 /* pdl_objc_message_hook.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E54552253823EB004C1033 /* pdl_objc_message_hook.h */; };
@@ -2495,7 +2493,6 @@
 		B8DFB0A1248CBBFB00880B66 /* pdl_thread_funtion_size */ = {isa = PBXFileReference; lastKnownFileType = folder; path = pdl_thread_funtion_size; sourceTree = "<group>"; };
 		B8DFB0A3248CC1E300880B66 /* pdl_thread_funtion_size.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = pdl_thread_funtion_size.sh; sourceTree = "<group>"; };
 		B8E3997025CA758C004096FF /* pdl_block.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_block.h; sourceTree = "<group>"; };
-		B8E3997125CA758C004096FF /* pdl_block.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = pdl_block.m; sourceTree = "<group>"; };
 		B8E39A8625CA77A7004096FF /* libpdl_block.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_block.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E54552253823EB004C1033 /* pdl_objc_message_hook.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_objc_message_hook.h; sourceTree = "<group>"; };
 		B8E54553253823EB004C1033 /* pdl_objc_message_hook.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_objc_message_hook.m; sourceTree = "<group>"; };
@@ -4112,7 +4109,6 @@
 			isa = PBXGroup;
 			children = (
 				B8E3997025CA758C004096FF /* pdl_block.h */,
-				B8E3997125CA758C004096FF /* pdl_block.m */,
 			);
 			path = pdl_block;
 			sourceTree = "<group>";
@@ -9065,7 +9061,6 @@
 				B85D45CB240E859000CBF758 /* NSObject+PDLWeakifyUnsafeUnretainedProperty.m in Sources */,
 				B886661C2607808000458D3F /* PDLApplication.m in Sources */,
 				B85D45CC240E859000CBF758 /* NSThread+PDLExtension.m in Sources */,
-				B8E3997225CA758C004096FF /* pdl_block.m in Sources */,
 				B85D45CD240E859000CBF758 /* NSUserDefaults+PDLExtension.m in Sources */,
 				B85D45CE240E859000CBF758 /* pdl_mach.m in Sources */,
 				B85D45CF240E859000CBF758 /* pdl_mach_o_const_symbols.m in Sources */,
@@ -9515,7 +9510,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E39C4A25CA77C2004096FF /* pdl_block.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

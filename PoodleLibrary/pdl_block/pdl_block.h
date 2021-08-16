@@ -65,6 +65,4 @@ typedef struct {
     pdl_block_data data;
 } pdl_block;
 
-extern size_t pdl_block_extra_size(void *block);
-
 NS_ASSUME_NONNULL_END
