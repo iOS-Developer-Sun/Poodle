@@ -266,7 +266,7 @@ static void *PDLBlockRetainObject(__unsafe_unretained id self, SEL _cmd) {
 static NSMutableDictionary *PDLBlockCopyMap = nil;
 static __weak id PDLBlockCopyMapLock = nil;
 static void PDLBlockDescCopy(pdl_block *toBlock, pdl_block *fromBlock) {
-    unsigned long key = (unsigned long)(fromBlock->Desc);
+    unsigned long key = (unsigned long)(fromBlock->Desc.object);
     unsigned long value = 0;
     @synchronized (PDLBlockCopyMapLock) {
         value = [PDLBlockCopyMap[@(key)] unsignedLongValue];
@@ -313,7 +313,7 @@ NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol)) {
                     return;
                 }
 
-                pdl_block_desc *desc = (pdl_block_desc *)address;
+                pdl_block_desc_object *desc = (void *)address;
                 void *copy = desc->copy;
                 if (!copy) {
                     return;

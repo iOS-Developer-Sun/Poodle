@@ -38,16 +38,30 @@ typedef struct {
 } pdl_block_impl;
 
 typedef struct {
+    size_t Block_size;
+} pdl_block_desc_size;
+
+typedef struct {
+    size_t reserved;
+    size_t Block_size;
+    const char *signature;
+} pdl_block_desc_basic;
+
+typedef struct {
     size_t reserved;
     size_t Block_size;
     void (*copy)(pdl_block_impl *, pdl_block_impl *);
     void (*dispose)(pdl_block_impl *);
     const char *signature;
-} pdl_block_desc;
+} pdl_block_desc_object;
 
 typedef struct {
     pdl_block_impl impl;
-    pdl_block_desc *Desc;
+    union {
+        pdl_block_desc_size *size;
+        pdl_block_desc_basic *basic;
+        pdl_block_desc_object *object;
+    } Desc;
     pdl_block_data data;
 } pdl_block;
 

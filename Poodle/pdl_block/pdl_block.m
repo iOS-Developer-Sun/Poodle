@@ -10,5 +10,15 @@
 
 size_t pdl_block_extra_size(void *block) {
     pdl_block *b = (void *)block;
-    return b->Desc->Block_size - sizeof(pdl_block);
+    size_t size = 0;
+#if TARGET_IPHONE_SIMULATOR
+    if (b->impl.Flags & 0x16u) {
+        size = b->Desc.size->Block_size;
+    } else {
+        size = b->Desc.object->Block_size;
+    }
+#else
+    size = b->Desc.object->Block_size;
+#endif
+    return size - sizeof(pdl_block);
 }
