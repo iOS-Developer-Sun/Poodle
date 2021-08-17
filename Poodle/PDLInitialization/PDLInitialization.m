@@ -80,7 +80,7 @@ static NSUInteger _preloadCount = 0;
     return _conversion;
 }
 
-static void pdl_load(id self, SEL _cmd) {
+static void pdl_load(__unsafe_unretained id self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
     uint64_t begin = mach_absolute_time();
     ((typeof(&pdl_load))_imp)(self, _cmd);
