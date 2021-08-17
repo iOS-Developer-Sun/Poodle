@@ -16,11 +16,12 @@ static void emptyLoad(__unsafe_unretained id self, SEL _cmd) {
     return;
 }
 
-void pdl_disableCategoryLoad(void *image_header, bool(*filter)(Class cls, const char *category_name, IMP imp)) {
+int pdl_disableCategoryLoad(void *image_header, bool(*filter)(Class cls, const char *category_name, IMP imp)) {
     if (!filter) {
-        return;
+        return 0;
     }
 
+    int ret = 0;
     size_t count = 0;
     pdl_objc_runtime_category *categories = pdl_objc_runtime_nonlazy_categories(image_header, &count);
     for (size_t i = 0; i < count; i++) {
@@ -51,7 +52,10 @@ void pdl_disableCategoryLoad(void *image_header, bool(*filter)(Class cls, const 
             bool disabled = filter(cls, name, imp);
             if (disabled) {
                 method_setImplementation(method, (IMP)&emptyLoad);
+                ret++;
             }
         }
     }
+
+    return ret;
 }
