@@ -128,11 +128,6 @@
 		B85D45E7240E859000CBF758 /* PDLProtocolViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E9D23D70019008D2DA1 /* PDLProtocolViewController.m */; };
 		B85D45E8240E859000CBF758 /* PDLKeyboardNotificationObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E7F23D70018008D2DA1 /* PDLKeyboardNotificationObserver.m */; };
 		B85D45E9240E859000CBF758 /* PDLMemoryQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DE823D70016008D2DA1 /* PDLMemoryQueryViewController.m */; };
-		B85D45EA240E859000CBF758 /* PDLNonThreadSafePropertyObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF123D70016008D2DA1 /* PDLNonThreadSafePropertyObserver.m */; };
-		B85D45EB240E859000CBF758 /* PDLNonThreadSafePropertyObserverAction.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DEF23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverAction.m */; };
-		B85D45EC240E859000CBF758 /* PDLNonThreadSafePropertyObserverChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF323D70016008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.m */; };
-		B85D45ED240E859000CBF758 /* PDLNonThreadSafePropertyObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF223D70016008D2DA1 /* PDLNonThreadSafePropertyObserverObject.m */; };
-		B85D45EE240E859000CBF758 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF023D70016008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.m */; };
 		B85D45EF240E859000CBF758 /* PDLOpenUrlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF723D70016008D2DA1 /* PDLOpenUrlViewController.m */; };
 		B85D45F0240E859000CBF758 /* PDLPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E8A23D70018008D2DA1 /* PDLPageControl.m */; };
 		B85D45F1240E859000CBF758 /* NSObject+PDLPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E8223D70018008D2DA1 /* NSObject+PDLPrivate.m */; };
@@ -443,15 +438,6 @@
 		B8E56F8623D704B4008D2DA1 /* PDLKeyboardNotificationObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E7E23D70018008D2DA1 /* PDLKeyboardNotificationObserver.h */; };
 		B8E56F8723D704BB008D2DA1 /* PDLMemoryQueryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DE823D70016008D2DA1 /* PDLMemoryQueryViewController.m */; };
 		B8E56F8823D704BE008D2DA1 /* PDLMemoryQueryViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56DE923D70016008D2DA1 /* PDLMemoryQueryViewController.h */; };
-		B8E56F8923D704CA008D2DA1 /* PDLNonThreadSafePropertyObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF123D70016008D2DA1 /* PDLNonThreadSafePropertyObserver.m */; };
-		B8E56F8A23D704CA008D2DA1 /* PDLNonThreadSafePropertyObserverAction.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DEF23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverAction.m */; };
-		B8E56F8B23D704CB008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF323D70016008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.m */; };
-		B8E56F8C23D704CB008D2DA1 /* PDLNonThreadSafePropertyObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF223D70016008D2DA1 /* PDLNonThreadSafePropertyObserverObject.m */; };
-		B8E56F8D23D704CB008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF023D70016008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.m */; };
-		B8E56F8E23D704DE008D2DA1 /* PDLNonThreadSafePropertyObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56DEC23D70016008D2DA1 /* PDLNonThreadSafePropertyObserver.h */; };
-		B8E56F8F23D704DE008D2DA1 /* PDLNonThreadSafePropertyObserverAction.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56DF423D70016008D2DA1 /* PDLNonThreadSafePropertyObserverAction.h */; };
-		B8E56F9023D704DE008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56DEE23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.h */; };
-		B8E56F9123D704DE008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56DEB23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.h */; };
 		B8E56F9223D704E5008D2DA1 /* PDLOpenUrlViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF723D70016008D2DA1 /* PDLOpenUrlViewController.m */; };
 		B8E56F9323D704E8008D2DA1 /* PDLOpenUrlViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56DF623D70016008D2DA1 /* PDLOpenUrlViewController.h */; };
 		B8E56F9423D704EE008D2DA1 /* PDLPageControl.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E8A23D70018008D2DA1 /* PDLPageControl.m */; };
@@ -488,6 +474,37 @@
 		B8E81E3525C109D900204009 /* PDLReuseItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E81E3425C109D900204009 /* PDLReuseItemManager.m */; };
 		B8E81FF525C10A3600204009 /* PDLReuseItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E81E3425C109D900204009 /* PDLReuseItemManager.m */; };
 		B8E8204E25C10A3A00204009 /* PDLReuseItemManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E81E3325C109D900204009 /* PDLReuseItemManager.h */; };
+		C010A6D927114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CA27114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m */; };
+		C010A6DA27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CB27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m */; };
+		C010A6DB27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CC27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m */; };
+		C010A6DC27114D8300A785E9 /* PDLNonThreadSafeObserverChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CD27114D8300A785E9 /* PDLNonThreadSafeObserverChecker.m */; };
+		C010A6DD27114D8300A785E9 /* PDLNonThreadSafeObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CE27114D8300A785E9 /* PDLNonThreadSafeObserverObject.m */; };
+		C010A6DE27114D8300A785E9 /* PDLNonThreadSafeObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CF27114D8300A785E9 /* PDLNonThreadSafeObserver.m */; };
+		C010A6DF27114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6D027114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.m */; };
+		C010A6E027114D8300A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6D127114D8300A785E9 /* PDLNonThreadSafeObserverAction.m */; };
+		C010A6E127114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6D527114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m */; };
+		C010A6E227114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6D627114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.m */; };
+		C010A6E327114DFE00A785E9 /* pdl_objc_runtime.c in Sources */ = {isa = PBXBuildFile; fileRef = B8C7A1A525FFAF8C0047EF59 /* pdl_objc_runtime.c */; };
+		C010A6E427114E4900A785E9 /* PDLNonThreadSafeObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CF27114D8300A785E9 /* PDLNonThreadSafeObserver.m */; };
+		C010A6E527114E4900A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6D127114D8300A785E9 /* PDLNonThreadSafeObserverAction.m */; };
+		C010A6E627114E4900A785E9 /* PDLNonThreadSafeObserverChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CD27114D8300A785E9 /* PDLNonThreadSafeObserverChecker.m */; };
+		C010A6E727114E4900A785E9 /* PDLNonThreadSafeObserverCriticalResource.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6D027114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.m */; };
+		C010A6E827114E4900A785E9 /* PDLNonThreadSafeObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CE27114D8300A785E9 /* PDLNonThreadSafeObserverObject.m */; };
+		C010A6E927114E5E00A785E9 /* PDLNonThreadSafeDictionaryObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6D627114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.m */; };
+		C010A6EA27114E5E00A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6D527114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m */; };
+		C010A6EB27114E5E00A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CB27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m */; };
+		C010A6EC27114E5E00A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CC27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m */; };
+		C010A6ED27114E5E00A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CA27114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m */; };
+		C010A6EE27114ECA00A785E9 /* PDLNonThreadSafeDictionaryObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6D427114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.h */; };
+		C010A6EF27114ECA00A785E9 /* PDLNonThreadSafeDictionaryObserverObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6D327114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.h */; };
+		C010A6F027114ECA00A785E9 /* PDLNonThreadSafeObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C527114D8300A785E9 /* PDLNonThreadSafeObserver.h */; };
+		C010A6F127114ECA00A785E9 /* PDLNonThreadSafeObserverAction.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C327114D8300A785E9 /* PDLNonThreadSafeObserverAction.h */; };
+		C010A6F227114ECA00A785E9 /* PDLNonThreadSafeObserverChecker.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6D827114D8300A785E9 /* PDLNonThreadSafeObserverChecker.h */; };
+		C010A6F327114ECA00A785E9 /* PDLNonThreadSafeObserverCriticalResource.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C427114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.h */; };
+		C010A6F427114ECA00A785E9 /* PDLNonThreadSafeObserverObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6D727114D8300A785E9 /* PDLNonThreadSafeObserverObject.h */; };
+		C010A6F527114ECA00A785E9 /* PDLNonThreadSafePropertyObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C827114D8300A785E9 /* PDLNonThreadSafePropertyObserver.h */; };
+		C010A6F627114ECA00A785E9 /* PDLNonThreadSafePropertyObserverObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C927114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.h */; };
+		C010A6F727114ECA00A785E9 /* PDLNonThreadSafePropertyObserverProperty.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C727114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1743,10 +1760,16 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
-				B8E56F8E23D704DE008D2DA1 /* PDLNonThreadSafePropertyObserver.h in CopyFiles */,
-				B8E56F8F23D704DE008D2DA1 /* PDLNonThreadSafePropertyObserverAction.h in CopyFiles */,
-				B8E56F9023D704DE008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.h in CopyFiles */,
-				B8E56F9123D704DE008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.h in CopyFiles */,
+				C010A6EE27114ECA00A785E9 /* PDLNonThreadSafeDictionaryObserver.h in CopyFiles */,
+				C010A6EF27114ECA00A785E9 /* PDLNonThreadSafeDictionaryObserverObject.h in CopyFiles */,
+				C010A6F027114ECA00A785E9 /* PDLNonThreadSafeObserver.h in CopyFiles */,
+				C010A6F127114ECA00A785E9 /* PDLNonThreadSafeObserverAction.h in CopyFiles */,
+				C010A6F227114ECA00A785E9 /* PDLNonThreadSafeObserverChecker.h in CopyFiles */,
+				C010A6F327114ECA00A785E9 /* PDLNonThreadSafeObserverCriticalResource.h in CopyFiles */,
+				C010A6F427114ECA00A785E9 /* PDLNonThreadSafeObserverObject.h in CopyFiles */,
+				C010A6F527114ECA00A785E9 /* PDLNonThreadSafePropertyObserver.h in CopyFiles */,
+				C010A6F627114ECA00A785E9 /* PDLNonThreadSafePropertyObserverObject.h in CopyFiles */,
+				C010A6F727114ECA00A785E9 /* PDLNonThreadSafePropertyObserverProperty.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2471,7 +2494,7 @@
 		B8A73D69269821E700713B8B /* pdl_zombie.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_zombie.h; sourceTree = "<group>"; };
 		B8A73D6A269821E700713B8B /* pdl_zombie.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = pdl_zombie.m; sourceTree = "<group>"; };
 		B8A73D742698290100713B8B /* libpdl_zombie.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_zombie.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8AD194923D15CD7005A7363 /* libPDLNonThreadSafePropertyObserver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLNonThreadSafePropertyObserver.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B8AD194923D15CD7005A7363 /* libPDLNonThreadSafeObserver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLNonThreadSafeObserver.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8AD196423D1B433005A7363 /* libNSObject+PDLThreadSafetifyProperty.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLThreadSafetifyProperty.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8B3A9FF24B71E2B008EFBE0 /* NSObject+PDLAssociation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLAssociation.m"; sourceTree = "<group>"; };
 		B8B3AA0024B71E2B008EFBE0 /* NSObject+PDLAssociation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+PDLAssociation.h"; sourceTree = "<group>"; };
@@ -2508,16 +2531,6 @@
 		B8E56DE623D70016008D2DA1 /* NSObject+PDLSelectorProxy.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLSelectorProxy.m"; sourceTree = "<group>"; };
 		B8E56DE823D70016008D2DA1 /* PDLMemoryQueryViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLMemoryQueryViewController.m; sourceTree = "<group>"; };
 		B8E56DE923D70016008D2DA1 /* PDLMemoryQueryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLMemoryQueryViewController.h; sourceTree = "<group>"; };
-		B8E56DEB23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafePropertyObserverProperty.h; sourceTree = "<group>"; };
-		B8E56DEC23D70016008D2DA1 /* PDLNonThreadSafePropertyObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafePropertyObserver.h; sourceTree = "<group>"; };
-		B8E56DED23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafePropertyObserverObject.h; sourceTree = "<group>"; };
-		B8E56DEE23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafePropertyObserverChecker.h; sourceTree = "<group>"; };
-		B8E56DEF23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverAction.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafePropertyObserverAction.m; sourceTree = "<group>"; };
-		B8E56DF023D70016008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafePropertyObserverProperty.m; sourceTree = "<group>"; };
-		B8E56DF123D70016008D2DA1 /* PDLNonThreadSafePropertyObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafePropertyObserver.m; sourceTree = "<group>"; };
-		B8E56DF223D70016008D2DA1 /* PDLNonThreadSafePropertyObserverObject.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafePropertyObserverObject.m; sourceTree = "<group>"; };
-		B8E56DF323D70016008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafePropertyObserverChecker.m; sourceTree = "<group>"; };
-		B8E56DF423D70016008D2DA1 /* PDLNonThreadSafePropertyObserverAction.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafePropertyObserverAction.h; sourceTree = "<group>"; };
 		B8E56DF623D70016008D2DA1 /* PDLOpenUrlViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLOpenUrlViewController.h; sourceTree = "<group>"; };
 		B8E56DF723D70016008D2DA1 /* PDLOpenUrlViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLOpenUrlViewController.m; sourceTree = "<group>"; };
 		B8E56DF923D70016008D2DA1 /* PDLViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLViewController.m; sourceTree = "<group>"; };
@@ -2749,6 +2762,26 @@
 		B8FC6D8D22EFD8F1005B91DE /* libPDLPrivate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLPrivate.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FC6D9822EFD95E005B91DE /* libpdl_asm.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_asm.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FC6DA122EFD979005B91DE /* libpdl_dynamic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_dynamic.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C010A6C327114D8300A785E9 /* PDLNonThreadSafeObserverAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverAction.h; sourceTree = "<group>"; };
+		C010A6C427114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverCriticalResource.h; sourceTree = "<group>"; };
+		C010A6C527114D8300A785E9 /* PDLNonThreadSafeObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserver.h; sourceTree = "<group>"; };
+		C010A6C727114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafePropertyObserverProperty.h; sourceTree = "<group>"; };
+		C010A6C827114D8300A785E9 /* PDLNonThreadSafePropertyObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafePropertyObserver.h; sourceTree = "<group>"; };
+		C010A6C927114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafePropertyObserverObject.h; sourceTree = "<group>"; };
+		C010A6CA27114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafePropertyObserverProperty.m; sourceTree = "<group>"; };
+		C010A6CB27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafePropertyObserver.m; sourceTree = "<group>"; };
+		C010A6CC27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafePropertyObserverObject.m; sourceTree = "<group>"; };
+		C010A6CD27114D8300A785E9 /* PDLNonThreadSafeObserverChecker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeObserverChecker.m; sourceTree = "<group>"; };
+		C010A6CE27114D8300A785E9 /* PDLNonThreadSafeObserverObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeObserverObject.m; sourceTree = "<group>"; };
+		C010A6CF27114D8300A785E9 /* PDLNonThreadSafeObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeObserver.m; sourceTree = "<group>"; };
+		C010A6D027114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeObserverCriticalResource.m; sourceTree = "<group>"; };
+		C010A6D127114D8300A785E9 /* PDLNonThreadSafeObserverAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeObserverAction.m; sourceTree = "<group>"; };
+		C010A6D327114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeDictionaryObserverObject.h; sourceTree = "<group>"; };
+		C010A6D427114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeDictionaryObserver.h; sourceTree = "<group>"; };
+		C010A6D527114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeDictionaryObserverObject.m; sourceTree = "<group>"; };
+		C010A6D627114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeDictionaryObserver.m; sourceTree = "<group>"; };
+		C010A6D727114D8300A785E9 /* PDLNonThreadSafeObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverObject.h; sourceTree = "<group>"; };
+		C010A6D827114D8300A785E9 /* PDLNonThreadSafeObserverChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverChecker.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3915,7 +3948,7 @@
 				B8724BB823AB9EDF003A4D2A /* libpdl_lldb_hook.a */,
 				B86A6BAD23BB55E500715650 /* libPDLViewController.a */,
 				B82334AF23BC982900B1B15B /* libNSObject+PDLSelectorProxy.a */,
-				B8AD194923D15CD7005A7363 /* libPDLNonThreadSafePropertyObserver.a */,
+				B8AD194923D15CD7005A7363 /* libPDLNonThreadSafeObserver.a */,
 				B8AD196423D1B433005A7363 /* libNSObject+PDLThreadSafetifyProperty.a */,
 				B85D45A3240E84DA00CBF758 /* PoodleApplication.app */,
 				B899F9F824506A2900EFBB39 /* libPDLViewControllerListViewController.a */,
@@ -4144,23 +4177,6 @@
 				B8E56DE823D70016008D2DA1 /* PDLMemoryQueryViewController.m */,
 			);
 			path = PDLMemoryQueryViewController;
-			sourceTree = "<group>";
-		};
-		B8E56DEA23D70016008D2DA1 /* PDLNonThreadSafePropertyObserver */ = {
-			isa = PBXGroup;
-			children = (
-				B8E56DEC23D70016008D2DA1 /* PDLNonThreadSafePropertyObserver.h */,
-				B8E56DF123D70016008D2DA1 /* PDLNonThreadSafePropertyObserver.m */,
-				B8E56DF423D70016008D2DA1 /* PDLNonThreadSafePropertyObserverAction.h */,
-				B8E56DEF23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverAction.m */,
-				B8E56DEE23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.h */,
-				B8E56DF323D70016008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.m */,
-				B8E56DED23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverObject.h */,
-				B8E56DF223D70016008D2DA1 /* PDLNonThreadSafePropertyObserverObject.m */,
-				B8E56DEB23D70016008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.h */,
-				B8E56DF023D70016008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.m */,
-			);
-			path = PDLNonThreadSafePropertyObserver;
 			sourceTree = "<group>";
 		};
 		B8E56DF523D70016008D2DA1 /* PDLOpenUrlViewController */ = {
@@ -4853,7 +4869,7 @@
 				B8E56E7D23D70018008D2DA1 /* PDLKeyboardNotificationObserver */,
 				B89FA7F625921E9900B714BE /* PDLLoad */,
 				B8E56DE723D70016008D2DA1 /* PDLMemoryQueryViewController */,
-				B8E56DEA23D70016008D2DA1 /* PDLNonThreadSafePropertyObserver */,
+				C010A6C227114D8300A785E9 /* PDLNonThreadSafeObserver */,
 				B8E56DF523D70016008D2DA1 /* PDLOpenUrlViewController */,
 				B878E7AF260345DB00F0859F /* PDLOverlayWindow */,
 				B8E56E8923D70018008D2DA1 /* PDLPageControl */,
@@ -4883,6 +4899,49 @@
 				B8E56EFA23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation */,
 			);
 			path = Poodle;
+			sourceTree = "<group>";
+		};
+		C010A6C227114D8300A785E9 /* PDLNonThreadSafeObserver */ = {
+			isa = PBXGroup;
+			children = (
+				C010A6D227114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver */,
+				C010A6C527114D8300A785E9 /* PDLNonThreadSafeObserver.h */,
+				C010A6CF27114D8300A785E9 /* PDLNonThreadSafeObserver.m */,
+				C010A6C327114D8300A785E9 /* PDLNonThreadSafeObserverAction.h */,
+				C010A6D127114D8300A785E9 /* PDLNonThreadSafeObserverAction.m */,
+				C010A6D827114D8300A785E9 /* PDLNonThreadSafeObserverChecker.h */,
+				C010A6CD27114D8300A785E9 /* PDLNonThreadSafeObserverChecker.m */,
+				C010A6C427114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.h */,
+				C010A6D027114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.m */,
+				C010A6D727114D8300A785E9 /* PDLNonThreadSafeObserverObject.h */,
+				C010A6CE27114D8300A785E9 /* PDLNonThreadSafeObserverObject.m */,
+				C010A6C627114D8300A785E9 /* PDLNonThreadSafePropertyObserver */,
+			);
+			path = PDLNonThreadSafeObserver;
+			sourceTree = "<group>";
+		};
+		C010A6C627114D8300A785E9 /* PDLNonThreadSafePropertyObserver */ = {
+			isa = PBXGroup;
+			children = (
+				C010A6C827114D8300A785E9 /* PDLNonThreadSafePropertyObserver.h */,
+				C010A6CB27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m */,
+				C010A6C927114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.h */,
+				C010A6CC27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m */,
+				C010A6C727114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.h */,
+				C010A6CA27114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m */,
+			);
+			path = PDLNonThreadSafePropertyObserver;
+			sourceTree = "<group>";
+		};
+		C010A6D227114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver */ = {
+			isa = PBXGroup;
+			children = (
+				C010A6D427114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.h */,
+				C010A6D627114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.m */,
+				C010A6D327114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.h */,
+				C010A6D527114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m */,
+			);
+			path = PDLNonThreadSafeDictionaryObserver;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -5688,6 +5747,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				B8B8734A264682D6004D9656 /* PBXTargetDependency */,
 				B8A73D782698292B00713B8B /* PBXTargetDependency */,
 				B86BE6952692B69300E90F06 /* PBXTargetDependency */,
 				B88E95912681E261008CDA4D /* PBXTargetDependency */,
@@ -5732,7 +5792,6 @@
 				B8B87344264682D6004D9656 /* PBXTargetDependency */,
 				B8B87346264682D6004D9656 /* PBXTargetDependency */,
 				B8B87348264682D6004D9656 /* PBXTargetDependency */,
-				B8B8734A264682D6004D9656 /* PBXTargetDependency */,
 				B8B8734C264682D6004D9656 /* PBXTargetDependency */,
 				B8B8734E264682D6004D9656 /* PBXTargetDependency */,
 				B8B87350264682D6004D9656 /* PBXTargetDependency */,
@@ -5940,9 +5999,9 @@
 			productReference = B8A73D742698290100713B8B /* libpdl_zombie.a */;
 			productType = "com.apple.product-type.library.static";
 		};
-		B8AD194123D15CD7005A7363 /* PDLNonThreadSafePropertyObserver */ = {
+		B8AD194123D15CD7005A7363 /* PDLNonThreadSafeObserver */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B8AD194623D15CD7005A7363 /* Build configuration list for PBXNativeTarget "PDLNonThreadSafePropertyObserver" */;
+			buildConfigurationList = B8AD194623D15CD7005A7363 /* Build configuration list for PBXNativeTarget "PDLNonThreadSafeObserver" */;
 			buildPhases = (
 				B8AD194223D15CD7005A7363 /* Sources */,
 				B8AD194323D15CD7005A7363 /* Frameworks */,
@@ -5953,9 +6012,9 @@
 			);
 			dependencies = (
 			);
-			name = PDLNonThreadSafePropertyObserver;
+			name = PDLNonThreadSafeObserver;
 			productName = "CAAnimation+PDLExtension";
-			productReference = B8AD194923D15CD7005A7363 /* libPDLNonThreadSafePropertyObserver.a */;
+			productReference = B8AD194923D15CD7005A7363 /* libPDLNonThreadSafeObserver.a */;
 			productType = "com.apple.product-type.library.static";
 		};
 		B8AD195C23D1B433005A7363 /* NSObject+PDLThreadSafetifyProperty */ = {
@@ -6987,7 +7046,7 @@
 				B8FC6D1E22EF0A96005B91DE /* PDLKeyboardNotificationObserver */,
 				B89FA8A225921FC800B714BE /* PDLLoad */,
 				B85ECBFA22F5784D0063BB7C /* PDLMemoryQueryViewController */,
-				B8AD194123D15CD7005A7363 /* PDLNonThreadSafePropertyObserver */,
+				B8AD194123D15CD7005A7363 /* PDLNonThreadSafeObserver */,
 				B861F029230A8C960071ADD4 /* PDLOpenUrlViewController */,
 				B878E86D2603469700F0859F /* PDLOverlayWindow */,
 				B8FC6D2722EF0A97005B91DE /* PDLPageControl */,
@@ -8993,6 +9052,7 @@
 				B85D461B240E861A00CBF758 /* pdl_lldb_hook.c in Sources */,
 				B88865FB24C03FB300D58BC7 /* NSObject+PDLMethod-arm.s in Sources */,
 				B85D461C240E861A00CBF758 /* pdl_mach_o_symbols.c in Sources */,
+				C010A6DB27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */,
 				B8795335248688D800798005 /* pdl_thread-x86_64.s in Sources */,
 				B85D461D240E861A00CBF758 /* pdl_mach_object.c in Sources */,
 				B85D461E240E861A00CBF758 /* pdl_os_unfair_lock_tracer.c in Sources */,
@@ -9031,8 +9091,10 @@
 				B85B447A24A0EC6200B25A3E /* pdl_allocation.m in Sources */,
 				B85D4614240E85A600CBF758 /* pdl_objc_message-x86_64.s in Sources */,
 				B85D4615240E85A600CBF758 /* pdl_systemcall-arm.s in Sources */,
+				C010A6DF27114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.m in Sources */,
 				B877A617257F6FE000580C6E /* UIViewController+PDLExtension.m in Sources */,
 				B8DEC4C424877D1800DB3D0E /* pdl_dispatch_backtrace.m in Sources */,
+				C010A6E227114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.m in Sources */,
 				B85D4616240E85A600CBF758 /* pdl_systemcall-arm64.s in Sources */,
 				B8528191255132CA00B74F87 /* PDLRunLoopObserverLoop.m in Sources */,
 				B85D4617240E85A600CBF758 /* pdl_systemcall-i386.s in Sources */,
@@ -9050,6 +9112,7 @@
 				B85D45C4240E859000CBF758 /* NSMapTable+PDLExtension.m in Sources */,
 				B85D45C5240E859000CBF758 /* NSObject+PDLDebug.m in Sources */,
 				B85D45C6240E859000CBF758 /* NSObject+PDLDebugNonArc.m in Sources */,
+				C010A6E327114DFE00A785E9 /* pdl_objc_runtime.c in Sources */,
 				B85D45C7240E859000CBF758 /* NSObject+PDLExtension.m in Sources */,
 				B8220D3B2681DFFE002018D8 /* PDLSharedCache.m in Sources */,
 				B85D45C8240E859000CBF758 /* NSObject+PDLImplementationInterceptor.m in Sources */,
@@ -9085,6 +9148,7 @@
 				B85D45DB240E859000CBF758 /* PDLDataQueryViewController.m in Sources */,
 				B864FA242523570300842343 /* PDLTaskManager.m in Sources */,
 				B80198A025C7ED5A00C5C1CE /* PDLProcessInfo.m in Sources */,
+				C010A6DC27114D8300A785E9 /* PDLNonThreadSafeObserverChecker.m in Sources */,
 				B8A6F5052546CA4000426AD1 /* PDLPageViewController.m in Sources */,
 				B8B3AA0124B71E2B008EFBE0 /* NSObject+PDLAssociation.m in Sources */,
 				B80DF29824C45E6300AE1B00 /* pdl_algorithm.c in Sources */,
@@ -9103,6 +9167,7 @@
 				B85D45E1240E859000CBF758 /* PDLFontViewController.m in Sources */,
 				B85D45E2240E859000CBF758 /* PDLFormView.m in Sources */,
 				B8672A5D259B1014008082E5 /* PDLSessionTaskStatistics.m in Sources */,
+				C010A6D927114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */,
 				B85D45E3240E859000CBF758 /* PDLClassListViewController.m in Sources */,
 				B85D45E4240E859000CBF758 /* PDLClassViewController.m in Sources */,
 				B8B7B5C9249CE7FE008D4604 /* pdl_list.c in Sources */,
@@ -9110,21 +9175,19 @@
 				B88865F924C03FB300D58BC7 /* NSObject+PDLMethod-i386.s in Sources */,
 				B85D45E6240E859000CBF758 /* PDLProtocolListViewController.m in Sources */,
 				B85D45E7240E859000CBF758 /* PDLProtocolViewController.m in Sources */,
+				C010A6E127114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m in Sources */,
 				B80AF8D724769E78009B9AF8 /* pdl_malloc.c in Sources */,
 				B85D45E8240E859000CBF758 /* PDLKeyboardNotificationObserver.m in Sources */,
 				B85D45E9240E859000CBF758 /* PDLMemoryQueryViewController.m in Sources */,
+				C010A6DE27114D8300A785E9 /* PDLNonThreadSafeObserver.m in Sources */,
 				B864FA252523570300842343 /* PDLTask.m in Sources */,
 				B8A73D6B269821E700713B8B /* pdl_zombie.m in Sources */,
 				B8A6F5062546CA4000426AD1 /* PDLPageView.m in Sources */,
 				B83CAA78248B487E009C784A /* pdl_security.c in Sources */,
-				B85D45EA240E859000CBF758 /* PDLNonThreadSafePropertyObserver.m in Sources */,
+				C010A6DA27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */,
 				B878E7B2260345EF00F0859F /* PDLOverlayWindow.m in Sources */,
 				B882967125D2ABD3006940F8 /* PDLBlock.m in Sources */,
-				B85D45EB240E859000CBF758 /* PDLNonThreadSafePropertyObserverAction.m in Sources */,
 				B839DA832620306F00D07F6E /* NSObject+PDLDescription.m in Sources */,
-				B85D45EC240E859000CBF758 /* PDLNonThreadSafePropertyObserverChecker.m in Sources */,
-				B85D45ED240E859000CBF758 /* PDLNonThreadSafePropertyObserverObject.m in Sources */,
-				B85D45EE240E859000CBF758 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */,
 				B85D45EF240E859000CBF758 /* PDLOpenUrlViewController.m in Sources */,
 				B879533E2487435D00798005 /* pdl_pthread_backtrace.c in Sources */,
 				B85D45F0240E859000CBF758 /* PDLPageControl.m in Sources */,
@@ -9135,6 +9198,7 @@
 				B879531F248685B000798005 /* pdl_thread.c in Sources */,
 				B8300F2225BEB61600A02412 /* PDLScrollPageViewController.m in Sources */,
 				B85D45F4240E859000CBF758 /* NSDictionary+PDLSafeOperation.m in Sources */,
+				C010A6DD27114D8300A785E9 /* PDLNonThreadSafeObserverObject.m in Sources */,
 				B893CBF9252488D000174119 /* PDLTaskScheduler.m in Sources */,
 				B85D45F5240E859000CBF758 /* PDLLayerDebuggerWindow.m in Sources */,
 				B86BE6982692B70700E90F06 /* PDLPudding.m in Sources */,
@@ -9152,6 +9216,7 @@
 				B88865F324C02F1A00D58BC7 /* pdl_thread_storage.c in Sources */,
 				B8220D352681DFA4002018D8 /* dsc_iterator.cpp in Sources */,
 				B8528194255132CA00B74F87 /* PDLBacktraceRecord.m in Sources */,
+				C010A6E027114D8300A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */,
 				B85D45FD240E859000CBF758 /* PDLPropertyDebugger.m in Sources */,
 				B85D45FE240E859000CBF758 /* PDLRectPropertyDebugger.m in Sources */,
 				B85D45FF240E859000CBF758 /* PDLSystemImage.m in Sources */,
@@ -9442,11 +9507,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E56F8923D704CA008D2DA1 /* PDLNonThreadSafePropertyObserver.m in Sources */,
-				B8E56F8A23D704CA008D2DA1 /* PDLNonThreadSafePropertyObserverAction.m in Sources */,
-				B8E56F8B23D704CB008D2DA1 /* PDLNonThreadSafePropertyObserverChecker.m in Sources */,
-				B8E56F8C23D704CB008D2DA1 /* PDLNonThreadSafePropertyObserverObject.m in Sources */,
-				B8E56F8D23D704CB008D2DA1 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */,
+				C010A6E927114E5E00A785E9 /* PDLNonThreadSafeDictionaryObserver.m in Sources */,
+				C010A6EA27114E5E00A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m in Sources */,
+				C010A6EB27114E5E00A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */,
+				C010A6EC27114E5E00A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */,
+				C010A6ED27114E5E00A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */,
+				C010A6E427114E4900A785E9 /* PDLNonThreadSafeObserver.m in Sources */,
+				C010A6E527114E4900A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */,
+				C010A6E627114E4900A785E9 /* PDLNonThreadSafeObserverChecker.m in Sources */,
+				C010A6E727114E4900A785E9 /* PDLNonThreadSafeObserverCriticalResource.m in Sources */,
+				C010A6E827114E4900A785E9 /* PDLNonThreadSafeObserverObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10101,7 +10171,7 @@
 		};
 		B8B8734A264682D6004D9656 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = B8AD194123D15CD7005A7363 /* PDLNonThreadSafePropertyObserver */;
+			target = B8AD194123D15CD7005A7363 /* PDLNonThreadSafeObserver */;
 			targetProxy = B8B87349264682D6004D9656 /* PBXContainerItemProxy */;
 		};
 		B8B8734C264682D6004D9656 /* PBXTargetDependency */ = {
@@ -13346,7 +13416,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B8AD194623D15CD7005A7363 /* Build configuration list for PBXNativeTarget "PDLNonThreadSafePropertyObserver" */ = {
+		B8AD194623D15CD7005A7363 /* Build configuration list for PBXNativeTarget "PDLNonThreadSafeObserver" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B8AD194723D15CD7005A7363 /* Debug */,

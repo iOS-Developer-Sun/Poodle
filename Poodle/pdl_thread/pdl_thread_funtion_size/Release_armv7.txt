@@ -13,8 +13,8 @@ ______PDL_THREAD_FAKE_END_____:
       14:	47 f8 30 2c	str	r2, [r7, #-48]
       18:	00 21	movs	r1, #0
       1a:	47 f8 28 0c	str	r0, [r7, #-40]
-      1e:	41 f6 00 10	movw	r0, :lower16:((6444-40)-4)
-      22:	c0 f2 00 00	movt	r0, :upper16:((6444-40)-4)
+      1e:	41 f6 0c 10	movw	r0, :lower16:((6456-40)-4)
+      22:	c0 f2 00 00	movt	r0, :upper16:((6456-40)-4)
       26:	be 68	ldr	r6, [r7, #8]
       28:	78 44	add	r0, pc
       2a:	4f f0 00 0a	mov.w	r10, #0
@@ -120,8 +120,8 @@ ______PDL_THREAD_FAKE_END_____:
      146:	40 46	mov	r0, r8
      148:	ff f7 5a ff	bl	______PDL_THREAD_FAKE_BEGIN_____
      14c:	57 f8 20 1c	ldr	r1, [r7, #-32]
-     150:	41 f2 d0 72	movw	r2, :lower16:((6444-344)-4)
-     154:	c0 f2 00 02	movt	r2, :upper16:((6444-344)-4)
+     150:	41 f2 dc 72	movw	r2, :lower16:((6456-344)-4)
+     154:	c0 f2 00 02	movt	r2, :upper16:((6456-344)-4)
      158:	7a 44	add	r2, pc
      15a:	12 68	ldr	r2, [r2]
      15c:	12 68	ldr	r2, [r2]

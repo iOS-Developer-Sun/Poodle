@@ -775,12 +775,12 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/PDLViewController'
         end
 
-        s.subspec 'PDLNonThreadSafePropertyObserver' do |ss|
+        s.subspec 'PDLNonThreadSafeObserver' do |ss|
             ss.platform = platform_ios
             ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLNonThreadSafePropertyObserver/' + source_files
-            ss.vendored_library = base + 'PDLNonThreadSafePropertyObserver/' + librariy_files
+            ss.source_files = base + 'PDLNonThreadSafeObserver/' + source_files
+            ss.vendored_library = base + 'PDLNonThreadSafeObserver/' + librariy_files
             ss.frameworks = 'Foundation'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/NSObject+PDLDebug'

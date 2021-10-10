@@ -1,14 +1,14 @@
 //
-//  PDLNonThreadSafePropertyObserverAction.m
+//  PDLNonThreadSafeObserverAction.m
 //  Poodle
 //
 //  Created by Poodle on 2020/1/16.
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
-#import "PDLNonThreadSafePropertyObserverAction.h"
+#import "PDLNonThreadSafeObserverAction.h"
 
-@implementation PDLNonThreadSafePropertyObserverAction
+@implementation PDLNonThreadSafeObserverAction
 
 - (NSString *)description {
     NSString *initializingString = self.isInitializing ? @"[init]" : @"";

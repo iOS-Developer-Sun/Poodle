@@ -1,14 +1,15 @@
 //
-//  PDLNonThreadSafePropertyObserverChecker.m
+//  PDLNonThreadSafeObserverChecker.m
 //  Poodle
 //
 //  Created by Poodle on 2020/1/16.
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
-#import "PDLNonThreadSafePropertyObserverChecker.h"
+#import "PDLNonThreadSafeObserverChecker.h"
+#import "PDLNonThreadSafeObserver.h"
 
-@interface PDLNonThreadSafePropertyObserverChecker () {
+@interface PDLNonThreadSafeObserverChecker () {
     NSMutableSet *_getters;
     NSMutableSet *_setters;
     NSMutableArray *_gettersAndSetters;
@@ -16,21 +17,29 @@
 
 @end
 
-@implementation PDLNonThreadSafePropertyObserverChecker
+@implementation PDLNonThreadSafeObserverChecker
 
-- (instancetype)initWithObserverProperty:(PDLNonThreadSafePropertyObserverProperty *)property {
+- (instancetype)initWithObserverCriticalResource:(PDLNonThreadSafeObserverCriticalResource *)resource {
     self = [super init];
     if (self) {
-        _property = property;
+        _resource = resource;
 
-        _getters = [NSMutableSet set];
-        _setters = [NSMutableSet set];
-        _gettersAndSetters = [NSMutableArray array];
+        NSMutableSet *getters = [NSMutableSet set];
+        [PDLNonThreadSafeObserver setIgnored:YES forObject:getters];
+        _getters = getters;
+
+        NSMutableSet *setters = [NSMutableSet set];
+        [PDLNonThreadSafeObserver setIgnored:YES forObject:setters];
+        _setters = setters;
+
+        NSMutableArray *gettersAndSetters = [NSMutableArray array];
+        [PDLNonThreadSafeObserver setIgnored:YES forObject:gettersAndSetters];
+        _gettersAndSetters = gettersAndSetters;
     }
     return self;
 }
 
-- (NSString *)actionString:(PDLNonThreadSafePropertyObserverAction *)action {
+- (NSString *)actionString:(PDLNonThreadSafeObserverAction *)action {
     NSString *actionString = @(action.thread).stringValue;
     if (action.queueIdentifier && action.isSerialQueue) {
         actionString = action.queueIdentifier;
@@ -38,7 +47,7 @@
     return actionString;
 }
 
-- (void)recordAction:(PDLNonThreadSafePropertyObserverAction *)action {
+- (void)recordAction:(PDLNonThreadSafeObserverAction *)action {
     if (!action.isInitializing) {
         NSString *actionString = [self actionString:action];
         if (action.isSetter) {

@@ -10,29 +10,33 @@
 #import "PDLNonThreadSafePropertyObserverObject.h"
 #import "NSObject+PDLImplementationInterceptor.h"
 #import "PDLNonThreadSafePropertyObserverProperty.h"
+#import "PDLNonThreadSafeObserver.h"
 
 @implementation PDLNonThreadSafePropertyObserver
 
-static void propertyLog(__unsafe_unretained id self, Class aClass, void *data, BOOL isSetter) {
-    NSString *propertyName = @((char *)data);
+static void propertyLog(__unsafe_unretained id self, Class aClass, NSString *propertyName, BOOL isSetter) {
+    if ([PDLNonThreadSafeObserver ignoredForObject:self]) {
+        return;
+    }
+
     PDLNonThreadSafePropertyObserverObject *observer = [PDLNonThreadSafePropertyObserverObject observerObjectForObject:self];
     [observer recordClass:aClass propertyName:propertyName isSetter:isSetter];
 }
 
 static id pdl_nonThreadSafePropertyGetter(__unsafe_unretained id self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
-    propertyLog(self, _class, _data, NO);
+    propertyLog(self, _class, @((char *)_data), NO);
     id object = ((typeof(&pdl_nonThreadSafePropertyGetter))_imp)(self, _cmd);
     return object;
 }
 
 static void pdl_nonThreadSafePropertySetter(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id property) {
     PDLImplementationInterceptorRecover(_cmd);
-    propertyLog(self, _class, _data, YES);
+    propertyLog(self, _class, @((char *)_data), YES);
     ((typeof(&pdl_nonThreadSafePropertySetter))_imp)(self, _cmd, property);
 }
 
-static id pdl_observeNonThreadSafePropertiesAllocWithZone(__unsafe_unretained id self, SEL _cmd, struct _NSZone *zone) {
+static id pdl_nonThreadSafePropertyAllocWithZone(__unsafe_unretained id self, SEL _cmd, struct _NSZone *zone) {
     PDLImplementationInterceptorRecover(_cmd);
     id object = nil;
     if (_imp) {
@@ -53,35 +57,6 @@ static id pdl_observeNonThreadSafePropertiesAllocWithZone(__unsafe_unretained id
     return [PDLNonThreadSafePropertyObserverObject observerObjectForObject:object];
 }
 
-static BOOL _queueEnabled = NO;
-
-+ (BOOL)queueCheckerEnabled {
-    return _queueEnabled;
-}
-
-+ (void)registerQueueCheckerEnabled:(BOOL)queueEnabled {
-    _queueEnabled = queueEnabled;
-}
-
-static void (^_reporter)(PDLNonThreadSafePropertyObserverProperty *property);
-
-+ (void(^)(PDLNonThreadSafePropertyObserverProperty *property))reporter {
-    return _reporter;
-}
-
-+ (void)registerReporter:(void(^)(PDLNonThreadSafePropertyObserverProperty *property))reporter {
-    _reporter = reporter;
-}
-
-static Class _checker = nil;
-
-+ (Class)checkerClass {
-    return _checker ?: [PDLNonThreadSafePropertyObserverChecker class];
-}
-+ (void)registerCheckerClass:(Class)checker {
-    _checker = checker;
-}
-
 + (void)observerClass:(Class)aClass
        propertyFilter:(PDLNonThreadSafePropertyObserver_PropertyFilter)propertyFilter
     propertyMapFilter:(NSArray <NSString *> *)propertyMapFilter {
@@ -89,7 +64,7 @@ static Class _checker = nil;
         return;
     }
 
-    if ([NSStringFromClass(aClass) hasPrefix:@"PDLNonThreadSafePropertyObserver"]) {
+    if ([NSStringFromClass(aClass) hasPrefix:@"PDLNonThreadSafe"]) {
         return;
     }
 
@@ -175,7 +150,7 @@ static Class _checker = nil;
     free(propertyList);
 
     if (classObserved) {
-        pdl_interceptSelector(object_getClass(aClass), @selector(allocWithZone:), (IMP)&pdl_observeNonThreadSafePropertiesAllocWithZone, nil, YES, NULL);
+        pdl_interceptSelector(object_getClass(aClass), @selector(allocWithZone:), (IMP)&pdl_nonThreadSafePropertyAllocWithZone, nil, YES, NULL);
     }
 }
 
