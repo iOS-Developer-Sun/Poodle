@@ -7,6 +7,7 @@
 //
 
 #import "PDLBacktrace.h"
+#import <dlfcn.h>
 
 @interface PDLBacktrace ()
 
@@ -107,5 +108,28 @@
         pdl_backtrace_thread_execute(self.backtrace, start, arg, hidden_count);
     }
 }
+
+- (NSString *)framesDescription {
+    void **frames = pdl_backtrace_get_frames(self.backtrace);
+    if (frames == NULL) {
+        return nil;
+    }
+
+    NSMutableString *string = [NSMutableString string];
+    int count = pdl_backtrace_get_frames_count(self.backtrace);
+    Dl_info info;
+    for (int i = 0; i < count; i++) {
+        void *frame = frames[i];
+        int ret = dladdr(frame, &info);
+        if (ret) {
+            [string appendFormat:@"%d:\t%s\t%p\n", i, info.dli_sname, frame];
+        } else {
+            [string appendFormat:@"%d:\t%p\n", i, frame];
+        }
+    }
+    return [string copy];
+
+}
+
 
 @end

@@ -15,6 +15,8 @@
 @property (readonly) BOOL isShown;
 @property (readonly) NSArray <NSNumber *>*frames;
 
+@property (readonly) NSString *framesDescription;
+
 - (instancetype)init;
 - (instancetype)initWithBacktrace:(pdl_backtrace_t)backtrace;
 - (void)record;

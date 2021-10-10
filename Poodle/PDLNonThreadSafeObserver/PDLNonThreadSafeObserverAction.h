@@ -1,5 +1,5 @@
 //
-//  PDLNonThreadSafePropertyObserverAction.h
+//  PDLNonThreadSafeObserverAction.h
 //  Poodle
 //
 //  Created by Poodle on 2020/1/16.
@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PDLNonThreadSafePropertyObserverAction : NSObject
+@interface PDLNonThreadSafeObserverAction : NSObject
 
 @property (nonatomic, assign) BOOL isInitializing;
 @property (nonatomic, assign) BOOL isSetter;

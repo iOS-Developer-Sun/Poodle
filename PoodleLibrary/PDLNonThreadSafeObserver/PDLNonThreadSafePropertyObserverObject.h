@@ -6,18 +6,13 @@
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "PDLNonThreadSafeObserverObject.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PDLNonThreadSafePropertyObserverObject : NSObject
-
-@property (readonly) BOOL isInitializing;
+@interface PDLNonThreadSafePropertyObserverObject : PDLNonThreadSafeObserverObject
 
 - (void)recordClass:(Class)aClass propertyName:(NSString *)propertyName isSetter:(BOOL)isSetter;
-
-+ (void)registerObject:(id)object;
-+ (instancetype _Nullable)observerObjectForObject:(id)object;
 
 @end
 

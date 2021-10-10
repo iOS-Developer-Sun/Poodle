@@ -1,47 +1,47 @@
 //
-//  PDLNonThreadSafePropertyObserverProperty.m
+//  PDLNonThreadSafeObserverCriticalResource.m
 //  Poodle
 //
 //  Created by Poodle on 2020/1/16.
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
-#import "PDLNonThreadSafePropertyObserverProperty.h"
+#import "PDLNonThreadSafeObserverCriticalResource.h"
 #import <mach/mach.h>
 #import <objc/runtime.h>
-#import "PDLNonThreadSafePropertyObserverObject.h"
-#import "PDLNonThreadSafePropertyObserver.h"
-#import "PDLNonThreadSafePropertyObserverChecker.h"
+#import "PDLNonThreadSafeObserver.h"
+#import "PDLNonThreadSafeObserverChecker.h"
 #import "pdl_dispatch.h"
 #import "PDLProcessInfo.h"
 
-@interface PDLNonThreadSafePropertyObserverChecker (PDLNonThreadSafePropertyObserverProperty)
-
-- (instancetype)initWithObserverProperty:(PDLNonThreadSafePropertyObserverProperty *)property;
-
-@end
-
-@interface PDLNonThreadSafePropertyObserverProperty () {
-    __weak PDLNonThreadSafePropertyObserverObject *_observer;
-    NSMutableArray <PDLNonThreadSafePropertyObserverAction *> *_actions;
-    PDLNonThreadSafePropertyObserverChecker *_checker;
+@interface PDLNonThreadSafeObserverCriticalResource () {
+    __weak PDLNonThreadSafeObserverObject *_observer;
+    NSMutableArray <PDLNonThreadSafeObserverAction *> *_actions;
+    PDLNonThreadSafeObserverChecker *_checker;
 }
 
 @end
 
-@implementation PDLNonThreadSafePropertyObserverProperty
+@implementation PDLNonThreadSafeObserverCriticalResource
 
-- (instancetype)initWithObserver:(PDLNonThreadSafePropertyObserverObject *)observer identifier:(NSString *)identifier {
+- (instancetype)initWithObserver:(PDLNonThreadSafeObserverObject *)observer identifier:(NSString * _Nullable)identifier {
     self = [super init];
     if (self) {
         _observer = observer;
         _identifier = [identifier copy];
 
-        _actions = [NSMutableArray array];
-        _checker = [[[PDLNonThreadSafePropertyObserver checkerClass] alloc] initWithObserverProperty:self];
+        NSMutableArray *actions = [NSMutableArray array];
+        [PDLNonThreadSafeObserver setIgnored:YES forObject:actions];
+        _actions = actions;
+
+        _checker = [[[PDLNonThreadSafeObserver checkerClass] alloc] initWithObserverCriticalResource:self];
         assert(_checker);
     }
     return self;
+}
+
+- (PDLNonThreadSafeObserverObject *)observer {
+    return _observer;
 }
 
 - (NSString *)queueLabel:(dispatch_queue_t)queue {
@@ -58,7 +58,7 @@
     NSString *queueIdentifier = nil;
     NSString *queueLabel = nil;
     BOOL isSerialQueue = NO;
-    if ([PDLNonThreadSafePropertyObserver queueCheckerEnabled]) {
+    if ([PDLNonThreadSafeObserver queueCheckerEnabled]) {
         dispatch_queue_t queue = pdl_dispatch_get_current_queue();
         if (queue) {
             queueIdentifier = @(pdl_dispatch_get_queue_unique_identifier(queue)).stringValue;
@@ -67,7 +67,7 @@
         queueLabel = [self queueLabel:queue];
     }
 
-    PDLNonThreadSafePropertyObserverAction *action = [[PDLNonThreadSafePropertyObserverAction alloc] init];
+    PDLNonThreadSafeObserverAction *action = [[PDLNonThreadSafeObserverAction alloc] init];
     action.thread = thread;
     action.queueIdentifier = queueIdentifier;
     action.queueLabel = queueLabel;
@@ -80,7 +80,7 @@
         [_actions addObject:action];
         [_checker recordAction:action];
         if (![_checker isThreadSafe]) {
-            void(^reporter)(PDLNonThreadSafePropertyObserverProperty *property) = [PDLNonThreadSafePropertyObserver reporter];
+            void(^reporter)(PDLNonThreadSafeObserverCriticalResource *resource) = [PDLNonThreadSafeObserver reporter];
             if (reporter) {
                 reporter(self);
             }
@@ -92,12 +92,6 @@
     @synchronized (self) {
         return [_actions copy];
     }
-}
-
-- (NSString *)description {
-    NSString *description = [super description];
-    PDLNonThreadSafePropertyObserverObject *observer = _observer;
-    return [NSString stringWithFormat:@"%@, observer: %p\n%@\n%@", description, observer, self.identifier, self.actions];
 }
 
 @end
