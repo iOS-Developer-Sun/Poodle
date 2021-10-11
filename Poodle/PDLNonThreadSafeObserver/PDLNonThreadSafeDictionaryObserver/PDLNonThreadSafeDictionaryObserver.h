@@ -13,7 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLNonThreadSafeDictionaryObserver : NSObject
 
-+ (void)enable;
++ (BOOL(^)(PDLBacktrace *backtrace, NSString * _Nullable * _Nonnull name))filter;
++ (void)enableWithFilter:(BOOL(^)(PDLBacktrace *backtrace, NSString * _Nullable * _Nonnull name))filter;
 
 @end
 

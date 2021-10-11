@@ -110,26 +110,44 @@
 }
 
 - (NSString *)framesDescription {
-    void **frames = pdl_backtrace_get_frames(self.backtrace);
-    if (frames == NULL) {
-        return nil;
+    NSMutableString *string = [NSMutableString string];
+    [self enumerateFrames:^(NSInteger index, void *address, NSString *symbol, NSString *image, BOOL *stops) {
+        if (symbol.length > 0) {
+            [string appendFormat:@"%@:\t%@\t%p\n", @(index), symbol, address];
+        } else {
+            [string appendFormat:@"%@:\t%p\n", @(index), address];
+        }
+    }];
+    return [string copy];
+}
+
+- (void)enumerateFrames:(void(^)(NSInteger index, void *address, NSString *symbol, NSString *image, BOOL *stops))enumerator {
+    if (!enumerator) {
+        return;
     }
 
-    NSMutableString *string = [NSMutableString string];
+    void **frames = pdl_backtrace_get_frames(self.backtrace);
+    if (frames == NULL) {
+        return;
+    }
+
     int count = pdl_backtrace_get_frames_count(self.backtrace);
     Dl_info info;
     for (int i = 0; i < count; i++) {
         void *frame = frames[i];
         int ret = dladdr(frame, &info);
+        NSString *symbol = nil;
+        NSString *image = nil;
         if (ret) {
-            [string appendFormat:@"%d:\t%s\t%p\n", i, info.dli_sname, frame];
-        } else {
-            [string appendFormat:@"%d:\t%p\n", i, frame];
+            symbol = @(info.dli_sname ?: "");
+            image = @(info.dli_fname ?: "");
+        }
+        BOOL stops = NO;
+        enumerator(i, frame, symbol, image, &stops);
+        if (stops) {
+            break;
         }
     }
-    return [string copy];
-
 }
-
 
 @end
