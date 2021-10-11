@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLNonThreadSafeDictionaryObserverDictionary : PDLNonThreadSafeObserverCriticalResource
 
+@property (readonly) NSString *name;
 @property (readonly) PDLBacktrace *backtrace;
 
 @end
