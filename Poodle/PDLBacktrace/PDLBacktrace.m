@@ -8,6 +8,7 @@
 
 #import "PDLBacktrace.h"
 #import <dlfcn.h>
+#import "PDLCrash.h"
 
 @interface PDLBacktrace ()
 
@@ -143,6 +144,7 @@
             image = @(info.dli_fname ?: "");
         }
         BOOL stops = NO;
+        symbol = [PDLCrash demangle:symbol] ?: symbol;
         enumerator(i, frame, symbol, image, &stops);
         if (stops) {
             break;

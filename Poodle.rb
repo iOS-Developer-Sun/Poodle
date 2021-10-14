@@ -786,6 +786,8 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/NSObject+PDLDebug'
             ss.dependency pod_name + '/PDLPrivate'
             ss.dependency pod_name + '/PDLProcessInfo'
+            ss.dependency pod_name + '/PDLBacktrace'
+            ss.dependency pod_name + '/PDLCrash'
         end
 
         s.subspec 'PDLOpenUrlViewController' do |ss|

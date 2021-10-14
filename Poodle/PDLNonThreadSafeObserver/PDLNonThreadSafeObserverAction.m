@@ -16,8 +16,9 @@
     NSString *threadString = [NSString stringWithFormat:@"[t%@]", @(self.thread)];
     NSString *queueString = self.queueIdentifier ? [NSString stringWithFormat:@"[q%@(%@)]", self.queueIdentifier, self.queueLabel] : @"";
     NSString *timeString = [NSString stringWithFormat:@"[%.3f]", self.time];
+    NSString *detailString = self.detail ? [NSString stringWithFormat:@"[%@]", self.detail] : @"";
 
-    NSString *actionString = [NSString stringWithFormat:@"%@%@%@%@%@", initializingString, isSetterString, threadString, queueString, timeString];
+    NSString *actionString = [NSString stringWithFormat:@"%@%@%@%@%@%@", initializingString, isSetterString, threadString, queueString, timeString, detailString];
     return actionString;
 }
 

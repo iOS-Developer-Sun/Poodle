@@ -52,7 +52,7 @@
     return @(dispatch_queue_get_label(queue) ?: "");
 }
 
-- (void)recordIsSetter:(BOOL)isSetter isInitializing:(BOOL)isInitializing {
+- (PDLNonThreadSafeObserverAction *)recordIsSetter:(BOOL)isSetter isInitializing:(BOOL)isInitializing {
     mach_port_t thread = mach_thread_self();
 
     NSString *queueIdentifier = nil;
@@ -86,6 +86,8 @@
             }
         }
     }
+
+    return action;
 }
 
 - (NSArray *)actions {
