@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, copy) NSString *_Nullable queueLabel;
 @property (nonatomic, assign) BOOL isSerialQueue;
 @property (nonatomic, assign) NSTimeInterval time;
+@property (nonatomic, copy) NSString *_Nullable detail;
 
 @end
 

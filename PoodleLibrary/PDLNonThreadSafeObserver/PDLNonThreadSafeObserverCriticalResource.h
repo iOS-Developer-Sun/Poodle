@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (readonly) PDLNonThreadSafeObserverChecker *checker;
 
 - (instancetype)initWithObserver:(PDLNonThreadSafeObserverObject *)observer identifier:(NSString * _Nullable)identifier;
-- (void)recordIsSetter:(BOOL)isSetter isInitializing:(BOOL)isInitializing;
+- (PDLNonThreadSafeObserverAction *)recordIsSetter:(BOOL)isSetter isInitializing:(BOOL)isInitializing;
 
 @end
 

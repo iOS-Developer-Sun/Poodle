@@ -702,10 +702,28 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         return nil;
     }
 
-    char *demangled = __cxxabiv1::__cxa_demangle(name.UTF8String, NULL, NULL, NULL);
+    const char *cstring = name.UTF8String;
+    char *demangled = __cxxabiv1::__cxa_demangle(cstring, NULL, NULL, NULL);
+    if (!demangled) {
+        static char *(*swift_demangle)(const char *name, size_t length, const char **output, size_t *output_length, unsigned int flags) = NULL;
+        static bool open = false;
+        if (!open) {
+            open = true;
+            void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
+            if (handle) {
+                swift_demangle = (typeof(swift_demangle))dlsym(handle, "swift_demangle");
+                dlclose(handle);
+            }
+        }
+        if (swift_demangle) {
+            demangled = swift_demangle(cstring, strlen(cstring), NULL, NULL, 0);
+        }
+    }
+
     if (!demangled) {
         return nil;
     }
+
     NSString *ret = [[NSString alloc] initWithBytesNoCopy:demangled length:strlen(demangled) encoding:NSUTF8StringEncoding freeWhenDone:YES];
     return ret;
 }

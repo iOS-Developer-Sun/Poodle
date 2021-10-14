@@ -28,7 +28,8 @@
 }
 
 - (void)recordClass:(Class)aClass selectorString:(NSString *)selectorString isSetter:(BOOL)isSetter {
-    [_dictionary recordIsSetter:isSetter isInitializing:self.isInitializing];
+    PDLNonThreadSafeObserverAction *action = [_dictionary recordIsSetter:isSetter isInitializing:self.isInitializing];
+    action.detail = selectorString;
 }
 
 @end
