@@ -127,6 +127,16 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'Foundation'
         end
 
+        s.subspec 'NSMutableDictionary+PDLThreadSafety' do |ss|
+            ss.platform = platform_universal
+            ss.osx.deployment_target  = '10.10'
+            ss.ios.deployment_target  = '9.0'
+            ss.source_files = base + 'NSMutableDictionary+PDLThreadSafety/' + source_files
+            ss.vendored_library = base + 'NSMutableDictionary+PDLThreadSafety/' + librariy_files
+            ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+        end
+
         s.subspec 'NSObject+PDLAssociation' do |ss|
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
