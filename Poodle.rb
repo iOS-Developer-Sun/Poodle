@@ -601,6 +601,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'UIKit'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/NSMapTable+PDLExtension'
+            ss.dependency pod_name + '/CAAnimation+PDLExtension'
         end
 
         s.subspec 'PDLBacktrace' do |ss|
@@ -716,6 +717,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/PDLViewController'
             ss.dependency pod_name + '/PDLCrash'
             ss.dependency pod_name + '/PDLColor'
+            ss.dependency pod_name + '/PDLFormView'
         end
 
         s.subspec 'PDLFontViewController' do |ss|
@@ -955,6 +957,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'Foundation'
             ss.libraries = 'c++'
             ss.dependency pod_name + '/pdl_mach_object'
+            ss.dependency pod_name + '/pdl_mach_o_symbols'
         end
 
         s.subspec 'PDLSystemImage' do |ss|

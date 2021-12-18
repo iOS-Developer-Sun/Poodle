@@ -419,6 +419,10 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         PDLSharedCacheImage *sharedCacheImage = [[PDLSharedCache sharedInstance] sharedCacheImageWithImageName:name];
         PDLSharedCacheSymbol *sharedCacheSymbol = [sharedCacheImage symbolOfAddress:offset];
         snameString = sharedCacheSymbol.name;
+        if (!snameString) {
+            return NO;
+        }
+
         if (snameString.length > 1 && [snameString hasPrefix:@"_"]) {
             snameString = [snameString substringFromIndex:1];
         }
@@ -583,6 +587,10 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
         PDLSharedCacheImage *sharedCacheImage = [[PDLSharedCache sharedInstance] sharedCacheImageWithImageName:name];
         PDLSharedCacheSymbol *sharedCacheSymbol = [sharedCacheImage symbolOfAddress:offset];
         snameString = sharedCacheSymbol.name;
+        if (!snameString) {
+            return NO;
+        }
+
         if (snameString.length > 1 && [snameString hasPrefix:@"_"]) {
             snameString = [snameString substringFromIndex:1];
         }
