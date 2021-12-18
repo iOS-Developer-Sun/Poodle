@@ -474,6 +474,8 @@
 		B8E81E3525C109D900204009 /* PDLReuseItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E81E3425C109D900204009 /* PDLReuseItemManager.m */; };
 		B8E81FF525C10A3600204009 /* PDLReuseItemManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E81E3425C109D900204009 /* PDLReuseItemManager.m */; };
 		B8E8204E25C10A3A00204009 /* PDLReuseItemManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E81E3325C109D900204009 /* PDLReuseItemManager.h */; };
+		C0080DC9276E5ECF00510D6A /* PDLDYLDSharedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */; };
+		C0080DCA276E5EFE00510D6A /* PDLDYLDSharedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */; };
 		C010A6D927114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CA27114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m */; };
 		C010A6DA27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CB27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m */; };
 		C010A6DB27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CC27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m */; };
@@ -2782,6 +2784,8 @@
 		B8FC6D8D22EFD8F1005B91DE /* libPDLPrivate.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLPrivate.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FC6D9822EFD95E005B91DE /* libpdl_asm.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_asm.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8FC6DA122EFD979005B91DE /* libpdl_dynamic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_dynamic.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLDYLDSharedCache.m; sourceTree = "<group>"; };
+		C0080DC8276E5ECE00510D6A /* PDLDYLDSharedCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLDYLDSharedCache.h; sourceTree = "<group>"; };
 		C010A6C327114D8300A785E9 /* PDLNonThreadSafeObserverAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverAction.h; sourceTree = "<group>"; };
 		C010A6C427114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverCriticalResource.h; sourceTree = "<group>"; };
 		C010A6C527114D8300A785E9 /* PDLNonThreadSafeObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserver.h; sourceTree = "<group>"; };
@@ -3586,6 +3590,8 @@
 			isa = PBXGroup;
 			children = (
 				B8220D252681DFA4002018D8 /* launch-cache */,
+				C0080DC8276E5ECE00510D6A /* PDLDYLDSharedCache.h */,
+				C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */,
 				B8220D392681DFFE002018D8 /* PDLSharedCache.h */,
 				B8220D3A2681DFFE002018D8 /* PDLSharedCache.m */,
 			);
@@ -9034,6 +9040,7 @@
 				B88E959626821222008CDA4D /* PDLSharedCache.m in Sources */,
 				B8220D372681DFE1002018D8 /* dsc_extractor.cpp in Sources */,
 				B8220D382681DFE1002018D8 /* dsc_iterator.cpp in Sources */,
+				C0080DCA276E5EFE00510D6A /* PDLDYLDSharedCache.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9262,6 +9269,7 @@
 				B864FA252523570300842343 /* PDLTask.m in Sources */,
 				B8A73D6B269821E700713B8B /* pdl_zombie.m in Sources */,
 				B8A6F5062546CA4000426AD1 /* PDLPageView.m in Sources */,
+				C0080DC9276E5ECF00510D6A /* PDLDYLDSharedCache.m in Sources */,
 				B83CAA78248B487E009C784A /* pdl_security.c in Sources */,
 				C010A6DA27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */,
 				B878E7B2260345EF00F0859F /* PDLOverlayWindow.m in Sources */,

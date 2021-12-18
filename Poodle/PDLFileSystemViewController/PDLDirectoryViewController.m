@@ -550,10 +550,12 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     }
 
     [self.tableView setEditing:isEditing animated:YES];
+    __weak __typeof(self) weakSelf = self;
     [UIView animateWithDuration:0.3 animations:^{
         self.tableView.contentInset = UIEdgeInsetsMake(0, 0, (isEditing ? self.selectAllView.frame.size.height : 0), 0);
         self.selectAllView.frame = CGRectMake(self.selectAllView.frame.origin.x, (isEditing ? self.view.frame.size.height - self.selectAllView.frame.size.height : self.view.frame.size.height), self.selectAllView.frame.size.width, self.selectAllView.frame.size.height);
     } completion:^(BOOL finished) {
+        __strong __typeof(self) self = weakSelf;
         if (isEditing == NO) {
             [self.selected removeAllObjects];
             [self refreshCheckbox];

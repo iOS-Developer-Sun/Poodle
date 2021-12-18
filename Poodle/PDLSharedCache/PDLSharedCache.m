@@ -12,6 +12,7 @@
 #import "dsc_extractor.h"
 #import "pdl_mach_object.h"
 #import "pdl_mach_o_symbols.h"
+#import "PDLDYLDSharedCache.h"
 
 @implementation PDLSharedCacheSymbol
 
@@ -176,22 +177,25 @@
         return NO;
     }
 
-    const char *imageNames[2];
-    imageNames[0] = imageName.UTF8String;
-    imageNames[1] = NULL;
-    int ret = dyld_shared_cache_extract_dylibs(self.systemCacheFile.UTF8String, self.cachePath.UTF8String, imageNames);
+    int ret = 0;
+    if (self.enabled) {
+        const char *imageNames[2];
+        imageNames[0] = imageName.UTF8String;
+        imageNames[1] = NULL;
+        ret = dyld_shared_cache_extract_dylibs(self.systemCacheFile.UTF8String, self.cachePath.UTF8String, imageNames);
+    } else {
+        ret = [self extract:self.systemCacheFile to:self.cachePath imageNames:@[imageName]];
+    }
+
     return ret == 0;
 }
 
 - (NSString *)sharedCachePathWithImageName:(NSString *)imageName {
-    if (self.enabled) {
-        return nil;
-    }
-
     NSString *path = [self.cachePath stringByAppendingPathComponent:imageName];
     if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
         return path;
     }
+
     BOOL ret = [self extract:imageName];
     if (ret) {
         if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
@@ -326,6 +330,12 @@
 
         return image;
     }
+}
+
+- (BOOL)extract:(NSString *)cachePath to:(NSString *)destinationPath imageNames:(NSArray *)imageNames {
+    PDLDYLDSharedCache *cache = [PDLDYLDSharedCache sharedCacheWithPath:cachePath];
+    cache.destinationPath = destinationPath;
+    return [cache extract:imageNames];
 }
 
 @end
