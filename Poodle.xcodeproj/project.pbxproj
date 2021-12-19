@@ -3711,8 +3711,8 @@
 				B85D45A5240E84DA00CBF758 /* AppDelegate.h */,
 				B85D45A6240E84DA00CBF758 /* AppDelegate.m */,
 				B85D45B1240E84DC00CBF758 /* Assets.xcassets */,
-				B85D45B3240E84DC00CBF758 /* LaunchScreen.storyboard */,
 				B85D45B6240E84DC00CBF758 /* Info.plist */,
+				B85D45B3240E84DC00CBF758 /* LaunchScreen.storyboard */,
 				B85D45B7240E84DC00CBF758 /* main.m */,
 			);
 			path = PoodleApplication;
