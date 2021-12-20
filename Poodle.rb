@@ -2,12 +2,12 @@ def PoodleCommonConfigurate(s)
     s.version = "0.0.1"
     s.summary = "Lots of fun."
     s.description = <<-DESC
-    Poodle
+    Poodle, really lots of fun.
     DESC
     s.homepage = "https://github.com/iOS-Developer-Sun/Poodle"
     s.license = "MIT"
     s.author = { "Poodle" => "250764090@qq.com" }
-    s.source = { :git => "https://github.com/iOS-Developer-Sun/Poodle", :tag => "#{s.version}" }
+    s.source = { :git => "git@github.com:iOS-Developer-Sun/Poodle.git", :tag => "#{s.version}" }
 
 #    s.platform     = { :ios => "9.0", :osx => "10.10" }
 #    s.platform     = :ios, "9.0"
@@ -23,7 +23,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         source_files = '**/*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'
         header_files = '**/*.{h,hpp}'
-        librariy_files = '**/*.{a}'
+        librariy_files = '**/lib*.a'
 
         if path == nil
             path = name
@@ -412,6 +412,8 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.source_files = base + 'pdl_malloc/' + source_files
             ss.vendored_library = base + 'pdl_malloc/' + librariy_files
             ss.frameworks = 'Foundation'
+            ss.dependency pod_name + '/pdl_backtrace'
+            ss.dependency pod_name + '/pdl_utils'
         end
 
         s.subspec 'pdl_objc_message' do |ss|
@@ -748,6 +750,9 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.vendored_library = base + 'PDLImageListViewController/' + librariy_files
             ss.frameworks = 'UIKit'
             ss.dependency pod_name + '/PDLViewController'
+            ss.dependency pod_name + '/NSObject+PDLDebug'
+            ss.dependency pod_name + '/PDLSystemImage'
+            ss.dependency pod_name + '/PDLKeyboardNotificationObserver'
         end
 
         s.subspec 'PDLInitialization' do |ss|
@@ -759,6 +764,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.frameworks = 'Foundation'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/PDLDebug'
+            ss.dependency pod_name + '/pdl_objc_runtime'
         end
 
         s.subspec 'PDLKeyboardNotificationObserver' do |ss|
@@ -989,6 +995,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'PDLViewController/' + source_files
             ss.vendored_library = base + 'PDLViewController/' + librariy_files
+            ss.dependency pod_name + '/PDLColor'
             ss.frameworks = 'UIKit'
         end
 
