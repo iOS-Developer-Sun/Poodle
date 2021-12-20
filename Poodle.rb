@@ -264,6 +264,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
+            ss.public_header_files = base + 'pdl_asm/' + 'pdl_asm.h'
             ss.source_files = base + 'pdl_asm/' + source_files
             ss.vendored_library = base + 'pdl_asm/' + librariy_files
         end
@@ -428,6 +429,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.platform = platform_universal
             ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
+            ss.public_header_files = base + 'pdl_objc_message_hook/' + 'pdl_objc_message_hook.h'
             ss.source_files = base + 'pdl_objc_message_hook/' + source_files
             ss.vendored_library = base + 'pdl_objc_message_hook/' + librariy_files
             ss.frameworks = 'Foundation'
@@ -693,6 +695,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.osx.deployment_target  = '10.10'
             ss.ios.deployment_target  = '9.0'
             ss.source_files = base + 'PDLDatabase/' + '*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'
+            ss.public_header_files = 'PDLDatabase/' + '*.h'
             ss.vendored_library = base + 'PDLDatabase/' + librariy_files
             ss.frameworks = 'Foundation'
         end
@@ -953,6 +956,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.platform = platform_universal
             ss.ios.deployment_target  = '9.0'
             ss.osx.deployment_target  = '10.10'
+            ss.public_header_files = base + 'PDLSharedCache/' + '**/*.h'
             ss.source_files = base + 'PDLSharedCache/' + source_files
             ss.vendored_library = base + 'PDLSharedCache/' + librariy_files
             ss.frameworks = 'Foundation'
