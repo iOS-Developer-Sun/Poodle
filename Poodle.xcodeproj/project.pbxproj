@@ -2443,7 +2443,7 @@
 		B878E7B0260345EF00F0859F /* PDLOverlayWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLOverlayWindow.h; sourceTree = "<group>"; };
 		B878E7B1260345EF00F0859F /* PDLOverlayWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLOverlayWindow.m; sourceTree = "<group>"; };
 		B878E8752603469700F0859F /* libPDLOverlayWindow.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLOverlayWindow.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B879143D2352385F00FC63C1 /* PoodleLibrary.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = PoodleLibrary.podspec; sourceTree = SOURCE_ROOT; };
+		B879143D2352385F00FC63C1 /* PoodleLibrary.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = PoodleLibrary.podspec; sourceTree = SOURCE_ROOT; };
 		B879143E2352386E00FC63C1 /* Poodle.rb */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.ruby; path = Poodle.rb; sourceTree = SOURCE_ROOT; };
 		B87914402352386E00FC63C1 /* PoodleLibraryMerge.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = PoodleLibraryMerge.sh; sourceTree = SOURCE_ROOT; };
 		B8795303248512A200798005 /* PDLBacktrace.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLBacktrace.h; sourceTree = "<group>"; };
@@ -2546,7 +2546,7 @@
 		B8E5455D25382417004C1033 /* libpdl_objc_message_hook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_objc_message_hook.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B8E545622538288A004C1033 /* pdl_objc_message_hook_dynamic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_objc_message_hook_dynamic.h; sourceTree = "<group>"; };
 		B8E5456425382BDA004C1033 /* pdl_objc_message_hook_dynamic_source.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_objc_message_hook_dynamic_source.h; sourceTree = "<group>"; };
-		B8E56DDF23D6F651008D2DA1 /* Poodle.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = Poodle.podspec; sourceTree = SOURCE_ROOT; };
+		B8E56DDF23D6F651008D2DA1 /* Poodle.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = Poodle.podspec; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		B8E56DE123D70016008D2DA1 /* NSObject+PDLSelectorProxy-i386.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "NSObject+PDLSelectorProxy-i386.s"; sourceTree = "<group>"; };
 		B8E56DE223D70016008D2DA1 /* NSObject+PDLSelectorProxy-x86_64.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "NSObject+PDLSelectorProxy-x86_64.s"; sourceTree = "<group>"; };
 		B8E56DE323D70016008D2DA1 /* NSObject+PDLSelectorProxy-arm64.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "NSObject+PDLSelectorProxy-arm64.s"; sourceTree = "<group>"; };
@@ -2740,8 +2740,8 @@
 		B8E56EF923D7001A008D2DA1 /* NSJSONSerialization+PDLExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSJSONSerialization+PDLExtension.m"; sourceTree = "<group>"; };
 		B8E56EFB23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLTransitionAnimation.h"; sourceTree = "<group>"; };
 		B8E56EFC23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLTransitionAnimation.m"; sourceTree = "<group>"; };
-		B8E56FB723D721D2008D2DA1 /* PoodleDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = PoodleDynamic.podspec; sourceTree = SOURCE_ROOT; };
-		B8E56FB823D721D2008D2DA1 /* PoodleLibraryDynamic.podspec */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = PoodleLibraryDynamic.podspec; sourceTree = SOURCE_ROOT; };
+		B8E56FB723D721D2008D2DA1 /* PoodleDynamic.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = PoodleDynamic.podspec; sourceTree = SOURCE_ROOT; };
+		B8E56FB823D721D2008D2DA1 /* PoodleLibraryDynamic.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = PoodleLibraryDynamic.podspec; sourceTree = SOURCE_ROOT; };
 		B8E81E3325C109D900204009 /* PDLReuseItemManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLReuseItemManager.h; sourceTree = "<group>"; };
 		B8E81E3425C109D900204009 /* PDLReuseItemManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLReuseItemManager.m; sourceTree = "<group>"; };
 		B8E81EEC25C10A2600204009 /* libPDLReuseItemManager.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLReuseItemManager.a; sourceTree = BUILT_PRODUCTS_DIR; };
