@@ -327,6 +327,22 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 - (void)refreshSelected {
     self.selectionImageView.image = self.cellSelected ? PDLDirectoryViewControllerCheckboxHighlightedImage() : PDLDirectoryViewControllerCheckboxImage();
+
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion <= 12) {
+        NSMutableArray *subviews = self.selectionImageView.superview.subviews.mutableCopy;
+        [subviews removeObject:self.selectionImageView];
+        UIImageView *imageView = subviews.lastObject;
+        imageView.hidden = YES;
+        if ([imageView isKindOfClass:[UIImageView class]]) {
+            self.selectionImageView.frame = imageView.frame;
+        }
+    }
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+
+    [self refreshSelected];
 }
 
 - (void)addSubview:(UIView *)view {
