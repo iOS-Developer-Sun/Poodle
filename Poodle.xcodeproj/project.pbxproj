@@ -510,6 +510,8 @@
 		C01B8B2A272A8DFF0083030A /* NSMutableDictionary+PDLThreadSafety.m in Sources */ = {isa = PBXBuildFile; fileRef = C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */; };
 		C01B8B34272A8E880083030A /* NSMutableDictionary+PDLThreadSafety.m in Sources */ = {isa = PBXBuildFile; fileRef = C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */; };
 		C01B8B35272A8E8C0083030A /* NSMutableDictionary+PDLThreadSafety.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C01B8B29272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.h */; };
+		C06B8F31277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = C06B8F30277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m */; };
+		C06B8F32277060E100B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = C06B8F30277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2809,6 +2811,8 @@
 		C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+PDLThreadSafety.m"; sourceTree = "<group>"; };
 		C01B8B29272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+PDLThreadSafety.h"; sourceTree = "<group>"; };
 		C01B8B33272A8E710083030A /* libNSMutableDictionary+PDLThreadSafety.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSMutableDictionary+PDLThreadSafety.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C06B8F2F277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeDictionaryObserverDictionary.h; sourceTree = "<group>"; };
+		C06B8F30277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeDictionaryObserverDictionary.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -4976,6 +4980,8 @@
 			children = (
 				C010A6D427114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.h */,
 				C010A6D627114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.m */,
+				C06B8F2F277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.h */,
+				C06B8F30277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m */,
 				C010A6D327114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.h */,
 				C010A6D527114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m */,
 			);
@@ -9168,6 +9174,7 @@
 				B85D460E240E85A600CBF758 /* pdl_die-arm64.s in Sources */,
 				B85D460F240E85A600CBF758 /* pdl_die-i386.s in Sources */,
 				B893CBFE2524959D00174119 /* PDLFirstOrderedTaskScheduler.m in Sources */,
+				C06B8F31277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m in Sources */,
 				B85D4610240E85A600CBF758 /* pdl_die-x86_64.s in Sources */,
 				B85D4611240E85A600CBF758 /* pdl_objc_message-arm.s in Sources */,
 				B85D4612240E85A600CBF758 /* pdl_objc_message-arm64.s in Sources */,
@@ -9602,6 +9609,7 @@
 				C010A6E427114E4900A785E9 /* PDLNonThreadSafeObserver.m in Sources */,
 				C010A6E527114E4900A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */,
 				C010A6E627114E4900A785E9 /* PDLNonThreadSafeObserverChecker.m in Sources */,
+				C06B8F32277060E100B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m in Sources */,
 				C010A6E727114E4900A785E9 /* PDLNonThreadSafeObserverCriticalResource.m in Sources */,
 				C010A6E827114E4900A785E9 /* PDLNonThreadSafeObserverObject.m in Sources */,
 			);
