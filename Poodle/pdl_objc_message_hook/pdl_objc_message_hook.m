@@ -12,6 +12,8 @@
 #import "pdl_objc_message.h"
 #import "pdl_asm.h"
 
+#ifndef __i386__
+
 __attribute__((naked))
 void pdl_objc_message_hook_objc_msgSend(void) {
     PDL_ASM_GOTO(pdl_objc_msgSend);
@@ -112,3 +114,5 @@ void pdl_objc_message_hook(void(*before)(__unsafe_unretained id self, SEL _cmd),
     pdl_objc_message_set_msgSendSuper_after_action(super_after);
 #endif
 }
+
+#endif

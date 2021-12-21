@@ -206,6 +206,14 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/pdl_thread_storage'
         end
 
+        PoodleSubspec(s, 'pdl_objc_message_hook', platform_universal) do |ss|
+            ss.public_header_files = s.base + 'pdl_objc_message_hook/' + 'pdl_objc_message_hook.h'
+            ss.dependency pod_name + '/pdl_dynamic'
+            ss.dependency pod_name + '/pdl_asm'
+            ss.dependency pod_name + '/pdl_objc_message'
+            ss.dependency pod_name + '/PDLPrivate'
+        end
+
         PoodleSubspec(s, 'pdl_objc_runtime', platform_universal)
 
         PoodleSubspec(s, 'pdl_os', platform_universal)
@@ -480,13 +488,6 @@ def PoodleDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, de
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency base_pod_name + '/pdl_utils'
             ss.dependency base_pod_name + '/pdl_spinlock'
-        end
-
-        PoodleSubspec(s, 'pdl_objc_message_hook', platform_universal) do |ss|
-            ss.dependency pod_name + '/pdl_dynamic'
-            ss.dependency base_pod_name + '/pdl_asm'
-            ss.dependency base_pod_name + '/pdl_objc_message'
-            ss.dependency base_pod_name + '/PDLPrivate'
         end
     end
 end

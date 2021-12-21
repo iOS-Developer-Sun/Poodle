@@ -12,7 +12,11 @@
 extern "C" {
 #endif
 
+#ifndef __i386__
+
 extern void pdl_objc_message_hook(void(*before)(__unsafe_unretained id self, SEL _cmd), void(*after)(__unsafe_unretained id self, SEL _cmd), void(*super_before)(struct objc_super *super, SEL _cmd), void(*super_after)(struct objc_super *super, SEL _cmd));
+
+#endif
 
 #ifdef __cplusplus
 }
