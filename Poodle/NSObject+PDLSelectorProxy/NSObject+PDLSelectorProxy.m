@@ -43,7 +43,8 @@ static BOOL NSObjectSelectorProxyIsObjectSupported(__unsafe_unretained id object
 #else
 #   define _OBJC_TAG_MASK 1
 #endif
-    if (((intptr_t)object & _OBJC_TAG_MASK) == _OBJC_TAG_MASK) {
+    void *pointer = (__bridge void *)object;
+    if (((uintptr_t)pointer & _OBJC_TAG_MASK) == _OBJC_TAG_MASK) {
         return NO;
     }
 

@@ -11,6 +11,8 @@
 #include "pdl_list.h"
 #include "pdl_thread_storage.h"
 
+#ifndef __i386__
+
 #pragma mark -
 
 typedef struct {
@@ -49,6 +51,7 @@ static pdl_list *pdl_thread_list(void) {
     return list;
 }
 
+__unused
 static void pdl_objc_message_initialize(void) {
     static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&lock);
@@ -78,6 +81,8 @@ void pdl_objc_message_set_msgSendSuper_before_action(void(*pdl_objc_msgSendSuper
     _pdl_objc_msgSendSuper_before_action = pdl_objc_msgSendSuper_before_action;
 }
 
+#ifndef __i386__
+
 static void(*_pdl_objc_msgSend_after_action)(__unsafe_unretained id self, SEL _cmd) = NULL;
 void(*pdl_objc_message_msgSend_after_action(void))(__unsafe_unretained id self, SEL _cmd) {
     return _pdl_objc_msgSend_after_action;
@@ -95,6 +100,8 @@ void pdl_objc_message_set_msgSendSuper_after_action(void(*pdl_objc_msgSendSuper_
     pdl_objc_message_initialize();
     _pdl_objc_msgSendSuper_after_action = pdl_objc_msgSendSuper_after_action;
 }
+
+#endif
 
 #pragma mark - callbacks
 
@@ -122,6 +129,16 @@ void pdl_objc_msgSendFull_before(__unsafe_unretained id self, SEL _cmd, void *lr
 }
 
 __attribute__((visibility("hidden")))
+void pdl_objc_msgSendSuper_before(struct objc_super *super, SEL _cmd) {
+    typeof(_pdl_objc_msgSendSuper_before_action) function = _pdl_objc_msgSendSuper_before_action;
+    if (function) {
+        function(super, _cmd);
+    }
+}
+
+#ifndef __i386__
+
+__attribute__((visibility("hidden")))
 void *pdl_objc_msgSendFull_after(void) {
     pdl_list *list = pdl_thread_list();
     pdl_list_node *node = list->tail;
@@ -136,14 +153,6 @@ void *pdl_objc_msgSendFull_after(void) {
         function(self, _cmd);
     }
     return lr;
-}
-
-__attribute__((visibility("hidden")))
-void pdl_objc_msgSendSuper_before(struct objc_super *super, SEL _cmd) {
-    typeof(_pdl_objc_msgSendSuper_before_action) function = _pdl_objc_msgSendSuper_before_action;
-    if (function) {
-        function(super, _cmd);
-    }
 }
 
 __attribute__((visibility("hidden")))
@@ -178,6 +187,8 @@ void *pdl_objc_msgSendSuperFull_after(void) {
     return lr;
 }
 
+#endif
+
 #pragma mark - originals
 
 void(*pdl_objc_msgSend_original)(void) = &objc_msgSend;
@@ -189,5 +200,7 @@ void(*pdl_objc_msgSendSuper2_original)(void) = &objc_msgSendSuper2;
 void(*pdl_objc_msgSend_stret_original)(void) = &objc_msgSend_stret;
 void(*pdl_objc_msgSendSuper_stret_original)(void) = &objc_msgSendSuper_stret;
 void(*pdl_objc_msgSendSuper2_stret_original)(void) = &objc_msgSendSuper2_stret;
+
+#endif
 
 #endif
