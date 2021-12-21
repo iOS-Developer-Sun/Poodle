@@ -1,3 +1,7 @@
+SOURCE_FILES = '*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'.freeze
+HEADER_FILES = '*.{h,hpp}'.freeze
+LIRBARY_FILES = 'lib*.a'.freeze
+
 def PoodleCommonConfigurate(s)
     s.version = "0.0.1"
     s.summary = "Lots of fun."
@@ -8,644 +12,274 @@ def PoodleCommonConfigurate(s)
     s.license = "MIT"
     s.author = { "Poodle" => "250764090@qq.com" }
     s.source = { :git => "git@github.com:iOS-Developer-Sun/Poodle.git", :tag => "#{s.version}" }
+end
 
-#    s.platform     = { :ios => "9.0", :osx => "10.10" }
-#    s.platform     = :ios, "9.0"
-#    s.static_framework = true
+def PoodleSubspec(s, name, platform)
+    ss = s.subspec name do |ss|
+        source_files = '**/' + SOURCE_FILES
+        header_files = '**/' + HEADER_FILES
+        librariy_files = '**/' + LIRBARY_FILES
+        base = s.base
+
+        ss.platform = platform
+        if platform.key?(:osx)
+            ss.osx.deployment_target  = '10.10'
+        end
+        if platform.key?(:ios)
+            ss.ios.deployment_target  = '9.0'
+        end
+        ss.frameworks = 'Foundation'
+        if s.is_library
+            ss.source_files = base + name + '/' + header_files
+            ss.vendored_library = base + name + '/' + librariy_files
+        else
+            ss.source_files = base + name + '/' + source_files
+        end
+        yield(ss) if block_given?
+    end
 end
 
 def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
-    pod_name = name
     Pod::Spec.new do |s|
-        s.name = pod_name
+        path = name if path == nil
+
+        class << s
+            attr_accessor :base, :is_library
+        end
+        s.base = path + '/'
+        s.is_library = is_library
+
+        s.name = name
+        s.default_subspec = default_subspec
+
+        pod_name = name
 
         PoodleCommonConfigurate(s)
 
-        source_files = '**/*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'
-        header_files = '**/*.{h,hpp}'
-        librariy_files = '**/lib*.a'
-
-        if path == nil
-            path = name
-        end
-
-        if is_library
-            source_files = header_files
-        end
-
-        if default_subspec
-            s.default_subspec = default_subspec
-        end
-
-        base = path + '/'
-
-        platform_osx = :osx, "10.10"
-        platform_ios = :ios, "9.0"
+        platform_osx = { :osx => "10.10" }
+        platform_ios = { :ios => "9.0" }
         platform_universal = { :osx => "10.10", :ios => "9.0" }
 
-        s.ios.deployment_target  = '9.0'
-        s.osx.deployment_target  = '10.10'
-
-        s.subspec 'CAAnimation+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'CAAnimation+PDLExtension/' + source_files
-            ss.vendored_library = base + 'CAAnimation+PDLExtension/' + librariy_files
+        PoodleSubspec(s, 'CAAnimation+PDLExtension', platform_universal) do |ss|
             ss.frameworks = 'QuartzCore'
         end
 
-        s.subspec 'CADisplayLink+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'CADisplayLink+PDLExtension/' + source_files
-            ss.vendored_library = base + 'CADisplayLink+PDLExtension/' + librariy_files
+        PoodleSubspec(s, 'CADisplayLink+PDLExtension', platform_universal) do |ss|
             ss.frameworks = 'QuartzCore'
         end
 
-        s.subspec 'CAMediaTimingFunction+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'CAMediaTimingFunction+PDLExtension/' + source_files
-            ss.vendored_library = base + 'CAMediaTimingFunction+PDLExtension/' + librariy_files
+        PoodleSubspec(s, 'CAMediaTimingFunction+PDLExtension', platform_universal) do |ss|
             ss.frameworks = 'QuartzCore'
         end
 
-        s.subspec 'NSCache+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSCache+PDLExtension/' + source_files
-            ss.vendored_library = base + 'NSCache+PDLExtension/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'NSCache+PDLExtension', platform_universal)
 
-        s.subspec 'NSCharacterSet+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSCharacterSet+PDLExtension/' + source_files
-            ss.vendored_library = base + 'NSCharacterSet+PDLExtension/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'NSCharacterSet+PDLExtension', platform_universal)
 
-        s.subspec 'NSDictionary+PDLObjectForKey' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSDictionary+PDLObjectForKey/' + source_files
-            ss.vendored_library = base + 'NSDictionary+PDLObjectForKey/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'NSDictionary+PDLObjectForKey', platform_universal)
 
-        s.subspec 'NSJSONSerialization+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSJSONSerialization+PDLExtension/' + source_files
-            ss.vendored_library = base + 'NSJSONSerialization+PDLExtension/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'NSJSONSerialization+PDLExtension', platform_universal)
 
-        s.subspec 'NSLock+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSLock+PDLExtension/' + source_files
-            ss.vendored_library = base + 'NSLock+PDLExtension/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'NSLock+PDLExtension', platform_universal) do |ss|
             ss.requires_arc = false
         end
 
-        s.subspec 'NSMapTable+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSMapTable+PDLExtension/' + source_files
-            ss.vendored_library = base + 'NSMapTable+PDLExtension/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'NSMapTable+PDLExtension', platform_universal)
 
-        s.subspec 'NSMutableDictionary+PDLThreadSafety' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSMutableDictionary+PDLThreadSafety/' + source_files
-            ss.vendored_library = base + 'NSMutableDictionary+PDLThreadSafety/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'NSMutableDictionary+PDLThreadSafety', platform_universal) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
 
-        s.subspec 'NSObject+PDLAssociation' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSObject+PDLAssociation/' + source_files
-            ss.vendored_library = base + 'NSObject+PDLAssociation/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'NSObject+PDLAssociation', platform_universal)
 
-        s.subspec 'NSObject+PDLDebug' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSObject+PDLDebug/' + source_files
-            ss.vendored_library = base + 'NSObject+PDLDebug/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'NSObject+PDLDebug', platform_universal) do |ss|
             ss.requires_arc = false
             ss.requires_arc = ['NSObject+PDLDebug/NSObject+PDLDebug.m']
         end
 
-        s.subspec 'NSObject+PDLDescription' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSObject+PDLDescription/' + source_files
-            ss.vendored_library = base + 'NSObject+PDLDescription/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'NSObject+PDLDescription', platform_universal)
 
-        s.subspec 'NSObject+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSObject+PDLExtension/' + source_files
-            ss.vendored_library = base + 'NSObject+PDLExtension/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'NSObject+PDLExtension', platform_universal)
 
-        s.subspec 'NSObject+PDLImplementationInterceptor' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSObject+PDLImplementationInterceptor/' + source_files
-            ss.vendored_library = base + 'NSObject+PDLImplementationInterceptor/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'NSObject+PDLImplementationInterceptor', platform_universal)
 
-        s.subspec 'NSObject+PDLMethod' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSObject+PDLMethod/' + source_files
-            ss.vendored_library = base + 'NSObject+PDLMethod/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'NSObject+PDLMethod', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_asm'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/pdl_utils'
             ss.dependency pod_name + '/pdl_thread_storage'
         end
 
-        s.subspec 'NSObject+PDLSelectorProxy' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSObject+PDLSelectorProxy/' + source_files
-            ss.vendored_library = base + 'NSObject+PDLSelectorProxy/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'NSObject+PDLSelectorProxy', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_asm'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
 
-        s.subspec 'NSObject+PDLThreadSafetifyMethod' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSObject+PDLThreadSafetifyMethod/' + source_files
-            ss.vendored_library = base + 'NSObject+PDLThreadSafetifyMethod/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'NSObject+PDLThreadSafetifyMethod', platform_universal) do |ss|
             ss.dependency pod_name + '/NSObject+PDLMethod'
         end
 
-        s.subspec 'NSObject+PDLThreadSafetifyProperty' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSObject+PDLThreadSafetifyProperty/' + source_files
-            ss.vendored_library = base + 'NSObject+PDLThreadSafetifyProperty/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'NSObject+PDLThreadSafetifyProperty', platform_universal) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/PDLPrivate'
         end
 
-        s.subspec 'NSObject+PDLWeakifyUnsafeUnretainedProperty' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSObject+PDLWeakifyUnsafeUnretainedProperty/' + source_files
-            ss.vendored_library = base + 'NSObject+PDLWeakifyUnsafeUnretainedProperty/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'NSObject+PDLWeakifyUnsafeUnretainedProperty', platform_universal) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
 
-        s.subspec 'NSThread+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSThread+PDLExtension/' + source_files
-            ss.vendored_library = base + 'NSThread+PDLExtension/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'NSThread+PDLExtension', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_pthread'
             ss.dependency pod_name + '/pdl_mach'
             ss.dependency pod_name + '/NSObject+PDLExtension'
         end
 
-        s.subspec 'NSUserDefaults+PDLExtension' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'NSUserDefaults+PDLExtension/' + source_files
-            ss.vendored_library = base + 'NSUserDefaults+PDLExtension/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'NSUserDefaults+PDLExtension', platform_universal)
 
-        s.subspec 'pdl_asm' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.public_header_files = base + 'pdl_asm/' + 'pdl_asm.h'
-            ss.source_files = base + 'pdl_asm/' + source_files
-            ss.vendored_library = base + 'pdl_asm/' + librariy_files
-        end
+        PoodleSubspec(s, 'pdl_asm', platform_universal)
 
-        s.subspec 'pdl_allocation' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_allocation/' + source_files
-            ss.vendored_library = base + 'pdl_allocation/' + librariy_files
-            ss.frameworks = 'Foundation'
-            ss.requires_arc = false
+        PoodleSubspec(s, 'pdl_allocation', platform_universal) do |ss|
             ss.requires_arc = ['NSObject+PDLDebug/NSObject+PDLAllocation.m']
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/pdl_backtrace'
         end
 
-        s.subspec 'pdl_backtrace' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_backtrace/' + source_files
-            ss.vendored_library = base + 'pdl_backtrace/' + librariy_files
+
+        PoodleSubspec(s, 'pdl_backtrace', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_thread'
         end
 
-        s.subspec 'pdl_block' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_block/' + source_files
-            ss.vendored_library = base + 'pdl_block/' + librariy_files
-        end
+        PoodleSubspec(s, 'pdl_block', platform_universal)
 
-        s.subspec 'pdl_die' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_die/' + source_files
-            ss.vendored_library = base + 'pdl_die/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'pdl_die', platform_universal)
 
-        s.subspec 'pdl_dispatch' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_dispatch/' + source_files
-            ss.vendored_library = base + 'pdl_dispatch/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'pdl_dispatch', platform_universal)
 
-        s.subspec 'pdl_dispatch_backtrace' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_dispatch_backtrace/' + source_files
-            ss.vendored_library = base + 'pdl_dispatch_backtrace/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_dispatch_backtrace', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_backtrace'
         end
 
-        s.subspec 'pdl_dynamic' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_dynamic/' + source_files
-            ss.vendored_library = base + 'pdl_dynamic/' + librariy_files
-        end
+        PoodleSubspec(s, 'pdl_dynamic', platform_universal)
 
-        s.subspec 'pdl_hook' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_hook/' + source_files
-            ss.vendored_library = base + 'pdl_hook/' + librariy_files
-        end
+        PoodleSubspec(s, 'pdl_hook', platform_universal)
 
-        s.subspec 'pdl_lldb_hook' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_lldb_hook/' + source_files
-            ss.vendored_library = base + 'pdl_lldb_hook/' + librariy_files
+        PoodleSubspec(s, 'pdl_lldb_hook', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_vm'
             ss.dependency pod_name + '/PDLSystemImage'
         end
 
-        s.subspec 'pdl_mach' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_mach/' + source_files
-            ss.vendored_library = base + 'pdl_mach/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'pdl_mach', platform_universal)
 
-        s.subspec 'pdl_mach_o_const_symbols' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_mach_o_const_symbols/' + source_files
-            ss.vendored_library = base + 'pdl_mach_o_const_symbols/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_mach_o_const_symbols', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_mach_object'
             ss.dependency pod_name + '/pdl_mach_o_symbols'
             ss.dependency pod_name + '/PDLSharedCache'
         end
 
-        s.subspec 'pdl_mach_o_symbol_pointer' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_mach_o_symbol_pointer/' + source_files
-            ss.vendored_library = base + 'pdl_mach_o_symbol_pointer/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_mach_o_symbol_pointer', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_mach_object'
             ss.dependency pod_name + '/pdl_mach_o_symbols'
             ss.dependency pod_name + '/pdl_mach_o_const_symbols'
         end
 
-        s.subspec 'pdl_mach_o_symbols' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_mach_o_symbols/' + source_files
-            ss.vendored_library = base + 'pdl_mach_o_symbols/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_mach_o_symbols', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_mach_object'
         end
 
-        s.subspec 'pdl_mach_object' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_mach_object/' + source_files
-            ss.vendored_library = base + 'pdl_mach_object/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'pdl_mach_object', platform_universal)
 
-        s.subspec 'pdl_malloc' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_malloc/' + source_files
-            ss.vendored_library = base + 'pdl_malloc/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_malloc', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_backtrace'
             ss.dependency pod_name + '/pdl_utils'
         end
 
-        s.subspec 'pdl_objc_message' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_objc_message/' + source_files
-            ss.vendored_library = base + 'pdl_objc_message/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_objc_message', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_asm'
             ss.dependency pod_name + '/PDLPrivate'
         end
 
-        s.subspec 'pdl_objc_message_hook' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.public_header_files = base + 'pdl_objc_message_hook/' + 'pdl_objc_message_hook.h'
-            ss.source_files = base + 'pdl_objc_message_hook/' + source_files
-            ss.vendored_library = base + 'pdl_objc_message_hook/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_objc_message_hook', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_asm'
             ss.dependency pod_name + '/pdl_objc_message'
             ss.dependency pod_name + '/PDLPrivate'
         end
 
-        s.subspec 'pdl_objc_runtime' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_objc_runtime/' + source_files
-            ss.vendored_library = base + 'pdl_objc_runtime/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'pdl_objc_runtime', platform_universal)
 
-        s.subspec 'pdl_os' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_os/' + source_files
-            ss.vendored_library = base + 'pdl_os/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'pdl_os', platform_universal)
 
-        s.subspec 'pdl_os_unfair_lock_tracer' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_os_unfair_lock_tracer/' + source_files
-            ss.vendored_library = base + 'pdl_os_unfair_lock_tracer/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_os_unfair_lock_tracer', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency pod_name + '/pdl_utils'
         end
 
-        s.subspec 'pdl_pthread' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_pthread/' + source_files
-            ss.vendored_library = base + 'pdl_pthread/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_pthread', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_mach_o_symbols'
         end
 
-        s.subspec 'pdl_pthread_backtrace' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_pthread_backtrace/' + source_files
-            ss.vendored_library = base + 'pdl_pthread_backtrace/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_pthread_backtrace', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_backtrace'
             ss.dependency pod_name + '/pdl_thread_storage'
         end
 
-        s.subspec 'pdl_pthread_lock_tracer' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_pthread_lock_tracer/' + source_files
-            ss.vendored_library = base + 'pdl_pthread_lock_tracer/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_pthread_lock_tracer', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency pod_name + '/pdl_utils'
         end
 
-        s.subspec 'pdl_security' do |ss|
-            ss.platform = platform_ios
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_security/' + source_files
-            ss.vendored_library = base + 'pdl_security/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_security', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_systemcall'
             ss.dependency pod_name + '/pdl_die'
         end
 
-        s.subspec 'pdl_spinlock' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_spinlock/' + source_files
-            ss.vendored_library = base + 'pdl_spinlock/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'pdl_spinlock', platform_universal)
 
-        s.subspec 'pdl_system_leak' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_system_leak/' + source_files
-            ss.vendored_library = base + 'pdl_system_leak/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_system_leak', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_thread'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
 
-        s.subspec 'pdl_systemcall' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_systemcall/' + source_files
-            ss.vendored_library = base + 'pdl_systemcall/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'pdl_systemcall', platform_universal)
 
-        s.subspec 'pdl_thread' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_thread/' + source_files
-            ss.vendored_library = base + 'pdl_thread/' + librariy_files
-        end
+        PoodleSubspec(s, 'pdl_thread', platform_universal)
 
-        s.subspec 'pdl_thread_storage' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_thread_storage/' + source_files
-            ss.vendored_library = base + 'pdl_thread_storage/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_thread_storage', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_utils'
         end
 
-        s.subspec 'pdl_utils' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.frameworks = 'Foundation'
-            ss.source_files = base + 'pdl_utils/' + source_files
-            ss.vendored_library = base + 'pdl_utils/' + librariy_files
-        end
+        PoodleSubspec(s, 'pdl_utils', platform_universal)
 
-        s.subspec 'pdl_vm' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.frameworks = 'Foundation'
-            ss.source_files = base + 'pdl_vm/' + source_files
-            ss.vendored_library = base + 'pdl_vm/' + librariy_files
-        end
+        PoodleSubspec(s, 'pdl_vm', platform_universal)
 
-        s.subspec 'pdl_zombie' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.frameworks = 'Foundation'
-            ss.source_files = base + 'pdl_zombie/' + source_files
-            ss.vendored_library = base + 'pdl_zombie/' + librariy_files
+        PoodleSubspec(s, 'pdl_zombie', platform_universal) do |ss|
             ss.requires_arc = false
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
 
-        s.subspec 'PDLAddressQueryViewController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLAddressQueryViewController/' + source_files
-            ss.vendored_library = base + 'PDLAddressQueryViewController/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLAddressQueryViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLViewController'
         end
 
-        s.subspec 'PDLApplication' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLApplication/' + source_files
-            ss.vendored_library = base + 'PDLApplication/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLApplication', platform_ios) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/NSMapTable+PDLExtension'
             ss.dependency pod_name + '/CAAnimation+PDLExtension'
         end
 
-        s.subspec 'PDLBacktrace' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLBacktrace/' + source_files
-            ss.vendored_library = base + 'PDLBacktrace/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLBacktrace', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_backtrace'
         end
 
-        s.subspec 'PDLBacktraceRecorder' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLBacktraceRecorder/' + source_files
-            ss.vendored_library = base + 'PDLBacktraceRecorder/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLBacktraceRecorder', platform_universal) do |ss|
             ss.dependency pod_name + '/PDLBacktrace'
         end
 
-        s.subspec 'PDLBacktraceRecordsItem' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLBacktraceRecordsItem/' + source_files
-            ss.vendored_library = base + 'PDLBacktraceRecordsItem/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLBacktraceRecordsItem', platform_universal) do |ss|
             ss.dependency pod_name + '/PDLBacktraceRecorder'
             ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
-        s.subspec 'PDLBlock' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLBlock/' + source_files
-            ss.vendored_library = base + 'PDLBlock/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLBlock', platform_universal) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/PDLSystemImage'
             ss.dependency pod_name + '/PDLBacktrace'
@@ -654,69 +288,28 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/pdl_block'
         end
 
-        s.subspec 'PDLCollectionViewFlowLayout' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLCollectionViewFlowLayout/' + source_files
-            ss.vendored_library = base + 'PDLCollectionViewFlowLayout/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'PDLCollectionViewFlowLayout', platform_ios)
 
-        s.subspec 'PDLColor' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLColor/' + source_files
-            ss.vendored_library = base + 'PDLColor/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'PDLColor', platform_ios)
 
-        s.subspec 'PDLCrash' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLCrash/' + source_files
-            ss.vendored_library = base + 'PDLCrash/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLCrash', platform_universal) do |ss|
             ss.dependency pod_name + '/PDLSystemImage'
             ss.dependency pod_name + '/PDLSharedCache'
         end
 
-        s.subspec 'PDLDebug' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLDebug/' + source_files
-            ss.vendored_library = base + 'PDLDebug/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLDebug', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_security'
             ss.dependency pod_name + '/NSObject+PDLMethod'
         end
 
-        s.subspec 'PDLDatabase' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLDatabase/' + '*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'
-            ss.public_header_files = 'PDLDatabase/' + '*.h'
-            ss.vendored_library = base + 'PDLDatabase/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLDatabase', platform_universal) do |ss|
+            ss.source_files = s.base + 'PDLDatabase/' + SOURCE_FILES
+            ss.public_header_files = s.base + 'PDLDatabase/' + '*.h'
         end
 
-        s.subspec 'PDLFileSystem' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLFileSystem/' + source_files
-            ss.vendored_library = base + 'PDLFileSystem/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'PDLFileSystem', platform_universal)
 
-        s.subspec 'PDLFileSystemViewController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLFileSystemViewController/' + source_files
-            ss.vendored_library = base + 'PDLFileSystemViewController/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLFileSystemViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLFileSystem'
             ss.dependency pod_name + '/PDLDatabase'
             ss.dependency pod_name + '/PDLViewController'
@@ -725,84 +318,40 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/PDLFormView'
         end
 
-        s.subspec 'PDLFontViewController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLFontViewController/' + source_files
-            ss.vendored_library = base + 'PDLFontViewController/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLFontViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLViewController'
         end
 
-        s.subspec 'PDLFormView' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLFormView/' + source_files
-            ss.vendored_library = base + 'PDLFormView/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLFormView', platform_ios) do |ss|
             ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
-        s.subspec 'PDLImageListViewController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLImageListViewController/' + source_files
-            ss.vendored_library = base + 'PDLImageListViewController/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLImageListViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLViewController'
             ss.dependency pod_name + '/NSObject+PDLDebug'
             ss.dependency pod_name + '/PDLSystemImage'
             ss.dependency pod_name + '/PDLKeyboardNotificationObserver'
         end
 
-        s.subspec 'PDLInitialization' do |ss|
-            ss.platform = platform_ios
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLInitialization/' + source_files
-            ss.vendored_library = base + 'PDLInitialization/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLInitialization', platform_universal) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/PDLDebug'
             ss.dependency pod_name + '/pdl_objc_runtime'
         end
 
-        s.subspec 'PDLKeyboardNotificationObserver' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLKeyboardNotificationObserver/' + source_files
-            ss.vendored_library = base + 'PDLKeyboardNotificationObserver/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'PDLKeyboardNotificationObserver', platform_ios)
 
-        s.subspec 'PDLLoad' do |ss|
-            ss.platform = platform_ios
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLLoad/' + source_files
-            ss.vendored_library = base + 'PDLLoad/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLLoad', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_objc_runtime'
         end
 
-        s.subspec 'PDLMemoryQueryViewController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLMemoryQueryViewController/' + source_files
-            ss.vendored_library = base + 'PDLMemoryQueryViewController/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLMemoryQueryViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/pdl_malloc'
             ss.dependency pod_name + '/PDLKeyboardNotificationObserver'
             ss.dependency pod_name + '/PDLViewController'
         end
 
-        s.subspec 'PDLNonThreadSafeObserver' do |ss|
-            ss.platform = platform_ios
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLNonThreadSafeObserver/' + source_files
-            ss.vendored_library = base + 'PDLNonThreadSafeObserver/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLNonThreadSafeObserver', platform_universal) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/NSObject+PDLDebug'
             ss.dependency pod_name + '/PDLPrivate'
@@ -812,321 +361,130 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/pdl_dispatch'
         end
 
-        s.subspec 'PDLOpenUrlViewController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLOpenUrlViewController/' + source_files
-            ss.vendored_library = base + 'PDLOpenUrlViewController/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLOpenUrlViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLKeyboardNotificationObserver'
             ss.dependency pod_name + '/PDLViewController'
         end
 
-        s.subspec 'PDLOverlayWindow' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLOverlayWindow/' + source_files
-            ss.vendored_library = base + 'PDLOverlayWindow/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'PDLOverlayWindow', platform_ios)
 
-        s.subspec 'PDLPageControl' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLPageControl/' + source_files
-            ss.vendored_library = base + 'PDLPageControl/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'PDLPageControl', platform_ios)
 
-        s.subspec 'PDLPageController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLPageController/' + source_files
-            ss.vendored_library = base + 'PDLPageController/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLPageController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLFormView'
         end
 
-        s.subspec 'PDLPageView' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLPageView/' + source_files
-            ss.vendored_library = base + 'PDLPageView/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLPageView', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLPageController'
         end
 
-        s.subspec 'PDLPageViewController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLPageViewController/' + source_files
-            ss.vendored_library = base + 'PDLPageViewController/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLPageViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLPageController'
             ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
-        s.subspec 'PDLProcessInfo' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLProcessInfo/' + source_files
-            ss.vendored_library = base + 'PDLProcessInfo/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'PDLProcessInfo', platform_universal)
 
-        s.subspec 'PDLPrivate' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLPrivate/' + source_files
-            ss.vendored_library = base + 'PDLPrivate/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'PDLPrivate', platform_universal)
 
-        s.subspec 'PDLPudding' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLPudding/' + source_files
-            ss.vendored_library = base + 'PDLPudding/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'PDLPudding', platform_universal)
 
-        s.subspec 'PDLResizableImageView' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLResizableImageView/' + source_files
-            ss.vendored_library = base + 'PDLResizableImageView/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'PDLResizableImageView', platform_ios)
 
-        s.subspec 'PDLReuseItemManager' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLReuseItemManager/' + source_files
-            ss.vendored_library = base + 'PDLReuseItemManager/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLReuseItemManager', platform_universal) do |ss|
             ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
-        s.subspec 'PDLRunLoopObserver' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLRunLoopObserver/' + source_files
-            ss.vendored_library = base + 'PDLRunLoopObserver/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'PDLRunLoopObserver', platform_universal)
 
-        s.subspec 'PDLSafeOperation' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLSafeOperation/' + source_files
-            ss.vendored_library = base + 'PDLSafeOperation/' + librariy_files
+        PoodleSubspec(s, 'PDLSafeOperation', platform_universal) do |ss|
             ss.requires_arc = false
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
 
-        s.subspec 'PDLScreenDebugger' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLScreenDebugger/' + source_files
-            ss.vendored_library = base + 'PDLScreenDebugger/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'PDLScreenDebugger', platform_ios)
 
-        s.subspec 'PDLScrollPageViewController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLScrollPageViewController/' + source_files
-            ss.vendored_library = base + 'PDLScrollPageViewController/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLScrollPageViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLReuseItemManager'
         end
 
-        s.subspec 'PDLSessionTaskStatisticsManager' do |ss|
-            ss.platform = platform_ios
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLSessionTaskStatisticsManager/' + source_files
-            ss.vendored_library = base + 'PDLSessionTaskStatisticsManager/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLSessionTaskStatisticsManager', platform_universal) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/PDLProcessInfo'
         end
 
-        s.subspec 'PDLSharedCache' do |ss|
-            ss.platform = platform_universal
-            ss.ios.deployment_target  = '9.0'
-            ss.osx.deployment_target  = '10.10'
-            ss.public_header_files = base + 'PDLSharedCache/' + '**/*.h'
-            ss.source_files = base + 'PDLSharedCache/' + source_files
-            ss.vendored_library = base + 'PDLSharedCache/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLSharedCache', platform_universal) do |ss|
+            ss.public_header_files = s.base + 'PDLSharedCache/' + '**/*.h'
             ss.libraries = 'c++'
             ss.dependency pod_name + '/pdl_mach_object'
             ss.dependency pod_name + '/pdl_mach_o_symbols'
         end
 
-        s.subspec 'PDLSystemImage' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLSystemImage/' + source_files
-            ss.vendored_library = base + 'PDLSystemImage/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'PDLSystemImage', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_mach_object'
         end
 
-        s.subspec 'PDLTaskManager' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLTaskManager/' + source_files
-            ss.vendored_library = base + 'PDLTaskManager/' + librariy_files
-            ss.frameworks = 'Foundation'
-        end
+        PoodleSubspec(s, 'PDLTaskManager', platform_universal)
 
-        s.subspec 'PDLViewController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLViewController/' + source_files
-            ss.vendored_library = base + 'PDLViewController/' + librariy_files
+        PoodleSubspec(s, 'PDLViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLColor'
-            ss.frameworks = 'UIKit'
         end
 
-        s.subspec 'PDLViewControllerListViewController' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'PDLViewControllerListViewController/' + source_files
-            ss.vendored_library = base + 'PDLViewControllerListViewController/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'PDLViewControllerListViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLViewController'
         end
 
-        s.subspec 'UINavigationController+PDLLongPressPop' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'UINavigationController+PDLLongPressPop/' + source_files
-            ss.vendored_library = base + 'UINavigationController+PDLLongPressPop/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'UINavigationController+PDLLongPressPop', platform_ios)
 
-        s.subspec 'UIScreen+PDLExtension' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'UIScreen+PDLExtension/' + source_files
-            ss.vendored_library = base + 'UIScreen+PDLExtension/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'UIScreen+PDLExtension', platform_ios)
 
-        s.subspec 'UIView+PDLDebug' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'UIView+PDLDebug/' + source_files
-            ss.vendored_library = base + 'UIView+PDLDebug/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'UIView+PDLDebug', platform_ios) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/NSObject+PDLExtension'
         end
 
-        s.subspec 'UIViewController+PDLExtension' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'UIViewController+PDLExtension/' + source_files
-            ss.vendored_library = base + 'UIViewController+PDLExtension/' + librariy_files
-            ss.frameworks = 'UIKit'
+        PoodleSubspec(s, 'UIViewController+PDLExtension', platform_ios) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
-        s.subspec 'UIViewController+PDLNavigationBar' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'UIViewController+PDLNavigationBar/' + source_files
-            ss.vendored_library = base + 'UIViewController+PDLNavigationBar/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'UIViewController+PDLNavigationBar', platform_ios)
 
-        s.subspec 'UIViewController+PDLTransitionAnimation' do |ss|
-            ss.platform = platform_ios
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'UIViewController+PDLTransitionAnimation/' + source_files
-            ss.vendored_library = base + 'UIViewController+PDLTransitionAnimation/' + librariy_files
-            ss.frameworks = 'UIKit'
-        end
+        PoodleSubspec(s, 'UIViewController+PDLTransitionAnimation', platform_ios)
     end
 end
 
 def PoodleDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, default_subspec: nil)
-    pod_name = name
     Pod::Spec.new do |s|
-        s.name = pod_name
+        path = name if path == nil
+
+        class << s
+            attr_accessor :base, :is_library
+        end
+        s.base = path + '/'
+        s.is_library = is_library
+
+        s.name = name
+        s.default_subspec = default_subspec
+
+        pod_name = name
 
         PoodleCommonConfigurate(s)
 
-        source_files = '**/*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'
-        header_files = '**/*.{h,hpp}'
-        librariy_files = '**/*.{a}'
-
-        if path == nil
-            path = name
-        end
-
-        if is_library
-            source_files = header_files
-        end
-
-        if default_subspec
-            s.default_subspec = default_subspec
-        end
-
-        if base_pod_name == nil
-            base_pod_name = name
-        end
-
-        base = path + '/'
-
-        platform_osx = :osx, "10.10"
-        platform_ios = :ios, "9.0"
+        platform_osx = { :osx => "10.10" }
+        platform_ios = { :ios => "9.0" }
         platform_universal = { :osx => "10.10", :ios => "9.0" }
 
-        s.ios.deployment_target  = '9.0'
-        s.osx.deployment_target  = '10.10'
+        PoodleSubspec(s, 'pdl_dynamic', platform_universal)
 
-        s.subspec 'pdl_dynamic' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_dynamic/' + source_files
-            ss.vendored_library = base + 'pdl_dynamic/' + librariy_files
-        end
-
-        s.subspec 'pdl_os_unfair_lock_tracer' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_os_unfair_lock_tracer/' + source_files
-            ss.vendored_library = base + 'pdl_os_unfair_lock_tracer/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_os_unfair_lock_tracer', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency base_pod_name + '/pdl_utils'
         end
 
-        s.subspec 'pdl_pthread_lock_tracer' do |ss|
-            ss.platform = platform_universal
-            ss.osx.deployment_target  = '10.10'
-            ss.ios.deployment_target  = '9.0'
-            ss.source_files = base + 'pdl_pthread_lock_tracer/' + source_files
-            ss.vendored_library = base + 'pdl_pthread_lock_tracer/' + librariy_files
-            ss.frameworks = 'Foundation'
+        PoodleSubspec(s, 'pdl_pthread_lock_tracer', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency base_pod_name + '/pdl_utils'
         end
-
     end
 end

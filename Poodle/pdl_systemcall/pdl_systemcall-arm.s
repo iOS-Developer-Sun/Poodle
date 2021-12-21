@@ -10,7 +10,7 @@
 
 .text
 .align 4
-.private_extern _pdl_systemcall
+.globl _pdl_systemcall
 
 _pdl_systemcall:
 

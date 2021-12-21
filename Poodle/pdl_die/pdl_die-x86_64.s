@@ -10,7 +10,7 @@
 
 .text
 .align 4
-.private_extern _pdl_die
+.globl _pdl_die
 
 _pdl_die:
 
