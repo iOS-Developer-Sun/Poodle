@@ -25,9 +25,8 @@ def PoodleSubspec(s, name, platform)
         librariy_files = '**/' + LIRBARY_FILES
         base = s.base
 
-        ss.platform = platform
-        ss.osx.deployment_target = OSX_VERSION
-        ss.ios.deployment_target = IOS_VERSION
+        ss.osx.deployment_target = platform[:osx] if platform.key?(:osx)
+        ss.ios.deployment_target = platform[:ios] if platform.key?(:ios)
         ss.frameworks = 'Foundation'
         if s.is_library
             ss.source_files = base + name + '/' + header_files
@@ -56,15 +55,15 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         PoodleCommonConfigurate(s)
 
-        platform_osx = { :osx => "10.10" }
-        platform_ios = { :ios => "9.0" }
-        platform_universal = { :osx => "10.10", :ios => "9.0" }
+        platform_osx = { :osx => OSX_VERSION }
+        platform_ios = { :ios => IOS_VERSION }
+        platform_universal = { :osx => OSX_VERSION, :ios => IOS_VERSION }
 
         PoodleSubspec(s, 'CAAnimation+PDLExtension', platform_universal) do |ss|
             ss.frameworks = 'QuartzCore'
         end
 
-        PoodleSubspec(s, 'CADisplayLink+PDLExtension', platform_universal) do |ss|
+        PoodleSubspec(s, 'CADisplayLink+PDLExtension', platform_ios) do |ss|
             ss.frameworks = 'QuartzCore'
         end
 
@@ -136,12 +135,15 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         PoodleSubspec(s, 'NSUserDefaults+PDLExtension', platform_universal)
 
-        PoodleSubspec(s, 'pdl_asm', platform_universal)
+        PoodleSubspec(s, 'pdl_asm', platform_universal) do |ss|
+            ss.public_header_files = s.base + 'pdl_asm/' + 'pdl_asm.h'
+        end
 
         PoodleSubspec(s, 'pdl_allocation', platform_universal) do |ss|
             ss.requires_arc = ['NSObject+PDLDebug/NSObject+PDLAllocation.m']
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/pdl_backtrace'
+            ss.dependency pod_name + '/pdl_utils'
         end
 
 
@@ -161,11 +163,15 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         PoodleSubspec(s, 'pdl_dynamic', platform_universal)
 
-        PoodleSubspec(s, 'pdl_hook', platform_universal)
+        PoodleSubspec(s, 'pdl_hook', platform_universal) do |ss|
+            ss.dependency pod_name + '/PDLSystemImage'
+            ss.dependency pod_name + '/pdl_vm'
+        end
 
         PoodleSubspec(s, 'pdl_lldb_hook', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_vm'
             ss.dependency pod_name + '/PDLSystemImage'
+            ss.dependency pod_name + '/pdl_utils'
         end
 
         PoodleSubspec(s, 'pdl_mach', platform_universal)
@@ -195,23 +201,14 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         PoodleSubspec(s, 'pdl_objc_message', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_asm'
+            ss.dependency pod_name + '/pdl_utils'
             ss.dependency pod_name + '/PDLPrivate'
-        end
-
-        PoodleSubspec(s, 'pdl_objc_message_hook', platform_universal) do |ss|
-            ss.dependency pod_name + '/pdl_asm'
-            ss.dependency pod_name + '/pdl_objc_message'
-            ss.dependency pod_name + '/PDLPrivate'
+            ss.dependency pod_name + '/pdl_thread_storage'
         end
 
         PoodleSubspec(s, 'pdl_objc_runtime', platform_universal)
 
         PoodleSubspec(s, 'pdl_os', platform_universal)
-
-        PoodleSubspec(s, 'pdl_os_unfair_lock_tracer', platform_universal) do |ss|
-            ss.dependency pod_name + '/pdl_dynamic'
-            ss.dependency pod_name + '/pdl_utils'
-        end
 
         PoodleSubspec(s, 'pdl_pthread', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_mach_o_symbols'
@@ -222,11 +219,6 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
             ss.dependency pod_name + '/pdl_thread_storage'
         end
 
-        PoodleSubspec(s, 'pdl_pthread_lock_tracer', platform_universal) do |ss|
-            ss.dependency pod_name + '/pdl_dynamic'
-            ss.dependency pod_name + '/pdl_utils'
-        end
-
         PoodleSubspec(s, 'pdl_security', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_systemcall'
             ss.dependency pod_name + '/pdl_die'
@@ -234,7 +226,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         PoodleSubspec(s, 'pdl_spinlock', platform_universal)
 
-        PoodleSubspec(s, 'pdl_system_leak', platform_universal) do |ss|
+        PoodleSubspec(s, 'pdl_system_leak', platform_ios) do |ss|
             ss.dependency pod_name + '/pdl_thread'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
@@ -268,6 +260,7 @@ def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
 
         PoodleSubspec(s, 'PDLBacktrace', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_backtrace'
+            ss.dependency pod_name + '/PDLCrash'
         end
 
         PoodleSubspec(s, 'PDLBacktraceRecorder', platform_universal) do |ss|
@@ -480,11 +473,20 @@ def PoodleDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, de
         PoodleSubspec(s, 'pdl_os_unfair_lock_tracer', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency base_pod_name + '/pdl_utils'
+            ss.dependency base_pod_name + '/pdl_spinlock'
         end
 
         PoodleSubspec(s, 'pdl_pthread_lock_tracer', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency base_pod_name + '/pdl_utils'
+            ss.dependency base_pod_name + '/pdl_spinlock'
+        end
+
+        PoodleSubspec(s, 'pdl_objc_message_hook', platform_universal) do |ss|
+            ss.dependency pod_name + '/pdl_dynamic'
+            ss.dependency base_pod_name + '/pdl_asm'
+            ss.dependency base_pod_name + '/pdl_objc_message'
+            ss.dependency base_pod_name + '/PDLPrivate'
         end
     end
 end

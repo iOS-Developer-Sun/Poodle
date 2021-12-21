@@ -8,6 +8,7 @@
 
 #include "pdl_asm-universal.h"
 
+#if 0
 #ifdef __i386__
 
 .text
@@ -110,4 +111,5 @@ _pdl_objc_msgSendSuper2_stretFull:
     mov     _pdl_objc_msgSendSuper2_stret_original, %eax
     jmp     *%eax
 
+#endif
 #endif
