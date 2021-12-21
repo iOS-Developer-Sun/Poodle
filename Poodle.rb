@@ -1,6 +1,8 @@
 SOURCE_FILES = '*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'.freeze
 HEADER_FILES = '*.{h,hpp}'.freeze
 LIRBARY_FILES = 'lib*.a'.freeze
+OSX_VERSION = '10.10'.freeze
+IOS_VERSION = '9.0'.freeze
 
 def PoodleCommonConfigurate(s)
     s.version = "0.0.1"
@@ -11,7 +13,9 @@ def PoodleCommonConfigurate(s)
     s.homepage = "https://github.com/iOS-Developer-Sun/Poodle"
     s.license = "MIT"
     s.author = { "Poodle" => "250764090@qq.com" }
-    s.source = { :git => "git@github.com:iOS-Developer-Sun/Poodle.git", :tag => "#{s.version}" }
+    s.source = { :git => "https://github.com/iOS-Developer-Sun/Poodle.git", :tag => "#{s.version}" }
+    s.osx.deployment_target = OSX_VERSION
+    s.ios.deployment_target = IOS_VERSION
 end
 
 def PoodleSubspec(s, name, platform)
@@ -22,12 +26,8 @@ def PoodleSubspec(s, name, platform)
         base = s.base
 
         ss.platform = platform
-        if platform.key?(:osx)
-            ss.osx.deployment_target  = '10.10'
-        end
-        if platform.key?(:ios)
-            ss.ios.deployment_target  = '9.0'
-        end
+        ss.osx.deployment_target = OSX_VERSION
+        ss.ios.deployment_target = IOS_VERSION
         ss.frameworks = 'Foundation'
         if s.is_library
             ss.source_files = base + name + '/' + header_files
