@@ -16,6 +16,8 @@ def PoodleCommonConfigurate(s)
     s.source = { :git => "https://github.com/iOS-Developer-Sun/Poodle.git", :tag => "#{s.version}" }
     s.osx.deployment_target = OSX_VERSION
     s.ios.deployment_target = IOS_VERSION
+    s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
+    s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64' }
 end
 
 def PoodleSubspec(s, name, platform)
