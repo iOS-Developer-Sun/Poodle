@@ -514,6 +514,7 @@
 		C06B8F32277060E100B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = C06B8F30277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m */; };
 		C06B8F3927721EBB00B6A8A3 /* NSArray+PDLSafeOperation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B85068EE250121690028E642 /* NSArray+PDLSafeOperation.h */; };
 		C06B8F3A27721EBB00B6A8A3 /* NSDictionary+PDLSafeOperation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B85068EF250121690028E642 /* NSDictionary+PDLSafeOperation.h */; };
+		C07436EC277346A8007C1206 /* PDLNonThreadSafeDictionaryObserverDictionary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C06B8F2F277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1776,6 +1777,7 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				C07436EC277346A8007C1206 /* PDLNonThreadSafeDictionaryObserverDictionary.h in CopyFiles */,
 				C010A6EE27114ECA00A785E9 /* PDLNonThreadSafeDictionaryObserver.h in CopyFiles */,
 				C010A6EF27114ECA00A785E9 /* PDLNonThreadSafeDictionaryObserverObject.h in CopyFiles */,
 				C010A6F027114ECA00A785E9 /* PDLNonThreadSafeObserver.h in CopyFiles */,
