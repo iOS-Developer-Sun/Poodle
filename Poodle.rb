@@ -482,7 +482,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
     end
 end
 
-def PoodleDynamicSpec(name, path: nil, is_library: false, base_pod_name: nil, default_subspec: nil)
+def PoodleDynamicSpec(name, path: nil, is_library: false, is_macos: false, base_pod_name: nil, default_subspec: nil)
     Pod::Spec.new do |s|
         path = name if path == nil
         base = path + '/'
