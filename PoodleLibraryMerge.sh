@@ -29,7 +29,7 @@ if [ -f "${pdl_iphoneos_library}" ] && [ -f "${pdl_iphonesimulator_library}" ] ;
 fi
 
 # macOS
-pdl_macos_build="${BUILD_DIR}/${CONFIGURATION}-maccatalyst"
+pdl_macos_build="${BUILD_DIR}/${CONFIGURATION}"
 pdl_macos_library="${pdl_macos_build}"/lib"${TARGETNAME}".a
 pdl_universal_library=macos/lib"${TARGETNAME}".a
 
