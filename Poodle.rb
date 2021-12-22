@@ -21,34 +21,47 @@ def PoodleCommonConfigurate(s)
 end
 
 def PoodleSubspec(s, name, platform)
+    support_osx = platform.key?(:osx)
+    support_ios = platform.key?(:osx)
+    is_library = s.is_library
+    is_macos = s.is_macos
+
+    if is_library
+        return if (!support_osx && is_macos) || (!support_ios && !is_macos)
+    end
+
     ss = s.subspec name do |ss|
-        source_files = '**/' + SOURCE_FILES
-        header_files = '**/' + HEADER_FILES
-        librariy_files = '**/' + LIRBARY_FILES
         base = s.base
 
-        ss.osx.deployment_target = platform[:osx] if platform.key?(:osx)
-        ss.ios.deployment_target = platform[:ios] if platform.key?(:ios)
         ss.frameworks = 'Foundation'
         if s.is_library
-            ss.source_files = base + name + '/' + header_files
-            ss.vendored_library = base + name + '/' + librariy_files
+            ss.source_files = base + name + '/' + '**/' + HEADER_FILES
+            if s.is_macos
+                ss.osx.deployment_target = platform[:osx]
+                ss.vendored_library = base + name + '/macos/' + LIRBARY_FILES
+            else
+                ss.ios.deployment_target = platform[:ios]
+                ss.vendored_library = base + name + '/ios/' + LIRBARY_FILES
+            end
         else
-            ss.source_files = base + name + '/' + source_files
+            ss.osx.deployment_target = platform[:osx] if support_osx
+            ss.ios.deployment_target = platform[:ios] if support_ios
+            ss.source_files = base + name + '/' + '**/' + SOURCE_FILES
         end
         yield(ss) if block_given?
     end
 end
 
-def PoodleSpec(name, path: nil, is_library: false, default_subspec: nil)
+def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subspec: nil)
     Pod::Spec.new do |s|
         path = name if path == nil
 
         class << s
-            attr_accessor :base, :is_library
+            attr_accessor :base, :is_library, :is_macos
         end
         s.base = path + '/'
         s.is_library = is_library
+        s.is_macos = is_macos
 
         s.name = name
         s.default_subspec = default_subspec
