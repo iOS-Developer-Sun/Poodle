@@ -32,8 +32,6 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLSharedCache : NSObject
 
-@property (nonatomic, assign, readonly) BOOL enabled;
-
 + (instancetype)sharedInstance;
 
 - (NSString *)sharedCachePathWithImageName:(NSString *)imageName;
