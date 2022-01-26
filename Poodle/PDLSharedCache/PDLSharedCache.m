@@ -145,21 +145,6 @@
         }
         _systemCacheFile = path;
 
-        const char *shared_cache_file_path = path.UTF8String;
-        struct stat statbuf;
-        if (!stat(shared_cache_file_path, &statbuf)) {
-            int fd = open(shared_cache_file_path, O_RDONLY);
-            if (fd >= 0) {
-                size_t size = (size_t)statbuf.st_size;
-                void *mapped_cache = mmap(NULL, size, PROT_READ, MAP_PRIVATE, fd, 0);
-                if (mapped_cache != MAP_FAILED) {
-                    _enabled = YES;
-                    munmap(mapped_cache, size);
-                }
-                close(fd);
-            }
-        }
-
         NSArray *libraryPaths = NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, YES);
         NSString *libraryPath = libraryPaths.firstObject;
         NSString *cachePath = [libraryPath stringByAppendingPathComponent:@"PDLSharedCache"];
@@ -177,13 +162,11 @@
         return NO;
     }
 
-    int ret = 0;
-    if (self.enabled) {
-        const char *imageNames[2];
-        imageNames[0] = imageName.UTF8String;
-        imageNames[1] = NULL;
-        ret = dyld_shared_cache_extract_dylibs(self.systemCacheFile.UTF8String, self.cachePath.UTF8String, imageNames);
-    } else {
+    const char *imageNames[2];
+    imageNames[0] = imageName.UTF8String;
+    imageNames[1] = NULL;
+    int ret = dyld_shared_cache_extract_dylibs(self.systemCacheFile.UTF8String, self.cachePath.UTF8String, imageNames);
+    if (ret != 0) {
         ret = [self extract:self.systemCacheFile to:self.cachePath imageNames:@[imageName]];
     }
 
