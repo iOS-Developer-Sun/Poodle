@@ -256,7 +256,7 @@ IMP NSObjectSelectorProxyForwarding(__unsafe_unretained id self, SEL _cmd) {
     return imp;
 }
 
-+ (void)load {
++ (void)pdl_enableSelectorProxy {
     if (![self pdl_kvoObjectEnabled]) {
         return;
     }

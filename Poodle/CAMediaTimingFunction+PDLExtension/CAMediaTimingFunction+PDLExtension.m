@@ -16,23 +16,11 @@ __unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_emp
 
 @implementation CAMediaTimingFunction (PDLExtension)
 
-#ifdef DEBUG
-+ (void)load {
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        [[CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionDefault] pdl_solve:0.5];
-    });
-}
-#endif
-
 static SEL pdl_solveForInputSelector(void) {
     static SEL sel = NULL;
     if (sel == NULL) {
         char sel_str[] = {'_', 's', 'o', 'l', 'v', 'e', 'F', 'o', 'r', 'I', 'n', 'p', 'u', 't', ':', '\0'};
         sel = sel_registerName(sel_str);
-#ifdef DEBUG
-        assert(sel_isEqual(sel, sel_registerName("_solveForInput:")));
-#endif
     }
     return sel;
 }
