@@ -10,6 +10,7 @@
 
 @interface NSObject (SelectorProxy)
 
++ (void)pdl_enableSelectorProxy;
 + (BOOL)pdl_kvoObjectEnabled; // default NO
 
 - (BOOL)pdl_setSelectorProxyForSelector:(SEL)selector withImplementation:(IMP)implemetation;

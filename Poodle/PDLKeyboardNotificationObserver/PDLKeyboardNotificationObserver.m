@@ -20,7 +20,7 @@
 
 @implementation PDLKeyboardNotificationObserver
 
-+ (void)load {
++ (void)enable {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(handleKeyboardWillShowNotification:) name:UIKeyboardWillShowNotification object:nil];

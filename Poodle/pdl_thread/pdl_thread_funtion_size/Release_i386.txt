@@ -16,7 +16,7 @@ ______PDL_THREAD_FAKE_END_____:
       17:	58	popl	%eax
       18:	8b 4d 18	movl	24(%ebp), %ecx
       1b:	8b 55 0c	movl	12(%ebp), %edx
-      1e:	8b 80 d4 17 00 00	movl	6123-23(%eax), %eax
+      1e:	8b 80 e2 17 00 00	movl	6137-23(%eax), %eax
       24:	89 45 d8	movl	%eax, -40(%ebp)
       27:	8b 00	movl	_pdl_thread_execute(%eax), %eax
       29:	89 45 f0	movl	%eax, -16(%ebp)

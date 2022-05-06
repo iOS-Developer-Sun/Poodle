@@ -34,6 +34,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong, readonly) id <PDLViewControllerExtensionController> pdl_extensionController;
 
++ (void)pdl_enableExtension;
+
 @end
 
 NS_ASSUME_NONNULL_END

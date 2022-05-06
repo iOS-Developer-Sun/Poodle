@@ -18,6 +18,8 @@
 @property (nonatomic, weak) id <PDLKeyboardNotificationObserver>delegate;
 @property (nonatomic, copy, readonly) NSDictionary *currentInfo;
 
++ (void)enable;
+
 + (instancetype)observerForDelegate:(id <PDLKeyboardNotificationObserver>)delegate;
 
 - (void)startObserving;

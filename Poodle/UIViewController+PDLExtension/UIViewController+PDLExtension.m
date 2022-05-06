@@ -135,7 +135,7 @@ static void PDLViewControllerDoAppear(__unsafe_unretained UIViewController *self
     [extensionController act:self type:(PDLViewControllerExtensionControllerType)(long)_data];
 }
 
-+ (void)load {
++ (void)pdl_enableExtension {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         BOOL ret = YES;
