@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)removeHomeDirectory;
 
 + (BOOL)setExcludedFromBackup:(NSString *)filePath;
++ (NSData *)md5:(NSString *)filePath;
++ (NSString *)md5String:(NSString *)filePath;
 
 @end
 

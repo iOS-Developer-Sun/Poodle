@@ -7,6 +7,7 @@
 //
 
 #import "PDLFileSystem.h"
+#import <CommonCrypto/CommonCrypto.h>
 
 @implementation PDLFileSystem
 
@@ -126,5 +127,51 @@
     BOOL ret = [url setResourceValue:@(YES) forKey:NSURLIsExcludedFromBackupKey error:nil];
     return ret;
 }
+
++ (NSData *)md5:(NSString *)filePath {
+    NSFileManager *fm = [NSFileManager defaultManager];
+    NSError *error = nil;
+    NSDictionary *fileAttr = [fm attributesOfItemAtPath:filePath error:&error];
+    if (error) {
+        return nil;
+    }
+
+    NSString *extendedAttributesKey = @"NSFileExtendedAttributes";
+    NSString *attributesKey = @"PDLFileSystemMD5";
+    NSDictionary *attr = fileAttr[extendedAttributesKey];
+    NSData *md5 = attr[attributesKey];
+    if (!md5) {
+        @autoreleasepool {
+            NSData *data = [[NSData alloc] initWithContentsOfFile:filePath];
+            unsigned char result[CC_MD5_DIGEST_LENGTH];
+            CC_MD5([data bytes], (CC_LONG)[data length], result);sleep(5);
+            md5 = [NSData dataWithBytes:result length:CC_MD5_DIGEST_LENGTH];
+            if (md5) {
+                NSMutableDictionary *dictionary = [attr ?: @{} mutableCopy];
+                dictionary[attributesKey] = md5;
+                attr = [dictionary copy];
+                [fm setAttributes:@{extendedAttributesKey : attr} ofItemAtPath:filePath error:NULL];
+            }
+        }
+    }
+
+    return md5;
+}
+
++ (NSString *)md5String:(NSString *)filePath {
+    NSString *string = nil;
+    NSData *data = [self md5:filePath];
+    if (data) {
+        NSUInteger length = data.length;
+        const unsigned char *bytes = (const unsigned char *)data.bytes;
+        NSMutableString *hexString  = [NSMutableString string];
+        for (NSUInteger i = 0; i < length; i++) {
+            [hexString appendFormat:@"%02x", bytes[i]];
+        }
+        string = [hexString copy];
+    }
+    return string;
+}
+
 
 @end

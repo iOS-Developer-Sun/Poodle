@@ -97,6 +97,14 @@ int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, i
     return pdl_thread_frames_with_filter(link_register, frame_pointer, frames, count, NULL);
 }
 
+#if defined(__x86_64__)
+#define    ISALIGNED(a)    ((((uintptr_t)(a)) & 0xf) == 0)
+#elif defined(__i386__)
+#define    ISALIGNED(a)    ((((uintptr_t)(a)) & 0xf) == 8)
+#elif defined(__arm__) || defined(__arm64__)
+#define    ISALIGNED(a)    ((((uintptr_t)(a)) & 0x1) == 0)
+#endif
+
 int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void **frames, int count, pdl_thread_frame_filter *filter) {
     int ret = 0;
     void *lr = (void *)link_register;
@@ -126,7 +134,7 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
             ret++;
         }
 
-        if (!fp) {
+        if (!fp || !ISALIGNED(fp)) {
             break;
         }
         if (!lr) {
