@@ -137,12 +137,13 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
         if (!fp || !ISALIGNED(fp)) {
             break;
         }
+
         if (!lr) {
             break;
         }
-        fp = *fp;
 
-        if (fp) {
+        fp = *fp;
+        if (fp && ISALIGNED(fp)) {
             lr = *(fp + 1);
         } else {
             lr = NULL;
