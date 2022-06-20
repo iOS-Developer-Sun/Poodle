@@ -136,21 +136,30 @@
         return nil;
     }
 
+    uint64_t systemDate = [fileAttr[NSFileModificationDate] timeIntervalSince1970] * 1000000;
     NSString *extendedAttributesKey = @"NSFileExtendedAttributes";
     NSString *attributesKey = @"PDLFileSystemMD5";
+    NSString *attributesDateKey = @"PDLFileSystemMD5Date";
     NSDictionary *attr = fileAttr[extendedAttributesKey];
+
     NSData *md5 = attr[attributesKey];
-    if (!md5) {
+    NSData *md5Date = attr[attributesDateKey];
+    uint64_t date = -1;
+    if (md5Date.length >= sizeof(date)) {
+        date = *(uint64_t *)md5Date.bytes;
+    }
+
+    if (!md5 || (date != systemDate)) {
         @autoreleasepool {
             NSData *data = [[NSData alloc] initWithContentsOfFile:filePath];
             unsigned char result[CC_MD5_DIGEST_LENGTH];
-            CC_MD5([data bytes], (CC_LONG)[data length], result);sleep(5);
+            CC_MD5([data bytes], (CC_LONG)[data length], result);
             md5 = [NSData dataWithBytes:result length:CC_MD5_DIGEST_LENGTH];
             if (md5) {
                 NSMutableDictionary *dictionary = [attr ?: @{} mutableCopy];
                 dictionary[attributesKey] = md5;
-                attr = [dictionary copy];
-                [fm setAttributes:@{extendedAttributesKey : attr} ofItemAtPath:filePath error:NULL];
+                dictionary[attributesDateKey] = [NSData dataWithBytes:&date length:sizeof(date)];
+                [fm setAttributes:@{extendedAttributesKey : dictionary} ofItemAtPath:filePath error:NULL];
             }
         }
     }
