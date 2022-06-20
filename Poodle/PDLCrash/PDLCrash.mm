@@ -12,6 +12,7 @@
 #import <cxxabi.h>
 #import "PDLSystemImage.h"
 #import "PDLSharedCache.h"
+#import "PDLIPS2Crash.h"
 
 typedef NS_ENUM(NSUInteger, PDLCrashType) {
     PDLCrashTypeCrash,
@@ -163,7 +164,8 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
 - (instancetype)initWithString:(NSString *)string {
     self = [super init];
     if (self) {
-        _string = [string copy];
+        NSString *crashString = [PDLIPS2Crash crashString:string];
+        _string = crashString ?: [string copy];
     }
     return self;
 }
@@ -696,11 +698,10 @@ typedef NS_ENUM(NSUInteger, PDLCrashType) {
     }
 
     BOOL symbolicated = symbolicatedCount > 0;
-    if (symbolicated) {
-        self.symbolicatedLocations = symbolicatedLocations;
-        self.symbolicatedString = symbolicatedString;
-        self.symbolicatedCount = symbolicatedCount;
-    }
+
+    self.symbolicatedLocations = symbolicatedLocations;
+    self.symbolicatedString = symbolicatedString;
+    self.symbolicatedCount = symbolicatedCount;
 
     return symbolicated;
 }

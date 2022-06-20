@@ -321,6 +321,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         PoodleSubspec(s, 'PDLColor', platform_ios)
 
         PoodleSubspec(s, 'PDLCrash', platform_universal) do |ss|
+            ss.exclude_files = base + 'PDLCrash/**/main.m'
             ss.dependency pod_name + '/PDLSystemImage'
             ss.dependency pod_name + '/PDLSharedCache'
         end
