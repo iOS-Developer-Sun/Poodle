@@ -1,0 +1,3 @@
+[submodule "Poodle/PDLCrash/ips2crash"]
+	path = Poodle/PDLCrash/ips2crash
+	url = https://github.com/iOS-Developer-Sun/ips2crash.git

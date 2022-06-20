@@ -476,6 +476,68 @@
 		B8E8204E25C10A3A00204009 /* PDLReuseItemManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E81E3325C109D900204009 /* PDLReuseItemManager.h */; };
 		C0080DC9276E5ECF00510D6A /* PDLDYLDSharedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */; };
 		C0080DCA276E5EFE00510D6A /* PDLDYLDSharedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */; };
+		C00AC7B0283E1D25006A2BDA /* NSArray+WBExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A9283E1CBA006A2BDA /* NSArray+WBExtensions.m */; };
+		C00AC7B1283E1D2C006A2BDA /* NSArray+WBExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A9283E1CBA006A2BDA /* NSArray+WBExtensions.m */; };
+		C00AC7B2283E1D30006A2BDA /* NSDictionary+WBExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7AA283E1CBA006A2BDA /* NSDictionary+WBExtensions.m */; };
+		C00AC7B3283E1D33006A2BDA /* NSDictionary+WBExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7AA283E1CBA006A2BDA /* NSDictionary+WBExtensions.m */; };
+		C00AC7B5283E1D41006A2BDA /* IPSThreadFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A0283E1CBA006A2BDA /* IPSThreadFrame.m */; };
+		C00AC7B6283E1D41006A2BDA /* IPSDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC77A283E1CB9006A2BDA /* IPSDateFormatter.m */; };
+		C00AC7B7283E1D41006A2BDA /* IPSError.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC774283E1CB9006A2BDA /* IPSError.m */; };
+		C00AC7B8283E1D41006A2BDA /* IPSReport.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC77F283E1CB9006A2BDA /* IPSReport.m */; };
+		C00AC7B9283E1D41006A2BDA /* IPSTermination.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A3283E1CBA006A2BDA /* IPSTermination.m */; };
+		C00AC7BA283E1D41006A2BDA /* IPSThreadInstructionStream.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC77C283E1CB9006A2BDA /* IPSThreadInstructionStream.m */; };
+		C00AC7BB283E1D41006A2BDA /* IPSCrashSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC783283E1CB9006A2BDA /* IPSCrashSummary.m */; };
+		C00AC7BC283E1D41006A2BDA /* IPSIncidentExceptionInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC789283E1CB9006A2BDA /* IPSIncidentExceptionInformation.m */; };
+		C00AC7BD283E1D41006A2BDA /* IPSBundleInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC79B283E1CBA006A2BDA /* IPSBundleInfo.m */; };
+		C00AC7BE283E1D41006A2BDA /* IPSSummarySerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC775283E1CB9006A2BDA /* IPSSummarySerialization.m */; };
+		C00AC7BF283E1D41006A2BDA /* IPSLegacyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC77B283E1CB9006A2BDA /* IPSLegacyInfo.m */; };
+		C00AC7C0283E1D41006A2BDA /* IPSException.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC786283E1CB9006A2BDA /* IPSException.m */; };
+		C00AC7C1283E1D41006A2BDA /* IPSIncident.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A5283E1CBA006A2BDA /* IPSIncident.m */; };
+		C00AC7C2283E1D41006A2BDA /* IPSIncidentHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC793283E1CBA006A2BDA /* IPSIncidentHeader.m */; };
+		C00AC7C3283E1D41006A2BDA /* IPSRegisterState.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC79F283E1CBA006A2BDA /* IPSRegisterState.m */; };
+		C00AC7C4283E1D41006A2BDA /* IPSThread.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC777283E1CB9006A2BDA /* IPSThread.m */; };
+		C00AC7C5283E1D41006A2BDA /* IPSExternalModificationSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A2283E1CBA006A2BDA /* IPSExternalModificationSummary.m */; };
+		C00AC7C6283E1D41006A2BDA /* IPSOperatingSystemVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC797283E1CBA006A2BDA /* IPSOperatingSystemVersion.m */; };
+		C00AC7C7283E1D41006A2BDA /* IPSThreadState.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC788283E1CB9006A2BDA /* IPSThreadState.m */; };
+		C00AC7C8283E1D41006A2BDA /* IPSExternalModificationStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC776283E1CB9006A2BDA /* IPSExternalModificationStatistics.m */; };
+		C00AC7C9283E1D41006A2BDA /* IPSSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC794283E1CBA006A2BDA /* IPSSummary.m */; };
+		C00AC7CA283E1D41006A2BDA /* IPSThreadInstructionState.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC787283E1CB9006A2BDA /* IPSThreadInstructionState.m */; };
+		C00AC7CB283E1D41006A2BDA /* IPSApplicationSpecificInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC778283E1CB9006A2BDA /* IPSApplicationSpecificInformation.m */; };
+		C00AC7CC283E1D41006A2BDA /* IPSImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A4283E1CBA006A2BDA /* IPSImage.m */; };
+		C00AC7CD283E1D41006A2BDA /* IPSIncidentDiagnosticMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC796283E1CBA006A2BDA /* IPSIncidentDiagnosticMessage.m */; };
+		C00AC7CE283E1D47006A2BDA /* IPSThreadFrame.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A0283E1CBA006A2BDA /* IPSThreadFrame.m */; };
+		C00AC7CF283E1D47006A2BDA /* IPSDateFormatter.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC77A283E1CB9006A2BDA /* IPSDateFormatter.m */; };
+		C00AC7D0283E1D47006A2BDA /* IPSError.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC774283E1CB9006A2BDA /* IPSError.m */; };
+		C00AC7D1283E1D47006A2BDA /* IPSReport.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC77F283E1CB9006A2BDA /* IPSReport.m */; };
+		C00AC7D2283E1D47006A2BDA /* IPSTermination.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A3283E1CBA006A2BDA /* IPSTermination.m */; };
+		C00AC7D3283E1D47006A2BDA /* IPSThreadInstructionStream.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC77C283E1CB9006A2BDA /* IPSThreadInstructionStream.m */; };
+		C00AC7D4283E1D47006A2BDA /* IPSCrashSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC783283E1CB9006A2BDA /* IPSCrashSummary.m */; };
+		C00AC7D5283E1D47006A2BDA /* IPSIncidentExceptionInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC789283E1CB9006A2BDA /* IPSIncidentExceptionInformation.m */; };
+		C00AC7D6283E1D47006A2BDA /* IPSBundleInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC79B283E1CBA006A2BDA /* IPSBundleInfo.m */; };
+		C00AC7D7283E1D47006A2BDA /* IPSSummarySerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC775283E1CB9006A2BDA /* IPSSummarySerialization.m */; };
+		C00AC7D8283E1D47006A2BDA /* IPSLegacyInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC77B283E1CB9006A2BDA /* IPSLegacyInfo.m */; };
+		C00AC7D9283E1D47006A2BDA /* IPSException.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC786283E1CB9006A2BDA /* IPSException.m */; };
+		C00AC7DA283E1D47006A2BDA /* IPSIncident.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A5283E1CBA006A2BDA /* IPSIncident.m */; };
+		C00AC7DB283E1D47006A2BDA /* IPSIncidentHeader.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC793283E1CBA006A2BDA /* IPSIncidentHeader.m */; };
+		C00AC7DC283E1D47006A2BDA /* IPSRegisterState.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC79F283E1CBA006A2BDA /* IPSRegisterState.m */; };
+		C00AC7DD283E1D47006A2BDA /* IPSThread.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC777283E1CB9006A2BDA /* IPSThread.m */; };
+		C00AC7DE283E1D47006A2BDA /* IPSExternalModificationSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A2283E1CBA006A2BDA /* IPSExternalModificationSummary.m */; };
+		C00AC7DF283E1D47006A2BDA /* IPSOperatingSystemVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC797283E1CBA006A2BDA /* IPSOperatingSystemVersion.m */; };
+		C00AC7E0283E1D47006A2BDA /* IPSThreadState.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC788283E1CB9006A2BDA /* IPSThreadState.m */; };
+		C00AC7E1283E1D47006A2BDA /* IPSExternalModificationStatistics.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC776283E1CB9006A2BDA /* IPSExternalModificationStatistics.m */; };
+		C00AC7E2283E1D47006A2BDA /* IPSSummary.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC794283E1CBA006A2BDA /* IPSSummary.m */; };
+		C00AC7E3283E1D47006A2BDA /* IPSThreadInstructionState.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC787283E1CB9006A2BDA /* IPSThreadInstructionState.m */; };
+		C00AC7E4283E1D47006A2BDA /* IPSApplicationSpecificInformation.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC778283E1CB9006A2BDA /* IPSApplicationSpecificInformation.m */; };
+		C00AC7E5283E1D47006A2BDA /* IPSImage.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7A4283E1CBA006A2BDA /* IPSImage.m */; };
+		C00AC7E6283E1D47006A2BDA /* IPSIncidentDiagnosticMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC796283E1CBA006A2BDA /* IPSIncidentDiagnosticMessage.m */; };
+		C00AC7E7283E1D50006A2BDA /* IPSImage+UserCode.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC76B283E1CB9006A2BDA /* IPSImage+UserCode.m */; };
+		C00AC7E8283E1D50006A2BDA /* IPSThreadState+RegisterDisplayName.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC76D283E1CB9006A2BDA /* IPSThreadState+RegisterDisplayName.m */; };
+		C00AC7E9283E1D50006A2BDA /* IPSReport+CrashRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC76C283E1CB9006A2BDA /* IPSReport+CrashRepresentation.m */; };
+		C00AC7EA283E1D56006A2BDA /* IPSImage+UserCode.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC76B283E1CB9006A2BDA /* IPSImage+UserCode.m */; };
+		C00AC7EB283E1D56006A2BDA /* IPSThreadState+RegisterDisplayName.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC76D283E1CB9006A2BDA /* IPSThreadState+RegisterDisplayName.m */; };
+		C00AC7EC283E1D56006A2BDA /* IPSReport+CrashRepresentation.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC76C283E1CB9006A2BDA /* IPSReport+CrashRepresentation.m */; };
+		C00AC7EF283E1E47006A2BDA /* PDLIPS2Crash.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7ED283E1E47006A2BDA /* PDLIPS2Crash.m */; };
+		C00AC7F0283E1E47006A2BDA /* PDLIPS2Crash.m in Sources */ = {isa = PBXBuildFile; fileRef = C00AC7ED283E1E47006A2BDA /* PDLIPS2Crash.m */; };
 		C010A6D927114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CA27114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m */; };
 		C010A6DA27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CB27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m */; };
 		C010A6DB27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CC27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m */; };
@@ -2794,6 +2856,69 @@
 		B8FC6DA122EFD979005B91DE /* libpdl_dynamic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_dynamic.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLDYLDSharedCache.m; sourceTree = "<group>"; };
 		C0080DC8276E5ECE00510D6A /* PDLDYLDSharedCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLDYLDSharedCache.h; sourceTree = "<group>"; };
+		C00AC767283E1CB9006A2BDA /* IPSImage+UserCode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IPSImage+UserCode.h"; sourceTree = "<group>"; };
+		C00AC768283E1CB9006A2BDA /* IPSReport+CrashRepresentation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IPSReport+CrashRepresentation.h"; sourceTree = "<group>"; };
+		C00AC769283E1CB9006A2BDA /* IPSThreadState+RegisterDisplayName.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "IPSThreadState+RegisterDisplayName.h"; sourceTree = "<group>"; };
+		C00AC76B283E1CB9006A2BDA /* IPSImage+UserCode.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "IPSImage+UserCode.m"; sourceTree = "<group>"; };
+		C00AC76C283E1CB9006A2BDA /* IPSReport+CrashRepresentation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "IPSReport+CrashRepresentation.m"; sourceTree = "<group>"; };
+		C00AC76D283E1CB9006A2BDA /* IPSThreadState+RegisterDisplayName.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "IPSThreadState+RegisterDisplayName.m"; sourceTree = "<group>"; };
+		C00AC774283E1CB9006A2BDA /* IPSError.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSError.m; sourceTree = "<group>"; };
+		C00AC775283E1CB9006A2BDA /* IPSSummarySerialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSSummarySerialization.m; sourceTree = "<group>"; };
+		C00AC776283E1CB9006A2BDA /* IPSExternalModificationStatistics.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSExternalModificationStatistics.m; sourceTree = "<group>"; };
+		C00AC777283E1CB9006A2BDA /* IPSThread.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSThread.m; sourceTree = "<group>"; };
+		C00AC778283E1CB9006A2BDA /* IPSApplicationSpecificInformation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSApplicationSpecificInformation.m; sourceTree = "<group>"; };
+		C00AC779283E1CB9006A2BDA /* IPSBundleInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSBundleInfo.h; sourceTree = "<group>"; };
+		C00AC77A283E1CB9006A2BDA /* IPSDateFormatter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSDateFormatter.m; sourceTree = "<group>"; };
+		C00AC77B283E1CB9006A2BDA /* IPSLegacyInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSLegacyInfo.m; sourceTree = "<group>"; };
+		C00AC77C283E1CB9006A2BDA /* IPSThreadInstructionStream.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSThreadInstructionStream.m; sourceTree = "<group>"; };
+		C00AC77D283E1CB9006A2BDA /* IPSIncidentDiagnosticMessage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSIncidentDiagnosticMessage.h; sourceTree = "<group>"; };
+		C00AC77E283E1CB9006A2BDA /* IPSOperatingSystemVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSOperatingSystemVersion.h; sourceTree = "<group>"; };
+		C00AC77F283E1CB9006A2BDA /* IPSReport.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSReport.m; sourceTree = "<group>"; };
+		C00AC780283E1CB9006A2BDA /* IPSSummary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSSummary.h; sourceTree = "<group>"; };
+		C00AC781283E1CB9006A2BDA /* IPSIncidentHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSIncidentHeader.h; sourceTree = "<group>"; };
+		C00AC782283E1CB9006A2BDA /* IPSExternalModificationSummary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSExternalModificationSummary.h; sourceTree = "<group>"; };
+		C00AC783283E1CB9006A2BDA /* IPSCrashSummary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSCrashSummary.m; sourceTree = "<group>"; };
+		C00AC784283E1CB9006A2BDA /* IPSThreadFrame.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSThreadFrame.h; sourceTree = "<group>"; };
+		C00AC785283E1CB9006A2BDA /* IPSRegisterState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSRegisterState.h; sourceTree = "<group>"; };
+		C00AC786283E1CB9006A2BDA /* IPSException.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSException.m; sourceTree = "<group>"; };
+		C00AC787283E1CB9006A2BDA /* IPSThreadInstructionState.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSThreadInstructionState.m; sourceTree = "<group>"; };
+		C00AC788283E1CB9006A2BDA /* IPSThreadState.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSThreadState.m; sourceTree = "<group>"; };
+		C00AC789283E1CB9006A2BDA /* IPSIncidentExceptionInformation.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSIncidentExceptionInformation.m; sourceTree = "<group>"; };
+		C00AC78A283E1CB9006A2BDA /* IPSIncident.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSIncident.h; sourceTree = "<group>"; };
+		C00AC78B283E1CB9006A2BDA /* IPSImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSImage.h; sourceTree = "<group>"; };
+		C00AC78C283E1CB9006A2BDA /* IPSObjectProtocol.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSObjectProtocol.h; sourceTree = "<group>"; };
+		C00AC78D283E1CB9006A2BDA /* IPSTermination.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSTermination.h; sourceTree = "<group>"; };
+		C00AC78E283E1CB9006A2BDA /* IPSApplicationSpecificInformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSApplicationSpecificInformation.h; sourceTree = "<group>"; };
+		C00AC78F283E1CB9006A2BDA /* IPSThread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSThread.h; sourceTree = "<group>"; };
+		C00AC790283E1CB9006A2BDA /* IPSExternalModificationStatistics.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSExternalModificationStatistics.h; sourceTree = "<group>"; };
+		C00AC791283E1CBA006A2BDA /* IPSSummarySerialization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSSummarySerialization.h; sourceTree = "<group>"; };
+		C00AC792283E1CBA006A2BDA /* IPSError.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSError.h; sourceTree = "<group>"; };
+		C00AC793283E1CBA006A2BDA /* IPSIncidentHeader.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSIncidentHeader.m; sourceTree = "<group>"; };
+		C00AC794283E1CBA006A2BDA /* IPSSummary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSSummary.m; sourceTree = "<group>"; };
+		C00AC795283E1CBA006A2BDA /* IPSReport.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSReport.h; sourceTree = "<group>"; };
+		C00AC796283E1CBA006A2BDA /* IPSIncidentDiagnosticMessage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSIncidentDiagnosticMessage.m; sourceTree = "<group>"; };
+		C00AC797283E1CBA006A2BDA /* IPSOperatingSystemVersion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSOperatingSystemVersion.m; sourceTree = "<group>"; };
+		C00AC798283E1CBA006A2BDA /* IPSThreadInstructionStream.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSThreadInstructionStream.h; sourceTree = "<group>"; };
+		C00AC799283E1CBA006A2BDA /* IPSDateFormatter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSDateFormatter.h; sourceTree = "<group>"; };
+		C00AC79A283E1CBA006A2BDA /* IPSLegacyInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSLegacyInfo.h; sourceTree = "<group>"; };
+		C00AC79B283E1CBA006A2BDA /* IPSBundleInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSBundleInfo.m; sourceTree = "<group>"; };
+		C00AC79C283E1CBA006A2BDA /* IPSThreadState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSThreadState.h; sourceTree = "<group>"; };
+		C00AC79D283E1CBA006A2BDA /* IPSException.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSException.h; sourceTree = "<group>"; };
+		C00AC79E283E1CBA006A2BDA /* IPSThreadInstructionState.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSThreadInstructionState.h; sourceTree = "<group>"; };
+		C00AC79F283E1CBA006A2BDA /* IPSRegisterState.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSRegisterState.m; sourceTree = "<group>"; };
+		C00AC7A0283E1CBA006A2BDA /* IPSThreadFrame.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSThreadFrame.m; sourceTree = "<group>"; };
+		C00AC7A1283E1CBA006A2BDA /* IPSCrashSummary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSCrashSummary.h; sourceTree = "<group>"; };
+		C00AC7A2283E1CBA006A2BDA /* IPSExternalModificationSummary.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSExternalModificationSummary.m; sourceTree = "<group>"; };
+		C00AC7A3283E1CBA006A2BDA /* IPSTermination.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSTermination.m; sourceTree = "<group>"; };
+		C00AC7A4283E1CBA006A2BDA /* IPSImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSImage.m; sourceTree = "<group>"; };
+		C00AC7A5283E1CBA006A2BDA /* IPSIncident.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = IPSIncident.m; sourceTree = "<group>"; };
+		C00AC7A6283E1CBA006A2BDA /* IPSIncidentExceptionInformation.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IPSIncidentExceptionInformation.h; sourceTree = "<group>"; };
+		C00AC7A9283E1CBA006A2BDA /* NSArray+WBExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSArray+WBExtensions.m"; sourceTree = "<group>"; };
+		C00AC7AA283E1CBA006A2BDA /* NSDictionary+WBExtensions.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSDictionary+WBExtensions.m"; sourceTree = "<group>"; };
+		C00AC7AB283E1CBA006A2BDA /* NSArray+WBExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSArray+WBExtensions.h"; sourceTree = "<group>"; };
+		C00AC7AC283E1CBA006A2BDA /* NSDictionary+WBExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSDictionary+WBExtensions.h"; sourceTree = "<group>"; };
+		C00AC7ED283E1E47006A2BDA /* PDLIPS2Crash.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLIPS2Crash.m; sourceTree = "<group>"; };
+		C00AC7EE283E1E47006A2BDA /* PDLIPS2Crash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLIPS2Crash.h; sourceTree = "<group>"; };
 		C010A6C327114D8300A785E9 /* PDLNonThreadSafeObserverAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverAction.h; sourceTree = "<group>"; };
 		C010A6C427114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverCriticalResource.h; sourceTree = "<group>"; };
 		C010A6C527114D8300A785E9 /* PDLNonThreadSafeObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserver.h; sourceTree = "<group>"; };
@@ -3661,8 +3786,11 @@
 		B84C840625CD3BF10086CD36 /* PDLCrash */ = {
 			isa = PBXGroup;
 			children = (
+				C00AC761283E1CB9006A2BDA /* ips2crash */,
 				B84C840725CD3C190086CD36 /* PDLCrash.h */,
 				B830D01E25F5D19B00A5614E /* PDLCrash.mm */,
+				C00AC7EE283E1E47006A2BDA /* PDLIPS2Crash.h */,
+				C00AC7ED283E1E47006A2BDA /* PDLIPS2Crash.m */,
 			);
 			path = PDLCrash;
 			sourceTree = "<group>";
@@ -4949,6 +5077,106 @@
 				B8E56EFA23D7001B008D2DA1 /* UIViewController+PDLTransitionAnimation */,
 			);
 			path = Poodle;
+			sourceTree = "<group>";
+		};
+		C00AC761283E1CB9006A2BDA /* ips2crash */ = {
+			isa = PBXGroup;
+			children = (
+				C00AC7A8283E1CBA006A2BDA /* Foundation + Extensions */,
+				C00AC773283E1CB9006A2BDA /* Model */,
+				C00AC762283E1CB9006A2BDA /* tool_ips2crash */,
+			);
+			path = ips2crash;
+			sourceTree = "<group>";
+		};
+		C00AC762283E1CB9006A2BDA /* tool_ips2crash */ = {
+			isa = PBXGroup;
+			children = (
+				C00AC766283E1CB9006A2BDA /* ips2crash */,
+			);
+			path = tool_ips2crash;
+			sourceTree = "<group>";
+		};
+		C00AC766283E1CB9006A2BDA /* ips2crash */ = {
+			isa = PBXGroup;
+			children = (
+				C00AC767283E1CB9006A2BDA /* IPSImage+UserCode.h */,
+				C00AC76B283E1CB9006A2BDA /* IPSImage+UserCode.m */,
+				C00AC768283E1CB9006A2BDA /* IPSReport+CrashRepresentation.h */,
+				C00AC76C283E1CB9006A2BDA /* IPSReport+CrashRepresentation.m */,
+				C00AC769283E1CB9006A2BDA /* IPSThreadState+RegisterDisplayName.h */,
+				C00AC76D283E1CB9006A2BDA /* IPSThreadState+RegisterDisplayName.m */,
+			);
+			path = ips2crash;
+			sourceTree = "<group>";
+		};
+		C00AC773283E1CB9006A2BDA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				C00AC78E283E1CB9006A2BDA /* IPSApplicationSpecificInformation.h */,
+				C00AC778283E1CB9006A2BDA /* IPSApplicationSpecificInformation.m */,
+				C00AC779283E1CB9006A2BDA /* IPSBundleInfo.h */,
+				C00AC79B283E1CBA006A2BDA /* IPSBundleInfo.m */,
+				C00AC7A1283E1CBA006A2BDA /* IPSCrashSummary.h */,
+				C00AC783283E1CB9006A2BDA /* IPSCrashSummary.m */,
+				C00AC799283E1CBA006A2BDA /* IPSDateFormatter.h */,
+				C00AC77A283E1CB9006A2BDA /* IPSDateFormatter.m */,
+				C00AC792283E1CBA006A2BDA /* IPSError.h */,
+				C00AC774283E1CB9006A2BDA /* IPSError.m */,
+				C00AC79D283E1CBA006A2BDA /* IPSException.h */,
+				C00AC786283E1CB9006A2BDA /* IPSException.m */,
+				C00AC790283E1CB9006A2BDA /* IPSExternalModificationStatistics.h */,
+				C00AC776283E1CB9006A2BDA /* IPSExternalModificationStatistics.m */,
+				C00AC782283E1CB9006A2BDA /* IPSExternalModificationSummary.h */,
+				C00AC7A2283E1CBA006A2BDA /* IPSExternalModificationSummary.m */,
+				C00AC78B283E1CB9006A2BDA /* IPSImage.h */,
+				C00AC7A4283E1CBA006A2BDA /* IPSImage.m */,
+				C00AC78A283E1CB9006A2BDA /* IPSIncident.h */,
+				C00AC7A5283E1CBA006A2BDA /* IPSIncident.m */,
+				C00AC77D283E1CB9006A2BDA /* IPSIncidentDiagnosticMessage.h */,
+				C00AC796283E1CBA006A2BDA /* IPSIncidentDiagnosticMessage.m */,
+				C00AC7A6283E1CBA006A2BDA /* IPSIncidentExceptionInformation.h */,
+				C00AC789283E1CB9006A2BDA /* IPSIncidentExceptionInformation.m */,
+				C00AC781283E1CB9006A2BDA /* IPSIncidentHeader.h */,
+				C00AC793283E1CBA006A2BDA /* IPSIncidentHeader.m */,
+				C00AC79A283E1CBA006A2BDA /* IPSLegacyInfo.h */,
+				C00AC77B283E1CB9006A2BDA /* IPSLegacyInfo.m */,
+				C00AC78C283E1CB9006A2BDA /* IPSObjectProtocol.h */,
+				C00AC77E283E1CB9006A2BDA /* IPSOperatingSystemVersion.h */,
+				C00AC797283E1CBA006A2BDA /* IPSOperatingSystemVersion.m */,
+				C00AC785283E1CB9006A2BDA /* IPSRegisterState.h */,
+				C00AC79F283E1CBA006A2BDA /* IPSRegisterState.m */,
+				C00AC795283E1CBA006A2BDA /* IPSReport.h */,
+				C00AC77F283E1CB9006A2BDA /* IPSReport.m */,
+				C00AC780283E1CB9006A2BDA /* IPSSummary.h */,
+				C00AC794283E1CBA006A2BDA /* IPSSummary.m */,
+				C00AC791283E1CBA006A2BDA /* IPSSummarySerialization.h */,
+				C00AC775283E1CB9006A2BDA /* IPSSummarySerialization.m */,
+				C00AC78D283E1CB9006A2BDA /* IPSTermination.h */,
+				C00AC7A3283E1CBA006A2BDA /* IPSTermination.m */,
+				C00AC78F283E1CB9006A2BDA /* IPSThread.h */,
+				C00AC777283E1CB9006A2BDA /* IPSThread.m */,
+				C00AC784283E1CB9006A2BDA /* IPSThreadFrame.h */,
+				C00AC7A0283E1CBA006A2BDA /* IPSThreadFrame.m */,
+				C00AC79E283E1CBA006A2BDA /* IPSThreadInstructionState.h */,
+				C00AC787283E1CB9006A2BDA /* IPSThreadInstructionState.m */,
+				C00AC798283E1CBA006A2BDA /* IPSThreadInstructionStream.h */,
+				C00AC77C283E1CB9006A2BDA /* IPSThreadInstructionStream.m */,
+				C00AC79C283E1CBA006A2BDA /* IPSThreadState.h */,
+				C00AC788283E1CB9006A2BDA /* IPSThreadState.m */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		C00AC7A8283E1CBA006A2BDA /* Foundation + Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				C00AC7AB283E1CBA006A2BDA /* NSArray+WBExtensions.h */,
+				C00AC7A9283E1CBA006A2BDA /* NSArray+WBExtensions.m */,
+				C00AC7AC283E1CBA006A2BDA /* NSDictionary+WBExtensions.h */,
+				C00AC7AA283E1CBA006A2BDA /* NSDictionary+WBExtensions.m */,
+			);
+			path = "Foundation + Extensions";
 			sourceTree = "<group>";
 		};
 		C010A6C227114D8300A785E9 /* PDLNonThreadSafeObserver */ = {
@@ -9098,7 +9326,38 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C00AC7DF283E1D47006A2BDA /* IPSOperatingSystemVersion.m in Sources */,
+				C00AC7E2283E1D47006A2BDA /* IPSSummary.m in Sources */,
+				C00AC7E5283E1D47006A2BDA /* IPSImage.m in Sources */,
+				C00AC7EC283E1D56006A2BDA /* IPSReport+CrashRepresentation.m in Sources */,
+				C00AC7DE283E1D47006A2BDA /* IPSExternalModificationSummary.m in Sources */,
+				C00AC7E0283E1D47006A2BDA /* IPSThreadState.m in Sources */,
+				C00AC7D7283E1D47006A2BDA /* IPSSummarySerialization.m in Sources */,
+				C00AC7CF283E1D47006A2BDA /* IPSDateFormatter.m in Sources */,
+				C00AC7DA283E1D47006A2BDA /* IPSIncident.m in Sources */,
+				C00AC7D2283E1D47006A2BDA /* IPSTermination.m in Sources */,
+				C00AC7D8283E1D47006A2BDA /* IPSLegacyInfo.m in Sources */,
+				C00AC7DB283E1D47006A2BDA /* IPSIncidentHeader.m in Sources */,
+				C00AC7B2283E1D30006A2BDA /* NSDictionary+WBExtensions.m in Sources */,
+				C00AC7EA283E1D56006A2BDA /* IPSImage+UserCode.m in Sources */,
 				B830D01F25F5D19B00A5614E /* PDLCrash.mm in Sources */,
+				C00AC7E4283E1D47006A2BDA /* IPSApplicationSpecificInformation.m in Sources */,
+				C00AC7D6283E1D47006A2BDA /* IPSBundleInfo.m in Sources */,
+				C00AC7DD283E1D47006A2BDA /* IPSThread.m in Sources */,
+				C00AC7D5283E1D47006A2BDA /* IPSIncidentExceptionInformation.m in Sources */,
+				C00AC7D0283E1D47006A2BDA /* IPSError.m in Sources */,
+				C00AC7E1283E1D47006A2BDA /* IPSExternalModificationStatistics.m in Sources */,
+				C00AC7D4283E1D47006A2BDA /* IPSCrashSummary.m in Sources */,
+				C00AC7CE283E1D47006A2BDA /* IPSThreadFrame.m in Sources */,
+				C00AC7E6283E1D47006A2BDA /* IPSIncidentDiagnosticMessage.m in Sources */,
+				C00AC7F0283E1E47006A2BDA /* PDLIPS2Crash.m in Sources */,
+				C00AC7B1283E1D2C006A2BDA /* NSArray+WBExtensions.m in Sources */,
+				C00AC7D1283E1D47006A2BDA /* IPSReport.m in Sources */,
+				C00AC7D9283E1D47006A2BDA /* IPSException.m in Sources */,
+				C00AC7D3283E1D47006A2BDA /* IPSThreadInstructionStream.m in Sources */,
+				C00AC7EB283E1D56006A2BDA /* IPSThreadState+RegisterDisplayName.m in Sources */,
+				C00AC7DC283E1D47006A2BDA /* IPSRegisterState.m in Sources */,
+				C00AC7E3283E1D47006A2BDA /* IPSThreadInstructionState.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -9150,6 +9409,7 @@
 			files = (
 				B85D461B240E861A00CBF758 /* pdl_lldb_hook.c in Sources */,
 				B88865FB24C03FB300D58BC7 /* NSObject+PDLMethod-arm.s in Sources */,
+				C00AC7CC283E1D41006A2BDA /* IPSImage.m in Sources */,
 				B85D461C240E861A00CBF758 /* pdl_mach_o_symbols.c in Sources */,
 				C010A6DB27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */,
 				B8795335248688D800798005 /* pdl_thread-x86_64.s in Sources */,
@@ -9166,7 +9426,9 @@
 				B842DD89267A0A0E00DD5A5F /* PDLSearchBarTableViewController.m in Sources */,
 				B85D4605240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-arm.s in Sources */,
 				B85D4606240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-arm64.s in Sources */,
+				C00AC7B5283E1D41006A2BDA /* IPSThreadFrame.m in Sources */,
 				B80A5AA0262527E0003EAA7D /* PDLDebug.m in Sources */,
+				C00AC7CB283E1D41006A2BDA /* IPSApplicationSpecificInformation.m in Sources */,
 				B88865FD24C03FB300D58BC7 /* NSObject+PDLMethod-x86_64.s in Sources */,
 				B85D4607240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-i386.s in Sources */,
 				B85D4608240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-x86_64.s in Sources */,
@@ -9174,6 +9436,7 @@
 				B85D4609240E85A600CBF758 /* NSObject+PDLSelectorProxy-arm.s in Sources */,
 				B85D460A240E85A600CBF758 /* NSObject+PDLSelectorProxy-arm64.s in Sources */,
 				B8795331248688D800798005 /* pdl_thread-arm.s in Sources */,
+				C00AC7B7283E1D41006A2BDA /* IPSError.m in Sources */,
 				B8795305248512A200798005 /* PDLBacktrace.m in Sources */,
 				B85D460B240E85A600CBF758 /* NSObject+PDLSelectorProxy-i386.s in Sources */,
 				B85D460C240E85A600CBF758 /* NSObject+PDLSelectorProxy-x86_64.s in Sources */,
@@ -9189,10 +9452,12 @@
 				B86BE6B1269556C000E90F06 /* JPEngine.m in Sources */,
 				B85D4613240E85A600CBF758 /* pdl_objc_message-i386.s in Sources */,
 				B85B447A24A0EC6200B25A3E /* pdl_allocation.m in Sources */,
+				C00AC7C0283E1D41006A2BDA /* IPSException.m in Sources */,
 				B85D4614240E85A600CBF758 /* pdl_objc_message-x86_64.s in Sources */,
 				B85D4615240E85A600CBF758 /* pdl_systemcall-arm.s in Sources */,
 				C010A6DF27114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.m in Sources */,
 				B877A617257F6FE000580C6E /* UIViewController+PDLExtension.m in Sources */,
+				C00AC7BC283E1D41006A2BDA /* IPSIncidentExceptionInformation.m in Sources */,
 				B8DEC4C424877D1800DB3D0E /* pdl_dispatch_backtrace.m in Sources */,
 				C010A6E227114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.m in Sources */,
 				B85D4616240E85A600CBF758 /* pdl_systemcall-arm64.s in Sources */,
@@ -9203,6 +9468,8 @@
 				B85D45BD240E859000CBF758 /* CADisplayLink+PDLExtension.m in Sources */,
 				B85D45BE240E859000CBF758 /* CAMediaTimingFunction+PDLExtension.m in Sources */,
 				B85D45BF240E859000CBF758 /* NSCache+PDLExtension.m in Sources */,
+				C00AC7BE283E1D41006A2BDA /* IPSSummarySerialization.m in Sources */,
+				C00AC7C6283E1D41006A2BDA /* IPSOperatingSystemVersion.m in Sources */,
 				B85D45C0240E859000CBF758 /* NSCharacterSet+PDLExtension.m in Sources */,
 				B85D45C1240E859000CBF758 /* NSDictionary+PDLObjectForKey.m in Sources */,
 				B858422C246B963E00AC3717 /* pdl_backtrace.m in Sources */,
@@ -9222,13 +9489,16 @@
 				B85D45C9240E859000CBF758 /* NSObject+PDLSelectorProxy.m in Sources */,
 				B8A6F5042546CA4000426AD1 /* PDLPageController.m in Sources */,
 				B85D45CA240E859000CBF758 /* NSObject+PDLThreadSafetifyProperty.m in Sources */,
+				C00AC7B6283E1D41006A2BDA /* IPSDateFormatter.m in Sources */,
 				B85D45CB240E859000CBF758 /* NSObject+PDLWeakifyUnsafeUnretainedProperty.m in Sources */,
 				B886661C2607808000458D3F /* PDLApplication.m in Sources */,
 				B85D45CC240E859000CBF758 /* NSThread+PDLExtension.m in Sources */,
 				B85D45CD240E859000CBF758 /* NSUserDefaults+PDLExtension.m in Sources */,
+				C00AC7BF283E1D41006A2BDA /* IPSLegacyInfo.m in Sources */,
 				B85D45CE240E859000CBF758 /* pdl_mach.m in Sources */,
 				B85D45CF240E859000CBF758 /* pdl_mach_o_const_symbols.m in Sources */,
 				B8795337248688D800798005 /* pdl_thread-arm64.s in Sources */,
+				C00AC7CA283E1D41006A2BDA /* IPSThreadInstructionState.m in Sources */,
 				B8672A5E259B1014008082E5 /* PDLSessionTaskStatisticsManager.m in Sources */,
 				B85D45D0240E859000CBF758 /* pdl_mach_o_symbol_pointer.m in Sources */,
 				B85D45D2240E859000CBF758 /* pdl_objc_message.m in Sources */,
@@ -9237,9 +9507,13 @@
 				B8795333248688D800798005 /* pdl_thread-i386.s in Sources */,
 				B85C3E44263945C80037EE57 /* pdl_vm.c in Sources */,
 				B852844C2551344200B74F87 /* PDLBacktraceRecordsItem.m in Sources */,
+				C00AC7C9283E1D41006A2BDA /* IPSSummary.m in Sources */,
+				C00AC7C2283E1D41006A2BDA /* IPSIncidentHeader.m in Sources */,
 				B85D45D5240E859000CBF758 /* pdl_spinlock.m in Sources */,
 				B85D45D6240E859000CBF758 /* PDLAddressQueryViewController.m in Sources */,
 				B85D45D7240E859000CBF758 /* PDLCollectionViewFlowLayout.m in Sources */,
+				C00AC7C5283E1D41006A2BDA /* IPSExternalModificationSummary.m in Sources */,
+				C00AC7E7283E1D50006A2BDA /* IPSImage+UserCode.m in Sources */,
 				B85D45D8240E859000CBF758 /* PDLDatabase.m in Sources */,
 				B8220D362681DFA4002018D8 /* dsc_extractor.cpp in Sources */,
 				B897B5B1260112B200696E06 /* PDLColor.m in Sources */,
@@ -9266,11 +9540,16 @@
 				B8A6F4F025428B7400426AD1 /* PDLFormViewCell.m in Sources */,
 				B8528195255132CA00B74F87 /* PDLBacktraceRecorder.m in Sources */,
 				B85D45E1240E859000CBF758 /* PDLFontViewController.m in Sources */,
+				C00AC7B9283E1D41006A2BDA /* IPSTermination.m in Sources */,
 				B85D45E2240E859000CBF758 /* PDLFormView.m in Sources */,
+				C00AC7BD283E1D41006A2BDA /* IPSBundleInfo.m in Sources */,
+				C00AC7B0283E1D25006A2BDA /* NSArray+WBExtensions.m in Sources */,
+				C00AC7B3283E1D33006A2BDA /* NSDictionary+WBExtensions.m in Sources */,
 				B8672A5D259B1014008082E5 /* PDLSessionTaskStatistics.m in Sources */,
 				C010A6D927114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */,
 				B85D45E3240E859000CBF758 /* PDLClassListViewController.m in Sources */,
 				B85D45E4240E859000CBF758 /* PDLClassViewController.m in Sources */,
+				C00AC7CD283E1D41006A2BDA /* IPSIncidentDiagnosticMessage.m in Sources */,
 				B8B7B5C9249CE7FE008D4604 /* pdl_list.c in Sources */,
 				B85D45E5240E859000CBF758 /* PDLImageListViewController.m in Sources */,
 				B88865F924C03FB300D58BC7 /* NSObject+PDLMethod-i386.s in Sources */,
@@ -9281,21 +9560,26 @@
 				B85D45E8240E859000CBF758 /* PDLKeyboardNotificationObserver.m in Sources */,
 				B85D45E9240E859000CBF758 /* PDLMemoryQueryViewController.m in Sources */,
 				C010A6DE27114D8300A785E9 /* PDLNonThreadSafeObserver.m in Sources */,
+				C00AC7B8283E1D41006A2BDA /* IPSReport.m in Sources */,
 				B864FA252523570300842343 /* PDLTask.m in Sources */,
 				B8A73D6B269821E700713B8B /* pdl_zombie.m in Sources */,
 				B8A6F5062546CA4000426AD1 /* PDLPageView.m in Sources */,
 				C0080DC9276E5ECF00510D6A /* PDLDYLDSharedCache.m in Sources */,
 				B83CAA78248B487E009C784A /* pdl_security.c in Sources */,
 				C010A6DA27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */,
+				C00AC7C7283E1D41006A2BDA /* IPSThreadState.m in Sources */,
 				B878E7B2260345EF00F0859F /* PDLOverlayWindow.m in Sources */,
 				B882967125D2ABD3006940F8 /* PDLBlock.m in Sources */,
 				B839DA832620306F00D07F6E /* NSObject+PDLDescription.m in Sources */,
+				C00AC7C1283E1D41006A2BDA /* IPSIncident.m in Sources */,
 				B85D45EF240E859000CBF758 /* PDLOpenUrlViewController.m in Sources */,
 				B879533E2487435D00798005 /* pdl_pthread_backtrace.c in Sources */,
 				B85D45F0240E859000CBF758 /* PDLPageControl.m in Sources */,
+				C00AC7E9283E1D50006A2BDA /* IPSReport+CrashRepresentation.m in Sources */,
 				B88668CE260783B300458D3F /* PDLFileSystem.m in Sources */,
 				B85D45F1240E859000CBF758 /* NSObject+PDLPrivate.m in Sources */,
 				B85D45F2240E859000CBF758 /* PDLResizableImageView.m in Sources */,
+				C00AC7BB283E1D41006A2BDA /* IPSCrashSummary.m in Sources */,
 				B85D45F3240E859000CBF758 /* NSArray+PDLSafeOperation.m in Sources */,
 				B879531F248685B000798005 /* pdl_thread.c in Sources */,
 				B8300F2225BEB61600A02412 /* PDLScrollPageViewController.m in Sources */,
@@ -9312,21 +9596,27 @@
 				B85D45F8240E859000CBF758 /* PDLScreenDebuggerWindow.m in Sources */,
 				B88865FF24C03FB300D58BC7 /* NSObject+PDLMethod-arm64.s in Sources */,
 				B85D45F9240E859000CBF758 /* PDLViewDebuggerWindow.m in Sources */,
+				C00AC7C3283E1D41006A2BDA /* IPSRegisterState.m in Sources */,
 				B85D45FA240E859000CBF758 /* PDLBoolPropertyDebugger.m in Sources */,
 				B85D45FB240E859000CBF758 /* PDLColorPropertyDebugger.m in Sources */,
+				C00AC7C4283E1D41006A2BDA /* IPSThread.m in Sources */,
 				B85D45FC240E859000CBF758 /* PDLFloatPropertyDebugger.m in Sources */,
 				B88865F324C02F1A00D58BC7 /* pdl_thread_storage.c in Sources */,
 				B8220D352681DFA4002018D8 /* dsc_iterator.cpp in Sources */,
 				B8528194255132CA00B74F87 /* PDLBacktraceRecord.m in Sources */,
 				C010A6E027114D8300A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */,
 				B85D45FD240E859000CBF758 /* PDLPropertyDebugger.m in Sources */,
+				C00AC7BA283E1D41006A2BDA /* IPSThreadInstructionStream.m in Sources */,
 				B85D45FE240E859000CBF758 /* PDLRectPropertyDebugger.m in Sources */,
+				C00AC7C8283E1D41006A2BDA /* IPSExternalModificationStatistics.m in Sources */,
 				B85D45FF240E859000CBF758 /* PDLSystemImage.m in Sources */,
 				B85D4600240E859000CBF758 /* PDLViewController.m in Sources */,
+				C00AC7EF283E1E47006A2BDA /* PDLIPS2Crash.m in Sources */,
 				B85D4601240E859000CBF758 /* UINavigationController+PDLLongPressPop.m in Sources */,
 				B85D4602240E859000CBF758 /* UIScreen+PDLExtension.m in Sources */,
 				B85D4603240E859000CBF758 /* UIViewController+PDLNavigationBar.m in Sources */,
 				B85D4604240E859000CBF758 /* UIViewController+PDLTransitionAnimation.m in Sources */,
+				C00AC7E8283E1D50006A2BDA /* IPSThreadState+RegisterDisplayName.m in Sources */,
 				B85D45A7240E84DA00CBF758 /* AppDelegate.m in Sources */,
 				B85D45B8240E84DC00CBF758 /* main.m in Sources */,
 			);
