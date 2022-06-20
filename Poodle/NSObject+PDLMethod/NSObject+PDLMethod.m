@@ -108,13 +108,7 @@ void *PDLMethodFullAfter(void) {
     return lr;
 }
 
-#pragma mark - public methods
-
-+ (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction {
-    return [self pdl_addInstanceMethodsBeforeAction:beforeAction afterAction:afterAction methodFilter:nil];
-}
-
-+ (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
+static NSInteger addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
 #ifdef __i386__
     return 0;
 #else
@@ -145,7 +139,7 @@ void *PDLMethodFullAfter(void) {
 
     ret = 0;
     unsigned int count = 0;
-    Method *methodList = class_copyMethodList(self, &count);
+    Method *methodList = class_copyMethodList(aClass, &count);
     for (unsigned int i = 0; i < count; i++) {
         Method method = methodList[i];
         SEL selector = method_getName(method);
@@ -153,7 +147,7 @@ void *PDLMethodFullAfter(void) {
             continue;
         }
 
-        BOOL result = pdl_intercept(self, selector, nil, ^IMP(BOOL exists, NSNumber **isStructRetNumber, Method method, void **data) {
+        BOOL result = pdl_intercept(aClass, selector, nil, ^IMP(BOOL exists, NSNumber **isStructRetNumber, Method method, void **data) {
             if (!exists) {
                 return NULL;
             }
@@ -180,6 +174,26 @@ void *PDLMethodFullAfter(void) {
     }
     return ret;
 #endif
+}
+
+#pragma mark - public methods
+
++ (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction {
+    return [self pdl_addInstanceMethodsBeforeAction:beforeAction afterAction:afterAction methodFilter:nil];
+}
+
++ (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
+    return addInstanceMethodsActions(self, beforeAction, afterAction, methodFilter);
+}
+
+NSInteger pdl_addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(*_Nullable methodFilter)(SEL selector)) {
+    BOOL(^_Nullable filter)(SEL selector) = nil;
+    if (methodFilter) {
+        filter = ^BOOL(SEL selector) {
+            return methodFilter(selector);
+        };
+    }
+    return addInstanceMethodsActions(aClass, beforeAction, afterAction, filter);
 }
 
 @end

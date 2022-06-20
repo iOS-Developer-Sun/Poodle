@@ -112,7 +112,7 @@
     static id sharedInstance = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-#if TARGET_OS_IPHONE
+#if TARGET_OS_IPHONE && !TARGET_OS_SIMULATOR
         sharedInstance = [[self alloc] init];
 #endif
     });
@@ -127,21 +127,29 @@
         NSString *systemCachePath = @"/System/Library/Caches/com.apple.dyld";
         NSError *error = nil;
         NSArray *filenames = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:systemCachePath error:&error];
+        NSMutableArray *cacheFiles = [NSMutableArray array];
+        for (NSString *filename in filenames) {
+            if (filename.pathExtension.length == 0) {
+                [cacheFiles addObject:filename];
+            }
+        }
+
         NSString *path = nil;
-        if (filenames.count != 0) {
-            if (filenames.count == 1) {
-                path = [systemCachePath stringByAppendingPathComponent:filenames.firstObject];
+        if (cacheFiles.count != 0) {
+            if (cacheFiles.count == 1) {
+                path = [systemCachePath stringByAppendingPathComponent:cacheFiles.firstObject];
             } else {
                 struct mach_header *header = pdl_execute_header();
                 NSString *arch = [self.class archWithHeader:header];
-                if (arch) {
-                    NSString *file = [NSString stringWithFormat:@"/dyld_shared_cache_%@", arch];
+                NSString *file = [NSString stringWithFormat:@"dyld_shared_cache_%@", arch];
+                if (arch && [cacheFiles containsObject:file]) {
                     path = [systemCachePath stringByAppendingPathComponent:file];
-                    if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
-                        path = nil;
-                    }
                 }
             }
+        }
+
+        if (![[NSFileManager defaultManager] fileExistsAtPath:path]) {
+            path = nil;
         }
         _systemCacheFile = path;
 
