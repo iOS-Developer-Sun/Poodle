@@ -498,7 +498,8 @@ static void pdl_handleTouches(__unsafe_unretained UIEvent *event) {
         } else {
             defaultInitializer(layer);
         }
-        layer.position = locationInWindow;
+        CGPoint position = [touch.view.window.layer convertPoint:locationInWindow toLayer:rootLayer];
+        layer.position = position;
         layer.transform = CATransform3DMakeScale(0, 0, 1);
         [rootLayer addSublayer:layer];
 

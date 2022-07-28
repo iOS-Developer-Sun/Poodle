@@ -30,7 +30,7 @@
 
 - (NSString *)description {
     NSString *durationString = pdl_durationString(self.duration);
-    NSString *description = [NSString stringWithFormat:@" [%@ %@, %p, %@]", self.aClass, self.category ? [NSString stringWithFormat:@"(%s)", self.category] : @"", self.imp, durationString];
+    NSString *description = [NSString stringWithFormat:@" [%@%@, %p, %@]", self.aClass, self.category ? [NSString stringWithFormat:@" (%s)", self.category] : @"", self.imp, durationString];
     return [[super description] stringByAppendingString:description];
 }
 
