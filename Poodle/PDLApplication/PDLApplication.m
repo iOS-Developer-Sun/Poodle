@@ -480,9 +480,9 @@ static void pdl_handleTouches(__unsafe_unretained UIEvent *event) {
 
     NSSet *allTouches = [event allTouches];
     for (UITouch *touch in allTouches) {
-        CGPoint locationInWindow = [touch locationInView:touch.view.window];
-        UIColor *color = pdl_colorForTouch(touch);
         UIWindow *window = touch.window;
+        CGPoint locationInWindow = [touch locationInView:window];
+        UIColor *color = pdl_colorForTouch(touch);
         CALayer *rootLayer = [window valueForKeyPath:@"_rootLayer"];
         CGFloat length = 20;
 
@@ -498,7 +498,8 @@ static void pdl_handleTouches(__unsafe_unretained UIEvent *event) {
         } else {
             defaultInitializer(layer);
         }
-        CGPoint position = [touch.view.window.layer convertPoint:locationInWindow toLayer:rootLayer];
+
+        CGPoint position = [window.layer convertPoint:locationInWindow toLayer:rootLayer];
         layer.position = position;
         layer.transform = CATransform3DMakeScale(0, 0, 1);
         [rootLayer addSublayer:layer];
