@@ -19,7 +19,11 @@ _PDLImplementationInterceptorEntry:
     add     x10, x0, #0x28      // set x10 &(block->method)
     mov     x0, x1              // move arg1(self) to arg0
     mov     x1, x10             // move &(block->method) to arg1
+#ifdef __arm64e__
+    braaz   x9                  // call block->interceptorImplementation
+#else
     br      x9                  // call block->interceptorImplementation
+#endif
 
 _PDLImplementationInterceptorEntry_stret:
 

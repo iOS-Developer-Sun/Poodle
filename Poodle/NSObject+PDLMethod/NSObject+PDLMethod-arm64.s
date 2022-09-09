@@ -23,7 +23,11 @@ _PDLMethodEntry:
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     ldr     x9, [x1, #0x10]
     ldr     x1, [x1]
-    br      x9
+#ifdef __arm64e__
+    braaz  x9
+#else
+    br     x9
+#endif
 
 _PDLMethodEntry_stret:
     b   _PDLMethodEntry
@@ -35,7 +39,11 @@ _PDLMethodEntryFull:
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     ldr     x9, [x1, #0x10]
     ldr     x1, [x1]
+#ifdef __arm64e__
+    blraaz  x9
+#else
     blr     x9
+#endif
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
     bl      _PDLMethodFullAfter
     mov     x9, x0

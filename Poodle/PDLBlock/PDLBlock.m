@@ -13,6 +13,7 @@
 #import "NSObject+PDLDebug.h"
 #import "PDLBacktrace.h"
 #import "PDLSystemImage.h"
+#import "pdl_pac.h"
 
 @interface PDLBlockTracker : NSObject
 
@@ -315,6 +316,10 @@ NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol)) {
 
                 pdl_block_desc_object *desc = (void *)address;
                 void *copy = desc->copy;
+                if (pdl_ptrauth_strip(copy) != copy) {
+                    copy = pdl_ptrauth_auth_function(desc->copy, &desc->copy);
+                }
+
                 if (!copy) {
                     return;
                 }
@@ -325,11 +330,11 @@ NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol)) {
                     }
                 }
 
-                unsigned long value = (unsigned long)copy;
+                unsigned long value = (unsigned long)pdl_ptrauth_sign_unauthenticated(copy, NULL);
                 @synchronized (PDLBlockCopyMapLock) {
                     map[@(key)] = @(value);
                 }
-                desc->copy = (typeof(desc->copy))&PDLBlockDescCopy;
+                desc->copy = pdl_ptrauth_sign_unauthenticated(pdl_ptrauth_strip(&PDLBlockDescCopy), &desc->copy);
             }];
             ret = PDLBlockCopyMap.count;
             PDLBlockCopyMapLock = nil;

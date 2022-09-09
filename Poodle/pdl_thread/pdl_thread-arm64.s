@@ -24,7 +24,11 @@ _pdl_thread_fake:
     mov     x20, lr                 // store lr
     mov     fp, x0                  // fake frames
     mov     x0, x2                  // set arg
+#ifdef __arm64e__
+    blraaz  x1                      // start(arg)
+#else
     blr     x1                      // start(arg)
+#endif
     mov     fp, x19                 // recover fp
     mov     lr, x20                 // recover lr
     ldp     x19, x20, [sp, #0x10]   // restore caller registers

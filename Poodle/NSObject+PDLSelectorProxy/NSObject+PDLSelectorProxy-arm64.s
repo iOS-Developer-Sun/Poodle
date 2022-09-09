@@ -20,7 +20,11 @@ _NSObjectSelectorProxyEntry:
     bl     _NSObjectSelectorProxyForwarding
     mov    x9, x0
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
+#ifdef __arm64e__
+    braaz  x9
+#else
     br     x9
+#endif
 
 _NSObjectSelectorProxyEntry_stret:
     b _NSObjectSelectorProxyEntry

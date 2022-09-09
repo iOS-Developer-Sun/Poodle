@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (instancetype)initWithThread:(mach_port_t)thread;
 - (void)invalidate;
 
+- (NSArray <PDLBacktraceRecord *>*)allRecords;
 - (NSArray <PDLBacktraceRecord *>*)recordsFrom:(CFTimeInterval)from to:(CFTimeInterval)to;
 
 @end
