@@ -127,7 +127,9 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'NSObject+PDLExtension', platform_universal)
 
-        PoodleSubspec(s, 'NSObject+PDLImplementationInterceptor', platform_universal)
+        PoodleSubspec(s, 'NSObject+PDLImplementationInterceptor', platform_universal) do |ss|
+            ss.dependency pod_name + '/pdl_pac'
+        end
 
         PoodleSubspec(s, 'NSObject+PDLMethod', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_asm'
@@ -245,6 +247,8 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'pdl_os', platform_universal)
 
+        PoodleSubspec(s, 'pdl_pac', platform_universal)
+
         PoodleSubspec(s, 'pdl_pthread', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_mach_o_symbols'
         end
@@ -268,7 +272,9 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'pdl_systemcall', platform_universal)
 
-        PoodleSubspec(s, 'pdl_thread', platform_universal)
+        PoodleSubspec(s, 'pdl_thread', platform_universal) do |ss|
+            ss.dependency pod_name + '/pdl_pac'
+        end
 
         PoodleSubspec(s, 'pdl_thread_storage', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_utils'
@@ -314,6 +320,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/NSObject+PDLDebug'
             ss.dependency pod_name + '/pdl_thread_storage'
             ss.dependency pod_name + '/pdl_block'
+            ss.dependency pod_name + '/pdl_pac'
         end
 
         PoodleSubspec(s, 'PDLCollectionViewFlowLayout', platform_ios)

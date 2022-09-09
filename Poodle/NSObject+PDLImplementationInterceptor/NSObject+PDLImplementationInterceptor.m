@@ -7,6 +7,7 @@
 //
 
 #import "NSObject+PDLImplementationInterceptor.h"
+#import "pdl_pac.h"
 
 extern void PDLImplementationInterceptorEntry(void);
 extern void PDLImplementationInterceptorEntry_stret(void);
@@ -63,7 +64,7 @@ IMP pdl_implementation(struct PDLImplementationInterceptorData implementationInt
         };
 
         blockPointer = (struct NSObjectImplementationInterceptorBlock *)(__bridge void *)(block);
-        blockPointer->impl.FuncPtr = (void *)&PDLImplementationInterceptorEntry;
+        blockPointer->impl.FuncPtr = pdl_ptrauth_sign_unauthenticated(pdl_ptrauth_strip(&PDLImplementationInterceptorEntry), &blockPointer->impl.FuncPtr);
     } else {
         block = ^struct __block_impl (id self) {
             struct __block_impl ret;
@@ -74,7 +75,7 @@ IMP pdl_implementation(struct PDLImplementationInterceptorData implementationInt
         };
 
         blockPointer = (struct NSObjectImplementationInterceptorBlock *)(__bridge void *)(block);
-        blockPointer->impl.FuncPtr = (void *)&PDLImplementationInterceptorEntry_stret;
+        blockPointer->impl.FuncPtr = pdl_ptrauth_sign_unauthenticated(pdl_ptrauth_strip(&PDLImplementationInterceptorEntry_stret), &blockPointer->impl.FuncPtr);
     }
 
     IMP blockImplementation = imp_implementationWithBlock(block);

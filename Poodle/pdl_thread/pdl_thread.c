@@ -8,6 +8,7 @@
 
 #include "pdl_thread.h"
 #include "pdl_thread_define.h"
+#include "pdl_pac.h"
 
 extern void *pdl_thread_fake(void **frames, void *(*start)(void *), void *arg);
 
@@ -145,6 +146,7 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
         fp = *fp;
         if (fp && ISALIGNED(fp)) {
             lr = *(fp + 1);
+            lr = pdl_ptrauth_strip(lr);
         } else {
             lr = NULL;
         }

@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSMutableArray *records;
 @property (nonatomic, assign) mach_port_t thread;
 @property (nonatomic, assign) BOOL invalidated;
+@property (nonatomic, strong) id activeSelf;
 
 @end
 
@@ -30,11 +31,17 @@ static void *PDLBacktraceRecorderMain(void *data) {
     return NULL;
 }
 
+- (instancetype)init {
+    mach_port_t thread = mach_thread_self();
+    return [self initWithThread:thread];
+}
+
 - (instancetype)initWithThread:(mach_port_t)thread {
     self = [super init];
     if (self) {
         _thread = thread;
         _records = [NSMutableArray array];
+        _activeSelf = self;
         pthread_t t;
         pthread_create(&t, NULL, PDLBacktraceRecorderMain, (__bridge void *)(self));
     }
@@ -53,6 +60,7 @@ static void *PDLBacktraceRecorderMain(void *data) {
         usleep(1000 * 1000 / 60 / 2);
     }
 #endif
+    self.activeSelf = nil;
 }
 
 - (void)tick {
@@ -90,9 +98,15 @@ static void *PDLBacktraceRecorderMain(void *data) {
         pc = (void *)machine_context.__ss.__rip;
 #endif
 #ifdef __arm64__
+#ifdef __arm64e__
+        fp = (void *)__darwin_arm_thread_state64_get_fp(machine_context.__ss);
+        lr = (void *)__darwin_arm_thread_state64_get_lr(machine_context.__ss);
+        pc = (void *)__darwin_arm_thread_state64_get_pc(machine_context.__ss);
+#else
         fp = (void *)machine_context.__ss.__fp;
         lr = (void *)machine_context.__ss.__lr;
         pc = (void *)machine_context.__ss.__pc;
+#endif
 #endif
     }
     void *fp_lr[2] = {fp, lr};
@@ -112,6 +126,10 @@ static void *PDLBacktraceRecorderMain(void *data) {
     @synchronized (self.records) {
         [self.records addObject:record];
     }
+}
+
+- (NSArray <PDLBacktraceRecord *>*)allRecords {
+    return [self.records copy];
 }
 
 - (NSArray<PDLBacktraceRecord *> *)recordsFrom:(CFTimeInterval)from to:(CFTimeInterval)to {
