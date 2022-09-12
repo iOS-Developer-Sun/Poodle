@@ -8,6 +8,7 @@
 
 #import "pdl_objc_runtime.h"
 #import <mach-o/getsect.h>
+#import "pdl_pac.h"
 
 struct list_t {
     uint32_t entsizeAndFlags;
@@ -33,9 +34,18 @@ struct method_t {
     IMP imp;
 };
 
+struct small_method_t {
+    int32_t name;
+    int32_t types;
+    int32_t imp;
+};
+
 struct method_list_t {
     struct list_t list;
-    struct method_t methods[0];
+    union {
+        struct small_method_t small[0];
+        struct method_t big[0];
+    } methods;
 };
 
 struct property_t {
@@ -160,7 +170,7 @@ Class pdl_objc_runtime_category_get_class(pdl_objc_runtime_category category) {
 
 pdl_objc_runtime_method_list pdl_objc_runtime_category_get_class_method_list(pdl_objc_runtime_category category) {
     struct category_t *c = (struct category_t *)category;
-    return c->classMethods;
+    return pdl_ptrauth_strip(c->classMethods);
 }
 
 pdl_objc_runtime_method_list pdl_objc_runtime_category_get_instance_method_list(pdl_objc_runtime_category category) {
@@ -175,5 +185,12 @@ uint32_t pdl_objc_runtime_method_list_get_count(pdl_objc_runtime_method_list met
 
 Method pdl_objc_runtime_method_list_get_method(pdl_objc_runtime_method_list method_list, uint32_t index) {
     struct method_list_t *m = (struct method_list_t *)method_list;
-    return (Method)&(m->methods[index]);
+    Method method = NULL;
+    if (m->list.entsizeAndFlags & 0x80000000) {
+        method = (Method)(((void *)&(m->methods.small[index])) + 1);
+        method = pdl_ptrauth_sign_unauthenticated_data(method, (void *)0xc1ab);
+    } else {
+        method = (Method)&(m->methods.big[index]);
+    }
+    return method;
 }

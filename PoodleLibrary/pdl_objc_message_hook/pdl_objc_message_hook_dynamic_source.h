@@ -94,7 +94,11 @@ void pdl_objc_message_hook_dyld_objc_msgSend(void) {
      "adrp x9, _pdl_objc_message_hook_dyld_pointer_objc_msgSend@PAGE\n"
      "ldr x9, [x9, _pdl_objc_message_hook_dyld_pointer_objc_msgSend@PAGEOFF]\n"
      "cbz x9, LOriginal\n"
+#ifdef __arm64e__
+     "braaz x9\n"
+#else
      "br x9\n"
+#endif
      "LOriginal:\n"
      "b _objc_msgSend\n"
      );
@@ -107,7 +111,11 @@ void pdl_objc_message_hook_dyld_objc_msgSendSuper2(void) {
      "adrp x9, _pdl_objc_message_hook_dyld_pointer_objc_msgSendSuper2@PAGE\n"
      "ldr x9, [x9, _pdl_objc_message_hook_dyld_pointer_objc_msgSendSuper2@PAGEOFF]\n"
      "cbz x9, LOriginalSuper\n"
+#ifdef __arm64e__
+     "braaz x9\n"
+#else
      "br x9\n"
+#endif
      "LOriginalSuper:\n"
      "b _objc_msgSendSuper2\n"
      );

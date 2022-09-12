@@ -33,3 +33,12 @@ void *pdl_ptrauth_auth_function(void *value, __unused void *data) {
 #endif
     return ret;
 }
+
+void *pdl_ptrauth_sign_unauthenticated_data(void *value, __unused void *data) {
+    void *ret = value;
+#ifdef __arm64e__
+    ret = ptrauth_sign_unauthenticated(value, ptrauth_key_asdb, data);
+#endif
+    return ret;
+}
+
