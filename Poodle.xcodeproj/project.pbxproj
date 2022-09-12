@@ -523,6 +523,7 @@
 		C083BA2B28CB1BB50016E214 /* NSObject+PDLMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = C083BA2A28CB1BB50016E214 /* NSObject+PDLMethod.m */; };
 		C083BA2D28CB209B0016E214 /* PDLBacktrace.m in Sources */ = {isa = PBXBuildFile; fileRef = C083BA2C28CB209B0016E214 /* PDLBacktrace.m */; };
 		C0BA480228C9EF7B009B9675 /* PDLLoad.c in Sources */ = {isa = PBXBuildFile; fileRef = B8C7A0EB25FFAF740047EF59 /* PDLLoad.c */; };
+		C0DAB09A28CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DAB09928CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -2859,6 +2860,7 @@
 		C083BA2828CB12470016E214 /* NSObject+PDLImplementationInterceptor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLImplementationInterceptor.m"; sourceTree = "<group>"; };
 		C083BA2A28CB1BB50016E214 /* NSObject+PDLMethod.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLMethod.m"; sourceTree = "<group>"; };
 		C083BA2C28CB209B0016E214 /* PDLBacktrace.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLBacktrace.m; sourceTree = "<group>"; };
+		C0DAB09928CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLSelectorProxy.m"; sourceTree = "<group>"; };
 		C0DE25C327724A400039A556 /* PoodleLibraryMac.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = PoodleLibraryMac.podspec; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -5077,6 +5079,7 @@
 			children = (
 				C083BA2828CB12470016E214 /* NSObject+PDLImplementationInterceptor.m */,
 				C083BA2A28CB1BB50016E214 /* NSObject+PDLMethod.m */,
+				C0DAB09928CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m */,
 				C083BA2C28CB209B0016E214 /* PDLBacktrace.m */,
 				C083BA2128CB11DE0016E214 /* PoodleTests.h */,
 			);
@@ -10218,6 +10221,7 @@
 			files = (
 				C083BA2928CB12470016E214 /* NSObject+PDLImplementationInterceptor.m in Sources */,
 				C083BA2D28CB209B0016E214 /* PDLBacktrace.m in Sources */,
+				C0DAB09A28CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m in Sources */,
 				C083BA2B28CB1BB50016E214 /* NSObject+PDLMethod.m in Sources */,
 				C083BA2228CB11DE0016E214 /* PoodleTests.h in Sources */,
 			);
