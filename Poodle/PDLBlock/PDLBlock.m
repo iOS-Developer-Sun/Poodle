@@ -14,6 +14,7 @@
 #import "PDLBacktrace.h"
 #import "PDLSystemImage.h"
 #import "pdl_pac.h"
+#import "pdl_vm.h"
 
 @interface PDLBlockTracker : NSObject
 
@@ -334,7 +335,9 @@ NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol)) {
                 @synchronized (PDLBlockCopyMapLock) {
                     map[@(key)] = @(value);
                 }
-                desc->copy = pdl_ptrauth_sign_unauthenticated(pdl_ptrauth_strip(&PDLBlockDescCopy), &desc->copy);
+
+                pdl_vm_write((void **)&desc->copy, pdl_ptrauth_sign_unauthenticated(pdl_ptrauth_strip(&PDLBlockDescCopy), &desc->copy), NULL);
+
             }];
             ret = PDLBlockCopyMap.count;
             PDLBlockCopyMapLock = nil;

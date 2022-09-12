@@ -243,7 +243,9 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLPrivate'
         end
 
-        PoodleSubspec(s, 'pdl_objc_runtime', platform_universal)
+        PoodleSubspec(s, 'pdl_objc_runtime', platform_universal) do |ss|
+            ss.dependency pod_name + '/pdl_pac'
+        end
 
         PoodleSubspec(s, 'pdl_os', platform_universal)
 
@@ -321,6 +323,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/pdl_thread_storage'
             ss.dependency pod_name + '/pdl_block'
             ss.dependency pod_name + '/pdl_pac'
+            ss.dependency pod_name + '/pdl_vm'
         end
 
         PoodleSubspec(s, 'PDLCollectionViewFlowLayout', platform_ios)
@@ -372,6 +375,8 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/PDLDebug'
             ss.dependency pod_name + '/pdl_objc_runtime'
+            ss.dependency pod_name + '/pdl_pac'
+            ss.dependency pod_name + '/pdl_vm'
         end
 
         PoodleSubspec(s, 'PDLKeyboardNotificationObserver', platform_ios)
