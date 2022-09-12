@@ -1,5 +1,5 @@
 //
-//  NSObject+PDLImplementationInterceptor.m
+//  NSObject+NSObject+PDLSelectorProxy.m
 //  PoodleTests
 //
 //  Created by zijian.sun on 9/9/22.
@@ -7,34 +7,34 @@
 //
 
 #import "PoodleTests.h"
-#import "NSObject+PDLImplementationInterceptor.h"
+#import "NSObject+PDLSelectorProxy.h"
 
-@interface PDLImplementationInterceptor : NSObject
+@interface PDLSelectorProxy : NSObject
 
 @property (nonatomic) NSInteger i;
 @property (nonatomic) CGRect rect;
 
 @end
 
-@implementation PDLImplementationInterceptor
+@implementation PDLSelectorProxy
 
 @end
 
-@interface PDLImplementationInterceptorTest : XCTestCase
+@interface PDLSelectorProxyTest : XCTestCase
 
 @end
 
-@implementation PDLImplementationInterceptorTest
+@implementation PDLSelectorProxyTest
 
 static NSInteger i(__unsafe_unretained id self, SEL _cmd) {
-    PDLImplementationInterceptorRecover(_cmd);
+    IMP _imp = [self pdl_selectorProxyImplementationForSelector:_cmd];
     NSInteger ret = ((typeof(&i))_imp)(self, _cmd);
     ret += 10000;
     return ret;
 }
 
 static CGRect rect(__unsafe_unretained id self, SEL _cmd) {
-    PDLImplementationInterceptorRecover(_cmd);
+    IMP _imp = [self pdl_selectorProxyImplementationForSelector:_cmd];
     CGRect ret = ((typeof(&rect))_imp)(self, _cmd);
     ret.size.width += 10000;
     ret.size.height += 10000;
@@ -42,9 +42,7 @@ static CGRect rect(__unsafe_unretained id self, SEL _cmd) {
 }
 
 - (void)setUp {
-    BOOL ret = [PDLImplementationInterceptor pdl_interceptSelector:@selector(i) withInterceptorImplementation:(IMP)i];
-    ret = ret && [PDLImplementationInterceptor pdl_interceptSelector:@selector(rect) withInterceptorImplementation:(IMP)rect];
-    XCTAssert(ret);
+    [NSObject pdl_enableSelectorProxy];
 }
 
 - (void)tearDown {
@@ -54,7 +52,11 @@ static CGRect rect(__unsafe_unretained id self, SEL _cmd) {
 - (void)testExample {
     // This is an example of a functional test case.
     // Use XCTAssert and related functions to verify your tests produce the correct results.
-    PDLImplementationInterceptor *test = [[PDLImplementationInterceptor alloc] init];
+    PDLSelectorProxy *test = [[PDLSelectorProxy alloc] init];
+    BOOL ret = [test pdl_setSelectorProxyForSelector:@selector(i) withImplementation:(IMP)&i];
+    ret = ret && [test pdl_setSelectorProxyForSelector:@selector(rect) withImplementation:(IMP)&rect];
+    XCTAssert(ret);
+
     test.i = 0;
     test.rect = CGRectZero;
     NSInteger i = test.i;
