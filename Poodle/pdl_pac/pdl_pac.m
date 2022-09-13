@@ -10,18 +10,26 @@
 #include <ptrauth.h>
 #include <assert.h>
 
-void *pdl_ptrauth_strip(void *pointer) {
-    void *ret = pointer;
+void *pdl_ptrauth_strip_function(void *value) {
+    void *ret = value;
 #ifdef __arm64e__
-    ret = ptrauth_strip(ret, ptrauth_key_asia);
+    ret = ptrauth_strip(ret, ptrauth_key_asia); // xpaci value
 #endif
     return ret;
 }
 
-void *pdl_ptrauth_sign_unauthenticated(void *value, __unused void *data) {
+void *pdl_ptrauth_strip_data(void *value) {
     void *ret = value;
 #ifdef __arm64e__
-    ret = ptrauth_sign_unauthenticated(value, ptrauth_key_asia, data);
+    ret = ptrauth_strip(ret, ptrauth_key_asdb); // xpacd value
+#endif
+    return ret;
+}
+
+void *pdl_ptrauth_sign_unauthenticated_function(void *value, __unused void *data) {
+    void *ret = value;
+#ifdef __arm64e__
+    ret = ptrauth_sign_unauthenticated(value, ptrauth_key_asia, data); // pacia value, data
 #endif
     return ret;
 }
@@ -29,7 +37,7 @@ void *pdl_ptrauth_sign_unauthenticated(void *value, __unused void *data) {
 void *pdl_ptrauth_auth_function(void *value, __unused void *data) {
     void *ret = value;
 #ifdef __arm64e__
-    ret = ptrauth_auth_data(value, ptrauth_key_asia, data);
+    ret = ptrauth_auth_data(value, ptrauth_key_asia, data); // autia value, data
 #endif
     return ret;
 }
@@ -37,8 +45,15 @@ void *pdl_ptrauth_auth_function(void *value, __unused void *data) {
 void *pdl_ptrauth_sign_unauthenticated_data(void *value, __unused void *data) {
     void *ret = value;
 #ifdef __arm64e__
-    ret = ptrauth_sign_unauthenticated(value, ptrauth_key_asdb, data);
+    ret = ptrauth_sign_unauthenticated(value, ptrauth_key_asdb, data); // pacdb value, data
 #endif
     return ret;
 }
 
+void *pdl_ptrauth_auth_data(void *value, __unused void *data) {
+    void *ret = value;
+#ifdef __arm64e__
+    ret = ptrauth_auth_data(value, ptrauth_key_asdb, data); // autdb value, data
+#endif
+    return ret;
+}

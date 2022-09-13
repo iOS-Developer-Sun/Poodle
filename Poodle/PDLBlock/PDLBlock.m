@@ -317,7 +317,7 @@ NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol)) {
 
                 pdl_block_desc_object *desc = (void *)address;
                 void *copy = desc->copy;
-                if (pdl_ptrauth_strip(copy) != copy) {
+                if (pdl_ptrauth_strip_function(copy) != copy) {
                     copy = pdl_ptrauth_auth_function(desc->copy, &desc->copy);
                 }
 
@@ -331,12 +331,12 @@ NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol)) {
                     }
                 }
 
-                unsigned long value = (unsigned long)pdl_ptrauth_sign_unauthenticated(copy, NULL);
+                unsigned long value = (unsigned long)pdl_ptrauth_sign_unauthenticated_function(copy, NULL);
                 @synchronized (PDLBlockCopyMapLock) {
                     map[@(key)] = @(value);
                 }
 
-                pdl_vm_write((void **)&desc->copy, pdl_ptrauth_sign_unauthenticated(pdl_ptrauth_strip(&PDLBlockDescCopy), &desc->copy), NULL);
+                pdl_vm_write((void **)&desc->copy, pdl_ptrauth_sign_unauthenticated_function(pdl_ptrauth_strip_function(&PDLBlockDescCopy), &desc->copy), NULL);
 
             }];
             ret = PDLBlockCopyMap.count;

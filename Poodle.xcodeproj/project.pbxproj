@@ -507,6 +507,7 @@
 		C010A6F527114ECA00A785E9 /* PDLNonThreadSafePropertyObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C827114D8300A785E9 /* PDLNonThreadSafePropertyObserver.h */; };
 		C010A6F627114ECA00A785E9 /* PDLNonThreadSafePropertyObserverObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C927114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.h */; };
 		C010A6F727114ECA00A785E9 /* PDLNonThreadSafePropertyObserverProperty.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C727114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.h */; };
+		C019BB3828D0B80100914A69 /* pdl_pac.m in Sources */ = {isa = PBXBuildFile; fileRef = C019BB3728D0B80000914A69 /* pdl_pac.m */; };
 		C01B8B2A272A8DFF0083030A /* NSMutableDictionary+PDLThreadSafety.m in Sources */ = {isa = PBXBuildFile; fileRef = C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */; };
 		C01B8B34272A8E880083030A /* NSMutableDictionary+PDLThreadSafety.m in Sources */ = {isa = PBXBuildFile; fileRef = C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */; };
 		C01B8B35272A8E8C0083030A /* NSMutableDictionary+PDLThreadSafety.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C01B8B29272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.h */; };
@@ -2847,6 +2848,7 @@
 		C010A6D627114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeDictionaryObserver.m; sourceTree = "<group>"; };
 		C010A6D727114D8300A785E9 /* PDLNonThreadSafeObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverObject.h; sourceTree = "<group>"; };
 		C010A6D827114D8300A785E9 /* PDLNonThreadSafeObserverChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverChecker.h; sourceTree = "<group>"; };
+		C019BB3728D0B80000914A69 /* pdl_pac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_pac.m; sourceTree = "<group>"; };
 		C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+PDLThreadSafety.m"; sourceTree = "<group>"; };
 		C01B8B29272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+PDLThreadSafety.h"; sourceTree = "<group>"; };
 		C01B8B33272A8E710083030A /* libNSMutableDictionary+PDLThreadSafety.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSMutableDictionary+PDLThreadSafety.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5080,6 +5082,7 @@
 				C083BA2828CB12470016E214 /* NSObject+PDLImplementationInterceptor.m */,
 				C083BA2A28CB1BB50016E214 /* NSObject+PDLMethod.m */,
 				C0DAB09928CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m */,
+				C019BB3728D0B80000914A69 /* pdl_pac.m */,
 				C083BA2C28CB209B0016E214 /* PDLBacktrace.m */,
 				C083BA2128CB11DE0016E214 /* PoodleTests.h */,
 			);
@@ -10224,6 +10227,7 @@
 				C0DAB09A28CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m in Sources */,
 				C083BA2B28CB1BB50016E214 /* NSObject+PDLMethod.m in Sources */,
 				C083BA2228CB11DE0016E214 /* PoodleTests.h in Sources */,
+				C019BB3828D0B80100914A69 /* pdl_pac.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

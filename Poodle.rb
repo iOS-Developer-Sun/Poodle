@@ -20,6 +20,7 @@ def PoodleSubspec(s, name, platform)
     is_macos = hash[:is_macos]
     source_files = hash[:source_files]
     header_files = hash[:header_files]
+    preserve_paths = hash[:preserve_paths]
     library_files = hash[:library_files]
 
     if is_library
@@ -30,6 +31,7 @@ def PoodleSubspec(s, name, platform)
         base = s.pdl_hash[:base]
 
         ss.frameworks = 'Foundation'
+        ss.preserve_paths = preserve_paths
         if is_library
             ss.source_files = base + name + '/' + '**/' + header_files
             if is_macos
@@ -56,6 +58,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         # constants
         source_files = '*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'.freeze
         header_files = '*.{h,hpp}'.freeze
+        preserve_paths = '*.{md,sh,py,rb,plist}'.freeze
         library_files = '*.a'.freeze
         osx_version = '10.10'.freeze
         ios_version = '9.0'.freeze
@@ -70,6 +73,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             :is_macos => is_macos,
             :source_files => source_files,
             :header_files => header_files,
+            :preserve_paths => preserve_paths,
             :library_files => library_files,
         }
 
@@ -199,8 +203,8 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'pdl_lldb_hook', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_vm'
-            ss.dependency pod_name + '/PDLSystemImage'
             ss.dependency pod_name + '/pdl_utils'
+            ss.dependency pod_name + '/pdl_pac'
         end
 
         PoodleSubspec(s, 'pdl_mach', platform_universal)

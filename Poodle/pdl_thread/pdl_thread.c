@@ -146,7 +146,7 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
         fp = *fp;
         if (fp && ISALIGNED(fp)) {
             lr = *(fp + 1);
-            lr = pdl_ptrauth_strip(lr);
+            lr = pdl_ptrauth_strip_function(lr);
         } else {
             lr = NULL;
         }

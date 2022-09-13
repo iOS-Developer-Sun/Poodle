@@ -170,7 +170,7 @@ Class pdl_objc_runtime_category_get_class(pdl_objc_runtime_category category) {
 
 pdl_objc_runtime_method_list pdl_objc_runtime_category_get_class_method_list(pdl_objc_runtime_category category) {
     struct category_t *c = (struct category_t *)category;
-    return pdl_ptrauth_strip(c->classMethods);
+    return pdl_ptrauth_strip_function(c->classMethods);
 }
 
 pdl_objc_runtime_method_list pdl_objc_runtime_category_get_instance_method_list(pdl_objc_runtime_category category) {
