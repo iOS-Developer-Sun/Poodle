@@ -12,11 +12,14 @@
 extern "C" {
 #endif
 
-extern void *pdl_ptrauth_strip(void *pointer);
-extern void *pdl_ptrauth_sign_unauthenticated(void *value, void *data);
+extern void *pdl_ptrauth_strip_function(void *value);
+extern void *pdl_ptrauth_strip_data(void *value);
+
+extern void *pdl_ptrauth_sign_unauthenticated_function(void *value, void *data);
 extern void *pdl_ptrauth_auth_function(void *value, void *data);
 
 extern void *pdl_ptrauth_sign_unauthenticated_data(void *value, void *data);
+extern void *pdl_ptrauth_auth_data(void *value, void *data);
 
 #ifdef __cplusplus
 }

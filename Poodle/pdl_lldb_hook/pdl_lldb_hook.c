@@ -13,6 +13,7 @@
 #include <assert.h>
 #include "pdl_lldb_hook.h"
 #include "pdl_list.h"
+#include "pdl_pac.h"
 
 #ifdef __arm64__
 
@@ -232,9 +233,10 @@ char *pdl_lldb_command(void) {
 void *pdl_lldb_hooked_new_entry(void **hooked_function) {
     pdl_entry *entry = pdl_lldb_hook_current_entry();
     if (hooked_function) {
-        *hooked_function = entry->hooked;
+        *hooked_function = pdl_ptrauth_sign_unauthenticated_function(entry->hooked, NULL);
     }
-    return ((void *)&entry->nop) + PAGE_MAX_SIZE;
+    void *ret = ((void *)&entry->nop) + PAGE_MAX_SIZE;
+    return pdl_ptrauth_sign_unauthenticated_function(ret, NULL);
 }
 
 #else
