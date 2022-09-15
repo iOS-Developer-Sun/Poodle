@@ -1,0 +1,106 @@
+Release arm64e
+---------------- t ______PDL_THREAD_FAKE_END_____
+---------------- T _pdl_builtin_frame_address
+    start:                0x4 ______PDL_THREAD_FAKE_END_____
+    length:               0x188
+arm64e/pdl_thread.o:
+(__TEXT,__text) section
+______PDL_THREAD_FAKE_END_____:
+       4:	7f 23 03 d5	pacibsp
+       8:	fc 6f ba a9	stp	x28, x27, [sp, #-96]!
+       c:	fa 67 01 a9	stp	x26, x25, [sp, #16]
+      10:	f8 5f 02 a9	stp	x24, x23, [sp, #32]
+      14:	f6 57 03 a9	stp	x22, x21, [sp, #48]
+      18:	f4 4f 04 a9	stp	x20, x19, [sp, #64]
+      1c:	fd 7b 05 a9	stp	x29, x30, [sp, #80]
+      20:	fd 43 01 91	add	x29, sp, #80
+      24:	ff 43 00 d1	sub	sp, sp, #16
+      28:	f6 03 04 aa	mov	x22, x4
+      2c:	f3 03 03 aa	mov	x19, x3
+      30:	f4 03 02 aa	mov	x20, x2
+      34:	fa 03 01 aa	mov	x26, x1
+      38:	f7 03 00 aa	mov	x23, x0
+      3c:	08 00 00 90	adrp	x8, ___stack_chk_guard@GOTPAGE
+      40:	08 01 40 f9	ldr	x8, [x8, ___stack_chk_guard@GOTPAGEOFF]
+      44:	08 01 40 f9	ldr	x8, [x8]
+      48:	a8 83 1a f8	stur	x8, [x29, #-88]
+      4c:	3f 00 00 71	cmp	w1, #0
+      50:	28 14 9f 1a	csinc	w8, w1, wzr, ne
+      54:	9f 00 00 71	cmp	w4, #0
+      58:	fb d7 9f 1a	cset	w27, gt
+      5c:	08 d5 88 1a	cinc	w8, w8, gt
+      60:	9c 54 84 5a	cneg	w28, w4, mi
+      64:	08 79 1f 53	lsl	w8, w8, #1
+      68:	f5 4f 28 cb	sub	x21, sp, w8, uxtw #3
+      6c:	bf 02 00 91	mov	sp, x21
+      70:	00 00 80 52	mov	w0, #0
+      74:	00 00 00 94	bl	_pdl_builtin_return_address
+      78:	f8 03 00 aa	mov	x24, x0
+      7c:	00 00 80 52	mov	w0, #0
+      80:	00 00 00 94	bl	_pdl_builtin_frame_address
+      84:	f9 03 00 aa	mov	x25, x0
+      88:	e0 03 18 aa	mov	x0, x24
+      8c:	e1 03 19 aa	mov	x1, x25
+      90:	02 00 80 d2	mov	x2, #0
+      94:	03 00 b0 12	mov	w3, #2147483647
+      98:	04 00 80 d2	mov	x4, #0
+      9c:	00 00 00 94	bl	_pdl_thread_frames_with_filter
+      a0:	1f 00 1c 6b	cmp	w0, w28
+      a4:	6d 03 00 54	b.le	0x110
+      a8:	9b 03 1b 0b	add	w27, w28, w27
+      ac:	e0 03 1b aa	mov	x0, x27
+      b0:	00 00 00 94	bl	_pdl_builtin_frame_address
+      b4:	f9 03 00 aa	mov	x25, x0
+      b8:	e0 03 1b aa	mov	x0, x27
+      bc:	00 00 00 94	bl	_pdl_builtin_return_address
+      c0:	da 02 00 34	cbz	w26, 0x118
+      c4:	48 07 00 51	sub	w8, w26, #1
+      c8:	e9 03 1a 2a	mov	w9, w26
+      cc:	aa 42 00 91	add	x10, x21, #16
+      d0:	88 00 00 b4	cbz	x8, 0xe0
+      d4:	eb 02 40 f9	ldr	x11, [x23]
+      d8:	4a 2d 3f a9	stp	x10, x11, [x10, #-16]
+      dc:	07 00 00 14	b	0xf8
+      e0:	df 06 00 71	cmp	w22, #1
+      e4:	8b 00 00 54	b.lt	0xf4
+      e8:	4a 61 3f a9	stp	x10, x24, [x10, #-16]
+      ec:	59 01 00 a9	stp	x25, x0, [x10]
+      f0:	02 00 00 14	b	0xf8
+      f4:	59 01 3f a9	stp	x25, x0, [x10, #-16]
+      f8:	f7 22 00 91	add	x23, x23, #8
+      fc:	08 05 00 d1	sub	x8, x8, #1
+     100:	4a 41 00 91	add	x10, x10, #16
+     104:	29 05 00 d1	sub	x9, x9, #1
+     108:	49 fe ff b5	cbnz	x9, 0xd0
+     10c:	0d 00 00 14	b	0x140
+     110:	00 00 80 d2	mov	x0, #0
+     114:	9a fd ff 35	cbnz	w26, 0xc4
+     118:	df 06 00 71	cmp	w22, #1
+     11c:	cb 00 00 54	b.lt	0x134
+     120:	e8 03 15 aa	mov	x8, x21
+     124:	19 0d 01 f8	str	x25, [x8, #16]!
+     128:	a8 62 00 a9	stp	x8, x24, [x21]
+     12c:	68 00 80 52	mov	w8, #3
+     130:	03 00 00 14	b	0x13c
+     134:	b9 02 00 f9	str	x25, [x21]
+     138:	28 00 80 52	mov	w8, #1
+     13c:	a0 7a 28 f8	str	x0, [x21, x8, lsl #3]
+     140:	e0 03 15 aa	mov	x0, x21
+     144:	e1 03 14 aa	mov	x1, x20
+     148:	e2 03 13 aa	mov	x2, x19
+     14c:	00 00 00 94	bl	______PDL_THREAD_FAKE_BEGIN_____
+     150:	a8 83 5a f8	ldur	x8, [x29, #-88]
+     154:	09 00 00 90	adrp	x9, ___stack_chk_guard@GOTPAGE
+     158:	29 01 40 f9	ldr	x9, [x9, ___stack_chk_guard@GOTPAGEOFF]
+     15c:	29 01 40 f9	ldr	x9, [x9]
+     160:	3f 01 08 eb	cmp	x9, x8
+     164:	21 01 00 54	b.ne	0x188
+     168:	bf 43 01 d1	sub	sp, x29, #80
+     16c:	fd 7b 45 a9	ldp	x29, x30, [sp, #80]
+     170:	f4 4f 44 a9	ldp	x20, x19, [sp, #64]
+     174:	f6 57 43 a9	ldp	x22, x21, [sp, #48]
+     178:	f8 5f 42 a9	ldp	x24, x23, [sp, #32]
+     17c:	fa 67 41 a9	ldp	x26, x25, [sp, #16]
+     180:	fc 6f c6 a8	ldp	x28, x27, [sp], #96
+     184:	ff 0f 5f d6	retab
+     188:	00 00 00 94	bl	___stack_chk_fail

@@ -1,6 +1,6 @@
 Release armv7
-00000012 t ______PDL_THREAD_FAKE_END_____
-00000344 T _pdl_thread_frames
+-------- t ______PDL_THREAD_FAKE_END_____
+-------- T _pdl_builtin_frame_address
 armv7/pdl_thread.o:
 (__TEXT,__text) section
 ______PDL_THREAD_FAKE_END_____:
@@ -11,8 +11,8 @@ ______PDL_THREAD_FAKE_END_____:
       16:	47 f8 24 3c	str	r3, [r7, #-36]
       1a:	83 46	mov	r11, r0
       1c:	47 f8 28 2c	str	r2, [r7, #-40]
-      20:	42 f2 ee 60	movw	r0, :lower16:((10012-42)-4)
-      24:	c0 f2 00 00	movt	r0, :upper16:((10012-42)-4)
+      20:	45 f2 be 00	movw	r0, :lower16:((20716-42)-4)
+      24:	c0 f2 00 00	movt	r0, :upper16:((20716-42)-4)
       28:	0d 46	mov	r5, r1
       2a:	78 44	add	r0, pc
       2c:	b9 68	ldr	r1, [r7, #8]
@@ -109,8 +109,8 @@ ______PDL_THREAD_FAKE_END_____:
      12a:	57 f8 24 2c	ldr	r2, [r7, #-36]
      12e:	ff f7 67 ff	bl	______PDL_THREAD_FAKE_BEGIN_____
      132:	57 f8 20 1c	ldr	r1, [r7, #-32]
-     136:	42 f2 da 52	movw	r2, :lower16:((10012-318)-4)
-     13a:	c0 f2 00 02	movt	r2, :upper16:((10012-318)-4)
+     136:	44 f6 aa 72	movw	r2, :lower16:((20716-318)-4)
+     13a:	c0 f2 00 02	movt	r2, :upper16:((20716-318)-4)
      13e:	7a 44	add	r2, pc
      140:	12 68	ldr	r2, [r2]
      142:	12 68	ldr	r2, [r2]

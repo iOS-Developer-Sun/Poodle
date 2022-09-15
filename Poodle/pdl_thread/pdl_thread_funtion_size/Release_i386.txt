@@ -1,6 +1,6 @@
 Release i386
-00000009 t ______PDL_THREAD_FAKE_END_____
-00000377 T _pdl_thread_frames
+-------- t ______PDL_THREAD_FAKE_END_____
+-------- T _pdl_builtin_frame_address
     start:                0x9 ______PDL_THREAD_FAKE_END_____
     length:               0x170
 i386/pdl_thread.o:
@@ -16,7 +16,7 @@ ______PDL_THREAD_FAKE_END_____:
       17:	58	popl	%eax
       18:	8b 4d 18	movl	24(%ebp), %ecx
       1b:	8b 7d 0c	movl	12(%ebp), %edi
-      1e:	8b 80 5d 15 00 00	movl	5492-23(%eax), %eax
+      1e:	8b 80 45 50 00 00	movl	20572-23(%eax), %eax
       24:	31 f6	xorl	%esi, %esi
       26:	46	incl	%esi
       27:	85 ff	testl	%edi, %edi

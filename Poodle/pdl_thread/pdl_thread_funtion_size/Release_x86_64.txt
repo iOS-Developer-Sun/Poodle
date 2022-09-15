@@ -1,6 +1,6 @@
 Release x86_64
-0000000000000010 t ______PDL_THREAD_FAKE_END_____
-0000000000000376 T _pdl_thread_frames
+---------------- t ______PDL_THREAD_FAKE_END_____
+---------------- T _pdl_builtin_frame_address
     start:                0xa ______PDL_THREAD_FAKE_END_____
     length:               0x16e
 x86_64/pdl_thread.o:

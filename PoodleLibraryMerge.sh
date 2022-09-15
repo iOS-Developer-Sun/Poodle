@@ -7,6 +7,7 @@ fi
 
 scripts="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+mkdir -p "${scripts}/PoodleLibrary/"
 cd "${scripts}/PoodleLibrary/"
 mkdir -p "${TARGETNAME}"
 cd "${TARGETNAME}"
@@ -36,4 +37,5 @@ pdl_universal_library=macos/lib"${TARGETNAME}".a
 if [ -f "${pdl_macos_library}" ] ; then
     mkdir macos
     cp "${pdl_macos_library}" "${pdl_universal_library}"
+    libtool -static -D "${pdl_universal_library}" -o "${pdl_universal_library}" 2> /dev/null
 fi
