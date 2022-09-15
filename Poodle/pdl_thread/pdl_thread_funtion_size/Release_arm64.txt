@@ -1,8 +1,8 @@
 Release arm64
-0000000000000004 t ______PDL_THREAD_FAKE_END_____
-0000000000000416 T _pdl_thread_frames
+---------------- t ______PDL_THREAD_FAKE_END_____
+---------------- T _pdl_builtin_frame_address
     start:                0x4 ______PDL_THREAD_FAKE_END_____
-    length:               0x19c
+    length:               0x184
 arm64/pdl_thread.o:
 (__TEXT,__text) section
 ______PDL_THREAD_FAKE_END_____:
@@ -45,67 +45,61 @@ ______PDL_THREAD_FAKE_END_____:
       94:	04 00 80 d2	mov	x4, #0
       98:	00 00 00 94	bl	_pdl_thread_frames_with_filter
       9c:	1f 00 1c 6b	cmp	w0, w28
-      a0:	2d 04 00 54	b.le	0x124
+      a0:	6d 03 00 54	b.le	0x10c
       a4:	9b 03 1b 0b	add	w27, w28, w27
       a8:	e0 03 1b aa	mov	x0, x27
       ac:	00 00 00 94	bl	_pdl_builtin_frame_address
       b0:	f9 03 00 aa	mov	x25, x0
       b4:	e0 03 1b aa	mov	x0, x27
       b8:	00 00 00 94	bl	_pdl_builtin_return_address
-      bc:	9a 03 00 34	cbz	w26, 0x12c
-      c0:	08 00 80 d2	mov	x8, #0
-      c4:	ea 03 1a 2a	mov	w10, w26
-      c8:	49 07 00 51	sub	w9, w26, #1
-      cc:	29 ed 7c d3	lsl	x9, x9, #4
-      d0:	4a ed 7c d3	lsl	x10, x10, #4
-      d4:	ab 02 08 8b	add	x11, x21, x8
-      d8:	3f 01 08 eb	cmp	x9, x8
-      dc:	01 01 00 54	b.ne	0xfc
-      e0:	df 06 00 71	cmp	w22, #1
-      e4:	4b 01 00 54	b.lt	0x10c
-      e8:	ec 03 0b aa	mov	x12, x11
-      ec:	99 0d 01 f8	str	x25, [x12, #16]!
-      f0:	6c 61 00 a9	stp	x12, x24, [x11]
-      f4:	60 0d 00 f9	str	x0, [x11, #24]
-      f8:	06 00 00 14	b	0x110
-      fc:	6d 41 00 91	add	x13, x11, #16
-     100:	ec 02 40 f9	ldr	x12, [x23]
-     104:	6d 31 00 a9	stp	x13, x12, [x11]
-     108:	02 00 00 14	b	0x110
-     10c:	79 01 00 a9	stp	x25, x0, [x11]
-     110:	08 41 00 91	add	x8, x8, #16
-     114:	f7 22 00 91	add	x23, x23, #8
-     118:	5f 01 08 eb	cmp	x10, x8
-     11c:	c1 fd ff 54	b.ne	0xd4
-     120:	0d 00 00 14	b	0x154
-     124:	00 00 80 d2	mov	x0, #0
-     128:	da fc ff 35	cbnz	w26, 0xc0
-     12c:	df 06 00 71	cmp	w22, #1
-     130:	cb 00 00 54	b.lt	0x148
-     134:	e8 03 15 aa	mov	x8, x21
-     138:	19 0d 01 f8	str	x25, [x8, #16]!
-     13c:	a8 62 00 a9	stp	x8, x24, [x21]
-     140:	68 00 80 52	mov	w8, #3
-     144:	03 00 00 14	b	0x150
-     148:	b9 02 00 f9	str	x25, [x21]
-     14c:	28 00 80 52	mov	w8, #1
-     150:	a0 7a 28 f8	str	x0, [x21, x8, lsl #3]
-     154:	e0 03 15 aa	mov	x0, x21
-     158:	e1 03 14 aa	mov	x1, x20
-     15c:	e2 03 13 aa	mov	x2, x19
-     160:	00 00 00 94	bl	______PDL_THREAD_FAKE_BEGIN_____
-     164:	a8 83 5a f8	ldur	x8, [x29, #-88]
-     168:	09 00 00 90	adrp	x9, ___stack_chk_guard@GOTPAGE
-     16c:	29 01 40 f9	ldr	x9, [x9, ___stack_chk_guard@GOTPAGEOFF]
-     170:	29 01 40 f9	ldr	x9, [x9]
-     174:	3f 01 08 eb	cmp	x9, x8
-     178:	21 01 00 54	b.ne	0x19c
-     17c:	bf 43 01 d1	sub	sp, x29, #80
-     180:	fd 7b 45 a9	ldp	x29, x30, [sp, #80]
-     184:	f4 4f 44 a9	ldp	x20, x19, [sp, #64]
-     188:	f6 57 43 a9	ldp	x22, x21, [sp, #48]
-     18c:	f8 5f 42 a9	ldp	x24, x23, [sp, #32]
-     190:	fa 67 41 a9	ldp	x26, x25, [sp, #16]
-     194:	fc 6f c6 a8	ldp	x28, x27, [sp], #96
-     198:	c0 03 5f d6	ret
-     19c:	00 00 00 94	bl	___stack_chk_fail
+      bc:	da 02 00 34	cbz	w26, 0x114
+      c0:	48 07 00 51	sub	w8, w26, #1
+      c4:	e9 03 1a 2a	mov	w9, w26
+      c8:	aa 42 00 91	add	x10, x21, #16
+      cc:	88 00 00 b4	cbz	x8, 0xdc
+      d0:	eb 02 40 f9	ldr	x11, [x23]
+      d4:	4a 2d 3f a9	stp	x10, x11, [x10, #-16]
+      d8:	07 00 00 14	b	0xf4
+      dc:	df 06 00 71	cmp	w22, #1
+      e0:	8b 00 00 54	b.lt	0xf0
+      e4:	4a 61 3f a9	stp	x10, x24, [x10, #-16]
+      e8:	59 01 00 a9	stp	x25, x0, [x10]
+      ec:	02 00 00 14	b	0xf4
+      f0:	59 01 3f a9	stp	x25, x0, [x10, #-16]
+      f4:	f7 22 00 91	add	x23, x23, #8
+      f8:	08 05 00 d1	sub	x8, x8, #1
+      fc:	4a 41 00 91	add	x10, x10, #16
+     100:	29 05 00 d1	sub	x9, x9, #1
+     104:	49 fe ff b5	cbnz	x9, 0xcc
+     108:	0d 00 00 14	b	0x13c
+     10c:	00 00 80 d2	mov	x0, #0
+     110:	9a fd ff 35	cbnz	w26, 0xc0
+     114:	df 06 00 71	cmp	w22, #1
+     118:	cb 00 00 54	b.lt	0x130
+     11c:	e8 03 15 aa	mov	x8, x21
+     120:	19 0d 01 f8	str	x25, [x8, #16]!
+     124:	a8 62 00 a9	stp	x8, x24, [x21]
+     128:	68 00 80 52	mov	w8, #3
+     12c:	03 00 00 14	b	0x138
+     130:	b9 02 00 f9	str	x25, [x21]
+     134:	28 00 80 52	mov	w8, #1
+     138:	a0 7a 28 f8	str	x0, [x21, x8, lsl #3]
+     13c:	e0 03 15 aa	mov	x0, x21
+     140:	e1 03 14 aa	mov	x1, x20
+     144:	e2 03 13 aa	mov	x2, x19
+     148:	00 00 00 94	bl	______PDL_THREAD_FAKE_BEGIN_____
+     14c:	a8 83 5a f8	ldur	x8, [x29, #-88]
+     150:	09 00 00 90	adrp	x9, ___stack_chk_guard@GOTPAGE
+     154:	29 01 40 f9	ldr	x9, [x9, ___stack_chk_guard@GOTPAGEOFF]
+     158:	29 01 40 f9	ldr	x9, [x9]
+     15c:	3f 01 08 eb	cmp	x9, x8
+     160:	21 01 00 54	b.ne	0x184
+     164:	bf 43 01 d1	sub	sp, x29, #80
+     168:	fd 7b 45 a9	ldp	x29, x30, [sp, #80]
+     16c:	f4 4f 44 a9	ldp	x20, x19, [sp, #64]
+     170:	f6 57 43 a9	ldp	x22, x21, [sp, #48]
+     174:	f8 5f 42 a9	ldp	x24, x23, [sp, #32]
+     178:	fa 67 41 a9	ldp	x26, x25, [sp, #16]
+     17c:	fc 6f c6 a8	ldp	x28, x27, [sp], #96
+     180:	c0 03 5f d6	ret
+     184:	00 00 00 94	bl	___stack_chk_fail

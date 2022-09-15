@@ -48,4 +48,8 @@ if [[ $PLATFORM_NAME == "iphoneos" ]]; then
     arch="arm64"
     out="${folder}/${CONFIGURATION}_${arch}.txt"
     pdl_thread ${arch} ${file} ${sym} ${out}
+
+    arch="arm64e"
+    out="${folder}/${CONFIGURATION}_${arch}.txt"
+    pdl_thread ${arch} ${file} ${sym} ${out}
 fi
