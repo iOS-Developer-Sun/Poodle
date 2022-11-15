@@ -8,10 +8,6 @@
 
 #import "NSDictionary+PDLObjectForKey.h"
 
-#if !TARGET_OS_OSX
-__unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_empty(void) {}
-#endif
-
 @implementation NSDictionary (PDLObjectForKey)
 
 - (id)pdl_dictionary_objectForKey:(id <NSCopying>)key class:(Class)class {

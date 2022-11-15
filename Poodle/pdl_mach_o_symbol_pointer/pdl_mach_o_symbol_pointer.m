@@ -15,10 +15,6 @@
 #import "dsc_extractor.h"
 #import "pdl_mach_object.h"
 
-#if !TARGET_OS_OSX
-__unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_empty(void) {}
-#endif
-
 #if !TARGET_IPHONE_SIMULATOR
 
 pdl_mach_o_symbol *pdl_mach_o_const_symbol(struct mach_header *header, const char *symbol_name) {
