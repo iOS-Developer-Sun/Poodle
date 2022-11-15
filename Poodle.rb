@@ -395,6 +395,13 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLViewController'
         end
 
+        PoodleSubspec(s, 'PDLMemoryTracer', platform_universal) do |ss|
+            ss.requires_arc = false
+            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+            ss.dependency pod_name + '/NSObject+PDLSelectorProxy'
+            ss.dependency pod_name + '/pdl_utils'
+        end
+
         PoodleSubspec(s, 'PDLNonThreadSafeObserver', platform_universal) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/NSObject+PDLDebug'
@@ -568,6 +575,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLKeyboardNotificationObserver'
             ss.dependency pod_name + '/PDLLoad'
             ss.dependency pod_name + '/PDLMemoryQueryViewController'
+            ss.dependency pod_name + '/PDLMemoryTracer'
             ss.dependency pod_name + '/PDLNonThreadSafeObserver'
             ss.dependency pod_name + '/PDLOpenUrlViewController'
             ss.dependency pod_name + '/PDLOverlayWindow'
