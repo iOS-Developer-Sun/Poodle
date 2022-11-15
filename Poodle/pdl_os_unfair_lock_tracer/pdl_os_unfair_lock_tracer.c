@@ -19,8 +19,6 @@
 #import "pdl_dictionary.h"
 #import "pdl_array.h"
 
-__unused __attribute__((visibility("hidden"))) void the_table_of_contents_is_empty(void) {}
-
 #if !TARGET_IPHONE_SIMULATOR && PDL_OS_UNFAIR_LOCK_TRACER_ENABLED
 
 #define PDL_LOG_LOCK(lock, action) if (pdl_os_unfair_lock_log_enabled) { printf("PDL LOG LOCK %s: %p %u\n", #action, (lock), mach_thread_self()); }
