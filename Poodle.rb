@@ -398,7 +398,6 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         PoodleSubspec(s, 'PDLMemoryTracer', platform_universal) do |ss|
             ss.requires_arc = false
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
-            ss.dependency pod_name + '/NSObject+PDLSelectorProxy'
             ss.dependency pod_name + '/pdl_utils'
         end
 

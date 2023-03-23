@@ -31,7 +31,8 @@
         int ret = sysctl(mib, 4, &proc, &size, NULL, 0);
         NSDate *processStartDate = nil;
         if (ret == 0) {
-            processStartDate = [NSDate dateWithTimeIntervalSince1970:proc.kp_proc.p_starttime.tv_sec];
+            NSTimeInterval timeInterval = proc.kp_proc.p_starttime.tv_sec + proc.kp_proc.p_starttime.tv_usec * 1e-6;
+            processStartDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
         } else {
             processStartDate = [NSDate date];
         }
