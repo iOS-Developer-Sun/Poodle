@@ -34,7 +34,9 @@
 
 @property (readonly) NSString *uuidString;
 @property (readonly) NSString *cpuTypeString;
+@property (readonly) NSString *cpuSubtypeString;
 @property (readonly) NSString *crashLogString;
+@property (readonly) NSString *versionString;
 
 + (const void *)executeHeader;
 + (instancetype)executeSystemImage;

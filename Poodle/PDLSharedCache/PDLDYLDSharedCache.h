@@ -11,6 +11,7 @@
 @interface PDLDYLDSharedCache : NSObject
 
 @property (nonatomic, copy) NSString *destinationPath;
+@property (nonatomic, copy) NSString *tmpPath;
 
 + (instancetype)sharedCacheWithPath:(NSString *)path;
 - (BOOL)extract:(NSArray *)imageNames;

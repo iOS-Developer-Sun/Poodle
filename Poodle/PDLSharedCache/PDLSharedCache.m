@@ -69,6 +69,7 @@
 
 @property (nonatomic, copy, readonly) NSString *systemCacheFile;
 @property (nonatomic, copy, readonly) NSString *cachePath;
+@property (nonatomic, copy, readonly) NSString *tmpPath;
 @property (nonatomic, strong) NSMutableDictionary *images;
 
 @end
@@ -161,6 +162,11 @@
             [[NSFileManager defaultManager] createDirectoryAtPath:cachePath withIntermediateDirectories:YES attributes:nil error:nil];
         }
         _cachePath = cachePath;
+        NSString *tmpPath = [NSTemporaryDirectory() stringByAppendingPathComponent:@"PDLSharedCache"];
+        if (![[NSFileManager defaultManager] fileExistsAtPath:tmpPath isDirectory:&isDir]) {
+            [[NSFileManager defaultManager] createDirectoryAtPath:tmpPath withIntermediateDirectories:YES attributes:nil error:nil];
+        }
+        _tmpPath = tmpPath;
     }
     return self;
 }
@@ -170,15 +176,12 @@
         return NO;
     }
 
-    const char *imageNames[2];
-    imageNames[0] = imageName.UTF8String;
-    imageNames[1] = NULL;
-    int ret = dyld_shared_cache_extract_dylibs(self.systemCacheFile.UTF8String, self.cachePath.UTF8String, imageNames);
-    if (ret != 0) {
-        ret = [self extract:self.systemCacheFile to:self.cachePath imageNames:@[imageName]];
+    BOOL ret = [self dyldExtract:@[imageName]];
+    if (!ret) {
+        ret = [self pdlExtract:@[imageName]];
     }
 
-    return ret == 0;
+    return ret;
 }
 
 - (NSString *)sharedCachePathWithImageName:(NSString *)imageName {
@@ -323,8 +326,33 @@
     }
 }
 
-- (BOOL)extract:(NSString *)cachePath to:(NSString *)destinationPath imageNames:(NSArray *)imageNames {
+- (BOOL)dyldExtract:(NSArray *)imageNames {
+    NSString *cachePath = self.systemCacheFile;
+    NSString *destinationPath = self.cachePath;
+    NSString *tmpPath = self.tmpPath;
+    const char *names[imageNames.count + 1];
+    for (NSInteger i = 0; i < imageNames.count; i++) {
+        NSString *imageName = imageNames[i];
+        names[i] = imageName.UTF8String;
+    }
+    names[imageNames.count] = NULL;
+
+    BOOL ret = YES;
+    dyld_shared_cache_extract_dylibs(self.systemCacheFile.UTF8String, tmpPath.UTF8String, names);
+    for (NSInteger i = 0; i < imageNames.count; i++) {
+        NSString *file = imageNames[i];
+        NSString *destinationFile = [destinationPath stringByAppendingPathComponent:file];
+        ret = ret && [[NSFileManager defaultManager] moveItemAtPath:[tmpPath stringByAppendingPathComponent:file] toPath:destinationFile error:nil];
+    }
+    return ret;
+}
+
+- (BOOL)pdlExtract:(NSArray *)imageNames {
+    NSString *cachePath = self.systemCacheFile;
+    NSString *destinationPath = self.cachePath;
+    NSString *tmpPath = self.tmpPath;
     PDLDYLDSharedCache *cache = [PDLDYLDSharedCache sharedCacheWithPath:cachePath];
+    cache.tmpPath = tmpPath;
     cache.destinationPath = destinationPath;
     return [cache extract:imageNames];
 }

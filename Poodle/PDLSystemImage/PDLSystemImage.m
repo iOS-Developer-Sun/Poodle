@@ -365,6 +365,11 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     return crashLogString;
 }
 
+- (NSString *)versionString {
+    NSString *versionString = [NSString stringWithFormat:@"%@.%@.%@", @(self.majorVersion), @(self.minorVersion), @(self.revisionVersion)];
+    return versionString;
+}
+
 - (void)enumerateSymbolPointersSection:(const pdl_section *)section symbolAction:(void(^)(const pdl_section *section, const char *symbol_name, void **address))symbolAction {
     if (!section || !symbolAction) {
         return;
