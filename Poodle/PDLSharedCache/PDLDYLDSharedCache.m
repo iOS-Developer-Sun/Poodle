@@ -271,7 +271,6 @@
     NSString *destinationPath = self.destinationPath;
     NSString *file = image.path.lastPathComponent;
     NSString *destinationFile = [destinationPath stringByAppendingPathComponent:file];
-
     char *buffer = (char *)malloc((size_t)image.fileSize);
     uint64_t current_offset = 0;
     for (PDLDYLDSharedCacheSegment *segment in image.segments) {
@@ -552,7 +551,7 @@
 
     BOOL ret = NO;
     @autoreleasepool {
-        NSString *tmp = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString stringWithFormat:@"PDLDYLDSharedCache.tmp.%@", file]];
+        NSString *tmp = [self.tmpPath ?: NSTemporaryDirectory() stringByAppendingPathComponent:file];
         NSData *data = [NSData dataWithBytesNoCopy:buffer length:newSize];
         ret = [data writeToFile:tmp atomically:YES];
         if (ret) {

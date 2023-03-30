@@ -45,15 +45,8 @@
 - (void)loadData {
     [super loadData];
 
-    unsigned int outCount = 0;
-    NSMutableArray *imageArray = [NSMutableArray array];
-    const char **imageNames = objc_copyImageNames(&outCount);
-    for (unsigned int i = 0; i < outCount; i++) {
-        const char *imageName = imageNames[i];
-        [imageArray addObject:@(imageName)];
-    }
-    free(imageNames);
-    self.data = imageArray;
+    NSArray *systemImages = [PDLSystemImage systemImages];
+    self.data = systemImages;
     self.title = [@"Images" stringByAppendingFormat:@"(%@)", @(self.data.count)];
 }
 
@@ -85,9 +78,9 @@
             return;
         }
 
-        NSString *imageName = self.filteredData[indexPath.row];
-        PDLSystemImage *systemImage = [PDLSystemImage systemImageWithPath:imageName];
-        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:imageName message:systemImage.description   preferredStyle:UIAlertControllerStyleAlert];
+        PDLSystemImage *systemImage = self.filteredData[indexPath.row];
+        NSString *description = [NSString stringWithFormat:@"%@\n\nversion: %@\nuuid: %@\ncpu: %@-%@\naddress: %p-%p\nvmsize: %@\nvmAddressSlide: %p", systemImage.path, systemImage.versionString, systemImage.uuidString, systemImage.cpuTypeString, systemImage.cpuSubtypeString, (void *)systemImage.address, (void *)systemImage.endAddress, @(systemImage.vmsize), (void *)systemImage.slide];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:systemImage.name message:description   preferredStyle:UIAlertControllerStyleAlert];
         [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             ;
         }]];
@@ -107,23 +100,22 @@
     NSString *identifier = @"";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-        cell.textLabel.numberOfLines = 0;
-        cell.textLabel.font = [UIFont systemFontOfSize:10];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:identifier];
         UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longPressGestureRecognizer.delegate = self;
         [cell addGestureRecognizer:longPressGestureRecognizer];
     }
-    NSString *imageName = self.filteredData[indexPath.row];
-    cell.textLabel.text = imageName;
+    PDLSystemImage *image = self.filteredData[indexPath.row];
+    cell.textLabel.text = image.name;
+    cell.detailTextLabel.text = image.versionString;
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [super tableView:tableView didSelectRowAtIndexPath:indexPath];
 
-    NSString *imageName = self.filteredData[indexPath.row];
-    PDLClassListViewController *viewController = [[PDLClassListViewController alloc] initWithImageName:imageName];
+    PDLSystemImage *image = self.filteredData[indexPath.row];
+    PDLClassListViewController *viewController = [[PDLClassListViewController alloc] initWithImageName:image.path];
     [self.navigationController pushViewController:viewController animated:YES];
 }
 
