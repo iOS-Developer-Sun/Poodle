@@ -12,10 +12,10 @@
 #import "PDLNonThreadSafePropertyObserverProperty.h"
 #import "PDLNonThreadSafeObserver.h"
 #import "pdl_hook.h"
-#import "pdl_malloc.h"
 #import "PDLCrash.h"
 #import "pdl_mach_object.h"
 #import <mach-o/getsect.h>
+//#import "pdl_malloc.h"
 
 @implementation PDLNonThreadSafeSwiftVariableObserver
 
@@ -100,11 +100,7 @@ static id pdl_nonThreadSafeSwiftVariableAllocWithZone(__unsafe_unretained id sel
 
 #pragma mark - public methods
 
-extern void *$ss14_getSuperclassyyXlXpSgyXlXpF(void *);
-extern void *swift_getObjCClassFromObject(void *);
-extern const char *swift_getTypeName(void *, long);
 extern bool swift_isClassType(void *);
-extern void *swift_getObjectType(void *);
 extern void *swift_beginAccess(void *, void **, int8_t, int64_t);
 static void *(*pdl_swift_beginAccess_original)(void *, void **, int8_t, int64_t) = NULL;
 static void *pdl_swift_beginAccess(void *address, void **result, int8_t flags, int64_t reserved) {

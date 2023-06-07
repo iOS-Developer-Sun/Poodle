@@ -409,6 +409,8 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLBacktrace'
             ss.dependency pod_name + '/PDLCrash'
             ss.dependency pod_name + '/pdl_dispatch'
+            ss.dependency pod_name + '/pdl_hook'
+            ss.dependency pod_name + '/pdl_mach_object'
         end
 
         PoodleSubspec(s, 'PDLOpenUrlViewController', platform_ios) do |ss|
