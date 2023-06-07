@@ -22,7 +22,11 @@
 - (instancetype)initWithObject:(id)object {
     self = [super initWithObject:object];
     if (self) {
-        _dictionary = [[PDLNonThreadSafeDictionaryObserverDictionary alloc] initWithObserver:self identifier:nil];
+        PDLNonThreadSafeDictionaryObserverDictionary *dictionary = [[PDLNonThreadSafeDictionaryObserverDictionary alloc] initWithObserver:self identifier:nil];
+        if (!dictionary) {
+            return nil;
+        }
+        _dictionary = dictionary;
     }
     return self;
 }

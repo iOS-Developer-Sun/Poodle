@@ -23,6 +23,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (instancetype)initWithObserver:(PDLNonThreadSafeObserverObject *)observer identifier:(NSString * _Nullable)identifier;
 - (PDLNonThreadSafeObserverAction *)recordIsSetter:(BOOL)isSetter isInitializing:(BOOL)isInitializing;
++ (BOOL)recordsBacktrace;
 
 @end
 

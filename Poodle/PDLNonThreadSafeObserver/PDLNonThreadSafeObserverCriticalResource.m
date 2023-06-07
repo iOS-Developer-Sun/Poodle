@@ -75,6 +75,11 @@
     action.isInitializing = isInitializing;
     action.isSerialQueue = isSerialQueue;
     action.time = [[NSDate date] timeIntervalSinceDate:[PDLProcessInfo sharedInstance].processStartDate];
+    if ([self.class recordsBacktrace]) {
+        PDLBacktrace *backtrace = [[PDLBacktrace alloc] init];
+        [backtrace record:5];
+        action.backtrace = backtrace;
+    }
 
     @synchronized (self) {
         [_actions addObject:action];
@@ -94,6 +99,10 @@
     @synchronized (self) {
         return [_actions copy];
     }
+}
+
++ (BOOL)recordsBacktrace {
+    return NO;
 }
 
 @end
