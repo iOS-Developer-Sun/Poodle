@@ -59,9 +59,10 @@
     }
 
     NSMutableArray *filteredImages = [NSMutableArray array];
-    for (NSString *image in self.data) {
-        NSRange range = [image rangeOfString:string options:NSCaseInsensitiveSearch];
-        if (range.location == 0 && range.length == image.length) {
+    for (PDLSystemImage *image in self.data) {
+        NSString *name = image.name;
+        NSRange range = [name rangeOfString:string options:NSCaseInsensitiveSearch];
+        if (range.location == 0 && range.length == name.length) {
             [filteredImages insertObject:image atIndex:0];
         } else if (range.location != NSNotFound) {
             [filteredImages addObject:image];

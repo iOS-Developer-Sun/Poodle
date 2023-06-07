@@ -34,10 +34,6 @@
             _startTime = startTime;
             _duration = [[NSDate date] timeIntervalSinceDate:startTimeDate];
         }
-
-        if (_urlString.length == 0) {
-            free(NULL);
-        }
     }
     return self;
 }

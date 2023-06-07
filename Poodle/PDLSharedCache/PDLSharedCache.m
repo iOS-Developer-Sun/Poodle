@@ -176,6 +176,10 @@
         return NO;
     }
 
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 15) {
+        return NO;
+    }
+
     BOOL ret = [self dyldExtract:@[imageName]];
     if (!ret) {
         ret = [self pdlExtract:@[imageName]];
@@ -337,8 +341,8 @@
     }
     names[imageNames.count] = NULL;
 
-    BOOL ret = YES;
-    dyld_shared_cache_extract_dylibs(self.systemCacheFile.UTF8String, tmpPath.UTF8String, names);
+    int result = dyld_shared_cache_extract_dylibs(cachePath.UTF8String, tmpPath.UTF8String, names);
+    BOOL ret = result == 0;
     for (NSInteger i = 0; i < imageNames.count; i++) {
         NSString *file = imageNames[i];
         NSString *destinationFile = [destinationPath stringByAppendingPathComponent:file];
@@ -355,6 +359,12 @@
     cache.tmpPath = tmpPath;
     cache.destinationPath = destinationPath;
     return [cache extract:imageNames];
+}
+
+- (BOOL)dump:(NSString *)path error:(NSError **)error {
+    NSString *systemCachePath = @"/System/Library/Caches/com.apple.dyld";
+    BOOL ret = [[NSFileManager defaultManager] copyItemAtPath:systemCachePath toPath:[path stringByAppendingPathComponent:systemCachePath.lastPathComponent] error:error];
+    return ret;
 }
 
 @end

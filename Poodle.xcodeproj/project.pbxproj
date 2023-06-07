@@ -526,6 +526,12 @@
 		C0962ACE292336AF00A838D1 /* PDLMemoryTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */; };
 		C0962AD8292336D900A838D1 /* PDLMemoryTracer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0962ACC292336AF00A838D1 /* PDLMemoryTracer.h */; };
 		C0962AD9292336DE00A838D1 /* PDLMemoryTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		C0AEE43C2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE43A2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m */; };
+		C0AEE43D2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE43A2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m */; };
+		C0AEE4402A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE43F2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m */; };
+		C0AEE4412A2DB4C400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE43F2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m */; };
+		C0AEE4442A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE4422A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m */; };
+		C0AEE4452A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE4422A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m */; };
 		C0BA480228C9EF7B009B9675 /* PDLLoad.c in Sources */ = {isa = PBXBuildFile; fileRef = B8C7A0EB25FFAF740047EF59 /* PDLLoad.c */; };
 		C0DAB09A28CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DAB09928CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m */; };
 /* End PBXBuildFile section */
@@ -2885,6 +2891,12 @@
 		C0962ACC292336AF00A838D1 /* PDLMemoryTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLMemoryTracer.h; sourceTree = "<group>"; };
 		C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLMemoryTracer.m; sourceTree = "<group>"; };
 		C0962AD7292336BD00A838D1 /* libPDLMemoryTracer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLMemoryTracer.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0AEE43A2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeSwiftVariableObserver.m; sourceTree = "<group>"; };
+		C0AEE43B2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeSwiftVariableObserver.h; sourceTree = "<group>"; };
+		C0AEE43E2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeSwiftVariableObserverObject.h; sourceTree = "<group>"; };
+		C0AEE43F2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeSwiftVariableObserverObject.m; sourceTree = "<group>"; };
+		C0AEE4422A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeSwiftVariableObserverVariable.m; sourceTree = "<group>"; };
+		C0AEE4432A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeSwiftVariableObserverVariable.h; sourceTree = "<group>"; };
 		C0DAB09928CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLSelectorProxy.m"; sourceTree = "<group>"; };
 		C0DE25C327724A400039A556 /* PoodleLibraryMac.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = PoodleLibraryMac.podspec; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -5060,6 +5072,7 @@
 				C010A6D727114D8300A785E9 /* PDLNonThreadSafeObserverObject.h */,
 				C010A6CE27114D8300A785E9 /* PDLNonThreadSafeObserverObject.m */,
 				C010A6C627114D8300A785E9 /* PDLNonThreadSafePropertyObserver */,
+				C0AEE4392A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver */,
 			);
 			path = PDLNonThreadSafeObserver;
 			sourceTree = "<group>";
@@ -5128,6 +5141,19 @@
 				C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */,
 			);
 			path = PDLMemoryTracer;
+			sourceTree = "<group>";
+		};
+		C0AEE4392A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver */ = {
+			isa = PBXGroup;
+			children = (
+				C0AEE43B2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.h */,
+				C0AEE43A2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m */,
+				C0AEE43E2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.h */,
+				C0AEE43F2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m */,
+				C0AEE4432A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.h */,
+				C0AEE4422A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m */,
+			);
+			path = PDLNonThreadSafeSwiftVariableObserver;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -9387,6 +9413,7 @@
 				B85D461E240E861A00CBF758 /* pdl_os_unfair_lock_tracer.c in Sources */,
 				B8E54554253823EB004C1033 /* pdl_objc_message_hook.m in Sources */,
 				B85D461F240E861A00CBF758 /* pdl_pthread_lock_tracer.c in Sources */,
+				C0AEE4402A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m in Sources */,
 				B85D4620240E861A00CBF758 /* pdl_systemcall.c in Sources */,
 				B84C805625CD1E280086CD36 /* PDLCrashViewController.m in Sources */,
 				B85D4621240E861A00CBF758 /* pdl_array.c in Sources */,
@@ -9508,6 +9535,7 @@
 				B85D45E7240E859000CBF758 /* PDLProtocolViewController.m in Sources */,
 				C010A6E127114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m in Sources */,
 				B80AF8D724769E78009B9AF8 /* pdl_malloc.c in Sources */,
+				C0AEE4442A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m in Sources */,
 				B85D45E8240E859000CBF758 /* PDLKeyboardNotificationObserver.m in Sources */,
 				B85D45E9240E859000CBF758 /* PDLMemoryQueryViewController.m in Sources */,
 				C010A6DE27114D8300A785E9 /* PDLNonThreadSafeObserver.m in Sources */,
@@ -9532,6 +9560,7 @@
 				B8300F2225BEB61600A02412 /* PDLScrollPageViewController.m in Sources */,
 				B85D45F4240E859000CBF758 /* NSDictionary+PDLSafeOperation.m in Sources */,
 				C010A6DD27114D8300A785E9 /* PDLNonThreadSafeObserverObject.m in Sources */,
+				C0AEE43C2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m in Sources */,
 				B893CBF9252488D000174119 /* PDLTaskScheduler.m in Sources */,
 				B85D45F5240E859000CBF758 /* PDLLayerDebuggerWindow.m in Sources */,
 				B86BE6982692B70700E90F06 /* PDLPudding.m in Sources */,
@@ -9842,12 +9871,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				C010A6E927114E5E00A785E9 /* PDLNonThreadSafeDictionaryObserver.m in Sources */,
+				C0AEE4412A2DB4C400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m in Sources */,
 				C010A6EA27114E5E00A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m in Sources */,
 				C010A6EB27114E5E00A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */,
 				C010A6EC27114E5E00A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */,
 				C010A6ED27114E5E00A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */,
 				C010A6E427114E4900A785E9 /* PDLNonThreadSafeObserver.m in Sources */,
 				C010A6E527114E4900A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */,
+				C0AEE43D2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m in Sources */,
+				C0AEE4452A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m in Sources */,
 				C010A6E627114E4900A785E9 /* PDLNonThreadSafeObserverChecker.m in Sources */,
 				C06B8F32277060E100B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m in Sources */,
 				C010A6E727114E4900A785E9 /* PDLNonThreadSafeObserverCriticalResource.m in Sources */,
