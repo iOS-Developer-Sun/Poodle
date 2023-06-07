@@ -57,7 +57,7 @@ static id pdl_nonThreadSafePropertyAllocWithZone(__unsafe_unretained id self, SE
     return [PDLNonThreadSafePropertyObserverObject observerObjectForObject:object];
 }
 
-+ (void)observerClass:(Class)aClass
++ (void)observeClass:(Class)aClass
        propertyFilter:(PDLNonThreadSafePropertyObserver_PropertyFilter)propertyFilter
     propertyMapFilter:(NSArray <NSString *> *)propertyMapFilter {
     if (!aClass) {
@@ -154,7 +154,7 @@ static id pdl_nonThreadSafePropertyAllocWithZone(__unsafe_unretained id self, SE
     }
 }
 
-+ (void)observerClassesForImage:(const char * _Nonnull)image
++ (void)observeClassesForImage:(const char * _Nonnull)image
                     classFilter:(PDLNonThreadSafePropertyObserver_ClassFilter)classFilter
             classPropertyFilter:(PDLNonThreadSafePropertyObserver_ClassPropertyFilter)classPropertyFilter
          classPropertyMapFilter:(NSDictionary <NSString *, NSArray <NSString *> *> *)classPropertyMapFilter {
@@ -172,7 +172,7 @@ static id pdl_nonThreadSafePropertyAllocWithZone(__unsafe_unretained id self, SE
         if (classPropertyFilter) {
             propertyFilter = classPropertyFilter(@(className));
         }
-        [self observerClass:aClass propertyFilter:propertyFilter propertyMapFilter:classPropertyMapFilter[@(className)]];
+        [self observeClass:aClass propertyFilter:propertyFilter propertyMapFilter:classPropertyMapFilter[@(className)]];
     }
     free(classNames);
 }

@@ -36,6 +36,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString *)sharedCachePathWithImageName:(NSString *)imageName;
 - (PDLSharedCacheImage *)sharedCacheImageWithImageName:(NSString *)imageName;
+- (BOOL)dump:(NSString *)path error:(NSError **)error;
 
 @end
 
