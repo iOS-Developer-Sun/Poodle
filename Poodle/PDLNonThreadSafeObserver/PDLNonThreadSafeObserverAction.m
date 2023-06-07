@@ -18,7 +18,7 @@
     NSString *timeString = [NSString stringWithFormat:@"[%.3f]", self.time];
     NSString *detailString = self.detail ? [NSString stringWithFormat:@"[%@]", self.detail] : @"";
 
-    NSString *actionString = [NSString stringWithFormat:@"%@%@%@%@%@%@", initializingString, isSetterString, threadString, queueString, timeString, detailString];
+    NSString *actionString = [NSString stringWithFormat:@"%@%@%@%@%@%@<%p>", initializingString, isSetterString, threadString, queueString, timeString, detailString, self];
     return actionString;
 }
 

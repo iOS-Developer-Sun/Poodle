@@ -48,4 +48,8 @@
     return [NSString stringWithFormat:@"<%@, name: %@, observer: %p>", description, self.name, self.observer];
 }
 
++ (BOOL)recordsBacktrace {
+    return YES;
+}
+
 @end
