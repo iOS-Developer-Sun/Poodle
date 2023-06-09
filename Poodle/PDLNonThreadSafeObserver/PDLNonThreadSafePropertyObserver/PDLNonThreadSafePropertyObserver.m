@@ -20,6 +20,10 @@ static void propertyLog(__unsafe_unretained id self, Class aClass, NSString *pro
     }
 
     PDLNonThreadSafePropertyObserverObject *observer = [PDLNonThreadSafePropertyObserverObject observerObjectForObject:self];
+    if (!observer) {
+        return;
+    }
+
     [observer recordClass:aClass propertyName:propertyName isSetter:isSetter];
 }
 
