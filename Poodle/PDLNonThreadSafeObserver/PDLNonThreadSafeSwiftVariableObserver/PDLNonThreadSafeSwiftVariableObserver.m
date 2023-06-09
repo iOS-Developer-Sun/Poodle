@@ -133,6 +133,10 @@ static void *pdl_swift_beginAccess(void *address, void **result, int8_t flags, i
             id object = (__bridge id)objectAddress;
             BOOL isSetter = flags & 1;
             PDLNonThreadSafeSwiftVariableObserverObject *observer = [PDLNonThreadSafeSwiftVariableObserverObject observerObjectForObject:object];
+            if (!observer) {
+                return ret;
+            }
+
             [observer recordClass:aClass variableName:variableName isSetter:isSetter];
         }
     }

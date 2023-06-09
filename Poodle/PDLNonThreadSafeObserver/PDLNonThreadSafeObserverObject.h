@@ -19,6 +19,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)registerObject:(id _Nullable)object;
 + (instancetype)observerObjectForObject:(id)object;
 
+- (BOOL)startRecording;
+- (void)finishRecording;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -19,6 +19,10 @@ static void dictionaryLog(__unsafe_unretained id self, Class aClass, SEL sel, BO
     }
 
     PDLNonThreadSafeDictionaryObserverObject *observer = [PDLNonThreadSafeDictionaryObserverObject observerObjectForObject:self];
+    if (!observer) {
+        return;
+    }
+
     [observer recordClass:aClass selectorString:NSStringFromSelector(sel) isSetter:isSetter];
 }
 
@@ -28,59 +32,48 @@ static void dictionaryRegister(__unsafe_unretained id dictionary) {
 
 #pragma mark - getters
 
-static id dictionaryObjectForKey(__unsafe_unretained NSMutableDictionary *self, SEL _cmd, __unsafe_unretained id key) {
+static void *getterA0(__unsafe_unretained NSMutableDictionary *self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
-    id ret = ((typeof(&dictionaryObjectForKey))_imp)(self, _cmd, key);
+    void *ret = ((typeof(&getterA0))_imp)(self, _cmd);
     dictionaryLog(self, _class, _cmd, NO);
     return ret;
 }
 
-static NSUInteger dictionaryCount(__unsafe_unretained NSMutableDictionary *self, SEL _cmd) {
+static void *getterA1(__unsafe_unretained NSMutableDictionary *self, SEL _cmd, void *a1) {
     PDLImplementationInterceptorRecover(_cmd);
-    NSUInteger ret = ((typeof(&dictionaryCount))_imp)(self, _cmd);
+    void *ret = ((typeof(&getterA1))_imp)(self, _cmd, a1);
     dictionaryLog(self, _class, _cmd, NO);
     return ret;
 }
 
-static id dictionaryKeyEnumerator(__unsafe_unretained NSMutableDictionary *self, SEL _cmd) {
+static void *getterA2(__unsafe_unretained NSMutableDictionary *self, SEL _cmd, void *a1, void *a2) {
     PDLImplementationInterceptorRecover(_cmd);
-    id ret = ((typeof(&dictionaryKeyEnumerator))_imp)(self, _cmd);
-    dictionaryLog(self, _class, _cmd, NO);
-    return ret;
-}
-
-static BOOL dictionaryIsEqualToDictionary(__unsafe_unretained NSMutableDictionary *self, SEL _cmd, __unsafe_unretained id dictionary) {
-    PDLImplementationInterceptorRecover(_cmd);
-    BOOL ret = ((typeof(&dictionaryIsEqualToDictionary))_imp)(self, _cmd, dictionary);
-    dictionaryLog(self, _class, _cmd, NO);
-    return ret;
-}
-
-static id dictionaryObjectsForKeysNotFoundMarker(__unsafe_unretained NSMutableDictionary *self, SEL _cmd, __unsafe_unretained id keys, __unsafe_unretained id marker) {
-    PDLImplementationInterceptorRecover(_cmd);
-    id ret = ((typeof(&dictionaryObjectsForKeysNotFoundMarker))_imp)(self, _cmd, keys, marker);
+    void *ret = ((typeof(&getterA2))_imp)(self, _cmd, a1, a2);
     dictionaryLog(self, _class, _cmd, NO);
     return ret;
 }
 
 #pragma mark - setters
 
-static void dictionarySetObjectForKey(__unsafe_unretained NSMutableDictionary *self, SEL _cmd, __unsafe_unretained id object, __unsafe_unretained id key) {
+static void *setterA0(__unsafe_unretained NSMutableDictionary *self, SEL _cmd) {
     PDLImplementationInterceptorRecover(_cmd);
-    ((typeof(&dictionarySetObjectForKey))_imp)(self, _cmd, object, key);
+    void *ret = ((typeof(&setterA0))_imp)(self, _cmd);
     dictionaryLog(self, _class, _cmd, YES);
+    return ret;
 }
 
-static void dictionaryRemoveObjectForKey(__unsafe_unretained NSMutableDictionary *self, SEL _cmd, __unsafe_unretained id argument) {
+static void *setterA1(__unsafe_unretained NSMutableDictionary *self, SEL _cmd, void *a1) {
     PDLImplementationInterceptorRecover(_cmd);
-    ((typeof(&dictionaryRemoveObjectForKey))_imp)(self, _cmd, argument);
+    void *ret = ((typeof(&setterA1))_imp)(self, _cmd, a1);
     dictionaryLog(self, _class, _cmd, YES);
+    return ret;
 }
 
-static void dictionaryRemoveAllObjects(__unsafe_unretained NSMutableDictionary *self, SEL _cmd) {
+static void *setterA2(__unsafe_unretained NSMutableDictionary *self, SEL _cmd, void *a1, void *a2) {
     PDLImplementationInterceptorRecover(_cmd);
-    ((typeof(&dictionaryRemoveAllObjects))_imp)(self, _cmd);
+    void *ret = ((typeof(&setterA2))_imp)(self, _cmd, a1, a2);
     dictionaryLog(self, _class, _cmd, YES);
+    return ret;
 }
 
 #pragma mark - initializers
@@ -130,27 +123,27 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
     dispatch_once(&onceToken, ^{
         _filter = filter;
         Class dictionaryClass = [NSDictionary class];
-        __unused BOOL ret = [dictionaryClass pdl_interceptClusterSelector:@selector(objectForKey:) withInterceptorImplementation:(IMP)&dictionaryObjectForKey];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(objectForKeyedSubscript:) withInterceptorImplementation:(IMP)&dictionaryObjectForKey];
+        __unused BOOL ret = [dictionaryClass pdl_interceptClusterSelector:@selector(objectForKey:) withInterceptorImplementation:(IMP)&getterA1];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(objectForKeyedSubscript:) withInterceptorImplementation:(IMP)&getterA1];
 
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(count) withInterceptorImplementation:(IMP)&dictionaryCount];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(keyEnumerator) withInterceptorImplementation:(IMP)&dictionaryKeyEnumerator];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(allKeys) withInterceptorImplementation:(IMP)&dictionaryKeyEnumerator];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(allValues) withInterceptorImplementation:(IMP)&dictionaryKeyEnumerator];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(allKeysForObject:) withInterceptorImplementation:(IMP)&dictionaryObjectForKey];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(isEqualToDictionary:) withInterceptorImplementation:(IMP)&dictionaryIsEqualToDictionary];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(objectEnumerator) withInterceptorImplementation:(IMP)&dictionaryKeyEnumerator];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(objectsForKeys:notFoundMarker:) withInterceptorImplementation:(IMP)&dictionaryObjectsForKeysNotFoundMarker];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(count) withInterceptorImplementation:(IMP)&getterA0];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(keyEnumerator) withInterceptorImplementation:(IMP)&getterA0];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(allKeys) withInterceptorImplementation:(IMP)&getterA0];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(allValues) withInterceptorImplementation:(IMP)&getterA0];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(allKeysForObject:) withInterceptorImplementation:(IMP)&getterA1];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(isEqualToDictionary:) withInterceptorImplementation:(IMP)&getterA1];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(objectEnumerator) withInterceptorImplementation:(IMP)&getterA0];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(objectsForKeys:notFoundMarker:) withInterceptorImplementation:(IMP)&getterA2];
 
         Class mutableDictionaryClass = [NSMutableDictionary class];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setObject:forKey:) withInterceptorImplementation:(IMP)&dictionarySetObjectForKey];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setObject:forKeyedSubscript:) withInterceptorImplementation:(IMP)&dictionarySetObjectForKey];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setObject:forKey:) withInterceptorImplementation:(IMP)&setterA2];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setObject:forKeyedSubscript:) withInterceptorImplementation:(IMP)&setterA2];
 
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeObjectForKey:) withInterceptorImplementation:(IMP)&dictionaryRemoveObjectForKey];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeObjectsForKeys:) withInterceptorImplementation:(IMP)&dictionaryRemoveObjectForKey];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(addEntriesFromDictionary:) withInterceptorImplementation:(IMP)&dictionaryRemoveObjectForKey];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setDictionary:) withInterceptorImplementation:(IMP)&dictionaryRemoveObjectForKey];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeAllObjects) withInterceptorImplementation:(IMP)&dictionaryRemoveAllObjects];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeObjectForKey:) withInterceptorImplementation:(IMP)&setterA1];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeObjectsForKeys:) withInterceptorImplementation:(IMP)&setterA1];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(addEntriesFromDictionary:) withInterceptorImplementation:(IMP)&setterA1];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setDictionary:) withInterceptorImplementation:(IMP)&setterA1];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeAllObjects) withInterceptorImplementation:(IMP)&setterA0];
 
         BOOL m1 = [mutableDictionaryClass pdl_interceptClusterSelector:@selector(mutableCopy) withInterceptorImplementation:(IMP)&mutableCopy];
         BOOL m2 = [mutableDictionaryClass pdl_interceptClusterSelector:@selector(mutableCopyWithZone:) withInterceptorImplementation:(IMP)&mutableCopyWithZone];
