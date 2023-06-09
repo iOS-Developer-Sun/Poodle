@@ -24,9 +24,12 @@ static void logBegin(__unsafe_unretained id self, Class aClass, SEL sel, BOOL is
     }
 
     BOOL ready = [observer startRecording];
-    if (ready) {
-        [observer recordClass:aClass selectorString:NSStringFromSelector(sel) isSetter:isSetter];
+    if (!ready) {
+        return;
     }
+
+    [observer recordClass:aClass selectorString:NSStringFromSelector(sel) isSetter:isSetter];
+//    NSLog(@"%@ %@ %@", aClass, NSStringFromSelector(sel), @(isSetter));
 }
 
 static void logEnd(__unsafe_unretained id self, Class aClass, SEL sel, BOOL isSetter) {
@@ -179,10 +182,10 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _filter = filter;
+        __unused BOOL ret = YES;
 
         // getters
         Class arrayClass = [NSArray class];
-        __unused BOOL ret = YES;
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(count) withInterceptorImplementation:(IMP)&impA0];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(objectAtIndex:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(arrayByAddingObject:) withInterceptorImplementation:(IMP)&impA1];
@@ -231,6 +234,8 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(arrayByApplyingDifference:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(getObjects:) withInterceptorImplementation:(IMP)&impA1];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(writeToFile:atomically:) withInterceptorImplementation:(IMP)&impA2];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(writeToURL:atomically:) withInterceptorImplementation:(IMP)&impA2];
 
         // setters
         Class mutableArrayClass = [NSMutableArray class];
@@ -262,6 +267,7 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortWithOptions:usingComparator:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
         ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(applyDifference:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
 
+        // creations
         NSUInteger m1 = [arrayClass pdl_interceptClusterSelector:@selector(mutableCopy) withInterceptorImplementation:(IMP)&mutableCopy];
         NSUInteger m2 = [arrayClass pdl_interceptClusterSelector:@selector(mutableCopyWithZone:) withInterceptorImplementation:(IMP)&mutableCopyWithZone];
         ret = ret && (m1 || m2);
