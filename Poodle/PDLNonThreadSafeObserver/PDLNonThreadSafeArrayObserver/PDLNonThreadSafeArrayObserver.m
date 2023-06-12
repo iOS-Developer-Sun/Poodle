@@ -236,6 +236,8 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(getObjects:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(writeToFile:atomically:) withInterceptorImplementation:(IMP)&impA2];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(writeToURL:atomically:) withInterceptorImplementation:(IMP)&impA2];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(valueForKey:) withInterceptorImplementation:(IMP)&impA1];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(setValue:forKey:) withInterceptorImplementation:(IMP)&impA2];
 
         // setters
         Class mutableArrayClass = [NSMutableArray class];

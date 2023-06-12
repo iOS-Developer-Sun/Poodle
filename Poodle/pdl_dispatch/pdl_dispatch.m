@@ -10,6 +10,7 @@
 #import <Foundation/Foundation.h>
 #import <malloc/malloc.h>
 #import <pthread.h>
+#import "pdl_hook.h"
 
 enum {
     DISPATCH_QUEUE_OVERCOMMIT = 0x2ull,
@@ -176,6 +177,46 @@ unsigned long pdl_dispatch_get_queue_unique_identifier(dispatch_queue_t queue) {
 
     pdl_dispatch_queue *q = (__bridge pdl_dispatch_queue *)dispatch_queue_get_specific(queue, &pdl_dispatch_queue_key);
     return q.uniqueIdentifier;
+}
+
+static DISPATCH_RETURNS_RETAINED dispatch_queue_t (*pdl_hook_dispatch_queue_create_original)(const char *_Nullable label, dispatch_queue_attr_t _Nullable attr) = NULL;
+static DISPATCH_RETURNS_RETAINED dispatch_queue_t pdl_hook_dispatch_queue_create(const char *_Nullable label, dispatch_queue_attr_t _Nullable attr) {
+    dispatch_queue_t queue = pdl_hook_dispatch_queue_create_original(label, attr);
+    pdl_dispatch_init_queue(queue);
+    return queue;
+}
+
+static DISPATCH_RETURNS_RETAINED dispatch_queue_t (*pdl_hook_dispatch_queue_create_with_target_original)(const char *_Nullable label, dispatch_queue_attr_t _Nullable attr, dispatch_queue_t _Nullable target) = NULL;
+static DISPATCH_RETURNS_RETAINED dispatch_queue_t pdl_hook_dispatch_queue_create_with_target(const char *_Nullable label, dispatch_queue_attr_t _Nullable attr, dispatch_queue_t _Nullable target) {
+    dispatch_queue_t queue = pdl_hook_dispatch_queue_create_with_target_original(label, attr, target);
+    pdl_dispatch_init_queue(queue);
+    return queue;
+}
+
+void pdl_dispatch_queue_enable(void) {
+    static bool init = false;
+    if (init) {
+        return;
+    }
+
+    int count = 2;
+    pdl_hook_item items[count];
+    items[0] = (pdl_hook_item){
+        "dispatch_queue_create",
+        &dispatch_queue_create,
+        &pdl_hook_dispatch_queue_create,
+        (void **)&pdl_hook_dispatch_queue_create_original,
+    };
+    items[1] = (pdl_hook_item){
+        "dispatch_queue_create_with_target",
+        &dispatch_queue_create_with_target,
+        &pdl_hook_dispatch_queue_create_with_target,
+        (void **)&pdl_hook_dispatch_queue_create_with_target_original,
+    };
+    int ret = pdl_hook(items, count);
+    assert(ret > 0);
+
+    init = true;
 }
 
 @end

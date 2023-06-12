@@ -219,6 +219,7 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(getObjects:andKeys:) withInterceptorImplementation:(IMP)&impA2];
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(writeToFile:atomically:) withInterceptorImplementation:(IMP)&impA2];
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(writeToURL:atomically:) withInterceptorImplementation:(IMP)&impA2];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(valueForKey:) withInterceptorImplementation:(IMP)&impA1];
 
         // setters
         Class mutableDictionaryClass = [NSMutableDictionary class];
@@ -229,6 +230,7 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeObjectsForKeys:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
         ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setDictionary:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
         ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setObject:forKeyedSubscript:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setValue:forKey:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
 
         // creations
         BOOL m1 = [dictionaryClass pdl_interceptClusterSelector:@selector(mutableCopy) withInterceptorImplementation:(IMP)&mutableCopy];

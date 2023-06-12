@@ -26,9 +26,27 @@ static void *pdl_get_object(void *address) {
 #elif defined(__x86_64__)
     __asm__ volatile ("mov %r13, %rax \n ret");
 #endif
+}
+
+static void *pdl_validate_object(void *address) {
 //    void *header = NULL;
 //    pdl_malloc_find(address, NULL, &header);
 //    return header;
+
+    BOOL isNotPointer = address < (void *)0x100000000UL;
+    if (isNotPointer) {
+        return NULL;
+    }
+
+    pthread_t thread = pthread_self();
+    void *threadAddress = pthread_get_stackaddr_np(thread);
+    size_t threadSize = pthread_get_stacksize_np(thread);
+    BOOL isInStack = address < threadAddress && address > (threadAddress - threadSize);
+    if (isInStack) {
+        return NULL;
+    }
+
+    return address;
 }
 
 static void *pdl_get_swift_superclass(void *cls) {
@@ -50,6 +68,11 @@ static NSMutableDictionary *pdl_variable_name_dictionary(void) {
 }
 
 static NSString *pdl_get_variable_name(Class aClass, intptr_t offset) {
+    size_t size = class_getInstanceSize(aClass);
+    if (offset >= size) {
+        return nil;
+    }
+
     NSString *key = [NSString stringWithFormat:@"%@:%@", aClass, @(offset)];
     NSMutableDictionary *dictionary = pdl_variable_name_dictionary();
     NSString *ret = nil;
@@ -100,15 +123,15 @@ static id pdl_nonThreadSafeSwiftVariableAllocWithZone(__unsafe_unretained id sel
 
 #pragma mark - public methods
 
-extern bool swift_isClassType(void *);
 extern void *swift_beginAccess(void *, void **, int8_t, int64_t);
 static void *(*pdl_swift_beginAccess_original)(void *, void **, int8_t, int64_t) = NULL;
 static void *pdl_swift_beginAccess(void *address, void **result, int8_t flags, int64_t reserved) {
     void *ret = pdl_swift_beginAccess_original(address, result, flags, reserved);
 
     void *objectAddress = pdl_get_object(address);
+    objectAddress = pdl_validate_object(address);
     intptr_t offset = address - objectAddress;
-    if (offset > 0 && offset <= 4096 && objectAddress && swift_isClassType(address)) {
+    if (offset > 0 && objectAddress) {
         Class aClass = object_getClass((__bridge __unsafe_unretained id)(objectAddress));
         void *cls = (__bridge void *)aClass;
         void *superClass = pdl_get_swift_superclass(cls);
@@ -121,7 +144,9 @@ static void *pdl_swift_beginAccess(void *address, void **result, int8_t flags, i
                 }
             }
             NSString *variableName = pdl_get_variable_name(aClass, offset);
-            assert(variableName);
+            if (!variableName) {
+                return ret;
+            }
             if (pdl_classVariableFilter) {
                 PDLNonThreadSafeSwiftVariableObserver_VariableFilter variableFilter = pdl_classVariableFilter(className);
                 if (variableFilter) {

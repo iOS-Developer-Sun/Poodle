@@ -188,7 +188,9 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'pdl_die', platform_universal)
 
-        PoodleSubspec(s, 'pdl_dispatch', platform_universal)
+        PoodleSubspec(s, 'pdl_dispatch', platform_universal) do |ss|
+            ss.dependency pod_name + '/pdl_hook'
+        end
 
         PoodleSubspec(s, 'pdl_dispatch_backtrace', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_backtrace'
