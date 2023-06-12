@@ -9,6 +9,7 @@
 #import "PDLNonThreadSafeObserver.h"
 #import <objc/runtime.h>
 #import "PDLNonThreadSafeObserverChecker.h"
+#import "pdl_dispatch.h"
 
 @implementation PDLNonThreadSafeObserver
 
@@ -20,6 +21,9 @@ static BOOL _queueEnabled = NO;
 
 + (void)registerQueueCheckerEnabled:(BOOL)queueEnabled {
     _queueEnabled = queueEnabled;
+    if (queueEnabled) {
+        pdl_dispatch_queue_enable();
+    }
 }
 
 static void (^_reporter)(PDLNonThreadSafeObserverCriticalResource *resource) = nil;
