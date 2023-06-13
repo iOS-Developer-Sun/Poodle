@@ -44,7 +44,9 @@
     @synchronized (self) { // one object to multiple class.property
         PDLNonThreadSafePropertyObserverProperty *property = _properties[identifier];
         if (!property) {
-            property = [[PDLNonThreadSafePropertyObserverProperty alloc] initWithObserver:self identifier:identifier];
+            property = [[PDLNonThreadSafePropertyObserverProperty alloc] init];
+            property.observer = self;
+            property.identifier = identifier;
             _properties[identifier] = property;
         }
         return property;
@@ -53,7 +55,7 @@
 
 - (void)recordClass:(Class)aClass propertyName:(NSString *)propertyName isSetter:(BOOL)isSetter {
     PDLNonThreadSafePropertyObserverProperty *property = [self propertyWithClass:aClass propertyName:propertyName];
-    [property recordIsSetter:isSetter isInitializing:self.isInitializing];
+    [property record:isSetter];
 }
 
 @end

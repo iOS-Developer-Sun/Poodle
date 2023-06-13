@@ -20,17 +20,22 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLNonThreadSafeObserverInitializing : NSObject
 
 @property (nonatomic, assign) mach_port_t thread;
+@property (nonatomic, weak) id observerObject;
 
 @end
 
 @implementation PDLNonThreadSafeObserverInitializing
+
+- (void)dealloc {
+    ;
+}
 
 @end
 
 @interface PDLNonThreadSafeObserverObject ()
 
 @property (unsafe_unretained, readonly) id object;
-@property (weak, readonly) PDLNonThreadSafeObserverInitializing *initializing;
+@property (weak) PDLNonThreadSafeObserverInitializing *initializing;
 
 @end
 
@@ -41,6 +46,7 @@ NS_ASSUME_NONNULL_BEGIN
     if (self) {
         _object = object;
         PDLNonThreadSafeObserverInitializing *initializing = [[[PDLNonThreadSafeObserverInitializing alloc] init] pdl_autoreleaseRetained];
+        initializing.observerObject = self;
         initializing.thread = mach_thread_self();
         _initializing = initializing;
     }
@@ -49,12 +55,21 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (NSString *)description {
     NSString *description = [super description];
-    return [NSString stringWithFormat:@"%@, object: %p, isInitializing: %@", description, self.object, @(self.isInitializing)];
+    return [NSString stringWithFormat:@"%@, object: %p, isInitializing: %@", description, self.object, @(self.initializing != nil)];
 }
 
-- (BOOL)isInitializing {
-    BOOL isInitializing = self.initializing && self.initializing.thread == mach_thread_self();
-    return isInitializing;
+- (BOOL)checkInitializing {
+    BOOL isInitializing = self.initializing != nil;
+    if (!isInitializing) {
+        return NO;
+    }
+
+    if (self.initializing.thread != mach_thread_self()) {
+        self.initializing = nil;
+        return NO;
+    }
+
+    return YES;
 }
 
 static void *PDLNonThreadSafePropertyObserverObjectObjectKey = &PDLNonThreadSafePropertyObserverObjectObjectKey;

@@ -35,8 +35,10 @@
         }
         validIdentifier = @(hash).stringValue;
     }
-    self = [super initWithObserver:observer identifier:validIdentifier];
+    self = [super init];
     if (self) {
+        self.observer = observer;
+        self.identifier = validIdentifier;
         _backtrace = backtrace;
         _name = [name copy];
     }
