@@ -8,31 +8,31 @@
 
 #import "PDLNonThreadSafeDictionaryObserverObject.h"
 #import "PDLNonThreadSafeDictionaryObserverDictionary.h"
-#import "PDLBacktrace.h"
 
-@interface  PDLNonThreadSafeDictionaryObserverObject () {
-    PDLNonThreadSafeDictionaryObserverDictionary *_dictionary;
-    PDLBacktrace *_backtrace;
-}
+@interface PDLNonThreadSafeDictionaryObserverObject ()
+
+@property (nonatomic, strong, readonly) PDLNonThreadSafeDictionaryObserverDictionary *dictionary;
 
 @end
 
 @implementation PDLNonThreadSafeDictionaryObserverObject
 
 - (instancetype)initWithObject:(id)object {
+    PDLNonThreadSafeDictionaryObserverDictionary *dictionary = [[PDLNonThreadSafeDictionaryObserverDictionary alloc] init];
+    if (!dictionary) {
+        return nil;
+    }
+
     self = [super initWithObject:object];
     if (self) {
-        PDLNonThreadSafeDictionaryObserverDictionary *dictionary = [[PDLNonThreadSafeDictionaryObserverDictionary alloc] initWithObserver:self identifier:nil];
-        if (!dictionary) {
-            return nil;
-        }
+        dictionary.observer = self;
         _dictionary = dictionary;
     }
     return self;
 }
 
 - (void)recordClass:(Class)aClass selectorString:(NSString *)selectorString isSetter:(BOOL)isSetter {
-    PDLNonThreadSafeObserverAction *action = [_dictionary recordIsSetter:isSetter isInitializing:self.isInitializing];
+    PDLNonThreadSafeObserverAction *action = [_dictionary record:isSetter];
     action.detail = selectorString;
 }
 

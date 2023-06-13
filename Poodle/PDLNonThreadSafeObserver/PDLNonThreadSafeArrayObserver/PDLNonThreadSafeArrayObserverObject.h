@@ -7,10 +7,13 @@
 //
 
 #import "PDLNonThreadSafeObserverObject.h"
-#import "NSObject+PDLImplementationInterceptor.h"
 
-@interface  PDLNonThreadSafeArrayObserverObject : PDLNonThreadSafeObserverObject
+NS_ASSUME_NONNULL_BEGIN
+
+@interface PDLNonThreadSafeArrayObserverObject : PDLNonThreadSafeObserverObject
 
 - (void)recordClass:(Class)aClass selectorString:(NSString *)selectorString isSetter:(BOOL)isSetter;
 
 @end
+
+NS_ASSUME_NONNULL_END

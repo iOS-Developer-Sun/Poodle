@@ -13,7 +13,7 @@
 
 @implementation PDLNonThreadSafeDictionaryObserver
 
-static void logBegin(__unsafe_unretained id self, Class aClass, SEL sel, BOOL isSetter) {
+static void logBegin(__unsafe_unretained id self, Class aClass, SEL sel, void *flags) {
     if ([PDLNonThreadSafeObserver ignoredForObject:self]) {
         return;
     }
@@ -23,16 +23,20 @@ static void logBegin(__unsafe_unretained id self, Class aClass, SEL sel, BOOL is
         return;
     }
 
-    BOOL ready = [observer startRecording];
-    if (!ready) {
-        return;
+    BOOL isExclusive = ((unsigned long)flags) & 0b10;
+    if (!isExclusive) {
+        BOOL ready = [observer startRecording];
+        if (!ready) {
+            return;
+        }
     }
 
+    BOOL isSetter = ((unsigned long)flags) & 0b1;
     [observer recordClass:aClass selectorString:NSStringFromSelector(sel) isSetter:isSetter];
 //    NSLog(@"%@ %@ %@", aClass, NSStringFromSelector(sel), @(isSetter));
 }
 
-static void logEnd(__unsafe_unretained id self, Class aClass, SEL sel, BOOL isSetter) {
+static void logEnd(__unsafe_unretained id self, Class aClass, SEL sel, void *flags) {
     if ([PDLNonThreadSafeObserver ignoredForObject:self]) {
         return;
     }
@@ -42,7 +46,10 @@ static void logEnd(__unsafe_unretained id self, Class aClass, SEL sel, BOOL isSe
         return;
     }
 
-    [observer finishRecording];
+    BOOL isExclusive = ((unsigned long)flags) & 0b10;
+    if (!isExclusive) {
+        [observer finishRecording];
+    }
 }
 
 static void dictionaryRegister(__unsafe_unretained id dictionary) {
@@ -54,7 +61,7 @@ static void dictionaryRegister(__unsafe_unretained id dictionary) {
 #pragma mark - imp
 
 #define DECL_IMP(FUNC_NAME) \
-static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd) {\
+static void *FUNC_NAME(__unsafe_unretained id self, SEL _cmd) {\
     PDLImplementationInterceptorRecover(_cmd);\
     logBegin(self, _class, _cmd, _data);\
     void *ret = NULL;\
@@ -70,7 +77,7 @@ static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd) {\
 }
 
 #define DECL_IMP1(FUNC_NAME, TYPE1) \
-static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1 a1) {\
+static void *FUNC_NAME(__unsafe_unretained id self, SEL _cmd, TYPE1 a1) {\
     PDLImplementationInterceptorRecover(_cmd);\
     logBegin(self, _class, _cmd, _data);\
     void *ret = NULL;\
@@ -86,7 +93,7 @@ static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1
 }
 
 #define DECL_IMP2(FUNC_NAME, TYPE1, TYPE2) \
-static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1 a1, TYPE2 a2) {\
+static void *FUNC_NAME(__unsafe_unretained id self, SEL _cmd, TYPE1 a1, TYPE2 a2) {\
     PDLImplementationInterceptorRecover(_cmd);\
     logBegin(self, _class, _cmd, _data);\
     void *ret = NULL;\
@@ -102,7 +109,7 @@ static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1
 }
 
 #define DECL_IMP3(FUNC_NAME, TYPE1, TYPE2, TYPE3) \
-static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1 a1, TYPE2 a2, TYPE3 a3) {\
+static void *FUNC_NAME(__unsafe_unretained id self, SEL _cmd, TYPE1 a1, TYPE2 a2, TYPE3 a3) {\
     PDLImplementationInterceptorRecover(_cmd);\
     logBegin(self, _class, _cmd, _data);\
     void *ret = NULL;\
@@ -118,7 +125,7 @@ static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1
 }
 
 #define DECL_IMP4(FUNC_NAME, TYPE1, TYPE2, TYPE3, TYPE4) \
-static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1 a1, TYPE2 a2, TYPE3 a3, TYPE4 a4) {\
+static void *FUNC_NAME(__unsafe_unretained id self, SEL _cmd, TYPE1 a1, TYPE2 a2, TYPE3 a3, TYPE4 a4) {\
     PDLImplementationInterceptorRecover(_cmd);\
     logBegin(self, _class, _cmd, _data);\
     void *ret = NULL;\
@@ -189,6 +196,9 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _filter = filter;
+        void *exclusiveFlag = (void *)0b10UL;
+        void *setterFlag = (void *)0b01UL;
+
         __unused BOOL ret = YES;
 
         // getters
@@ -210,12 +220,12 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(keysSortedByValueUsingSelector:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(getObjects:andKeys:count:) withInterceptorImplementation:(IMP)&impA3];
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(objectForKeyedSubscript:) withInterceptorImplementation:(IMP)&impA1];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(enumerateKeysAndObjectsUsingBlock:) withInterceptorImplementation:(IMP)&impA1];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(enumerateKeysAndObjectsWithOptions:usingBlock:) withInterceptorImplementation:(IMP)&impA2];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(enumerateKeysAndObjectsUsingBlock:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(enumerateKeysAndObjectsWithOptions:usingBlock:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(keysSortedByValueUsingComparator:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(keysSortedByValueWithOptions:usingComparator:) withInterceptorImplementation:(IMP)&impA2];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(keysOfEntriesPassingTest:) withInterceptorImplementation:(IMP)&impA1];
-        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(keysOfEntriesWithOptions:passingTest:) withInterceptorImplementation:(IMP)&impA2];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(keysOfEntriesPassingTest:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
+        ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(keysOfEntriesWithOptions:passingTest:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(getObjects:andKeys:) withInterceptorImplementation:(IMP)&impA2];
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(writeToFile:atomically:) withInterceptorImplementation:(IMP)&impA2];
         ret = ret && [dictionaryClass pdl_interceptClusterSelector:@selector(writeToURL:atomically:) withInterceptorImplementation:(IMP)&impA2];
@@ -223,14 +233,14 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
 
         // setters
         Class mutableDictionaryClass = [NSMutableDictionary class];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeObjectForKey:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setObject:forKey:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(addEntriesFromDictionary:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeAllObjects) withInterceptorImplementation:(IMP)&impA0 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeObjectsForKeys:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setDictionary:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setObject:forKeyedSubscript:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setValue:forKey:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeObjectForKey:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setObject:forKey:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(addEntriesFromDictionary:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeAllObjects) withInterceptorImplementation:(IMP)&impA0 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(removeObjectsForKeys:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setDictionary:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setObject:forKeyedSubscript:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableDictionaryClass pdl_interceptClusterSelector:@selector(setValue:forKey:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
 
         // creations
         BOOL m1 = [dictionaryClass pdl_interceptClusterSelector:@selector(mutableCopy) withInterceptorImplementation:(IMP)&mutableCopy];

@@ -47,7 +47,9 @@
     @synchronized (self) { // one object to multiple class.variable
         PDLNonThreadSafeSwiftVariableObserverVariable *variable = _variables[identifier];
         if (!variable) {
-            variable = [[PDLNonThreadSafeSwiftVariableObserverVariable alloc] initWithObserver:self identifier:identifier];
+            variable = [[PDLNonThreadSafeSwiftVariableObserverVariable alloc] init];
+            variable.observer = self;
+            variable.identifier = identifier;
             _variables[identifier] = variable;
         }
         return variable;
@@ -56,7 +58,7 @@
 
 - (void)recordClass:(Class)aClass variableName:(NSString *)variableName isSetter:(BOOL)isSetter {
     PDLNonThreadSafeSwiftVariableObserverVariable *variable = [self variableWithClass:aClass variableName:variableName];
-    [variable recordIsSetter:isSetter isInitializing:self.isInitializing];
+    [variable record:isSetter];
 }
 
 @end

@@ -15,7 +15,6 @@
 #import "PDLProcessInfo.h"
 
 @interface PDLNonThreadSafeObserverCriticalResource () {
-    __weak PDLNonThreadSafeObserverObject *_observer;
     NSMutableArray <PDLNonThreadSafeObserverAction *> *_actions;
     PDLNonThreadSafeObserverChecker *_checker;
 }
@@ -24,12 +23,9 @@
 
 @implementation PDLNonThreadSafeObserverCriticalResource
 
-- (instancetype)initWithObserver:(PDLNonThreadSafeObserverObject *)observer identifier:(NSString * _Nullable)identifier {
+- (instancetype)init {
     self = [super init];
     if (self) {
-        _observer = observer;
-        _identifier = [identifier copy];
-
         NSMutableArray *actions = [NSMutableArray array];
         [PDLNonThreadSafeObserver setIgnored:YES forObject:actions];
         _actions = actions;
@@ -40,10 +36,6 @@
     return self;
 }
 
-- (PDLNonThreadSafeObserverObject *)observer {
-    return _observer;
-}
-
 - (NSString *)queueLabel:(dispatch_queue_t)queue {
     if (!queue) {
         return nil;
@@ -52,9 +44,11 @@
     return @(dispatch_queue_get_label(queue) ?: "");
 }
 
-- (PDLNonThreadSafeObserverAction *)recordIsSetter:(BOOL)isSetter isInitializing:(BOOL)isInitializing {
-    mach_port_t thread = mach_thread_self();
+- (PDLNonThreadSafeObserverAction *)record:(BOOL)isSetter {
+    PDLNonThreadSafeObserverObject *observer = self.observer;
+    assert(observer);
 
+    mach_port_t thread = mach_thread_self();
     NSString *queueIdentifier = nil;
     NSString *queueLabel = nil;
     BOOL isSerialQueue = NO;
@@ -72,7 +66,7 @@
     action.queueIdentifier = queueIdentifier;
     action.queueLabel = queueLabel;
     action.isSetter = isSetter;
-    action.isInitializing = isInitializing;
+    action.isInitializing = observer.checkInitializing;
     action.isSerialQueue = isSerialQueue;
     action.time = [[NSDate date] timeIntervalSinceDate:[PDLProcessInfo sharedInstance].processStartDate];
     if ([self.class recordsBacktrace]) {

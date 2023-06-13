@@ -12,12 +12,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLNonThreadSafeObserverObject : NSObject
 
-@property (readonly) BOOL isInitializing;
-
 - (instancetype)initWithObject:(id)object;
 
 + (void)registerObject:(id _Nullable)object;
 + (instancetype)observerObjectForObject:(id)object;
+
+- (BOOL)checkInitializing;
 
 - (BOOL)startRecording;
 - (void)finishRecording;

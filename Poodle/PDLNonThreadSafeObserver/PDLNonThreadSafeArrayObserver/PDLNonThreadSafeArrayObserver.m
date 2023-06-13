@@ -13,7 +13,7 @@
 
 @implementation PDLNonThreadSafeArrayObserver
 
-static void logBegin(__unsafe_unretained id self, Class aClass, SEL sel, BOOL isSetter) {
+static void logBegin(__unsafe_unretained id self, Class aClass, SEL sel, void *flags) {
     if ([PDLNonThreadSafeObserver ignoredForObject:self]) {
         return;
     }
@@ -23,16 +23,20 @@ static void logBegin(__unsafe_unretained id self, Class aClass, SEL sel, BOOL is
         return;
     }
 
-    BOOL ready = [observer startRecording];
-    if (!ready) {
-        return;
+    BOOL isExclusive = ((unsigned long)flags) & 0b10;
+    if (!isExclusive) {
+        BOOL ready = [observer startRecording];
+        if (!ready) {
+            return;
+        }
     }
 
+    BOOL isSetter = ((unsigned long)flags) & 0b1;
     [observer recordClass:aClass selectorString:NSStringFromSelector(sel) isSetter:isSetter];
 //    NSLog(@"%@ %@ %@", aClass, NSStringFromSelector(sel), @(isSetter));
 }
 
-static void logEnd(__unsafe_unretained id self, Class aClass, SEL sel, BOOL isSetter) {
+static void logEnd(__unsafe_unretained id self, Class aClass, SEL sel, void *flags) {
     if ([PDLNonThreadSafeObserver ignoredForObject:self]) {
         return;
     }
@@ -54,7 +58,7 @@ static void arrayRegister(__unsafe_unretained id array) {
 #pragma mark - imp
 
 #define DECL_IMP(FUNC_NAME) \
-static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd) {\
+static void *FUNC_NAME(__unsafe_unretained id self, SEL _cmd) {\
     PDLImplementationInterceptorRecover(_cmd);\
     logBegin(self, _class, _cmd, _data);\
     void *ret = NULL;\
@@ -70,7 +74,7 @@ static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd) {\
 }
 
 #define DECL_IMP1(FUNC_NAME, TYPE1) \
-static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1 a1) {\
+static void *FUNC_NAME(__unsafe_unretained id self, SEL _cmd, TYPE1 a1) {\
     PDLImplementationInterceptorRecover(_cmd);\
     logBegin(self, _class, _cmd, _data);\
     void *ret = NULL;\
@@ -86,7 +90,7 @@ static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1
 }
 
 #define DECL_IMP2(FUNC_NAME, TYPE1, TYPE2) \
-static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1 a1, TYPE2 a2) {\
+static void *FUNC_NAME(__unsafe_unretained id self, SEL _cmd, TYPE1 a1, TYPE2 a2) {\
     PDLImplementationInterceptorRecover(_cmd);\
     logBegin(self, _class, _cmd, _data);\
     void *ret = NULL;\
@@ -102,7 +106,7 @@ static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1
 }
 
 #define DECL_IMP3(FUNC_NAME, TYPE1, TYPE2, TYPE3) \
-static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1 a1, TYPE2 a2, TYPE3 a3) {\
+static void *FUNC_NAME(__unsafe_unretained id self, SEL _cmd, TYPE1 a1, TYPE2 a2, TYPE3 a3) {\
     PDLImplementationInterceptorRecover(_cmd);\
     logBegin(self, _class, _cmd, _data);\
     void *ret = NULL;\
@@ -118,7 +122,7 @@ static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1
 }
 
 #define DECL_IMP4(FUNC_NAME, TYPE1, TYPE2, TYPE3, TYPE4) \
-static void *FUNC_NAME(__unsafe_unretained NSMutableArray *self, SEL _cmd, TYPE1 a1, TYPE2 a2, TYPE3 a3, TYPE4 a4) {\
+static void *FUNC_NAME(__unsafe_unretained id self, SEL _cmd, TYPE1 a1, TYPE2 a2, TYPE3 a3, TYPE4 a4) {\
     PDLImplementationInterceptorRecover(_cmd);\
     logBegin(self, _class, _cmd, _data);\
     void *ret = NULL;\
@@ -182,6 +186,9 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _filter = filter;
+        void *exclusiveFlag = (void *)0b10UL;
+        void *setterFlag = (void *)0b01UL;
+
         __unused BOOL ret = YES;
 
         // getters
@@ -212,14 +219,14 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(sortedArrayUsingSelector:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(subarrayWithRange:) withInterceptorImplementation:(IMP)&impR1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(writeToURL:error:) withInterceptorImplementation:(IMP)&impA2];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(makeObjectsPerformSelector:) withInterceptorImplementation:(IMP)&impA1];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(makeObjectsPerformSelector:withObject:) withInterceptorImplementation:(IMP)&impA2];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(makeObjectsPerformSelector:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(makeObjectsPerformSelector:withObject:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(objectsAtIndexes:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(objectAtIndexedSubscript:) withInterceptorImplementation:(IMP)&impA1];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(enumerateObjectsUsingBlock:) withInterceptorImplementation:(IMP)&impA1];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(enumerateObjectsWithOptions:usingBlock:) withInterceptorImplementation:(IMP)&impA2];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(enumerateObjectsAtIndexes:options:usingBlock:) withInterceptorImplementation:(IMP)&impA3];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(enumerateObjectsAtIndexes:options:usingBlock:) withInterceptorImplementation:(IMP)&impA3];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(enumerateObjectsUsingBlock:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(enumerateObjectsWithOptions:usingBlock:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(enumerateObjectsAtIndexes:options:usingBlock:) withInterceptorImplementation:(IMP)&impA3 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(enumerateObjectsAtIndexes:options:usingBlock:) withInterceptorImplementation:(IMP)&impA3 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(indexOfObjectPassingTest:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(indexOfObjectWithOptions:passingTest:) withInterceptorImplementation:(IMP)&impA2];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(indexOfObjectAtIndexes:options:passingTest:) withInterceptorImplementation:(IMP)&impA3];
@@ -229,9 +236,9 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(sortedArrayUsingComparator:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(sortedArrayWithOptions:usingComparator:) withInterceptorImplementation:(IMP)&impA2];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(indexOfObject:inSortedRange:options:usingComparator:) withInterceptorImplementation:(IMP)&impA1R1A2];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:withOptions:usingEquivalenceTest:) withInterceptorImplementation:(IMP)&impA3];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:withOptions:) withInterceptorImplementation:(IMP)&impA2];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:) withInterceptorImplementation:(IMP)&impA1];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:withOptions:usingEquivalenceTest:) withInterceptorImplementation:(IMP)&impA3 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:withOptions:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
+        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:exclusiveFlag];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(arrayByApplyingDifference:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(getObjects:) withInterceptorImplementation:(IMP)&impA1];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(writeToFile:atomically:) withInterceptorImplementation:(IMP)&impA2];
@@ -241,33 +248,33 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
 
         // setters
         Class mutableArrayClass = [NSMutableArray class];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(addObject:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(insertObject:atIndex:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeLastObject) withInterceptorImplementation:(IMP)&impA0 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectAtIndex:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(replaceObjectAtIndex:withObject:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(addObjectsFromArray:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(exchangeObjectAtIndex:withObjectAtIndex:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeAllObjects) withInterceptorImplementation:(IMP)&impA0 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObject:inRange:) withInterceptorImplementation:(IMP)&impA1R1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObject:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectIdenticalTo:inRange:) withInterceptorImplementation:(IMP)&impA1R1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectIdenticalTo:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectsFromIndices:numIndices:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectsInArray:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectsInRange:) withInterceptorImplementation:(IMP)&impR1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(replaceObjectsInRange:withObjectsFromArray:range:) withInterceptorImplementation:(IMP)&impR1A1R1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(replaceObjectsInRange:withObjectsFromArray:) withInterceptorImplementation:(IMP)&impR1A1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(setArray:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortUsingFunction:context:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortUsingSelector:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(insertObjects:atIndexes:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectsAtIndexes:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(replaceObjectsAtIndexes:withObjects:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(setObject:atIndexedSubscript:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortUsingComparator:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortWithOptions:usingComparator:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(applyDifference:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:(void *)YES];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(addObject:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(insertObject:atIndex:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeLastObject) withInterceptorImplementation:(IMP)&impA0 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectAtIndex:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(replaceObjectAtIndex:withObject:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(addObjectsFromArray:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(exchangeObjectAtIndex:withObjectAtIndex:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeAllObjects) withInterceptorImplementation:(IMP)&impA0 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObject:inRange:) withInterceptorImplementation:(IMP)&impA1R1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObject:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectIdenticalTo:inRange:) withInterceptorImplementation:(IMP)&impA1R1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectIdenticalTo:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectsFromIndices:numIndices:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectsInArray:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectsInRange:) withInterceptorImplementation:(IMP)&impR1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(replaceObjectsInRange:withObjectsFromArray:range:) withInterceptorImplementation:(IMP)&impR1A1R1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(replaceObjectsInRange:withObjectsFromArray:) withInterceptorImplementation:(IMP)&impR1A1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(setArray:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortUsingFunction:context:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortUsingSelector:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(insertObjects:atIndexes:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(removeObjectsAtIndexes:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(replaceObjectsAtIndexes:withObjects:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(setObject:atIndexedSubscript:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortUsingComparator:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortWithOptions:usingComparator:) withInterceptorImplementation:(IMP)&impA2 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
+        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(applyDifference:) withInterceptorImplementation:(IMP)&impA1 isStructRet:@(NO) addIfNotExistent:NO data:setterFlag];
 
         // creations
         NSUInteger m1 = [arrayClass pdl_interceptClusterSelector:@selector(mutableCopy) withInterceptorImplementation:(IMP)&mutableCopy];
