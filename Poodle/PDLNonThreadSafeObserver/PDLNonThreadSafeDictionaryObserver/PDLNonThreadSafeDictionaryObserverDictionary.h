@@ -6,15 +6,11 @@
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
-#import "PDLNonThreadSafeObserverCriticalResource.h"
-#import "PDLBacktrace.h"
+#import "PDLNonThreadSafeClusterObserverCluster.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PDLNonThreadSafeDictionaryObserverDictionary : PDLNonThreadSafeObserverCriticalResource
-
-@property (readonly) NSString *name;
-@property (readonly) PDLBacktrace *backtrace;
+@interface PDLNonThreadSafeDictionaryObserverDictionary : PDLNonThreadSafeClusterObserverCluster
 
 @end
 
