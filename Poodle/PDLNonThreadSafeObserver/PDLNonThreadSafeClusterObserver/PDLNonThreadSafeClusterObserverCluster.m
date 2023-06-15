@@ -20,8 +20,8 @@
     BOOL(^filter)(PDLBacktrace *, NSString **name) = [self.class filter];
     NSString *name = nil;
     if (filter) {
-        BOOL exclusive = filter(backtrace, &name);
-        if (exclusive) {
+        BOOL valid = filter(backtrace, &name);
+        if (!valid) {
             return nil;
         }
     }

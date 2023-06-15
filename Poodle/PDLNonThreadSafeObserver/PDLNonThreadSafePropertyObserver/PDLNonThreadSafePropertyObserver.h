@@ -25,8 +25,7 @@ typedef _Nullable PDLNonThreadSafePropertyObserver_PropertyFilter(^_Nullable PDL
 
 + (void)observeClassesForImage:(const char *)image
                     classFilter:(PDLNonThreadSafePropertyObserver_ClassFilter _Nullable)classFilter
-            classPropertyFilter:(PDLNonThreadSafePropertyObserver_ClassPropertyFilter _Nullable)classPropertyFilter
-         classPropertyMapFilter:(NSDictionary <NSString *, NSArray <NSString *> *> * _Nullable)classPropertyMapFilter;
+            classPropertyFilter:(PDLNonThreadSafePropertyObserver_ClassPropertyFilter _Nullable)classPropertyFilter;
 
 @end
 

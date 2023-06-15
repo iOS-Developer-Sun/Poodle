@@ -40,7 +40,7 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
     return _filter;
 }
 
-+ (void)enableWithFilter:(BOOL(^)(PDLBacktrace *backtrace, NSString **name))filter {
++ (void)observeWithFilter:(BOOL(^)(PDLBacktrace *backtrace, NSString **name))filter {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         _filter = filter;
