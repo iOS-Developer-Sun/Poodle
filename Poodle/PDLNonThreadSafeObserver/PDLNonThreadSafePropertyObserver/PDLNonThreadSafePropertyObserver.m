@@ -62,8 +62,7 @@ static id pdl_nonThreadSafePropertyAllocWithZone(__unsafe_unretained id self, SE
 }
 
 + (void)observeClass:(Class)aClass
-       propertyFilter:(PDLNonThreadSafePropertyObserver_PropertyFilter)propertyFilter
-    propertyMapFilter:(NSArray <NSString *> *)propertyMapFilter {
+       propertyFilter:(PDLNonThreadSafePropertyObserver_PropertyFilter)propertyFilter {
     if (!aClass) {
         return;
     }
@@ -79,10 +78,7 @@ static id pdl_nonThreadSafePropertyAllocWithZone(__unsafe_unretained id self, SE
         objc_property_t property = propertyList[i];
         const char *name = property_getName(property);
         NSString *propertyName = @(name);
-        if (propertyFilter && propertyFilter(propertyName)) {
-            continue;
-        }
-        if ([propertyMapFilter containsObject:propertyName]) {
+        if (propertyFilter && !propertyFilter(propertyName)) {
             continue;
         }
 
@@ -160,14 +156,13 @@ static id pdl_nonThreadSafePropertyAllocWithZone(__unsafe_unretained id self, SE
 
 + (void)observeClassesForImage:(const char * _Nonnull)image
                     classFilter:(PDLNonThreadSafePropertyObserver_ClassFilter)classFilter
-            classPropertyFilter:(PDLNonThreadSafePropertyObserver_ClassPropertyFilter)classPropertyFilter
-         classPropertyMapFilter:(NSDictionary <NSString *, NSArray <NSString *> *> *)classPropertyMapFilter {
+            classPropertyFilter:(PDLNonThreadSafePropertyObserver_ClassPropertyFilter)classPropertyFilter {
     unsigned int outCount = 0;
     const char **classNames = objc_copyClassNamesForImage(image, &outCount);
     for (unsigned int i = 0; i < outCount; i++) {
         const char *className = classNames[i];
         if (classFilter) {
-            if (classFilter(@(className))) {
+            if (!classFilter(@(className))) {
                 continue;
             }
         }
@@ -176,7 +171,7 @@ static id pdl_nonThreadSafePropertyAllocWithZone(__unsafe_unretained id self, SE
         if (classPropertyFilter) {
             propertyFilter = classPropertyFilter(@(className));
         }
-        [self observeClass:aClass propertyFilter:propertyFilter propertyMapFilter:classPropertyMapFilter[@(className)]];
+        [self observeClass:aClass propertyFilter:propertyFilter];
     }
     free(classNames);
 }

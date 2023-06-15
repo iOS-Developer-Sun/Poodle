@@ -46,16 +46,20 @@ static void *pdl_validate_object(void *address) {
         return NULL;
     }
 
-    return address;
-}
+    if (((unsigned long)address & 0xFFFFFFFF) == 0) {
+        return NULL;
+    }
 
-static void *pdl_get_swift_superclass(void *cls) {
-    return ((void **)cls)[1];
+    return address;
 }
 
 static bool pdl_is_class_available(void *cls) {
     unsigned long address = (unsigned long)cls;
-    return ((address & 0xFFFFFFFF) > 0x10) && (!(address & 0x8000000000000000LL));
+    return ((address & 0xFFFFFFFF) > 0x10000) && (!(address & 0x8000000000000000LL));
+}
+
+static void *pdl_get_swift_superclass(void *cls) {
+    return ((void **)cls)[1];
 }
 
 static NSMutableDictionary *pdl_variable_name_dictionary(void) {
@@ -127,11 +131,10 @@ extern void *swift_beginAccess(void *, void **, int8_t, int64_t);
 static void *(*pdl_swift_beginAccess_original)(void *, void **, int8_t, int64_t) = NULL;
 static void *pdl_swift_beginAccess(void *address, void **result, int8_t flags, int64_t reserved) {
     void *ret = pdl_swift_beginAccess_original(address, result, flags, reserved);
-
-    void *objectAddress = pdl_get_object(address);
-    objectAddress = pdl_validate_object(address);
+    void *possibleObjectAddress = pdl_get_object(address);
+    void *objectAddress = pdl_validate_object(possibleObjectAddress);
     intptr_t offset = address - objectAddress;
-    if (offset > 0 && objectAddress) {
+    if (offset > 0 && offset < 0x10000 && objectAddress) {
         Class aClass = object_getClass((__bridge __unsafe_unretained id)(objectAddress));
         void *cls = (__bridge void *)aClass;
         void *superClass = pdl_get_swift_superclass(cls);
