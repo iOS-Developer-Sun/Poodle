@@ -45,6 +45,7 @@
 + (instancetype)systemImageWithName:(NSString *)name;
 + (NSArray *)systemImages;
 
+- (void)enumerateNonLazySymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action;
 - (void)enumerateLazySymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action;
 - (void)enumerateSymbolPointers:(void(^)(PDLSystemImage *systemImage, pdl_nlist *nlist, const char *symbol, void **address))action;
 
