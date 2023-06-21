@@ -511,6 +511,18 @@
 		C01B8B2A272A8DFF0083030A /* NSMutableDictionary+PDLThreadSafety.m in Sources */ = {isa = PBXBuildFile; fileRef = C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */; };
 		C01B8B34272A8E880083030A /* NSMutableDictionary+PDLThreadSafety.m in Sources */ = {isa = PBXBuildFile; fileRef = C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */; };
 		C01B8B35272A8E8C0083030A /* NSMutableDictionary+PDLThreadSafety.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C01B8B29272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.h */; };
+		C03D59172A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D590D2A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m */; };
+		C03D59182A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D590D2A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m */; };
+		C03D59192A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D590E2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.m */; };
+		C03D591A2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D590E2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.m */; };
+		C03D591B2A3B03540039053F /* PDLNonThreadSafeArrayObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D590F2A3B03540039053F /* PDLNonThreadSafeArrayObserver.m */; };
+		C03D591C2A3B03540039053F /* PDLNonThreadSafeArrayObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D590F2A3B03540039053F /* PDLNonThreadSafeArrayObserver.m */; };
+		C03D591D2A3B03540039053F /* PDLNonThreadSafeClusterObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D59122A3B03540039053F /* PDLNonThreadSafeClusterObserver.m */; };
+		C03D591E2A3B03540039053F /* PDLNonThreadSafeClusterObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D59122A3B03540039053F /* PDLNonThreadSafeClusterObserver.m */; };
+		C03D591F2A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D59152A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.m */; };
+		C03D59202A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D59152A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.m */; };
+		C03D59212A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D59162A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m */; };
+		C03D59222A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D59162A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m */; };
 		C06B8F31277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = C06B8F30277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m */; };
 		C06B8F32277060E100B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m in Sources */ = {isa = PBXBuildFile; fileRef = C06B8F30277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m */; };
 		C06B8F3927721EBB00B6A8A3 /* NSArray+PDLSafeOperation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B85068EE250121690028E642 /* NSArray+PDLSafeOperation.h */; };
@@ -523,7 +535,7 @@
 		C083BA2928CB12470016E214 /* NSObject+PDLImplementationInterceptor.m in Sources */ = {isa = PBXBuildFile; fileRef = C083BA2828CB12470016E214 /* NSObject+PDLImplementationInterceptor.m */; };
 		C083BA2B28CB1BB50016E214 /* NSObject+PDLMethod.m in Sources */ = {isa = PBXBuildFile; fileRef = C083BA2A28CB1BB50016E214 /* NSObject+PDLMethod.m */; };
 		C083BA2D28CB209B0016E214 /* PDLBacktrace.m in Sources */ = {isa = PBXBuildFile; fileRef = C083BA2C28CB209B0016E214 /* PDLBacktrace.m */; };
-		C0962ACE292336AF00A838D1 /* PDLMemoryTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */; };
+		C0962ACE292336AF00A838D1 /* PDLMemoryTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C0962AD8292336D900A838D1 /* PDLMemoryTracer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0962ACC292336AF00A838D1 /* PDLMemoryTracer.h */; };
 		C0962AD9292336DE00A838D1 /* PDLMemoryTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C0AEE43C2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE43A2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m */; };
@@ -2878,6 +2890,18 @@
 		C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+PDLThreadSafety.m"; sourceTree = "<group>"; };
 		C01B8B29272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+PDLThreadSafety.h"; sourceTree = "<group>"; };
 		C01B8B33272A8E710083030A /* libNSMutableDictionary+PDLThreadSafety.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSMutableDictionary+PDLThreadSafety.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C03D590A2A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeArrayObserverObject.h; sourceTree = "<group>"; };
+		C03D590B2A3B03540039053F /* PDLNonThreadSafeArrayObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeArrayObserver.h; sourceTree = "<group>"; };
+		C03D590C2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeArrayObserverArray.h; sourceTree = "<group>"; };
+		C03D590D2A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeArrayObserverObject.m; sourceTree = "<group>"; };
+		C03D590E2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeArrayObserverArray.m; sourceTree = "<group>"; };
+		C03D590F2A3B03540039053F /* PDLNonThreadSafeArrayObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeArrayObserver.m; sourceTree = "<group>"; };
+		C03D59112A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeClusterObserverCluster.h; sourceTree = "<group>"; };
+		C03D59122A3B03540039053F /* PDLNonThreadSafeClusterObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeClusterObserver.m; sourceTree = "<group>"; };
+		C03D59132A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeClusterObserverObject.h; sourceTree = "<group>"; };
+		C03D59142A3B03540039053F /* PDLNonThreadSafeClusterObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeClusterObserver.h; sourceTree = "<group>"; };
+		C03D59152A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeClusterObserverCluster.m; sourceTree = "<group>"; };
+		C03D59162A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeClusterObserverObject.m; sourceTree = "<group>"; };
 		C06B8F2F277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeDictionaryObserverDictionary.h; sourceTree = "<group>"; };
 		C06B8F30277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeDictionaryObserverDictionary.m; sourceTree = "<group>"; };
 		C083BA1228CAE9BE0016E214 /* libpdl_pac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_pac.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5060,6 +5084,8 @@
 		C010A6C227114D8300A785E9 /* PDLNonThreadSafeObserver */ = {
 			isa = PBXGroup;
 			children = (
+				C03D59092A3B03540039053F /* PDLNonThreadSafeArrayObserver */,
+				C03D59102A3B03540039053F /* PDLNonThreadSafeClusterObserver */,
 				C010A6D227114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver */,
 				C010A6C527114D8300A785E9 /* PDLNonThreadSafeObserver.h */,
 				C010A6CF27114D8300A785E9 /* PDLNonThreadSafeObserver.m */,
@@ -5110,6 +5136,32 @@
 				C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */,
 			);
 			path = "NSMutableDictionary+PDLThreadSafety";
+			sourceTree = "<group>";
+		};
+		C03D59092A3B03540039053F /* PDLNonThreadSafeArrayObserver */ = {
+			isa = PBXGroup;
+			children = (
+				C03D590B2A3B03540039053F /* PDLNonThreadSafeArrayObserver.h */,
+				C03D590F2A3B03540039053F /* PDLNonThreadSafeArrayObserver.m */,
+				C03D590C2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.h */,
+				C03D590E2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.m */,
+				C03D590A2A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.h */,
+				C03D590D2A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m */,
+			);
+			path = PDLNonThreadSafeArrayObserver;
+			sourceTree = "<group>";
+		};
+		C03D59102A3B03540039053F /* PDLNonThreadSafeClusterObserver */ = {
+			isa = PBXGroup;
+			children = (
+				C03D59142A3B03540039053F /* PDLNonThreadSafeClusterObserver.h */,
+				C03D59122A3B03540039053F /* PDLNonThreadSafeClusterObserver.m */,
+				C03D59112A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.h */,
+				C03D59152A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.m */,
+				C03D59132A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.h */,
+				C03D59162A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m */,
+			);
+			path = PDLNonThreadSafeClusterObserver;
 			sourceTree = "<group>";
 		};
 		C083BA1328CAE9E50016E214 /* pdl_pac */ = {
@@ -9455,6 +9507,7 @@
 				B85D4616240E85A600CBF758 /* pdl_systemcall-arm64.s in Sources */,
 				B8528191255132CA00B74F87 /* PDLRunLoopObserverLoop.m in Sources */,
 				B85D4617240E85A600CBF758 /* pdl_systemcall-i386.s in Sources */,
+				C03D59192A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.m in Sources */,
 				B85D4618240E85A600CBF758 /* pdl_systemcall-x86_64.s in Sources */,
 				B85D45BC240E859000CBF758 /* CAAnimation+PDLExtension.m in Sources */,
 				B85D45BD240E859000CBF758 /* CADisplayLink+PDLExtension.m in Sources */,
@@ -9481,6 +9534,7 @@
 				B85D45CA240E859000CBF758 /* NSObject+PDLThreadSafetifyProperty.m in Sources */,
 				B85D45CB240E859000CBF758 /* NSObject+PDLWeakifyUnsafeUnretainedProperty.m in Sources */,
 				B886661C2607808000458D3F /* PDLApplication.m in Sources */,
+				C03D591D2A3B03540039053F /* PDLNonThreadSafeClusterObserver.m in Sources */,
 				B85D45CC240E859000CBF758 /* NSThread+PDLExtension.m in Sources */,
 				B85D45CD240E859000CBF758 /* NSUserDefaults+PDLExtension.m in Sources */,
 				B85D45CE240E859000CBF758 /* pdl_mach.m in Sources */,
@@ -9567,6 +9621,7 @@
 				B85D45F6240E859000CBF758 /* PDLPropertyDebuggerView.m in Sources */,
 				B899F9EF245065DA00EFBB39 /* PDLViewControllerListViewController.m in Sources */,
 				B80AF8D524769E78009B9AF8 /* pdl_malloc_zone.c in Sources */,
+				C03D59212A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m in Sources */,
 				B85D45F7240E859000CBF758 /* PDLScreenDebugger.m in Sources */,
 				B88865D024BF21AE00D58BC7 /* NSObject+PDLMethod.m in Sources */,
 				B85D45F8240E859000CBF758 /* PDLScreenDebuggerWindow.m in Sources */,
@@ -9575,11 +9630,14 @@
 				B85D45FA240E859000CBF758 /* PDLBoolPropertyDebugger.m in Sources */,
 				B85D45FB240E859000CBF758 /* PDLColorPropertyDebugger.m in Sources */,
 				B85D45FC240E859000CBF758 /* PDLFloatPropertyDebugger.m in Sources */,
+				C03D59172A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m in Sources */,
 				B88865F324C02F1A00D58BC7 /* pdl_thread_storage.c in Sources */,
 				B8220D352681DFA4002018D8 /* dsc_iterator.cpp in Sources */,
+				C03D591F2A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.m in Sources */,
 				B8528194255132CA00B74F87 /* PDLBacktraceRecord.m in Sources */,
 				C010A6E027114D8300A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */,
 				B85D45FD240E859000CBF758 /* PDLPropertyDebugger.m in Sources */,
+				C03D591B2A3B03540039053F /* PDLNonThreadSafeArrayObserver.m in Sources */,
 				B85D45FE240E859000CBF758 /* PDLRectPropertyDebugger.m in Sources */,
 				B85D45FF240E859000CBF758 /* PDLSystemImage.m in Sources */,
 				B85D4600240E859000CBF758 /* PDLViewController.m in Sources */,
@@ -9871,11 +9929,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				C010A6E927114E5E00A785E9 /* PDLNonThreadSafeDictionaryObserver.m in Sources */,
+				C03D59182A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m in Sources */,
 				C0AEE4412A2DB4C400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m in Sources */,
 				C010A6EA27114E5E00A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m in Sources */,
 				C010A6EB27114E5E00A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */,
 				C010A6EC27114E5E00A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */,
 				C010A6ED27114E5E00A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */,
+				C03D591A2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.m in Sources */,
+				C03D591C2A3B03540039053F /* PDLNonThreadSafeArrayObserver.m in Sources */,
+				C03D59222A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m in Sources */,
 				C010A6E427114E4900A785E9 /* PDLNonThreadSafeObserver.m in Sources */,
 				C010A6E527114E4900A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */,
 				C0AEE43D2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m in Sources */,
@@ -9883,6 +9945,8 @@
 				C010A6E627114E4900A785E9 /* PDLNonThreadSafeObserverChecker.m in Sources */,
 				C06B8F32277060E100B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m in Sources */,
 				C010A6E727114E4900A785E9 /* PDLNonThreadSafeObserverCriticalResource.m in Sources */,
+				C03D591E2A3B03540039053F /* PDLNonThreadSafeClusterObserver.m in Sources */,
+				C03D59202A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.m in Sources */,
 				C010A6E827114E4900A785E9 /* PDLNonThreadSafeObserverObject.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,6 +9,7 @@
 #import "PDLProcessInfo.h"
 #import <sys/sysctl.h>
 #import <sys/types.h>
+#import <QuartzCore/QuartzCore.h>
 
 @implementation PDLProcessInfo
 
@@ -29,14 +30,21 @@
         struct kinfo_proc proc;
         size_t size = sizeof(proc);
         int ret = sysctl(mib, 4, &proc, &size, NULL, 0);
+        NSDate *now = [NSDate date];
+        NSTimeInterval current = CACurrentMediaTime();
+        NSTimeInterval processStartMediaTime = 0;
         NSDate *processStartDate = nil;
         if (ret == 0) {
             NSTimeInterval timeInterval = proc.kp_proc.p_starttime.tv_sec + proc.kp_proc.p_starttime.tv_usec * 1e-6;
             processStartDate = [NSDate dateWithTimeIntervalSince1970:timeInterval];
+            NSTimeInterval diff = [now timeIntervalSinceDate:processStartDate];
+            processStartMediaTime = current - diff;
         } else {
-            processStartDate = [NSDate date];
+            processStartDate = now;
+            processStartMediaTime = current;
         }
         _processStartDate = processStartDate;
+        _processStartMediaTime = processStartMediaTime;
     }
     return self;
 }

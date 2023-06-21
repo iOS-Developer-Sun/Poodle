@@ -30,9 +30,9 @@
 #elif defined(__arm__)
 #define pdl_thread_fake_end_size 0x38c
 #elif defined(__arm64e__)
-#define pdl_thread_fake_end_size 0x3c4
+#define pdl_thread_fake_end_size 0x400
 #elif defined(__arm64__)
-#define pdl_thread_fake_end_size 0x3c0
+#define pdl_thread_fake_end_size 0x3fc
 #endif
 
 #else
@@ -40,13 +40,13 @@
 #if defined(__i386__)
 #define pdl_thread_fake_end_size 0x170
 #elif defined(__x86_64__)
-#define pdl_thread_fake_end_size 0x16e
+#define pdl_thread_fake_end_size 0x1ac
 #elif defined(__arm__)
 #define pdl_thread_fake_end_size 0x154
 #elif defined(__arm64e__)
-#define pdl_thread_fake_end_size 0x188
+#define pdl_thread_fake_end_size 0x1b8
 #elif defined(__arm64__)
-#define pdl_thread_fake_end_size 0x184
+#define pdl_thread_fake_end_size 0x1b4
 #endif
 
 #endif

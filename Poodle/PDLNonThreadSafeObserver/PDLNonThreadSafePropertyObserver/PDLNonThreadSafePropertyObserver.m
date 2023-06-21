@@ -61,8 +61,7 @@ static id pdl_nonThreadSafePropertyAllocWithZone(__unsafe_unretained id self, SE
     return [PDLNonThreadSafePropertyObserverObject observerObjectForObject:object];
 }
 
-+ (void)observeClass:(Class)aClass
-       propertyFilter:(PDLNonThreadSafePropertyObserver_PropertyFilter)propertyFilter {
++ (void)observeClass:(Class)aClass propertyFilter:(PDLNonThreadSafePropertyObserver_PropertyFilter)propertyFilter {
     if (!aClass) {
         return;
     }
@@ -154,9 +153,7 @@ static id pdl_nonThreadSafePropertyAllocWithZone(__unsafe_unretained id self, SE
     }
 }
 
-+ (void)observeClassesForImage:(const char * _Nonnull)image
-                    classFilter:(PDLNonThreadSafePropertyObserver_ClassFilter)classFilter
-            classPropertyFilter:(PDLNonThreadSafePropertyObserver_ClassPropertyFilter)classPropertyFilter {
++ (void)observeClassesForImage:(const char * _Nonnull)image classFilter:(PDLNonThreadSafePropertyObserver_ClassFilter)classFilter classPropertyFilter:(PDLNonThreadSafePropertyObserver_ClassPropertyFilter)classPropertyFilter {
     unsigned int outCount = 0;
     const char **classNames = objc_copyClassNamesForImage(image, &outCount);
     for (unsigned int i = 0; i < outCount; i++) {

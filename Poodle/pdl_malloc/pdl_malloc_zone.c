@@ -92,11 +92,11 @@ void pdl_malloc_set_pthread_create(int(*pthread_create)(pthread_t *, const pthre
 
 static pthread_mutex_t _mutex = PTHREAD_MUTEX_INITIALIZER;
 
-static void pdl_malloc_lock() {
+static void pdl_malloc_lock(void) {
     pthread_mutex_lock(&_mutex);
 }
 
-static void pdl_malloc_unlock() {
+static void pdl_malloc_unlock(void) {
     pthread_mutex_unlock(&_mutex);
 }
 

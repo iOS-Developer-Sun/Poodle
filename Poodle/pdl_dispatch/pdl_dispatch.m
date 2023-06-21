@@ -11,6 +11,8 @@
 #import <malloc/malloc.h>
 #import <pthread.h>
 #import "pdl_hook.h"
+#import <mach-o/ldsyms.h>
+#import <dlfcn.h>
 
 enum {
     DISPATCH_QUEUE_OVERCOMMIT = 0x2ull,
@@ -144,14 +146,18 @@ static void pdl_dispatch_init_queue(dispatch_queue_t queue) {
     pdl_dispatch_register_queue(queue, false);
 }
 
+static bool pdl_dispatch_queue_enabled = false;
+
 DISPATCH_RETURNS_RETAINED dispatch_queue_t pdl_dispatch_queue_create(const char *label, dispatch_queue_attr_t attr, DISPATCH_RETURNS_RETAINED dispatch_queue_t (*dispatch_queue_create_original)(const char *label, dispatch_queue_attr_t attr)) {
     dispatch_queue_t queue = dispatch_queue_create_original(label, attr);
+    pdl_dispatch_queue_enabled = true;
     pdl_dispatch_init_queue(queue);
     return queue;
 }
 
 DISPATCH_RETURNS_RETAINED dispatch_queue_t pdl_dispatch_queue_create_with_target(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t target, DISPATCH_RETURNS_RETAINED dispatch_queue_t (*dispatch_queue_create_with_target_original)(const char *label, dispatch_queue_attr_t attr, dispatch_queue_t target)) {
     dispatch_queue_t queue = dispatch_queue_create_with_target_original(label, attr, target);
+    pdl_dispatch_queue_enabled = true;
     pdl_dispatch_init_queue(queue);
     return queue;
 }
@@ -194,7 +200,7 @@ static DISPATCH_RETURNS_RETAINED dispatch_queue_t pdl_hook_dispatch_queue_create
 }
 
 // (extension in Dispatch):__C.OS_dispatch_queue.init(label: Swift.String, qos: Dispatch.DispatchQoS, attributes: (extension in Dispatch):__C.OS_dispatch_queue.Attributes, autoreleaseFrequency: (extension in Dispatch):__C.OS_dispatch_queue.AutoreleaseFrequency, target: __C.OS_dispatch_queue?) -> __C.OS_dispatch_queue
-extern void *$sSo17OS_dispatch_queueC8DispatchE5label3qos10attributes20autoreleaseFrequency6targetABSS_AC0D3QoSVAbCE10AttributesVAbCE011AutoreleaseI0OABSgtcfC(void *, void *, void *, void *, void *);
+//extern void *$sSo17OS_dispatch_queueC8DispatchE5label3qos10attributes20autoreleaseFrequency6targetABSS_AC0D3QoSVAbCE10AttributesVAbCE011AutoreleaseI0OABSgtcfC(void *, void *, void *, void *, void *);
 static void *(*pdl_hook_OS_dispatch_queue_original)(void *, void *, void *, void *, void *) = NULL;
 static void *pdl_hook_OS_dispatch_queue(void *a, void *b, void *c, void *d, void *e) {
     void *queue = pdl_hook_OS_dispatch_queue_original(a, b, c, d, e);
@@ -203,36 +209,46 @@ static void *pdl_hook_OS_dispatch_queue(void *a, void *b, void *c, void *d, void
 }
 
 void pdl_dispatch_queue_enable(void) {
-    static bool init = false;
-    if (init) {
+    if (pdl_dispatch_queue_enabled) {
         return;
     }
 
-    int count = 3;
+    void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
+    pdl_hook_OS_dispatch_queue_original = dlsym(handle, "$sSo17OS_dispatch_queueC8DispatchE5label3qos10attributes20autoreleaseFrequency6targetABSS_AC0D3QoSVAbCE10AttributesVAbCE011AutoreleaseI0OABSgtcfC");
+    dlclose(handle);
+
+    int count = 0;
     pdl_hook_item items[count];
-    items[0] = (pdl_hook_item) {
+    items[count++] = (pdl_hook_item) {
         "dispatch_queue_create",
         &dispatch_queue_create,
         &pdl_hook_dispatch_queue_create,
         (void **)&pdl_hook_dispatch_queue_create_original,
     };
-    items[1] = (pdl_hook_item) {
-        "dispatch_queue_create_with_target",
-        &dispatch_queue_create_with_target,
-        &pdl_hook_dispatch_queue_create_with_target,
-        (void **)&pdl_hook_dispatch_queue_create_with_target_original,
-    };
-    items[2] = (pdl_hook_item) {
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 10) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+        items[count++] = (pdl_hook_item) {
+            "dispatch_queue_create_with_target",
+            &dispatch_queue_create_with_target,
+            &pdl_hook_dispatch_queue_create_with_target,
+            (void **)&pdl_hook_dispatch_queue_create_with_target_original,
+        };
+#pragma clang diagnostic pop
+    }
+
+    items[count++] = (pdl_hook_item) {
         "$sSo17OS_dispatch_queueC8DispatchE5label3qos10attributes20autoreleaseFrequency6targetABSS_AC0D3QoSVAbCE10AttributesVAbCE011AutoreleaseI0OABSgtcfC",
-        &$sSo17OS_dispatch_queueC8DispatchE5label3qos10attributes20autoreleaseFrequency6targetABSS_AC0D3QoSVAbCE10AttributesVAbCE011AutoreleaseI0OABSgtcfC,
+        NULL, // &$sSo17OS_dispatch_queueC8DispatchE5label3qos10attributes20autoreleaseFrequency6targetABSS_AC0D3QoSVAbCE10AttributesVAbCE011AutoreleaseI0OABSgtcfC,
         &pdl_hook_OS_dispatch_queue,
-        (void **)&pdl_hook_OS_dispatch_queue_original,
+        NULL, //(void **)&pdl_hook_OS_dispatch_queue_original,
     };
 
     int ret = pdl_hook(items, count);
     assert(ret > 0);
 
-    init = true;
+    pdl_dispatch_queue_enabled = true;
 }
 
 @end

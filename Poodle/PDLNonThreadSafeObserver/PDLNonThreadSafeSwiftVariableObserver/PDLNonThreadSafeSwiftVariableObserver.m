@@ -15,6 +15,9 @@
 #import "PDLCrash.h"
 #import "pdl_mach_object.h"
 #import <mach-o/getsect.h>
+#include <mach-o/ldsyms.h>
+#include <dlfcn.h>
+
 //#import "pdl_malloc.h"
 
 @implementation PDLNonThreadSafeSwiftVariableObserver
@@ -127,7 +130,7 @@ static id pdl_nonThreadSafeSwiftVariableAllocWithZone(__unsafe_unretained id sel
 
 #pragma mark - public methods
 
-extern void *swift_beginAccess(void *, void **, int8_t, int64_t);
+//extern void *swift_beginAccess(void *, void **, int8_t, int64_t);
 static void *(*pdl_swift_beginAccess_original)(void *, void **, int8_t, int64_t) = NULL;
 static void *pdl_swift_beginAccess(void *address, void **result, int8_t flags, int64_t reserved) {
     void *ret = pdl_swift_beginAccess_original(address, result, flags, reserved);
@@ -191,25 +194,32 @@ static void *pdl_swift_allocObject(void *cls, size_t requiredSize, size_t requir
 
 + (void)observeWithClassFilter:(PDLNonThreadSafeSwiftVariableObserver_ClassFilter)classFilter classVariableFilter:(PDLNonThreadSafeSwiftVariableObserver_ClassVariableFilter)classVariableFilter {
 #if defined(__arm64__) || defined(__x86_64__)
+
+    void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
+    pdl_swift_beginAccess_original = dlsym(handle, "swift_beginAccess");
+    pdl_swift_endAccess_original = dlsym(handle, "swift_beginAccess");
+    pdl_swift_allocObject_original = dlsym(handle, "swift_beginAccess");
+    dlclose(handle);
+
     int count = 3;
     pdl_hook_item items[count];
     items[0] = (pdl_hook_item){
         "swift_beginAccess",
-        &swift_beginAccess,
+        NULL, // &swift_beginAccess,
         &pdl_swift_beginAccess,
-        (void **)&pdl_swift_beginAccess_original,
+        NULL, // (void **)&pdl_swift_beginAccess_original,
     };
     items[1] = (pdl_hook_item){
         "swift_endAccess",
-        &swift_endAccess,
+        NULL, // &swift_endAccess,
         &pdl_swift_endAccess,
-        (void **)&pdl_swift_endAccess_original,
+        NULL, // (void **)&pdl_swift_endAccess_original,
     };
     items[2] = (pdl_hook_item){
         "swift_allocObject",
-        &swift_allocObject,
+        NULL, // &swift_allocObject,
         &pdl_swift_allocObject,
-        (void **)&pdl_swift_allocObject_original,
+        NULL, // (void **)&pdl_swift_allocObject_original,
     };
     int ret = pdl_hook(items, count);
     assert(ret == count);
