@@ -39,34 +39,34 @@ ______PDL_THREAD_FAKE_END_____:
       bf:	31 c0	xorl	%eax, %eax
       c1:	2b 45 d0	subl	-48(%rbp), %eax
       c4:	89 45 d0	movl	%eax, -48(%rbp)
-      c7:	31 ff	xorl	%edi, %edi
-      c9:	c7 45 c4 02 00 00 00	movl	$2, -60(%rbp)
-      d0:	8b 45 cc	movl	-52(%rbp), %eax
-      d3:	8b 4d c4	movl	-60(%rbp), %ecx
-      d6:	0f af c1	imull	%ecx, %eax
-      d9:	89 c1	movl	%eax, %ecx
-      db:	48 89 e0	movq	%rsp, %rax
-      de:	48 89 45 b8	movq	%rax, -72(%rbp)
-      e2:	48 8d 14 cd 0f 00 00 00	leaq	15(,%rcx,8), %rdx
-      ea:	48 83 e2 f0	andq	$-16, %rdx
-      ee:	48 89 e0	movq	%rsp, %rax
-      f1:	48 29 d0	subq	%rdx, %rax
-      f4:	48 89 c4	movq	%rax, %rsp
-      f7:	48 89 4d b0	movq	%rcx, -80(%rbp)
-      fb:	48 89 45 a8	movq	%rax, -88(%rbp)
+      c7:	c7 45 c4 02 00 00 00	movl	$2, -60(%rbp)
+      ce:	8b 45 cc	movl	-52(%rbp), %eax
+      d1:	8b 4d c4	movl	-60(%rbp), %ecx
+      d4:	0f af c1	imull	%ecx, %eax
+      d7:	89 c1	movl	%eax, %ecx
+      d9:	48 89 e0	movq	%rsp, %rax
+      dc:	48 89 45 b8	movq	%rax, -72(%rbp)
+      e0:	48 8d 14 cd 0f 00 00 00	leaq	15(,%rcx,8), %rdx
+      e8:	48 83 e2 f0	andq	$-16, %rdx
+      ec:	48 89 e0	movq	%rsp, %rax
+      ef:	48 29 d0	subq	%rdx, %rax
+      f2:	48 89 c4	movq	%rax, %rsp
+      f5:	48 89 4d b0	movq	%rcx, -80(%rbp)
+      f9:	48 89 45 a8	movq	%rax, -88(%rbp)
+      fd:	31 ff	xorl	%edi, %edi
       ff:	e8 00 00 00 00	callq	_pdl_builtin_return_address
-     104:	31 ff	xorl	%edi, %edi
-     106:	48 89 45 a0	movq	%rax, -96(%rbp)
+     104:	48 89 45 a0	movq	%rax, -96(%rbp)
+     108:	31 ff	xorl	%edi, %edi
      10a:	e8 00 00 00 00	callq	_pdl_builtin_frame_address
-     10f:	31 c9	xorl	%ecx, %ecx
-     111:	89 ca	movl	%ecx, %edx
-     113:	48 89 45 98	movq	%rax, -104(%rbp)
-     117:	48 8b 45 a0	movq	-96(%rbp), %rax
-     11b:	48 89 45 90	movq	%rax, -112(%rbp)
-     11f:	48 8b 45 98	movq	-104(%rbp), %rax
-     123:	48 89 45 88	movq	%rax, -120(%rbp)
-     127:	48 8b 7d 90	movq	-112(%rbp), %rdi
-     12b:	48 8b 75 88	movq	-120(%rbp), %rsi
+     10f:	48 89 45 98	movq	%rax, -104(%rbp)
+     113:	48 8b 45 a0	movq	-96(%rbp), %rax
+     117:	48 89 45 90	movq	%rax, -112(%rbp)
+     11b:	48 8b 45 98	movq	-104(%rbp), %rax
+     11f:	48 89 45 88	movq	%rax, -120(%rbp)
+     123:	48 8b 7d 90	movq	-112(%rbp), %rdi
+     127:	48 8b 75 88	movq	-120(%rbp), %rsi
+     12b:	31 c0	xorl	%eax, %eax
+     12d:	89 c2	movl	%eax, %edx
      12f:	b9 ff ff ff 7f	movl	$2147483647, %ecx
      134:	e8 00 00 00 00	callq	_pdl_thread_frames
      139:	83 e8 01	subl	$1, %eax

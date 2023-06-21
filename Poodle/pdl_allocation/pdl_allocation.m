@@ -47,11 +47,11 @@ static Class _pdl_allocation_class = NULL;
 
 static pthread_mutex_t _mutex = PTHREAD_RECURSIVE_MUTEX_INITIALIZER;
 
-static void pdl_allocation_lock() {
+static void pdl_allocation_lock(void) {
     pthread_mutex_lock(&_mutex);
 }
 
-static void pdl_allocation_unlock() {
+static void pdl_allocation_unlock(void) {
     pthread_mutex_unlock(&_mutex);
 }
 

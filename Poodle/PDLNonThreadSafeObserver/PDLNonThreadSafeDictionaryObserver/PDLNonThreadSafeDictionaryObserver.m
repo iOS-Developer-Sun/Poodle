@@ -22,13 +22,8 @@
 
 PDLNonThreadSafeClusterObserverDeclLogImp(logA0);
 PDLNonThreadSafeClusterObserverDeclLogImp1(logA1, void *);
-PDLNonThreadSafeClusterObserverDeclLogImp1(logR1, NSRange);
 PDLNonThreadSafeClusterObserverDeclLogImp2(logA2, void *, void *);
 PDLNonThreadSafeClusterObserverDeclLogImp3(logA3, void *, void *, void *);
-PDLNonThreadSafeClusterObserverDeclLogImp2(logA1R1, void *, NSRange);
-PDLNonThreadSafeClusterObserverDeclLogImp2(logR1A1, NSRange, void *);
-PDLNonThreadSafeClusterObserverDeclLogImp3(logR1A1R1, NSRange, void *, NSRange);
-PDLNonThreadSafeClusterObserverDeclLogImp4(logA1R1A2, void *, NSRange, void *, void *);
 
 PDLNonThreadSafeClusterObserverDeclRegisterImp(registerA0);
 PDLNonThreadSafeClusterObserverDeclRegisterImp1(registerA1, void *);

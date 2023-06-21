@@ -21,11 +21,11 @@ static pthread_mutex_t NSObjectSelectorProxyLock = PTHREAD_RECURSIVE_MUTEX_INITI
 
 @implementation NSObject (SelectorProxy)
 
-static void NSObjectSelectorProxyLockLock() {
+static void NSObjectSelectorProxyLockLock(void) {
     pthread_mutex_lock(&NSObjectSelectorProxyLock);
 }
 
-static void NSObjectSelectorProxyLockUnlock() {
+static void NSObjectSelectorProxyLockUnlock(void) {
     pthread_mutex_unlock(&NSObjectSelectorProxyLock);
 }
 
