@@ -218,7 +218,7 @@ void pdl_dispatch_queue_enable(void) {
     dlclose(handle);
 
     int count = 0;
-    pdl_hook_item items[count];
+    pdl_hook_item items[3];
     items[count++] = (pdl_hook_item) {
         "dispatch_queue_create",
         &dispatch_queue_create,

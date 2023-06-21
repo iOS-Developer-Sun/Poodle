@@ -407,6 +407,25 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     }
 }
 
+- (void)enumerateNonLazySymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action {
+    if (!action) {
+        return;
+    }
+
+    pdl_mach_object_t *machObject = (pdl_mach_object_t *)self.machObject;
+    const pdl_segment_command *segment = machObject->data_const_segment_command;
+    [self enumerateSegment:segment sectionAction:^(const pdl_segment_command *segment, const pdl_section *section, uint32_t index) {
+        uint32_t flags = section->flags;
+        uint32_t section_type = flags & SECTION_TYPE;
+        if (section_type == S_NON_LAZY_SYMBOL_POINTERS) {
+            [self enumerateSymbolPointersSection:section symbolAction:^(const pdl_section *section, const char *symbol_name, void **address) {
+                action(self, symbol_name, address);
+            }];
+        }
+    }];
+}
+
+
 - (void)enumerateLazySymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action {
     if (!action) {
         return;

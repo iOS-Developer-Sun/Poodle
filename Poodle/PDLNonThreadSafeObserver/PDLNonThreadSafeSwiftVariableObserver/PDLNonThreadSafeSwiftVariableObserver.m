@@ -194,11 +194,10 @@ static void *pdl_swift_allocObject(void *cls, size_t requiredSize, size_t requir
 
 + (void)observeWithClassFilter:(PDLNonThreadSafeSwiftVariableObserver_ClassFilter)classFilter classVariableFilter:(PDLNonThreadSafeSwiftVariableObserver_ClassVariableFilter)classVariableFilter {
 #if defined(__arm64__) || defined(__x86_64__)
-
     void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
     pdl_swift_beginAccess_original = dlsym(handle, "swift_beginAccess");
-    pdl_swift_endAccess_original = dlsym(handle, "swift_beginAccess");
-    pdl_swift_allocObject_original = dlsym(handle, "swift_beginAccess");
+    pdl_swift_endAccess_original = dlsym(handle, "swift_endAccess");
+    pdl_swift_allocObject_original = dlsym(handle, "swift_allocObject");
     dlclose(handle);
 
     int count = 3;

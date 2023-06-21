@@ -200,6 +200,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'pdl_hook', platform_universal) do |ss|
             ss.dependency pod_name + '/PDLSystemImage'
+            ss.dependency pod_name + '/pdl_pac'
             ss.dependency pod_name + '/pdl_vm'
         end
 
