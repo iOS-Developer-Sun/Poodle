@@ -60,7 +60,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         header_files = '*.{h,hpp}'.freeze
         preserve_paths = '*.{md,sh,py,rb,plist}'.freeze
         library_files = '*.a'.freeze
-        osx_version = '10.10'.freeze
+        osx_version = '11.0'.freeze
         ios_version = '11.0'.freeze
 
         # extra storage
@@ -414,6 +414,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/pdl_dispatch'
             ss.dependency pod_name + '/pdl_hook'
             ss.dependency pod_name + '/pdl_mach_object'
+            ss.dependency pod_name + '/pdl_thread_storage'
         end
 
         PoodleSubspec(s, 'PDLOpenUrlViewController', platform_ios) do |ss|
