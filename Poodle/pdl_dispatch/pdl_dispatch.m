@@ -208,9 +208,9 @@ static void *pdl_hook_OS_dispatch_queue(void *a, void *b, void *c, void *d, void
     return queue;
 }
 
-void pdl_dispatch_queue_enable(void) {
+int pdl_dispatch_queue_enable(void) {
     if (pdl_dispatch_queue_enabled) {
-        return;
+        return 0;
     }
 
     void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
@@ -246,9 +246,8 @@ void pdl_dispatch_queue_enable(void) {
     };
 
     int ret = pdl_hook(items, count);
-    assert(ret > 0);
-
     pdl_dispatch_queue_enabled = true;
+    return ret;
 }
 
 @end

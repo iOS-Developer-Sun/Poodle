@@ -18,7 +18,7 @@ extern DISPATCH_RETURNS_RETAINED dispatch_queue_t pdl_dispatch_queue_create_with
 extern dispatch_queue_t pdl_dispatch_get_current_queue(void);
 extern unsigned long pdl_dispatch_get_queue_width(dispatch_queue_t queue);
 extern unsigned long pdl_dispatch_get_queue_unique_identifier(dispatch_queue_t queue);
-extern void pdl_dispatch_queue_enable(void);
+extern int pdl_dispatch_queue_enable(void);
 
 #ifdef __cplusplus
 }
