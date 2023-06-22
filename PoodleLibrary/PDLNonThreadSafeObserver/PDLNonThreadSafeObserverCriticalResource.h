@@ -15,14 +15,14 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLNonThreadSafeObserverCriticalResource : NSObject
 
-@property (readonly) PDLNonThreadSafeObserverObject *observer;
-@property (readonly) NSString *identifier;
+@property (nonatomic, weak) PDLNonThreadSafeObserverObject *observer;
+@property (nonatomic, copy) NSString *identifier;
 @property (readonly) NSArray <PDLNonThreadSafeObserverAction *> *actions;
 
 @property (readonly) PDLNonThreadSafeObserverChecker *checker;
 
-- (instancetype)initWithObserver:(PDLNonThreadSafeObserverObject *)observer identifier:(NSString * _Nullable)identifier;
-- (PDLNonThreadSafeObserverAction *)recordIsSetter:(BOOL)isSetter isInitializing:(BOOL)isInitializing;
+- (PDLNonThreadSafeObserverAction *)record:(BOOL)isSetter;
++ (BOOL)recordsBacktrace;
 
 @end
 

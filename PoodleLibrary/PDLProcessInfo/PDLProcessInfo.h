@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLProcessInfo : NSObject
 
 @property (readonly) NSDate *processStartDate;
+@property (readonly) NSTimeInterval processStartMediaTime;
 
 + (instancetype)sharedInstance;
 

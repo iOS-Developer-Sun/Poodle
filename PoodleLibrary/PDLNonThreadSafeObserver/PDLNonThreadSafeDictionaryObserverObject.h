@@ -6,11 +6,12 @@
 //  Copyright © 2020 Poodle. All rights reserved.
 //
 
-#import "PDLNonThreadSafeObserverObject.h"
-#import "NSObject+PDLImplementationInterceptor.h"
+#import "PDLNonThreadSafeClusterObserverObject.h"
 
-@interface  PDLNonThreadSafeDictionaryObserverObject : PDLNonThreadSafeObserverObject
+NS_ASSUME_NONNULL_BEGIN
 
-- (void)recordClass:(Class)aClass selectorString:(NSString *)selectorString isSetter:(BOOL)isSetter;
+@interface PDLNonThreadSafeDictionaryObserverObject : PDLNonThreadSafeClusterObserverObject
 
 @end
+
+NS_ASSUME_NONNULL_END
