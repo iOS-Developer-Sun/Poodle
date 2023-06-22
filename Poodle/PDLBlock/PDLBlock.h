@@ -8,6 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 extern NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol));
 extern BOOL PDLBlockCheck(Class aClass, void (^callback)(void *block, void *object));
 
@@ -15,3 +19,8 @@ extern void PDLBlockCheckIgnoreBegin(id object);
 extern void PDLBlockCheckIgnoreEnd(id object);
 extern void PDLBlockCheckIgnoreAllBegin(void);
 extern void PDLBlockCheckIgnoreAllEnd(void);
+
+#ifdef __cplusplus
+}
+#endif
+
