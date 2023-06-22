@@ -537,6 +537,15 @@
 		C083BA2D28CB209B0016E214 /* PDLBacktrace.m in Sources */ = {isa = PBXBuildFile; fileRef = C083BA2C28CB209B0016E214 /* PDLBacktrace.m */; };
 		C08CF2C82A44233800E758F8 /* PDLToolKit_iOS.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C08CF2BE2A43F5F800E758F8 /* PDLToolKit_iOS.h */; };
 		C08CF2DB2A44347000E758F8 /* PDLToolKit_macOS.h in Copy Files */ = {isa = PBXBuildFile; fileRef = C08CF2D02A44344700E758F8 /* PDLToolKit_macOS.h */; };
+		C08CF2DE2A4444D400E758F8 /* PDLNonThreadSafeArrayObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C03D590B2A3B03540039053F /* PDLNonThreadSafeArrayObserver.h */; };
+		C08CF2DF2A4444D400E758F8 /* PDLNonThreadSafeArrayObserverArray.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C03D590C2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.h */; };
+		C08CF2E02A4444D400E758F8 /* PDLNonThreadSafeArrayObserverObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C03D590A2A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.h */; };
+		C08CF2E12A4444D400E758F8 /* PDLNonThreadSafeClusterObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C03D59142A3B03540039053F /* PDLNonThreadSafeClusterObserver.h */; };
+		C08CF2E22A4444D400E758F8 /* PDLNonThreadSafeClusterObserverCluster.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C03D59112A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.h */; };
+		C08CF2E32A4444D400E758F8 /* PDLNonThreadSafeClusterObserverObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C03D59132A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.h */; };
+		C08CF2E42A4444D400E758F8 /* PDLNonThreadSafeSwiftVariableObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0AEE43B2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.h */; };
+		C08CF2E52A4444D400E758F8 /* PDLNonThreadSafeSwiftVariableObserverObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0AEE43E2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.h */; };
+		C08CF2E62A4444D400E758F8 /* PDLNonThreadSafeSwiftVariableObserverVariable.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0AEE4432A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.h */; };
 		C0962ACE292336AF00A838D1 /* PDLMemoryTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C0962AD8292336D900A838D1 /* PDLMemoryTracer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0962ACC292336AF00A838D1 /* PDLMemoryTracer.h */; };
 		C0962AD9292336DE00A838D1 /* PDLMemoryTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -1845,6 +1854,15 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				C08CF2DE2A4444D400E758F8 /* PDLNonThreadSafeArrayObserver.h in CopyFiles */,
+				C08CF2DF2A4444D400E758F8 /* PDLNonThreadSafeArrayObserverArray.h in CopyFiles */,
+				C08CF2E02A4444D400E758F8 /* PDLNonThreadSafeArrayObserverObject.h in CopyFiles */,
+				C08CF2E12A4444D400E758F8 /* PDLNonThreadSafeClusterObserver.h in CopyFiles */,
+				C08CF2E22A4444D400E758F8 /* PDLNonThreadSafeClusterObserverCluster.h in CopyFiles */,
+				C08CF2E32A4444D400E758F8 /* PDLNonThreadSafeClusterObserverObject.h in CopyFiles */,
+				C08CF2E42A4444D400E758F8 /* PDLNonThreadSafeSwiftVariableObserver.h in CopyFiles */,
+				C08CF2E52A4444D400E758F8 /* PDLNonThreadSafeSwiftVariableObserverObject.h in CopyFiles */,
+				C08CF2E62A4444D400E758F8 /* PDLNonThreadSafeSwiftVariableObserverVariable.h in CopyFiles */,
 				C07436EC277346A8007C1206 /* PDLNonThreadSafeDictionaryObserverDictionary.h in CopyFiles */,
 				C010A6EE27114ECA00A785E9 /* PDLNonThreadSafeDictionaryObserver.h in CopyFiles */,
 				C010A6EF27114ECA00A785E9 /* PDLNonThreadSafeDictionaryObserverObject.h in CopyFiles */,
