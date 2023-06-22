@@ -34,7 +34,9 @@
 
 @property (readonly) NSString *uuidString;
 @property (readonly) NSString *cpuTypeString;
+@property (readonly) NSString *cpuSubtypeString;
 @property (readonly) NSString *crashLogString;
+@property (readonly) NSString *versionString;
 
 + (const void *)executeHeader;
 + (instancetype)executeSystemImage;
@@ -43,6 +45,7 @@
 + (instancetype)systemImageWithName:(NSString *)name;
 + (NSArray *)systemImages;
 
+- (void)enumerateNonLazySymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action;
 - (void)enumerateLazySymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action;
 - (void)enumerateSymbolPointers:(void(^)(PDLSystemImage *systemImage, pdl_nlist *nlist, const char *symbol, void **address))action;
 

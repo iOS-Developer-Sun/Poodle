@@ -19,14 +19,10 @@ typedef _Nullable PDLNonThreadSafePropertyObserver_PropertyFilter(^_Nullable PDL
 
 + (id)observerObjectForObject:(id)object;
 
-+ (void)observerClass:(Class)aClass
-       propertyFilter:(PDLNonThreadSafePropertyObserver_PropertyFilter _Nullable)propertyFilter
-    propertyMapFilter:(NSArray <NSString *> *_Nullable)propertyMapFilter;
++ (void)observeClass:(Class)aClass
+       propertyFilter:(PDLNonThreadSafePropertyObserver_PropertyFilter _Nullable)propertyFilter;
 
-+ (void)observerClassesForImage:(const char *)image
-                    classFilter:(PDLNonThreadSafePropertyObserver_ClassFilter _Nullable)classFilter
-            classPropertyFilter:(PDLNonThreadSafePropertyObserver_ClassPropertyFilter _Nullable)classPropertyFilter
-         classPropertyMapFilter:(NSDictionary <NSString *, NSArray <NSString *> *> * _Nullable)classPropertyMapFilter;
++ (void)observeClassesForImage:(const char *)image classFilter:(PDLNonThreadSafePropertyObserver_ClassFilter _Nullable)classFilter classPropertyFilter:(PDLNonThreadSafePropertyObserver_ClassPropertyFilter _Nullable)classPropertyFilter;
 
 @end
 

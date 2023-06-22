@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <mach/mach.h>
+#import "PDLBacktrace.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -21,6 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, assign) BOOL isSerialQueue;
 @property (nonatomic, assign) NSTimeInterval time;
 @property (nonatomic, copy) NSString *_Nullable detail;
+@property (nonatomic, strong) PDLBacktrace *backtrace;
 
 @end
 
