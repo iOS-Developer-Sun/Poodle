@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "PDLToolKit_iOS.h"
 
 @interface AppDelegate ()
 
