@@ -72,8 +72,6 @@ NS_ASSUME_NONNULL_BEGIN
     return YES;
 }
 
-static void *PDLNonThreadSafePropertyObserverObjectObjectKey = &PDLNonThreadSafePropertyObserverObjectObjectKey;
-
 static void *registerKey(void) {
     static pthread_mutex_t registerLock = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&registerLock);
@@ -125,7 +123,7 @@ static void *recordKey(void) {
         return;
     }
 
-    PDLNonThreadSafeObserverObject *observer = objc_getAssociatedObject(object, PDLNonThreadSafePropertyObserverObjectObjectKey);
+    PDLNonThreadSafeObserverObject *observer = objc_getAssociatedObject(object, (__bridge const void *)[self class]);
     if (observer) {
         return;
     }
@@ -138,7 +136,7 @@ static void *recordKey(void) {
     isRegistering = YES;
     [self setIsRegistering:YES];
     observer = [[self alloc] initWithObject:object];
-    objc_setAssociatedObject(object, PDLNonThreadSafePropertyObserverObjectObjectKey, observer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(object, (__bridge const void *)[self class], observer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self setIsRegistering:NO];
 }
 
@@ -148,7 +146,7 @@ static void *recordKey(void) {
         return nil;
     }
 
-    PDLNonThreadSafeObserverObject *observer = objc_getAssociatedObject(object, &PDLNonThreadSafePropertyObserverObjectObjectKey);
+    PDLNonThreadSafeObserverObject *observer = objc_getAssociatedObject(object, (__bridge const void *)[self class]);
     return observer;
 }
 
