@@ -41,7 +41,21 @@ static NSString *_developmentToolIdentifier = nil;
         return;
     }
 
-    UIWindow *window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    UIWindow *window = nil;
+    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 13) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+        UIWindowScene *scene = (UIWindowScene *)[UIApplication sharedApplication].connectedScenes.anyObject;
+        if ([scene isKindOfClass:[UIWindowScene class]]) {
+            window = [[UIWindow alloc] initWithWindowScene:scene];
+        }
+#pragma clang diagnostic pop
+    }
+
+    if (!window) {
+        window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+    }
     window.backgroundColor = [UIColor clearColor];
     window.windowLevel = UIWindowLevelNormal + 1;
     window.alpha = 0.95;

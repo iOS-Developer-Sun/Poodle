@@ -30,6 +30,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLInitialization : NSObject
 
+@property (nonatomic, assign, class) void (*initializer)(int argc, const char * _Nullable * _Nullable argv, const char * _Nullable * _Nullable envp, const char * _Nullable * _Nullable apple, void *pvars);
+
 + (NSUInteger)preloadCount;
 + (NSUInteger)preload:(const void *)header filter:(BOOL(^_Nullable)(Class aClass, const char *_Nullable categoryName, IMP imp))filter;
 + (NSArray <PDLInitializationLoader *>*)loaders;

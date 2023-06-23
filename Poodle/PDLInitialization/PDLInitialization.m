@@ -220,9 +220,10 @@ static void pdl_load(__unsafe_unretained id self, SEL _cmd) {
 static NSMutableArray *_initializers = nil;
 static NSMutableArray *_initializerFunctions = nil;
 static NSUInteger _preinitializeCount = 0;
+static void (*_initializer)(int argc, const char * _Nullable * _Nullable argv, const char * _Nullable * _Nullable envp, const char * _Nullable * _Nullable apple, void *pvars) = NULL;
 
-struct ProgramVars;
-static void pdl_initialize(int argc, const char **argv, const char **envp, const char **apple, struct ProgramVars *pvars) {
+//struct ProgramVars;
+static void pdl_initialize(int argc, const char **argv, const char **envp, const char **apple, void *pvars) {
     uintptr_t value = [_initializerFunctions.firstObject integerValue];
     [_initializerFunctions removeObjectAtIndex:0];
     if (_initializerFunctions.count == 0) {
@@ -251,6 +252,14 @@ static void pdl_initialize(int argc, const char **argv, const char **envp, const
     initializer.imageName = imageName;
     initializer.functionName = functionName;
     [_initializers addObject:initializer];
+}
+
++ (void (*)(int, const char * _Nullable * _Nullable, const char * _Nullable * _Nullable, const char * _Nullable * _Nullable, void * _Nonnull))initializer {
+    return &pdl_initialize;
+}
+
++ (void)setInitializer:(void (*)(int, const char * _Nullable * _Nullable, const char * _Nullable * _Nullable, const char * _Nullable * _Nullable, void * _Nonnull))initializer {
+    _initializer = initializer;
 }
 
 + (NSUInteger)preinitializeCount {
@@ -313,7 +322,8 @@ void **pdl_initializers(const void *header, size_t *count) {
         }
 
         [_initializerFunctions addObject:@((uintptr_t)initializer)];
-        initializers[i] = (IMP)&pdl_initialize;
+        IMP imp = (IMP)_initializer ?: (IMP)&pdl_initialize;
+        initializers[i] = imp;
         count++;
     }
 
