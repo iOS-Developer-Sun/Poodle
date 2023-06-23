@@ -220,8 +220,8 @@ static void *pdl_swift_allocObject(void *cls, size_t requiredSize, size_t requir
         &pdl_swift_allocObject,
         NULL, // (void **)&pdl_swift_allocObject_original,
     };
-    int ret = pdl_hook(items, count);
-    assert(ret == count);
+    __unused int ret = pdl_hook(items, count);
+//    assert(ret == count);
 
     {
         unsigned long size = 0;

@@ -52,7 +52,6 @@ static pdl_dictionary_t pdl_get_storage(void) {
     return storage;
 }
 
-__attribute__((constructor))
 static void pdl_thread_storage_enable(void) {
     static bool init = false;
     if (init) {

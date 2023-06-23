@@ -289,7 +289,30 @@ uint64_t pdl_pthread_mutex_locked_tid(pthread_mutex_t *omutex) {
     return *tidaddr;
 }
 
+static void pdl_pthread_check_version(void) {
+    static bool init = false;
+    if (init) {
+        return;
+    }
+    init = true;
+
+    const char *name = "libsystem_pthread.dylib";
+    struct mach_header *header = pdl_mach_o_image(name);
+    pdl_mach_object mach_object;
+    bool ret = pdl_get_mach_object_with_header(header, -1, name, &mach_object);
+    if (ret) {
+        uint32_t version = 0;
+        if (mach_object.id_dylib_dylib_command) {
+            version = mach_object.id_dylib_dylib_command->dylib.current_version;
+        }
+        _majorVersion = version >> 16;
+        _minorVersion = (version >> 8) & 0xff;
+        _revisionVersion = version & 0xff;
+    }
+}
+
 int pdl_pthread_mutex_waiters(pthread_mutex_t *omutex) {
+    pdl_pthread_check_version();
     _pthread_mutex *mutex = (_pthread_mutex *)omutex;
     mutex_seq *seqaddr = (void *)(((uintptr_t)mutex->m_seq + 0x7ul) & ~0x7ul);
     int numwaiters = diff_genseq(seqaddr->lgenval, seqaddr->ugenval) >> PTHRW_COUNT_SHIFT;
@@ -303,6 +326,7 @@ int pdl_pthread_mutex_waiters(pthread_mutex_t *omutex) {
 }
 
 uint64_t pdl_pthread_rwlock_locked_tid(pthread_rwlock_t *orwlock) {
+    pdl_pthread_check_version();
     if (_majorVersion > 218) {
         _pthread_rwlock2 *rwlock = (_pthread_rwlock2 *)orwlock;
         uint64_t *tidaddr = (void *)(((uintptr_t)rwlock->rw_tid + 0x7ul) & ~0x7ul);
@@ -318,6 +342,7 @@ uint64_t pdl_pthread_rwlock_locked_tid(pthread_rwlock_t *orwlock) {
 }
 
 uint32_t pdl_pthread_rwlock_lockers(pthread_rwlock_t *orwlock) {
+    pdl_pthread_check_version();
     if (_majorVersion > 218) {
         _pthread_rwlock2 *rwlock = (_pthread_rwlock2 *)orwlock;
         rwlock_seq *seqaddr = (void *)(((uintptr_t)rwlock->rw_seq + 0xful) & ~0xful);
@@ -358,20 +383,3 @@ int pdl_pthread_count(void) {
     return *pthreadCount;
 }
 #endif
-
-__attribute__ ((constructor)) static void pdl_pthread_check_version(void) {
-    const char *name = "libsystem_pthread.dylib";
-    struct mach_header *header = pdl_mach_o_image(name);
-    pdl_mach_object mach_object;
-    bool ret = pdl_get_mach_object_with_header(header, -1, name, &mach_object);
-    if (ret) {
-        uint32_t version = 0;
-        if (mach_object.id_dylib_dylib_command) {
-            version = mach_object.id_dylib_dylib_command->dylib.current_version;
-        }
-        _majorVersion = version >> 16;
-        _minorVersion = (version >> 8) & 0xff;
-        _revisionVersion = version & 0xff;
-    }
-}
-
