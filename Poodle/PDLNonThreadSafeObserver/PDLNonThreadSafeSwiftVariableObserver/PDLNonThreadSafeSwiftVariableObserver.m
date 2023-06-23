@@ -9,7 +9,6 @@
 #import "PDLNonThreadSafeSwiftVariableObserver.h"
 #import "PDLNonThreadSafeSwiftVariableObserverObject.h"
 #import "NSObject+PDLImplementationInterceptor.h"
-#import "PDLNonThreadSafePropertyObserverProperty.h"
 #import "PDLNonThreadSafeObserver.h"
 #import "pdl_hook.h"
 #import "PDLCrash.h"
@@ -70,6 +69,7 @@ static NSMutableDictionary *pdl_variable_name_dictionary(void) {
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         dictionary = [NSMutableDictionary dictionary];
+        [PDLNonThreadSafeObserver setIgnored:YES forObject:dictionary];
     });
     return dictionary;
 }

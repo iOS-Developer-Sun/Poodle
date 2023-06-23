@@ -31,9 +31,9 @@ sym="______PDL_THREAD_FAKE_END_____"
 file="pdl_thread.o"
 
 if [[ $PLATFORM_NAME == "iphonesimulator" ]]; then
-    arch="i386"
-    out="${folder}/${CONFIGURATION}_${arch}.txt"
-    pdl_thread ${arch} ${file} ${sym} ${out}
+#    arch="i386"
+#    out="${folder}/${CONFIGURATION}_${arch}.txt"
+#    pdl_thread ${arch} ${file} ${sym} ${out}
 
     arch="x86_64"
     out="${folder}/${CONFIGURATION}_${arch}.txt"
@@ -41,9 +41,9 @@ if [[ $PLATFORM_NAME == "iphonesimulator" ]]; then
 fi
 
 if [[ $PLATFORM_NAME == "iphoneos" ]]; then
-    arch="armv7"
-    out="${folder}/${CONFIGURATION}_${arch}.txt"
-    pdl_thread ${arch} ${file} ${sym} ${out}
+#    arch="armv7"
+#    out="${folder}/${CONFIGURATION}_${arch}.txt"
+#    pdl_thread ${arch} ${file} ${sym} ${out}
 
     arch="arm64"
     out="${folder}/${CONFIGURATION}_${arch}.txt"
