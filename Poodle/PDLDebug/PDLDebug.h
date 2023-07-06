@@ -25,6 +25,12 @@ extern void pdl_debug_halt(void);
 extern NSInteger pdl_logInstanceMethods(Class aClass);
 extern NSInteger pdl_logClassMethods(Class aClass);
 
+extern void pdl_suspendThread(mach_port_t thread);
+extern void pdl_resumeThread(mach_port_t thread);
+extern mach_port_t pdl_suspendOtherThreads(void);
+extern mach_port_t pdl_resumeOtherThreads(void);
+extern void pdl_resumeAllThreads(void);
+
 NS_ASSUME_NONNULL_END
 
 #if defined (__cplusplus)

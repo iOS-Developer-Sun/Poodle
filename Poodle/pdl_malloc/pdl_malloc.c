@@ -69,6 +69,7 @@ bool pdl_malloc_find(void *address, size_t *size, void **header) {
     return true;
 }
 
+__attribute__((used))
 void pdl_malloc_find_print(uintptr_t address) {
     size_t size = 0;
     void *header = NULL;
@@ -96,6 +97,7 @@ bool pdl_malloc_frames(uintptr_t address, uintptr_t *frames, unsigned int *count
     return true;
 }
 
+__attribute__((used))
 void pdl_malloc_frames_print(uintptr_t address) {
     unsigned int count = 128;
     uintptr_t frames[count];

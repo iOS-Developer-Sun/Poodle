@@ -1,4 +1,5 @@
 def PoodleCommonConfigurate(s)
+    s.module_name = "Poodle"
     s.version = "0.0.1"
     s.summary = "Lots of fun."
     s.description = <<-DESC
@@ -32,6 +33,7 @@ def PoodleSubspec(s, name, platform)
 
         ss.frameworks = 'Foundation'
         ss.preserve_paths = preserve_paths
+        ss.pod_target_xcconfig = { "DEFINES_MODULE" => "YES" }
         if is_library
             ss.source_files = base + name + '/' + '**/' + header_files
             if is_macos
@@ -89,6 +91,8 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         platform_osx = { :osx => osx_version }
         platform_ios = { :ios => ios_version }
         platform_universal = { :osx => osx_version, :ios => ios_version }
+
+        PoodleSubspec(s, 'PDLSwiftModule', platform_universal)
 
         PoodleSubspec(s, 'CAAnimation+PDLExtension', platform_universal) do |ss|
             ss.frameworks = 'QuartzCore'
@@ -697,8 +701,9 @@ def PoodleDynamicSpec(name, path: nil, is_library: false, is_macos: false, base_
         # constants
         source_files = '*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'.freeze
         header_files = '*.{h,hpp}'.freeze
+        preserve_paths = '*.{md,sh,py,rb,plist}'.freeze
         library_files = '*.a'.freeze
-        osx_version = '11.10'.freeze
+        osx_version = '11.0'.freeze
         ios_version = '11.0'.freeze
 
         # extra storage
@@ -711,6 +716,7 @@ def PoodleDynamicSpec(name, path: nil, is_library: false, is_macos: false, base_
             :is_macos => is_macos,
             :source_files => source_files,
             :header_files => header_files,
+            :preserve_paths => preserve_paths,
             :library_files => library_files,
         }
 
