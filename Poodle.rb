@@ -35,7 +35,7 @@ def PoodleSubspec(s, name, platform)
         ss.preserve_paths = preserve_paths
         ss.pod_target_xcconfig = { "DEFINES_MODULE" => "YES" }
         if is_library
-            ss.source_files = base + name + '/' + '**/' + header_files
+            ss.source_files = base + name + '/' + '**/' + source_files
             if is_macos
                 ss.osx.deployment_target = platform[:osx]
                 ss.vendored_library = base + name + '/macos/' + library_files
