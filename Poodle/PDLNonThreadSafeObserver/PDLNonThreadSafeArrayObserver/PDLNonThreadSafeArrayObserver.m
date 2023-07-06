@@ -105,10 +105,12 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(sortedArrayUsingComparator:) withInterceptorImplementation:(IMP)&logA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)getter];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(sortedArrayWithOptions:usingComparator:) withInterceptorImplementation:(IMP)&logA2 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)getter];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(indexOfObject:inSortedRange:options:usingComparator:) withInterceptorImplementation:(IMP)&logA1R1A2 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)getter];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:withOptions:usingEquivalenceTest:) withInterceptorImplementation:(IMP)&logA3 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)exclusiveGetter];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:withOptions:) withInterceptorImplementation:(IMP)&logA2 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)exclusiveGetter];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:) withInterceptorImplementation:(IMP)&logA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)exclusiveGetter];
-        ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(arrayByApplyingDifference:) withInterceptorImplementation:(IMP)&logA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)getter];
+        if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 13) {
+            ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:withOptions:usingEquivalenceTest:) withInterceptorImplementation:(IMP)&logA3 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)exclusiveGetter];
+            ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:withOptions:) withInterceptorImplementation:(IMP)&logA2 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)exclusiveGetter];
+            ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(differenceFromArray:) withInterceptorImplementation:(IMP)&logA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)exclusiveGetter];
+            ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(arrayByApplyingDifference:) withInterceptorImplementation:(IMP)&logA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)getter];
+        }
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(getObjects:) withInterceptorImplementation:(IMP)&logA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)getter];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(writeToFile:atomically:) withInterceptorImplementation:(IMP)&logA2 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)getter];
         ret = ret && [arrayClass pdl_interceptClusterSelector:@selector(writeToURL:atomically:) withInterceptorImplementation:(IMP)&logA2 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)getter];
@@ -143,7 +145,9 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(setObject:atIndexedSubscript:) withInterceptorImplementation:(IMP)&logA2 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)setter];
         ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortUsingComparator:) withInterceptorImplementation:(IMP)&logA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)setter];
         ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(sortWithOptions:usingComparator:) withInterceptorImplementation:(IMP)&logA2 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)setter];
-        ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(applyDifference:) withInterceptorImplementation:(IMP)&logA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)setter];
+        if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 13) {
+            ret = ret && [mutableArrayClass pdl_interceptClusterSelector:@selector(applyDifference:) withInterceptorImplementation:(IMP)&logA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)setter];
+        }
 
         // creations
         NSUInteger m1 = [arrayClass pdl_interceptClusterSelector:@selector(mutableCopy) withInterceptorImplementation:(IMP)&registerA0 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)self];
@@ -155,7 +159,7 @@ static BOOL (^_filter)(PDLBacktrace *backtrace, NSString **name) = nil;
         ret = ret && [placeholderClass pdl_interceptSelector:@selector(initWithContentsOfFile:) withInterceptorImplementation:(IMP)&registerA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)self];
         ret = ret && [placeholderClass pdl_interceptSelector:@selector(initWithContentsOfURL:) withInterceptorImplementation:(IMP)&registerA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)self];
         ret = ret && [placeholderClass pdl_interceptSelector:@selector(initWithObjects:count:) withInterceptorImplementation:(IMP)&registerA2 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)self];
-        ret = ret && [placeholderClass pdl_interceptSelector:@selector(initWithArray:) withInterceptorImplementation:(IMP)&registerA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)self];
+        ret = ret || [placeholderClass pdl_interceptSelector:@selector(initWithArray:) withInterceptorImplementation:(IMP)&registerA1 isStructRet:@(NO) addIfNotExistent:NO data:(__bridge void *)self];
         assert(ret);
     });
 }

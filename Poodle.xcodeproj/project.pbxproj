@@ -2983,6 +2983,8 @@
 		C0AEE4432A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeSwiftVariableObserverVariable.h; sourceTree = "<group>"; };
 		C0DAB09928CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLSelectorProxy.m"; sourceTree = "<group>"; };
 		C0DE25C327724A400039A556 /* PoodleLibraryMac.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = PoodleLibraryMac.podspec; sourceTree = "<group>"; };
+		C0E095D62A56A59C0045A3F6 /* PDLSwiftModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLSwiftModule.m; sourceTree = "<group>"; };
+		C0E095D72A56A59C0045A3F6 /* PDLSwiftModule.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLSwiftModule.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -5143,6 +5145,7 @@
 				B8300F1F25BEB61600A02412 /* PDLScrollPageViewController */,
 				B8672A58259B0FDA008082E5 /* PDLSessionTaskStatisticsManager */,
 				B8220D242681DFA4002018D8 /* PDLSharedCache */,
+				C0E095D52A56A59C0045A3F6 /* PDLSwiftModule */,
 				B8E56E7723D70018008D2DA1 /* PDLSystemImage */,
 				B864FA1F2523570300842343 /* PDLTaskManager */,
 				C08CF2BD2A43F5F800E758F8 /* PDLToolKit_iOS */,
@@ -5300,6 +5303,15 @@
 				C0AEE4422A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m */,
 			);
 			path = PDLNonThreadSafeSwiftVariableObserver;
+			sourceTree = "<group>";
+		};
+		C0E095D52A56A59C0045A3F6 /* PDLSwiftModule */ = {
+			isa = PBXGroup;
+			children = (
+				C0E095D72A56A59C0045A3F6 /* PDLSwiftModule.h */,
+				C0E095D62A56A59C0045A3F6 /* PDLSwiftModule.m */,
+			);
+			path = PDLSwiftModule;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
