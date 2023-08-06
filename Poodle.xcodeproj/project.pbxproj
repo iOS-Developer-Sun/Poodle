@@ -528,6 +528,9 @@
 		C06B8F3927721EBB00B6A8A3 /* NSArray+PDLSafeOperation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B85068EE250121690028E642 /* NSArray+PDLSafeOperation.h */; };
 		C06B8F3A27721EBB00B6A8A3 /* NSDictionary+PDLSafeOperation.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B85068EF250121690028E642 /* NSDictionary+PDLSafeOperation.h */; };
 		C07436EC277346A8007C1206 /* PDLNonThreadSafeDictionaryObserverDictionary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C06B8F2F277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.h */; };
+		C079F6E82A7BBF7A00D4FA0B /* PDLDSym.m in Sources */ = {isa = PBXBuildFile; fileRef = C079F6E72A7BBF7A00D4FA0B /* PDLDSym.m */; };
+		C079F6E92A7BBF8C00D4FA0B /* PDLDSym.m in Sources */ = {isa = PBXBuildFile; fileRef = C079F6E72A7BBF7A00D4FA0B /* PDLDSym.m */; };
+		C079F6EA2A7BBF9700D4FA0B /* PDLDSym.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C079F6E62A7BBF7A00D4FA0B /* PDLDSym.h */; };
 		C083BA1628CAE9E50016E214 /* pdl_pac.m in Sources */ = {isa = PBXBuildFile; fileRef = C083BA1528CAE9E50016E214 /* pdl_pac.m */; };
 		C083BA1728CAE9E50016E214 /* pdl_pac.m in Sources */ = {isa = PBXBuildFile; fileRef = C083BA1528CAE9E50016E214 /* pdl_pac.m */; };
 		C083BA1828CAE9F00016E214 /* pdl_pac.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C083BA1428CAE9E50016E214 /* pdl_pac.h */; };
@@ -1280,6 +1283,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = C01B8B2B272A8E710083030A;
 			remoteInfo = "NSMutableDictionary+PDLThreadSafety";
+		};
+		C079F6EB2A7BBFA300D4FA0B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C079F6DC2A7BBECE00D4FA0B;
+			remoteInfo = PDLDSym;
 		};
 		C083BA1928CAEA000016E214 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2410,6 +2420,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C079F6DF2A7BBECE00D4FA0B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				C079F6EA2A7BBF9700D4FA0B /* PDLDSym.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C083BA0D28CAE9BE0016E214 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2960,6 +2980,9 @@
 		C03D59162A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeClusterObserverObject.m; sourceTree = "<group>"; };
 		C06B8F2F277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeDictionaryObserverDictionary.h; sourceTree = "<group>"; };
 		C06B8F30277060C500B6A8A3 /* PDLNonThreadSafeDictionaryObserverDictionary.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeDictionaryObserverDictionary.m; sourceTree = "<group>"; };
+		C079F6E42A7BBECE00D4FA0B /* libPDLDSym.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLDSym.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C079F6E62A7BBF7A00D4FA0B /* PDLDSym.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLDSym.h; sourceTree = "<group>"; };
+		C079F6E72A7BBF7A00D4FA0B /* PDLDSym.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLDSym.m; sourceTree = "<group>"; };
 		C083BA1228CAE9BE0016E214 /* libpdl_pac.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_pac.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C083BA1428CAE9E50016E214 /* pdl_pac.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_pac.h; sourceTree = "<group>"; };
 		C083BA1528CAE9E50016E214 /* pdl_pac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_pac.m; sourceTree = "<group>"; };
@@ -3723,6 +3746,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C079F6DE2A7BBECE00D4FA0B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C083BA0C28CAE9BE0016E214 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -4251,6 +4281,7 @@
 				C0962AD7292336BD00A838D1 /* libPDLMemoryTracer.a */,
 				C08CF2C72A44230200E758F8 /* libPDLToolKit_iOS.a */,
 				C08CF2DA2A44345600E758F8 /* libPDLToolKit_macOS.a */,
+				C079F6E42A7BBECE00D4FA0B /* libPDLDSym.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5117,6 +5148,7 @@
 				B84C840625CD3BF10086CD36 /* PDLCrash */,
 				B8E56E6D23D70018008D2DA1 /* PDLDatabase */,
 				B80A5A9D262527E0003EAA7D /* PDLDebug */,
+				C079F6E52A7BBF7A00D4FA0B /* PDLDSym */,
 				B88668CB260783B300458D3F /* PDLFileSystem */,
 				B8E56EB423D7001A008D2DA1 /* PDLFileSystemViewController */,
 				B8E56E9E23D70019008D2DA1 /* PDLFontViewController */,
@@ -5243,6 +5275,15 @@
 				C03D59162A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m */,
 			);
 			path = PDLNonThreadSafeClusterObserver;
+			sourceTree = "<group>";
+		};
+		C079F6E52A7BBF7A00D4FA0B /* PDLDSym */ = {
+			isa = PBXGroup;
+			children = (
+				C079F6E62A7BBF7A00D4FA0B /* PDLDSym.h */,
+				C079F6E72A7BBF7A00D4FA0B /* PDLDSym.m */,
+			);
+			path = PDLDSym;
 			sourceTree = "<group>";
 		};
 		C083BA1328CAE9E50016E214 /* pdl_pac */ = {
@@ -6117,6 +6158,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C079F6EC2A7BBFA300D4FA0B /* PBXTargetDependency */,
 				C08CF2DD2A44349000E758F8 /* PBXTargetDependency */,
 				C08CF2CB2A44251400E758F8 /* PBXTargetDependency */,
 				B8B872F8264682D6004D9656 /* PBXTargetDependency */,
@@ -7328,6 +7370,24 @@
 			productReference = C01B8B33272A8E710083030A /* libNSMutableDictionary+PDLThreadSafety.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		C079F6DC2A7BBECE00D4FA0B /* PDLDSym */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C079F6E12A7BBECE00D4FA0B /* Build configuration list for PBXNativeTarget "PDLDSym" */;
+			buildPhases = (
+				C079F6DD2A7BBECE00D4FA0B /* Sources */,
+				C079F6DE2A7BBECE00D4FA0B /* Frameworks */,
+				C079F6DF2A7BBECE00D4FA0B /* CopyFiles */,
+				C079F6E02A7BBECE00D4FA0B /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLDSym;
+			productName = "CAAnimation+PDLExtension";
+			productReference = C079F6E42A7BBECE00D4FA0B /* libPDLDSym.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		C083BA0A28CAE9BE0016E214 /* pdl_pac */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C083BA0F28CAE9BE0016E214 /* Build configuration list for PBXNativeTarget "pdl_pac" */;
@@ -7527,6 +7587,7 @@
 				B84C81DB25CD3B580086CD36 /* PDLCrash */,
 				B8B9A562234F9A100069476E /* PDLDatabase */,
 				B80A5AA1262527EC003EAA7D /* PDLDebug */,
+				C079F6DC2A7BBECE00D4FA0B /* PDLDSym */,
 				B886698D260784EB00458D3F /* PDLFileSystem */,
 				B802ACCB22F33A6A00BF028E /* PDLFileSystemViewController */,
 				B85ECC1F22F595130063BB7C /* PDLFontViewController */,
@@ -9482,6 +9543,24 @@
 			shellPath = /bin/sh;
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
+		C079F6E02A7BBECE00D4FA0B /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
 		C083BA0E28CAE9BE0016E214 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -9855,6 +9934,7 @@
 				B80DF29824C45E6300AE1B00 /* pdl_algorithm.c in Sources */,
 				B8866BDA2607890B00458D3F /* PDLCrash.mm in Sources */,
 				B81E710E2501185A00399E4B /* PDLInitialization.m in Sources */,
+				C079F6E82A7BBF7A00D4FA0B /* PDLDSym.m in Sources */,
 				B8528192255132CA00B74F87 /* PDLRunLoopObserver.m in Sources */,
 				B85D45DC240E859000CBF758 /* PDLDirectoryViewController.m in Sources */,
 				B8060E9A26C4062300741C80 /* pdl_lldb_hook-arm64.s in Sources */,
@@ -10674,6 +10754,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C079F6DD2A7BBECE00D4FA0B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C079F6E92A7BBF8C00D4FA0B /* PDLDSym.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C083BA0B28CAE9BE0016E214 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -11234,6 +11322,11 @@
 			isa = PBXTargetDependency;
 			target = C01B8B2B272A8E710083030A /* NSMutableDictionary+PDLThreadSafety */;
 			targetProxy = C01B8B36272A8E970083030A /* PBXContainerItemProxy */;
+		};
+		C079F6EC2A7BBFA300D4FA0B /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C079F6DC2A7BBECE00D4FA0B /* PDLDSym */;
+			targetProxy = C079F6EB2A7BBFA300D4FA0B /* PBXContainerItemProxy */;
 		};
 		C083BA1A28CAEA000016E214 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -13812,6 +13905,28 @@
 			};
 			name = Release;
 		};
+		C079F6E22A7BBECE00D4FA0B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C079F6E32A7BBECE00D4FA0B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		C083BA1028CAE9BE0016E214 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -14901,6 +15016,15 @@
 			buildConfigurations = (
 				C01B8B31272A8E710083030A /* Debug */,
 				C01B8B32272A8E710083030A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C079F6E12A7BBECE00D4FA0B /* Build configuration list for PBXNativeTarget "PDLDSym" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C079F6E22A7BBECE00D4FA0B /* Debug */,
+				C079F6E32A7BBECE00D4FA0B /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

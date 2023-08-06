@@ -17,6 +17,8 @@
 @property (class, readonly) NSString *imagesDidAddNotificationName;
 @property (class, readonly) NSString *imagesDidRemoveNotificationName;
 
+@property (readonly) pdl_mach_object *machObject;
+
 @property (readonly) NSString *name;
 @property (readonly) intptr_t slide;
 @property (readonly) NSString *path;

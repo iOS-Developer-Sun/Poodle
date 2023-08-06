@@ -90,6 +90,14 @@ bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t 
                     }
                     mach_object->segments_count++;
                 }
+                uint32_t nsects = (is64 == false) ? segment_command->nsects : ((struct segment_command_64 *)segment_command)->nsects;
+                for (uint32_t j = 0; j < nsects; j++) {
+                    struct section *section = ((void *)segment_command) + ((is64 == false) ? sizeof(struct segment_command) : sizeof(struct segment_command_64)) + ((is64 == false) ? sizeof(struct section) : sizeof(struct section_64)) * j;
+                    if (mach_object->sections_count < sizeof(mach_object->sections) / sizeof(mach_object->sections[0])) {
+                        mach_object->sections[mach_object->sections_count] = section;
+                    }
+                    mach_object->sections_count++;
+                }
             } break;
             case LC_SYMTAB: {
                 mach_object->symtab_command = (struct symtab_command *)command_pointer;
