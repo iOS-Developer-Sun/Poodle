@@ -351,6 +351,10 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/NSObject+PDLMethod'
         end
 
+        PoodleSubspec(s, 'PDLDSym', platform_universal) do |ss|
+            ss.dependency pod_name + '/PDLSystemImage'
+        end
+
         PoodleSubspec(s, 'PDLDatabase', platform_universal) do |ss|
             ss.source_files = base + 'PDLDatabase/' + source_files
             ss.public_header_files = base + 'PDLDatabase/' + '*.h'
@@ -575,6 +579,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLCrash'
             ss.dependency pod_name + '/PDLDatabase'
             ss.dependency pod_name + '/PDLDebug'
+            ss.dependency pod_name + '/PDLDSym'
             ss.dependency pod_name + '/PDLFileSystem'
             ss.dependency pod_name + '/PDLFileSystemViewController'
             ss.dependency pod_name + '/PDLFontViewController'
