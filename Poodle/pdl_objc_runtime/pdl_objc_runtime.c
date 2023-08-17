@@ -122,6 +122,8 @@ static uint8_t *getDataSection(const void *mhdr, const char *sectname, size_t *o
     return data;
 }
 
+#pragma mark -
+
 Class *pdl_objc_runtime_classes(const void *header, size_t *count) {
     size_t size = 0;
     Class *data = (Class *)getDataSection(header, "__objc_classlist", &size);

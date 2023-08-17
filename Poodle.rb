@@ -9,7 +9,10 @@ def PoodleCommonConfigurate(s)
     s.license = "MIT"
     s.author = { "Poodle" => "250764090@qq.com" }
     s.source = { :git => "https://github.com/iOS-Developer-Sun/Poodle.git", :tag => "#{s.version}" }
-    s.pod_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 arm64e' }
+    s.pod_target_xcconfig = {
+        'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 arm64e',
+        'OTHER_LDFLAGS' => '-lObjC'
+    }
     s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 arm64e' }
 end
 
@@ -400,6 +403,10 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/pdl_objc_runtime'
         end
 
+        PoodleSubspec(s, 'PDLMachObject', platform_universal) do |ss|
+            ss.dependency pod_name + '/PDLSystemImage'
+        end
+
         PoodleSubspec(s, 'PDLMemoryQueryViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/pdl_malloc'
             ss.dependency pod_name + '/PDLKeyboardNotificationObserver'
@@ -588,6 +595,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLInitialization'
             ss.dependency pod_name + '/PDLKeyboardNotificationObserver'
             ss.dependency pod_name + '/PDLLoad'
+            ss.dependency pod_name + '/PDLMachObject'
             ss.dependency pod_name + '/PDLMemoryQueryViewController'
             ss.dependency pod_name + '/PDLMemoryTracer'
             ss.dependency pod_name + '/PDLNonThreadSafeObserver'
