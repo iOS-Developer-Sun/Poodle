@@ -18,10 +18,17 @@ typedef void * PDLMachObjectAddress;
 - (instancetype)initWithPath:(NSString *)path;
 
 - (PDLMachObjectAddress _Nonnull * _Nullable)classList:(size_t *)count;
-
 - (const char *)className:(PDLMachObjectAddress)cls;
 - (PDLMachObjectAddress)instanceMethodList:(PDLMachObjectAddress)cls;
 - (PDLMachObjectAddress)classMethodList:(PDLMachObjectAddress)cls;
+
+- (PDLMachObjectAddress _Nonnull * _Nullable)categoryList:(size_t *)count;
+- (const char *)categoryName:(PDLMachObjectAddress)cat;
+- (const char *)categoryClassName:(PDLMachObjectAddress)cat;
+- (PDLMachObjectAddress)categoryInstanceMethodList:(PDLMachObjectAddress)cat;
+- (PDLMachObjectAddress)categoryClassMethodList:(PDLMachObjectAddress)cat;
+
+- (uint32_t)methodCount:(PDLMachObjectAddress)methodList;
 - (void)enumerateMethodList:(PDLMachObjectAddress)methodList action:(void(^)(const char *name, const char *type, intptr_t impOffset))action;
 
 @end

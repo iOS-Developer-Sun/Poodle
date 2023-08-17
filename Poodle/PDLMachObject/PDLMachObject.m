@@ -112,8 +112,10 @@ struct category_t {
     pdl_mach_object_t __object;
 }
 
-@property (nonatomic, copy, readonly) NSData *data;
+@property (nonatomic, copy, readonly) NSData *originalData;
+@property (nonatomic, strong, readonly) NSMutableData *data;
 @property (nonatomic, assign, readonly) pdl_mach_object_t *object;
+@property (nonatomic, strong, readonly) NSMutableDictionary *bindInfo;
 
 @end
 
@@ -129,7 +131,8 @@ struct category_t {
     self = [super init];
     if (self) {
         PDLSystemImage *executable = [PDLSystemImage executeSystemImage];
-        NSData *data = [NSData dataWithContentsOfFile:path];
+        _originalData = [NSData dataWithContentsOfFile:path];
+        NSMutableData *data = [_originalData mutableCopy];
         cpu_type_t my_cputype = executable.cpuType;
         cpu_subtype_t my_cpusubtype = executable.cpuSubtype;
         pdl_fat_object object;
@@ -181,8 +184,153 @@ struct category_t {
         if (!ret) {
             return nil;
         }
+
+        [self setup];
     }
     return self;
+}
+
+static int64_t read_sleb128(uint8_t **pointer, uint8_t *end) {
+    uint8_t *p = *pointer;
+    int64_t result = 0;
+    int bit = 0;
+    uint8_t byte;
+    do {
+        assert(p != end);
+        byte = *p++;
+        result |= ((byte & 0x7f) << bit);
+        bit += 7;
+    } while (byte & 0x80);
+    // sign extend negative numbers
+    if ( (byte & 0x40) != 0 ) {
+        result |= (-1LL) << bit;
+    }
+    *pointer = p;
+    return result;
+}
+
+static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
+    uint8_t *p = *pointer;
+    uint64_t result = 0;
+    int bit = 0;
+    do {
+        assert(p != end);
+        uint64_t slice = *p & 0x7f;
+        assert(!(bit >= 64 || slice << bit >> bit != slice));
+        result |= (slice << bit);
+        bit += 7;
+    } while (*p++ & 0x80);
+    *pointer = p;
+    return result;
+}
+
+static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t type, int libraryOrdinal, int64_t addend, const char* symbolName, bool lazyPointer, bool weakImport, PDLMachObject *self) {
+//    printf("segmentIndex: %d, segmentOffset: %llx, type: %d, libraryOrdinal: %d, addend: %llx, symbolName: %s, lazyPointer: %d, weakImport: %d\n", segmentIndex, segmentOffset, type, libraryOrdinal, addend, symbolName, lazyPointer, weakImport);
+    const pdl_segment_command *segment = self.object->total_segments[segmentIndex];
+    uintptr_t addr = segment->vmaddr + segmentOffset;
+    self.bindInfo[@(addr)] = @((unsigned long)symbolName);
+}
+
+- (void)setup {
+    struct dyld_info_command const *dyld_info_command = self.object->dyld_info_dyld_info_command ?: self.object->dyld_info_only_dyld_info_command;
+    if (!dyld_info_command) {
+        return;
+    }
+
+    uint32_t bind_off = dyld_info_command->bind_off;
+    uint32_t bind_size = dyld_info_command->bind_size;
+    if (bind_off == 0 || bind_size == 0) {
+        return;
+    }
+
+    _bindInfo = [NSMutableDictionary dictionary];
+
+    // bind
+    {
+        uint8_t *start = ((void *)self.object->header) + bind_off;
+        uint8_t *end = start + bind_size;
+        uint8_t *p = start;
+
+        uint8_t type = 0;
+        uint64_t segmentOffset = 0;
+        uint8_t segmentIndex = 0;
+        const char* symbolName = NULL;
+        int libraryOrdinal = 0;
+        int64_t addend = 0;
+        uint32_t count;
+        uint32_t skip;
+        bool weakImport = false;
+        bool done = false;
+        while (!done && (p < end)) {
+            uint8_t immediate = *p & BIND_IMMEDIATE_MASK;
+            uint8_t opcode = *p & BIND_OPCODE_MASK;
+            ++p;
+            switch (opcode) {
+                case BIND_OPCODE_DONE:
+                    done = true;
+                    break;
+                case BIND_OPCODE_SET_DYLIB_ORDINAL_IMM:
+                    libraryOrdinal = immediate;
+                    break;
+                case BIND_OPCODE_SET_DYLIB_ORDINAL_ULEB:
+                    libraryOrdinal = (int)read_uleb128(&p, end);
+                    break;
+                case BIND_OPCODE_SET_DYLIB_SPECIAL_IMM:
+                    // the special ordinals are negative numbers
+                    if ( immediate == 0 )
+                        libraryOrdinal = 0;
+                    else {
+                        int8_t signExtended = BIND_OPCODE_MASK | immediate;
+                        libraryOrdinal = signExtended;
+                    }
+                    break;
+                case BIND_OPCODE_SET_SYMBOL_TRAILING_FLAGS_IMM:
+                    weakImport = ( (immediate & BIND_SYMBOL_FLAGS_WEAK_IMPORT) != 0 );
+                    symbolName = (char*)p;
+                    while (*p != '\0') {
+                        ++p;
+                    }
+                    ++p;
+                    break;
+                case BIND_OPCODE_SET_TYPE_IMM:
+                    type = immediate;
+                    break;
+                case BIND_OPCODE_SET_ADDEND_SLEB:
+                    addend = read_sleb128(&p, end);
+                    break;
+                case BIND_OPCODE_SET_SEGMENT_AND_OFFSET_ULEB:
+                    segmentIndex = immediate;
+                    segmentOffset = read_uleb128(&p, end);
+                    break;
+                case BIND_OPCODE_ADD_ADDR_ULEB:
+                    segmentOffset += read_uleb128(&p, end);
+                    break;
+                case BIND_OPCODE_DO_BIND:
+                    bindDyldInfoAt(segmentIndex, segmentOffset, type, libraryOrdinal, addend, symbolName, false, weakImport, self);
+                    segmentOffset += sizeof(intptr_t);
+                    break;
+                case BIND_OPCODE_DO_BIND_ADD_ADDR_ULEB:
+                    bindDyldInfoAt(segmentIndex, segmentOffset, type, libraryOrdinal, addend, symbolName, false, weakImport, self);
+                    segmentOffset += read_uleb128(&p, end) + sizeof(intptr_t);
+                    break;
+                case BIND_OPCODE_DO_BIND_ADD_ADDR_IMM_SCALED:
+                    bindDyldInfoAt(segmentIndex, segmentOffset, type, libraryOrdinal, addend, symbolName, false, weakImport, self);
+                    segmentOffset += immediate * sizeof(intptr_t) + sizeof(intptr_t);
+                    break;
+                case BIND_OPCODE_DO_BIND_ULEB_TIMES_SKIPPING_ULEB:
+                    count = (uint32_t)read_uleb128(&p, end);
+                    skip = (uint32_t)read_uleb128(&p, end);
+                    for (uint32_t i=0; i < count; ++i) {
+                        bindDyldInfoAt(segmentIndex, segmentOffset, type, libraryOrdinal, addend, symbolName, false, weakImport, self);
+                        segmentOffset += skip + sizeof(intptr_t);
+                    }
+                    break;
+                default:
+                    assert(0);
+                    break;
+            }
+        }
+    }
 }
 
 - (const pdl_section *)sectionWithSegmentName:(const char *)segname sectionName:(const char *)sectname {
@@ -224,7 +372,7 @@ struct category_t {
 - (intptr_t)offset:(PDLMachObjectAddress)address {
     const pdl_section *section = [self sectionOfAddress:address];
     if (!section) {
-        NSLog(@"!");
+        NSLog(@"*** cannot find address %p ***", address);
     }
     assert(section);
     intptr_t fileOffset = (unsigned long)address - section->addr + section->offset;
@@ -234,11 +382,17 @@ struct category_t {
 - (PDLMachObjectAddress)address:(intptr_t)offset {
     const pdl_section *section = [self sectionOfOffset:offset];
     if (!section) {
-        NSLog(@"!");
+        NSLog(@"*** cannot find offset %ld ***", offset);
+        assert(false);
     }
-    assert(section);
     PDLMachObjectAddress address = (PDLMachObjectAddress)(offset - section->offset + section->addr);
     return address;
+}
+
+- (void *)realAddress:(PDLMachObjectAddress)address {
+    intptr_t offset = [self offset:address];
+    void *ret = ((void *)self.object->header) + offset;
+    return ret;
 }
 
 - (PDLMachObjectAddress *)classList:(size_t *)count {
@@ -258,12 +412,6 @@ struct category_t {
         *count = size;
     }
     return ((void *)self.object->header) + section->offset;
-}
-
-- (void *)realAddress:(PDLMachObjectAddress)address {
-    intptr_t offset = [self offset:address];
-    void *ret = ((void *)self.object->header) + offset;
-    return ret;
 }
 
 - (const char *)className:(PDLMachObjectAddress)cls {
@@ -323,10 +471,21 @@ struct category_t {
 - (const char *)categoryClassName:(PDLMachObjectAddress)cat {
     struct category_t *c = [self realAddress:cat];
     PDLMachObjectAddress cls = c->cls;
-    // TODO
     if (cls) {
         return [self className:cls];
     }
+
+    PDLMachObjectAddress clsAddress = offsetof(struct category_t, cls) + cat;
+    const char *name = (const char *)[self.bindInfo[@((unsigned long)clsAddress)] unsignedLongValue];
+    if (name) {
+        static const char *objc_class_prefix = "_OBJC_CLASS_$_";
+        size_t prefixLength = strlen(objc_class_prefix);
+        if (strncmp(objc_class_prefix, name, prefixLength) == 0) {
+            const char *ret = name + prefixLength;
+            return ret;
+        }
+    }
+
     return NULL;
 }
 
