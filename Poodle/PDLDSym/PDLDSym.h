@@ -11,6 +11,7 @@
 
 @interface PDLDSym : NSObject
 
+@property (nonatomic, copy) NSString *unnamedSymbolPrefix;
 @property (nonatomic, readonly) PDLSystemImage *systemImage;
 
 - (instancetype)initWithSystemImage:(PDLSystemImage *)systemImage;

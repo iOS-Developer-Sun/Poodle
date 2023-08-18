@@ -17,6 +17,11 @@ typedef void * PDLMachObjectAddress;
 + (instancetype)executable;
 - (instancetype)initWithPath:(NSString *)path;
 
+- (uintptr_t)mainOffset;
+
+- (uint32_t)constructorsCount;
+- (uintptr_t)constructorOffset:(uint32_t)index;
+
 - (PDLMachObjectAddress _Nonnull * _Nullable)classList:(size_t *)count;
 - (const char *)className:(PDLMachObjectAddress)cls;
 - (PDLMachObjectAddress)instanceMethodList:(PDLMachObjectAddress)cls;
