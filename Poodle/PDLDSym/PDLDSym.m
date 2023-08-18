@@ -153,6 +153,7 @@ static char PDLVariableItem[] = {
         _offsetToSymbol = [NSMutableDictionary dictionary];
         _offsetToDebugName = [NSMutableDictionary dictionary];
         _variables = [NSMutableArray array];
+        _unnamedSymbolPrefix = @"___pdl_unnamed_symbol";
         [self findFunctions];
     }
     return self;
@@ -254,13 +255,14 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
     NSMutableDictionary *symbolToDebugNameOffsets = [NSMutableDictionary dictionary];
     NSMutableDictionary *offsetToDebugName = [self.offsetToDebugName mutableCopy];
     NSInteger unnamedIndex = 1;
+    NSString *unnamedSymbolPrefix = self.unnamedSymbolPrefix;
     for (NSNumber *offset in self.functions) {
         if (offsetToSymbol[offset]) {
             continue;
         }
 
-        offsetToSymbol[offset] = [NSString stringWithFormat:@"___pdl_unnamed_symbol%@", @(unnamedIndex)];
-        offsetToDebugName[offset] = [NSString stringWithFormat:@"__pdl_unnamed_symbol%@", @(unnamedIndex)];
+        offsetToSymbol[offset] = [NSString stringWithFormat:@"%@%@", unnamedSymbolPrefix, @(unnamedIndex)];
+        offsetToDebugName[offset] = [NSString stringWithFormat:@"%@%@", unnamedSymbolPrefix, @(unnamedIndex)];
         unnamedIndex++;
     }
 

@@ -108,6 +108,8 @@ struct category_t {
 
 #pragma mark -
 
+#define PDLMachObjectUninitialized ((void *)(unsigned long)-1)
+
 @interface PDLMachObject () {
     pdl_mach_object_t __object;
 }
@@ -116,6 +118,10 @@ struct category_t {
 @property (nonatomic, strong, readonly) NSMutableData *data;
 @property (nonatomic, assign, readonly) pdl_mach_object_t *object;
 @property (nonatomic, strong, readonly) NSMutableDictionary *bindInfo;
+
+@property (nonatomic, assign) pdl_section *classlistSection;
+@property (nonatomic, assign) pdl_section *catlistSection;
+@property (nonatomic, assign) pdl_section *modinitSection;
 
 @end
 
@@ -185,9 +191,40 @@ struct category_t {
             return nil;
         }
 
+        _classlistSection = PDLMachObjectUninitialized;
+        _catlistSection = PDLMachObjectUninitialized;
+        _modinitSection = PDLMachObjectUninitialized;
+
         [self setup];
     }
     return self;
+}
+
+- (uintptr_t)mainOffset {
+    uintptr_t mainOffset = self.object->entry_point_command->entryoff;
+    return mainOffset;
+}
+
+- (uint32_t)constructorsCount {
+    pdl_section *modinitSection = self.modinitSection;
+    if (!modinitSection) {
+        return 0;
+    }
+
+    uint32_t ret = (uint32_t)(modinitSection->size / sizeof(unsigned long));
+    return ret;
+}
+
+- (uintptr_t)constructorOffset:(uint32_t)index {
+    pdl_section *modinitSection = self.modinitSection;
+    if (!modinitSection) {
+        return 0;
+    }
+
+    uint32_t offset = modinitSection->offset;
+    PDLMachObjectAddress *constructors = ((void *)self.object->header) + offset;
+    PDLMachObjectAddress constructor = constructors[index];
+    return [self offset:constructor];
 }
 
 static int64_t read_sleb128(uint8_t **pointer, uint8_t *end) {
@@ -396,13 +433,7 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
 }
 
 - (PDLMachObjectAddress *)classList:(size_t *)count {
-    const pdl_section *section = [self sectionWithSegmentName:"__DATA" sectionName:"__objc_classlist"];
-    if (!section) {
-        section = [self sectionWithSegmentName:"__DATA_CONST" sectionName:"__objc_classlist"];
-    }
-    if (!section) {
-        section = [self sectionWithSegmentName:"__DATA_DIRTY" sectionName:"__objc_classlist"];
-    }
+    const pdl_section *section = [self classlistSection];
     if (!section) {
         return NULL;
     }
@@ -443,14 +474,53 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
     return [self instanceMethodList:c->isa];
 }
 
+- (pdl_section *)classlistSection {
+    if (_classlistSection == PDLMachObjectUninitialized) {
+        const char *sectionName = "__objc_classlist";
+        const pdl_section *section = [self sectionWithSegmentName:"__DATA" sectionName:sectionName];
+        if (!section) {
+            section = [self sectionWithSegmentName:"__DATA_CONST" sectionName:sectionName];
+        }
+        if (!section) {
+            section = [self sectionWithSegmentName:"__DATA_DIRTY" sectionName:sectionName];
+        }
+        _classlistSection = (pdl_section *)section;
+    }
+    return _classlistSection;
+}
+
+- (pdl_section *)catlistSection {
+    if (_catlistSection == PDLMachObjectUninitialized) {
+        const char *sectionName = "__objc_catlist";
+        const pdl_section *section = [self sectionWithSegmentName:"__DATA" sectionName:sectionName];
+        if (!section) {
+            section = [self sectionWithSegmentName:"__DATA_CONST" sectionName:sectionName];
+        }
+        if (!section) {
+            section = [self sectionWithSegmentName:"__DATA_DIRTY" sectionName:sectionName];
+        }
+        _catlistSection = (pdl_section *)section;
+    }
+    return _catlistSection;
+}
+
+- (pdl_section *)modinitSection {
+    if (_modinitSection == PDLMachObjectUninitialized) {
+        const char *sectionName = "__mod_init_func";
+        const pdl_section *section = [self sectionWithSegmentName:"__DATA" sectionName:sectionName];
+        if (!section) {
+            section = [self sectionWithSegmentName:"__DATA_CONST" sectionName:sectionName];
+        }
+        if (!section) {
+            section = [self sectionWithSegmentName:"__DATA_DIRTY" sectionName:sectionName];
+        }
+        _modinitSection = (pdl_section *)section;
+    }
+    return _modinitSection;
+}
+
 - (PDLMachObjectAddress _Nonnull * _Nullable)categoryList:(size_t *)count {
-    const pdl_section *section = [self sectionWithSegmentName:"__DATA" sectionName:"__objc_catlist"];
-    if (!section) {
-        section = [self sectionWithSegmentName:"__DATA_CONST" sectionName:"__objc_catlist"];
-    }
-    if (!section) {
-        section = [self sectionWithSegmentName:"__DATA_DIRTY" sectionName:"__objc_catlist"];
-    }
+    pdl_section *section = self.catlistSection;
     if (!section) {
         return NULL;
     }
