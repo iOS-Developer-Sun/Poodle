@@ -7,14 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "PDLSystemImage.h"
+#import "pdl_mach_object.h"
 
 @interface PDLDSym : NSObject
 
 @property (nonatomic, copy) NSString *unnamedSymbolPrefix;
-@property (nonatomic, readonly) PDLSystemImage *systemImage;
+@property (nonatomic, readonly) pdl_mach_object *machObject;
 
-- (instancetype)initWithSystemImage:(PDLSystemImage *)systemImage;
+- (instancetype)initWithObject:(pdl_mach_object)machObject;
 - (void)addSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset;
 - (BOOL)dump:(NSString *)path;
 

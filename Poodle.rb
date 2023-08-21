@@ -355,7 +355,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         end
 
         PoodleSubspec(s, 'PDLDSym', platform_universal) do |ss|
-            ss.dependency pod_name + '/PDLSystemImage'
+            ss.dependency pod_name + '/pdl_mach_object'
         end
 
         PoodleSubspec(s, 'PDLDatabase', platform_universal) do |ss|
@@ -404,7 +404,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         end
 
         PoodleSubspec(s, 'PDLMachObject', platform_universal) do |ss|
-            ss.dependency pod_name + '/PDLSystemImage'
+            ss.dependency pod_name + '/pdl_mach_object'
         end
 
         PoodleSubspec(s, 'PDLMemoryQueryViewController', platform_ios) do |ss|
@@ -685,11 +685,13 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLBacktraceRecordsItem'
             ss.dependency pod_name + '/PDLBlock'
             ss.dependency pod_name + '/PDLCrash'
-            ss.dependency pod_name + '/PDLDebug'
             ss.dependency pod_name + '/PDLDatabase'
+            ss.dependency pod_name + '/PDLDebug'
+            ss.dependency pod_name + '/PDLDSym'
             ss.dependency pod_name + '/PDLFileSystem'
             ss.dependency pod_name + '/PDLInitialization'
             ss.dependency pod_name + '/PDLLoad'
+            ss.dependency pod_name + '/PDLMachObject'
             ss.dependency pod_name + '/PDLMemoryTracer'
             ss.dependency pod_name + '/PDLNonThreadSafeObserver'
             ss.dependency pod_name + '/PDLProcessInfo'
