@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "pdl_mach_object.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -14,8 +15,9 @@ typedef void * PDLMachObjectAddress;
 
 @interface PDLMachObject : NSObject
 
-+ (instancetype)executable;
-- (instancetype)initWithPath:(NSString *)path;
+@property (nonatomic, assign, readonly) pdl_mach_object_t *object;
+
+- (instancetype)initWithData:(NSData *)data;
 
 - (uintptr_t)mainOffset;
 

@@ -134,7 +134,9 @@ static char PDLVariableItem[] = {
     + PDL_SIZE_DW_FORM_flag_present \
 )
 
-@interface PDLDSym ()
+@interface PDLDSym () {
+    pdl_mach_object _object;
+}
 
 @property (nonatomic, readonly) NSMutableDictionary *offsetToSymbol;
 @property (nonatomic, readonly) NSMutableDictionary *offsetToDebugName;
@@ -146,10 +148,19 @@ static char PDLVariableItem[] = {
 
 @implementation PDLDSym
 
-- (instancetype)initWithSystemImage:(PDLSystemImage *)systemImage {
+- (instancetype)initWithObject:(pdl_mach_object)machObject {
+    BOOL supported = NO;
+#ifdef __LP64__
+    supported = YES;
+#endif
+    if (!supported || !machObject.is64) {
+        return nil;
+    }
+
     self = [super init];
     if (self) {
-        _systemImage = systemImage;
+        _object = machObject;
+        _machObject = &_object;
         _offsetToSymbol = [NSMutableDictionary dictionary];
         _offsetToDebugName = [NSMutableDictionary dictionary];
         _variables = [NSMutableArray array];
@@ -185,7 +196,7 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
 }
 
 - (void)findFunctions {
-    pdl_mach_object *machObject = self.systemImage.machObject;
+    pdl_mach_object *machObject = self.machObject;
     const struct linkedit_data_command *function_starts =  machObject->function_starts_linkedit_data_command;
     if (!function_starts || function_starts->datasize == 0) {
         return;
@@ -301,7 +312,7 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
         debugStrSize += string.length + 1;
     }
 
-    pdl_mach_object *machObject = self.systemImage.machObject;
+    pdl_mach_object *machObject = self.machObject;
 
     // calculate size
     uint32_t headerSize = sizeof(pdl_mach_header);

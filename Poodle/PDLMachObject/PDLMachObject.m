@@ -7,7 +7,6 @@
 //
 
 #import "PDLMachObject.h"
-#import "PDLSystemImage.h"
 
 struct list_t {
     uint32_t entsizeAndFlags;
@@ -116,7 +115,6 @@ struct category_t {
 
 @property (nonatomic, copy, readonly) NSData *originalData;
 @property (nonatomic, strong, readonly) NSMutableData *data;
-@property (nonatomic, assign, readonly) pdl_mach_object_t *object;
 @property (nonatomic, strong, readonly) NSMutableDictionary *bindInfo;
 
 @property (nonatomic, assign) pdl_section *classlistSection;
@@ -127,69 +125,26 @@ struct category_t {
 
 @implementation PDLMachObject
 
-+ (instancetype)executable {
-    PDLSystemImage *executable = [PDLSystemImage executeSystemImage];
-    NSString *path = executable.path;
-    return [[self alloc] initWithPath:path];
-}
-
-- (instancetype)initWithPath:(NSString *)path {
+- (instancetype)initWithData:(NSData *)data {
     self = [super init];
     if (self) {
-        PDLSystemImage *executable = [PDLSystemImage executeSystemImage];
-        _originalData = [NSData dataWithContentsOfFile:path];
-        NSMutableData *data = [_originalData mutableCopy];
-        cpu_type_t my_cputype = executable.cpuType;
-        cpu_subtype_t my_cpusubtype = executable.cpuSubtype;
-        pdl_fat_object object;
-        pdl_fat_object *fat_object = &object;
-        struct mach_header *header = NULL;
-        bool isFat = pdl_get_fat_object_with_header((const struct fat_header *)data.bytes, fat_object);
-        if (isFat) {
-            uint32_t archCount = fat_object->arch_count;
-            if (fat_object->swaps) {
-                archCount = OSSwapInt32(archCount);
-            }
-            for (uint32_t i = 0; i < archCount; i++) {
-                cpu_type_t cpuType;
-                cpu_subtype_t cpuSubtype;
-                uint64_t offset;
-                if (fat_object->is64 == false) {
-                    struct fat_arch *arch = &fat_object->arch_list[i];
-                    cpuType = arch->cputype;
-                    cpuSubtype = arch->cpusubtype;
-                    offset = arch->offset;
-                } else {
-                    struct fat_arch_64 *arch = &((pdl_fat_object_64 *)fat_object)->arch_list[i];
-                    cpuType = arch->cputype;
-                    cpuSubtype = arch->cpusubtype;
-                    offset = arch->offset;
-                }
-
-                if (fat_object->swaps) {
-                    cpuType = OSSwapInt32(cpuType);
-                    cpuSubtype = OSSwapInt32(cpuSubtype);
-                    if (fat_object->is64 == false) {
-                        offset = OSSwapInt32((uint32_t)offset);
-                    } else {
-                        offset = OSSwapInt64(offset);
-                    }
-                }
-
-                if (cpuType == my_cputype && cpuSubtype == my_cpusubtype) {
-                    header = (struct mach_header *)(((char *)fat_object->header) + offset);
-                    break;
-                }
-            }
-        } else {
-            header = (struct mach_header *)data.bytes;
-        }
-        _data = data;
         _object = &__object;
+        struct mach_header *header = (struct mach_header *)data.bytes;
         BOOL ret = pdl_get_mach_object_with_header(header, -1, NULL, (pdl_mach_object *)_object);
         if (!ret) {
             return nil;
         }
+
+        BOOL supported = NO;
+#ifdef __LP64__
+        supported = YES;
+#endif
+        if (!supported || !_object->is64) {
+            return nil;
+        }
+
+        _originalData = [data copy];
+        _data = [_originalData mutableCopy];
 
         _classlistSection = PDLMachObjectUninitialized;
         _catlistSection = PDLMachObjectUninitialized;
