@@ -26,6 +26,8 @@ def PoodleSubspec(s, name, platform)
     header_files = hash[:header_files]
     preserve_paths = hash[:preserve_paths]
     library_files = hash[:library_files]
+    toolkit_osx = hash[:toolkit_osx]
+    toolkit_ios = hash[:toolkit_ios]
 
     if is_library
         return if (!support_osx && is_macos) || (!support_ios && !is_macos)
@@ -51,6 +53,9 @@ def PoodleSubspec(s, name, platform)
             ss.ios.deployment_target = platform[:ios] if support_ios
             ss.source_files = base + name + '/' + '**/' + source_files
         end
+        hash[:toolkit_osx].append name if support_osx
+        hash[:toolkit_ios].append name if support_ios
+
         yield(ss) if block_given?
     end
 end
@@ -94,6 +99,9 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         platform_osx = { :osx => osx_version }
         platform_ios = { :ios => ios_version }
         platform_universal = { :osx => osx_version, :ios => ios_version }
+
+        s.pdl_hash[:toolkit_ios] = []
+        s.pdl_hash[:toolkit_osx] = []
 
         PoodleSubspec(s, 'PDLSwiftModule', platform_universal)
 
@@ -185,7 +193,6 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/pdl_backtrace'
             ss.dependency pod_name + '/pdl_utils'
         end
-
 
         PoodleSubspec(s, 'pdl_backtrace', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_thread'
@@ -523,187 +530,17 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'UIViewController+PDLTransitionAnimation', platform_ios)
 
-        PoodleSubspec(s, 'PDLToolKit_iOS', platform_ios)  do |ss|
-            ss.dependency pod_name + '/CAAnimation+PDLExtension'
-            ss.dependency pod_name + '/CADisplayLink+PDLExtension'
-            ss.dependency pod_name + '/CAMediaTimingFunction+PDLExtension'
-            ss.dependency pod_name + '/NSCache+PDLExtension'
-            ss.dependency pod_name + '/NSCharacterSet+PDLExtension'
-            ss.dependency pod_name + '/NSDictionary+PDLObjectForKey'
-            ss.dependency pod_name + '/NSJSONSerialization+PDLExtension'
-            ss.dependency pod_name + '/NSLock+PDLExtension'
-            ss.dependency pod_name + '/NSMapTable+PDLExtension'
-            ss.dependency pod_name + '/NSMutableDictionary+PDLThreadSafety'
-            ss.dependency pod_name + '/NSObject+PDLAssociation'
-            ss.dependency pod_name + '/NSObject+PDLDebug'
-            ss.dependency pod_name + '/NSObject+PDLDescription'
-            ss.dependency pod_name + '/NSObject+PDLExtension'
-            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
-            ss.dependency pod_name + '/NSObject+PDLMethod'
-            ss.dependency pod_name + '/NSObject+PDLSelectorProxy'
-            ss.dependency pod_name + '/NSObject+PDLThreadSafetifyMethod'
-            ss.dependency pod_name + '/NSObject+PDLWeakifyUnsafeUnretainedProperty'
-            ss.dependency pod_name + '/NSThread+PDLExtension'
-            ss.dependency pod_name + '/NSUserDefaults+PDLExtension'
-            ss.dependency pod_name + '/pdl_allocation'
-            ss.dependency pod_name + '/pdl_asm'
-            ss.dependency pod_name + '/pdl_backtrace'
-            ss.dependency pod_name + '/pdl_block'
-            ss.dependency pod_name + '/pdl_die'
-            ss.dependency pod_name + '/pdl_dispatch'
-            ss.dependency pod_name + '/pdl_dispatch_backtrace'
-            ss.dependency pod_name + '/pdl_hook'
-            ss.dependency pod_name + '/pdl_lldb_hook'
-            ss.dependency pod_name + '/pdl_mach'
-            ss.dependency pod_name + '/pdl_mach_o_const_symbols'
-            ss.dependency pod_name + '/pdl_mach_o_symbol_pointer'
-            ss.dependency pod_name + '/pdl_mach_o_symbols'
-            ss.dependency pod_name + '/pdl_mach_object'
-            ss.dependency pod_name + '/pdl_malloc'
-            ss.dependency pod_name + '/pdl_objc_message'
-            ss.dependency pod_name + '/pdl_objc_message_hook'
-            ss.dependency pod_name + '/pdl_objc_runtime'
-            ss.dependency pod_name + '/pdl_os'
-            ss.dependency pod_name + '/pdl_pthread'
-            ss.dependency pod_name + '/pdl_pthread_backtrace'
-            ss.dependency pod_name + '/pdl_security'
-            ss.dependency pod_name + '/pdl_spinlock'
-            ss.dependency pod_name + '/pdl_system_leak'
-            ss.dependency pod_name + '/pdl_systemcall'
-            ss.dependency pod_name + '/pdl_thread'
-            ss.dependency pod_name + '/pdl_thread_storage'
-            ss.dependency pod_name + '/pdl_utils'
-            ss.dependency pod_name + '/pdl_vm'
-            ss.dependency pod_name + '/pdl_zombie'
-            ss.dependency pod_name + '/PDLAddressQueryViewController'
-            ss.dependency pod_name + '/PDLApplication'
-            ss.dependency pod_name + '/PDLBacktrace'
-            ss.dependency pod_name + '/PDLBacktraceRecorder'
-            ss.dependency pod_name + '/PDLBacktraceRecordsItem'
-            ss.dependency pod_name + '/PDLBlock'
-            ss.dependency pod_name + '/PDLCollectionViewFlowLayout'
-            ss.dependency pod_name + '/PDLColor'
-            ss.dependency pod_name + '/PDLCrash'
-            ss.dependency pod_name + '/PDLDatabase'
-            ss.dependency pod_name + '/PDLDebug'
-            ss.dependency pod_name + '/PDLDSym'
-            ss.dependency pod_name + '/PDLFileSystem'
-            ss.dependency pod_name + '/PDLFileSystemViewController'
-            ss.dependency pod_name + '/PDLFontViewController'
-            ss.dependency pod_name + '/PDLFormView'
-            ss.dependency pod_name + '/PDLImageListViewController'
-            ss.dependency pod_name + '/PDLInitialization'
-            ss.dependency pod_name + '/PDLKeyboardNotificationObserver'
-            ss.dependency pod_name + '/PDLLoad'
-            ss.dependency pod_name + '/PDLMachObject'
-            ss.dependency pod_name + '/PDLMemoryQueryViewController'
-            ss.dependency pod_name + '/PDLMemoryTracer'
-            ss.dependency pod_name + '/PDLNonThreadSafeObserver'
-            ss.dependency pod_name + '/PDLOpenUrlViewController'
-            ss.dependency pod_name + '/PDLOverlayWindow'
-            ss.dependency pod_name + '/PDLPageControl'
-            ss.dependency pod_name + '/PDLPageController'
-            ss.dependency pod_name + '/PDLPageView'
-            ss.dependency pod_name + '/PDLPageViewController'
-            ss.dependency pod_name + '/PDLPrivate'
-            ss.dependency pod_name + '/PDLProcessInfo'
-            ss.dependency pod_name + '/PDLPudding'
-            ss.dependency pod_name + '/PDLResizableImageView'
-            ss.dependency pod_name + '/PDLReuseItemManager'
-            ss.dependency pod_name + '/PDLRunLoopObserver'
-            ss.dependency pod_name + '/PDLSafeOperation'
-            ss.dependency pod_name + '/PDLScreenDebugger'
-            ss.dependency pod_name + '/PDLScrollPageViewController'
-            ss.dependency pod_name + '/PDLSessionTaskStatisticsManager'
-            ss.dependency pod_name + '/PDLSharedCache'
-            ss.dependency pod_name + '/PDLSystemImage'
-            ss.dependency pod_name + '/PDLTaskManager'
-            ss.dependency pod_name + '/PDLViewController'
-            ss.dependency pod_name + '/PDLViewControllerListViewController'
-            ss.dependency pod_name + '/UINavigationController+PDLLongPressPop'
-            ss.dependency pod_name + '/UIScreen+PDLExtension'
-            ss.dependency pod_name + '/UIView+PDLDebug'
-            ss.dependency pod_name + '/UIViewController+PDLExtension'
-            ss.dependency pod_name + '/UIViewController+PDLNavigationBar'
-            ss.dependency pod_name + '/UIViewController+PDLTransitionAnimation'
+        # tool kit
+        PoodleSubspec(s, 'PDLToolKit_iOS', platform_ios) do |ss|
+            s.pdl_hash[:toolkit_ios].each do |each_name|
+                ss.dependency pod_name + '/' + each_name if each_name != 'PDLToolKit_iOS'
+            end
         end
-        PoodleSubspec(s, 'PDLToolKit_macOS', platform_osx)  do |ss|
-            ss.dependency pod_name + '/CAAnimation+PDLExtension'
-            ss.dependency pod_name + '/CAMediaTimingFunction+PDLExtension'
-            ss.dependency pod_name + '/NSCache+PDLExtension'
-            ss.dependency pod_name + '/NSCharacterSet+PDLExtension'
-            ss.dependency pod_name + '/NSDictionary+PDLObjectForKey'
-            ss.dependency pod_name + '/NSJSONSerialization+PDLExtension'
-            ss.dependency pod_name + '/NSLock+PDLExtension'
-            ss.dependency pod_name + '/NSMapTable+PDLExtension'
-            ss.dependency pod_name + '/NSMutableDictionary+PDLThreadSafety'
-            ss.dependency pod_name + '/NSObject+PDLAssociation'
-            ss.dependency pod_name + '/NSObject+PDLDebug'
-            ss.dependency pod_name + '/NSObject+PDLDescription'
-            ss.dependency pod_name + '/NSObject+PDLExtension'
-            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
-            ss.dependency pod_name + '/NSObject+PDLMethod'
-            ss.dependency pod_name + '/NSObject+PDLSelectorProxy'
-            ss.dependency pod_name + '/NSObject+PDLThreadSafetifyMethod'
-            ss.dependency pod_name + '/NSObject+PDLThreadSafetifyProperty'
-            ss.dependency pod_name + '/NSObject+PDLWeakifyUnsafeUnretainedProperty'
-            ss.dependency pod_name + '/NSThread+PDLExtension'
-            ss.dependency pod_name + '/NSUserDefaults+PDLExtension'
-            ss.dependency pod_name + '/pdl_asm'
-            ss.dependency pod_name + '/pdl_allocation'
-            ss.dependency pod_name + '/pdl_backtrace'
-            ss.dependency pod_name + '/pdl_block'
-            ss.dependency pod_name + '/pdl_die'
-            ss.dependency pod_name + '/pdl_dispatch'
-            ss.dependency pod_name + '/pdl_dispatch_backtrace'
-            ss.dependency pod_name + '/pdl_dynamic'
-            ss.dependency pod_name + '/pdl_hook'
-            ss.dependency pod_name + '/pdl_lldb_hook'
-            ss.dependency pod_name + '/pdl_mach'
-            ss.dependency pod_name + '/pdl_mach_o_const_symbols'
-            ss.dependency pod_name + '/pdl_mach_o_symbol_pointer'
-            ss.dependency pod_name + '/pdl_mach_o_symbols'
-            ss.dependency pod_name + '/pdl_mach_object'
-            ss.dependency pod_name + '/pdl_malloc'
-            ss.dependency pod_name + '/pdl_objc_message'
-            ss.dependency pod_name + '/pdl_objc_message_hook'
-            ss.dependency pod_name + '/pdl_objc_runtime'
-            ss.dependency pod_name + '/pdl_os'
-            ss.dependency pod_name + '/pdl_pac'
-            ss.dependency pod_name + '/pdl_pthread'
-            ss.dependency pod_name + '/pdl_pthread_backtrace'
-            ss.dependency pod_name + '/pdl_security'
-            ss.dependency pod_name + '/pdl_spinlock'
-            ss.dependency pod_name + '/pdl_systemcall'
-            ss.dependency pod_name + '/pdl_thread'
-            ss.dependency pod_name + '/pdl_thread_storage'
-            ss.dependency pod_name + '/pdl_utils'
-            ss.dependency pod_name + '/pdl_vm'
-            ss.dependency pod_name + '/pdl_zombie'
-            ss.dependency pod_name + '/PDLBacktrace'
-            ss.dependency pod_name + '/PDLBacktraceRecorder'
-            ss.dependency pod_name + '/PDLBacktraceRecordsItem'
-            ss.dependency pod_name + '/PDLBlock'
-            ss.dependency pod_name + '/PDLCrash'
-            ss.dependency pod_name + '/PDLDatabase'
-            ss.dependency pod_name + '/PDLDebug'
-            ss.dependency pod_name + '/PDLDSym'
-            ss.dependency pod_name + '/PDLFileSystem'
-            ss.dependency pod_name + '/PDLInitialization'
-            ss.dependency pod_name + '/PDLLoad'
-            ss.dependency pod_name + '/PDLMachObject'
-            ss.dependency pod_name + '/PDLMemoryTracer'
-            ss.dependency pod_name + '/PDLNonThreadSafeObserver'
-            ss.dependency pod_name + '/PDLProcessInfo'
-            ss.dependency pod_name + '/PDLPrivate'
-            ss.dependency pod_name + '/PDLPudding'
-            ss.dependency pod_name + '/PDLReuseItemManager'
-            ss.dependency pod_name + '/PDLRunLoopObserver'
-            ss.dependency pod_name + '/PDLSafeOperation'
-            ss.dependency pod_name + '/PDLSessionTaskStatisticsManager'
-            ss.dependency pod_name + '/PDLSharedCache'
-            ss.dependency pod_name + '/PDLSystemImage'
-            ss.dependency pod_name + '/PDLTaskManager'
+
+        PoodleSubspec(s, 'PDLToolKit_macOS', platform_osx) do |ss|
+            s.pdl_hash[:toolkit_osx].each do |each_name|
+                ss.dependency pod_name + '/' + each_name if each_name != 'PDLToolKit_macOS'
+            end
         end
     end
 end
