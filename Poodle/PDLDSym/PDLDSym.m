@@ -278,12 +278,14 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
     }
 
     NSArray *offsets = [offsetToSymbol.allKeys sortedArrayUsingSelector:@selector(compare:)];
-    NSArray *strings = [offsetToSymbol.allValues sortedArrayUsingSelector:@selector(compare:)];
-    for (NSString *string in strings) {
+    NSArray *allStrings = [offsetToSymbol.allValues sortedArrayUsingSelector:@selector(compare:)];
+    NSMutableArray *strings = [NSMutableArray array];
+    for (NSString *string in allStrings) {
         if (symbolToOffsets[string]) {
             continue;
         }
 
+        [strings addObject:string];
         symbolToOffsets[string] = @(strtabSize);
         strtabSize += string.length + 1;
     }
@@ -302,13 +304,15 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
         debugStrSize += constDebugString.length + 1;
     }
 
-    NSArray *debugStrings = [offsetToDebugName.allValues sortedArrayUsingSelector:@selector(compare:)];
-    for (NSString *string in debugStrings) {
+    NSArray *allDebugStrings = [offsetToDebugName.allValues sortedArrayUsingSelector:@selector(compare:)];
+    NSMutableArray *debugStrings = [NSMutableArray array];
+    for (NSString *string in allDebugStrings) {
         if (symbolToDebugNameOffsets[string]) {
             continue;
         }
 
         symbolToDebugNameOffsets[string] = @(debugStrSize);
+        [debugStrings addObject:string];
         debugStrSize += string.length + 1;
     }
 
