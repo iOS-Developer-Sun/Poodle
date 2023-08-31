@@ -277,6 +277,9 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
         unnamedIndex++;
     }
 
+    _unnamedCount = unnamedIndex - 1;
+    _totalCount = self.functions.count;
+
     NSArray *offsets = [offsetToSymbol.allKeys sortedArrayUsingSelector:@selector(compare:)];
     NSArray *allStrings = [offsetToSymbol.allValues sortedArrayUsingSelector:@selector(compare:)];
     NSMutableArray *strings = [NSMutableArray array];

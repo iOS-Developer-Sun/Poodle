@@ -28,4 +28,6 @@
 - (void)execute:(void *(*)(void *))start arg:(void *)arg hidden_count:(int)hidden_count;
 - (void)enumerateFrames:(void(^)(NSInteger index, void *address, NSString *symbol, NSString *image, BOOL *stops))enumerator;
 
++ (void)clearSymbolCache;
+
 @end

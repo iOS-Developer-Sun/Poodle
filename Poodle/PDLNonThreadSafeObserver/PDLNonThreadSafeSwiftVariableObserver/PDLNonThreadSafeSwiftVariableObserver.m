@@ -112,6 +112,7 @@ static NSString *pdl_get_variable_name(Class aClass, intptr_t offset) {
 
 static PDLNonThreadSafeSwiftVariableObserver_ClassFilter pdl_classFilter = nil;
 static PDLNonThreadSafeSwiftVariableObserver_ClassVariableFilter pdl_classVariableFilter = nil;
+static NSSet *pdl_classes = nil;
 
 static id pdl_nonThreadSafeSwiftVariableAllocWithZone(__unsafe_unretained id self, SEL _cmd, struct _NSZone *zone) {
     PDLImplementationInterceptorRecover(_cmd);
@@ -140,8 +141,7 @@ static void *pdl_swift_beginAccess(void *address, void **result, int8_t flags, i
     if (offset > 0 && offset < 0x10000 && objectAddress) {
         Class aClass = object_getClass((__bridge __unsafe_unretained id)(objectAddress));
         void *cls = (__bridge void *)aClass;
-        void *superClass = pdl_get_swift_superclass(cls);
-        if (pdl_is_class_available(superClass)) {
+        if ([pdl_classes containsObject:@((unsigned long)cls)]) {
             NSString *className = NSStringFromClass(aClass);
             className = [PDLCrash demangle:className] ?: className;
             if (pdl_classFilter) {
@@ -223,6 +223,7 @@ static void *pdl_swift_allocObject(void *cls, size_t requiredSize, size_t requir
     __unused int ret = pdl_hook(items, count);
 //    assert(ret == count);
 
+    NSMutableSet *classes = [NSMutableSet set];
     {
         unsigned long size = 0;
         uint8_t *section = getsectiondata((void *)pdl_execute_header(), "__DATA", "__objc_classlist", &size);
@@ -242,12 +243,15 @@ static void *pdl_swift_allocObject(void *cls, size_t requiredSize, size_t requir
                 continue;
             }
 
+            [classes addObject:@((unsigned long)cls)];
+
             pdl_interceptSelector(object_getClass(aClass), @selector(allocWithZone:), (IMP)&pdl_nonThreadSafeSwiftVariableAllocWithZone, nil, YES, NULL);
         }
     }
 
     pdl_classFilter = classFilter;
     pdl_classVariableFilter = classVariableFilter;
+    pdl_classes = [classes copy];
 #endif
 }
 
