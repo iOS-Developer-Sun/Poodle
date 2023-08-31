@@ -413,8 +413,8 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     }
 
     pdl_mach_object_t *machObject = (pdl_mach_object_t *)self.machObject;
-    const pdl_segment_command *segment = machObject->data_const_segment_command;
-    [self enumerateSegment:segment sectionAction:^(const pdl_segment_command *segment, const pdl_section *section, uint32_t index) {
+    for (uint32_t i = 0; i < machObject->sections_count; i++) {
+        const pdl_section *section = machObject->sections[i];
         uint32_t flags = section->flags;
         uint32_t section_type = flags & SECTION_TYPE;
         if (section_type == S_NON_LAZY_SYMBOL_POINTERS) {
@@ -422,9 +422,8 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
                 action(self, symbol_name, address);
             }];
         }
-    }];
+    }
 }
-
 
 - (void)enumerateLazySymbolPointers:(void(^)(PDLSystemImage *systemImage, const char *symbol, void **address))action {
     if (!action) {
@@ -432,8 +431,8 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     }
 
     pdl_mach_object_t *machObject = (pdl_mach_object_t *)self.machObject;
-    const pdl_segment_command *segment = machObject->data_segment_command;
-    [self enumerateSegment:segment sectionAction:^(const pdl_segment_command *segment, const pdl_section *section, uint32_t index) {
+    for (uint32_t i = 0; i < machObject->sections_count; i++) {
+        const pdl_section *section = machObject->sections[i];
         uint32_t flags = section->flags;
         uint32_t section_type = flags & SECTION_TYPE;
         if (section_type == S_LAZY_SYMBOL_POINTERS) {
@@ -441,7 +440,7 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
                 action(self, symbol_name, address);
             }];
         }
-    }];
+    }
 }
 
 - (void)enumerateSymbolPointers:(void(^)(PDLSystemImage *systemImage, pdl_nlist *nlist, const char *symbol, void **address))action {

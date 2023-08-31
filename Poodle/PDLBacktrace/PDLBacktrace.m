@@ -122,6 +122,42 @@
     return [string copy];
 }
 
++ (NSMutableDictionary *)symbolCache {
+    static NSMutableDictionary *symbolCache = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        symbolCache = [NSMutableDictionary dictionary];
+    });
+    return symbolCache;
+}
+
++ (int)dladdr:(const void *)frame :(Dl_info *)info {
+    int ret = 0;
+    NSMutableDictionary *symbolCache = [self symbolCache];
+    @synchronized (symbolCache) {
+        NSNumber *key = @((NSUInteger)frame);
+        NSDictionary *value = symbolCache[key];
+        if (!value) {
+            ret = dladdr(frame, info);
+            NSMutableDictionary *v = [NSMutableDictionary dictionary];
+            v[@"return"] = @(ret);
+            v[@"dli_fname"] = @((NSUInteger)(info->dli_fname));
+            v[@"dli_fbase"] = @((NSUInteger)(info->dli_fbase));
+            v[@"dli_sname"] = @((NSUInteger)(info->dli_sname));
+            v[@"dli_saddr"] = @((NSUInteger)(info->dli_saddr));
+            value = [v copy];
+            symbolCache[key] = value;
+        } else {
+            ret = [value[@"return"] intValue];
+            info->dli_fname = (void *)[value[@"dli_fname"] unsignedIntegerValue];
+            info->dli_fbase = (void *)[value[@"dli_fbase"] unsignedIntegerValue];
+            info->dli_sname = (void *)[value[@"dli_sname"] unsignedIntegerValue];
+            info->dli_saddr = (void *)[value[@"dli_saddr"] unsignedIntegerValue];
+        }
+    }
+    return ret;
+}
+
 - (void)enumerateFrames:(void(^)(NSInteger index, void *address, NSString *symbol, NSString *image, BOOL *stops))enumerator {
     if (!enumerator) {
         return;
@@ -136,7 +172,7 @@
     Dl_info info;
     for (int i = 0; i < count; i++) {
         void *frame = frames[i];
-        int ret = dladdr(frame, &info);
+        int ret = [PDLBacktrace dladdr:frame :&info];
         NSString *symbol = nil;
         NSString *image = nil;
         if (ret) {
@@ -149,6 +185,13 @@
         if (stops) {
             break;
         }
+    }
+}
+
++ (void)clearSymbolCache {
+    NSMutableDictionary *symbolCache = [self symbolCache];
+    @synchronized (symbolCache) {
+        [symbolCache removeAllObjects];
     }
 }
 

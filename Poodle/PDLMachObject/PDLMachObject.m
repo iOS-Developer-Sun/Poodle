@@ -107,6 +107,202 @@ struct category_t {
 
 #pragma mark -
 
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_MODULE 0
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_EXTENSION 1
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_ANONYMOUS 2
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_PROTOCOL 3
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_OPAQUE_TYPE 4
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_CLASS 16
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_STRUCT 17
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_ENUM 18
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_ANY 31
+
+struct swift_type
+{
+    uint32_t flags;
+    int32_t parent;
+};
+
+struct swift_type_module
+{
+    uint32_t flags;
+    int32_t parent;
+    int32_t name;
+};
+
+struct swift_vtable_descriptor_header
+{
+    uint32_t offset;
+    uint32_t size;
+};
+
+struct swift_vtable_descriptor
+{
+    uint32_t flags;
+    int32_t imp;
+};
+
+struct swift_type_class
+{
+    uint32_t flags;
+    int32_t parent;
+    int32_t name;
+    int32_t access_function;
+    int32_t field_descriptor;
+    uint32_t superclass_type;
+    uint32_t negative_size;
+    uint32_t positive_size;
+    uint32_t number_of_immediate_members;
+    uint32_t number_of_fields;
+    uint32_t field_offset_vector_offset;
+    // optional
+//    int32_t resilient_superclass;
+//    int32_t metadataInitialization[3];
+//    struct swift_vtable_descriptor_header vtable;
+//    struct swift_vtable_descriptor methods[0];
+};
+
+struct swift_type_struct
+{
+    uint32_t flags;
+    int32_t parent;
+    int32_t name;
+    int32_t access_function;
+    int32_t field_descriptor;
+    uint32_t number_of_fields;
+    uint32_t field_offset_vector_offset;
+};
+
+#define SWIFT_VTABLE_DESCRIPTOR_MASK_KIND (0x0F)
+#define SWIFT_VTABLE_DESCRIPTOR_MASK_IS_INSTANCE (0x10)
+#define SWIFT_VTABLE_DESCRIPTOR_MASK_IS_DYNAMIC (0x20)
+
+enum swift_method_kind {
+    swift_method_kind_method,
+    swift_method_kind_init,
+    swift_method_kind_getter,
+    swift_method_kind_setter,
+    swift_method_kind_modifyCoroutine,
+    swift_method_kind_readCoroutine,
+};
+
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_MODULE 0
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_EXTENSION 1
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_ANONYMOUS 2
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_PROTOCOL 3
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_OPAQUE_TYPE 4
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_CLASS 16
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_STRUCT 17
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_ENUM 18
+#define SWIFT_CONTEXT_DESCRIPTOR_KIND_ANY 31
+
+enum {
+        // All of these values are bit offsets or widths.
+        // Generic flags build upwards from 0.
+        // Type-specific flags build downwards from 15.
+
+        /// Whether there's something unusual about how the metadata is
+        /// initialized.
+        ///
+        /// Meaningful for all type-descriptor kinds.
+    MetadataInitialization = 0,
+    MetadataInitialization_width = 2,
+
+        /// Set if the type has extended import information.
+        ///
+        /// If true, a sequence of strings follow the null terminator in the
+        /// descriptor, terminated by an empty string (i.e. by two null
+        /// terminators in a row).  See TypeImportInfo for the details of
+        /// these strings and the order in which they appear.
+        ///
+        /// Meaningful for all type-descriptor kinds.
+    HasImportInfo = 2,
+
+        /// Set if the type descriptor has a pointer to a list of canonical
+        /// prespecializations.
+    HasCanonicalMetadataPrespecializations = 3,
+
+        /// Set if the metadata contains a pointer to a layout string
+    HasLayoutString = 4,
+
+        // Type-specific flags:
+
+        /// Set if the class is an actor.
+        ///
+        /// Only meaningful for class descriptors.
+    Class_IsActor = 7,
+
+        /// Set if the class is a default actor class.  Note that this is
+        /// based on the best knowledge available to the class; actor
+        /// classes with resilient superclassess might be default actors
+        /// without knowing it.
+        ///
+        /// Only meaningful for class descriptors.
+    Class_IsDefaultActor = 8,
+
+        /// The kind of reference that this class makes to its resilient superclass
+        /// descriptor.  A TypeReferenceKind.
+        ///
+        /// Only meaningful for class descriptors.
+    Class_ResilientSuperclassReferenceKind = 9,
+    Class_ResilientSuperclassReferenceKind_width = 3,
+
+        /// Whether the immediate class members in this metadata are allocated
+        /// at negative offsets.  For now, we don't use this.
+    Class_AreImmediateMembersNegative = 12,
+
+        /// Set if the context descriptor is for a class with resilient ancestry.
+        ///
+        /// Only meaningful for class descriptors.
+    Class_HasResilientSuperclass = 13,
+
+        /// Set if the context descriptor includes metadata for dynamically
+        /// installing method overrides at metadata instantiation time.
+    Class_HasOverrideTable = 14,
+
+        /// Set if the context descriptor includes metadata for dynamically
+        /// constructing a class's vtables at metadata instantiation time.
+        ///
+        /// Only meaningful for class descriptors.
+    Class_HasVTable = 15,
+};
+
+enum MetadataInitializationKind {
+        /// There are either no special rules for initializing the metadata
+        /// or the metadata is generic.  (Genericity is set in the
+        /// non-kind-specific descriptor flags.)
+    NoMetadataInitialization = 0,
+
+        /// The type requires non-trivial singleton initialization using the
+        /// "in-place" code pattern.
+    SingletonMetadataInitialization = 1,
+
+        /// The type requires non-trivial singleton initialization using the
+        /// "foreign" code pattern.
+    ForeignMetadataInitialization = 2,
+
+        // We only have two bits here, so if you add a third special kind,
+        // include more flag bits in its out-of-line storage.
+};
+
+struct swift_field_record {
+    uint32_t flags;
+    int32_t name;
+    int32_t fieldname;
+};
+
+struct swift_field_descriptor
+{
+    int32_t type_name;
+    int32_t superclass;
+    uint16_t kind;
+    uint16_t field_record_size;
+    uint32_t number_of_records;
+    struct swift_field_record records[0];
+};
+
+#pragma mark -
+
 #define PDLMachObjectUninitialized ((void *)(unsigned long)-1)
 
 @interface PDLMachObject () {
@@ -120,6 +316,7 @@ struct category_t {
 @property (nonatomic, assign) pdl_section *classlistSection;
 @property (nonatomic, assign) pdl_section *catlistSection;
 @property (nonatomic, assign) pdl_section *modinitSection;
+@property (nonatomic, assign) pdl_section *swift5typesSection;
 
 @end
 
@@ -149,6 +346,7 @@ struct category_t {
         _classlistSection = PDLMachObjectUninitialized;
         _catlistSection = PDLMachObjectUninitialized;
         _modinitSection = PDLMachObjectUninitialized;
+        _swift5typesSection = PDLMachObjectUninitialized;
 
         [self setup];
     }
@@ -156,7 +354,10 @@ struct category_t {
 }
 
 - (uintptr_t)mainOffset {
-    uintptr_t mainOffset = self.object->entry_point_command->entryoff;
+    uintptr_t mainOffset = 0;
+    if (self.object->entry_point_command) {
+        mainOffset = self.object->entry_point_command->entryoff;
+    }
     return mainOffset;
 }
 
@@ -381,14 +582,28 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
     return address;
 }
 
+- (PDLMachObjectAddress)validateAddress:(PDLMachObjectAddress)address {
+#define ARM64E_MASK 0x000007FFFFFFFFFFUL
+    PDLMachObjectAddress ret = (PDLMachObjectAddress)(((unsigned long)address) & ARM64E_MASK);
+    if (ret != address) {
+        return NULL;
+    }
+    return ret;
+}
+
 - (void *)realAddress:(PDLMachObjectAddress)address {
-    intptr_t offset = [self offset:address];
+    PDLMachObjectAddress a = [self validateAddress:address];
+    if (a == NULL) {
+        return NULL;
+    }
+
+    intptr_t offset = [self offset:a];
     void *ret = ((void *)self.object->header) + offset;
     return ret;
 }
 
 - (PDLMachObjectAddress *)classList:(size_t *)count {
-    const pdl_section *section = [self classlistSection];
+    const pdl_section *section = self.classlistSection;
     if (!section) {
         return NULL;
     }
@@ -402,10 +617,13 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
 
 - (const char *)className:(PDLMachObjectAddress)cls {
     struct class_t *c = [self realAddress:cls];
+    if (c == NULL) {
+        return NULL;
+    }
+
     struct class_ro_t *ro = [self realAddress:c->ro];
     if (((unsigned long)ro & 1) == 1) {
-        // TODO
-        return NULL;
+        ro = (struct class_ro_t *)(((unsigned long)ro) & ~1);
     }
 
     const char *name = [self realAddress:(PDLMachObjectAddress)ro->name];
@@ -416,8 +634,7 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
     struct class_t *c = [self realAddress:cls];
     struct class_ro_t *ro = [self realAddress:c->ro];
     if (((unsigned long)ro & 1) == 1) {
-        // TODO
-        return NULL;
+        ro = (struct class_ro_t *)(((unsigned long)ro) & ~1);
     }
 
     PDLMachObjectAddress ret = ro->methods;
@@ -472,6 +689,15 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
         _modinitSection = (pdl_section *)section;
     }
     return _modinitSection;
+}
+
+- (pdl_section *)swift5typesSection {
+    if (_swift5typesSection == PDLMachObjectUninitialized) {
+        const char *sectionName = "__swift5_types";
+        const pdl_section *section = [self sectionWithSegmentName:"__TEXT" sectionName:sectionName];
+        _swift5typesSection = (pdl_section *)section;
+    }
+    return _swift5typesSection;
 }
 
 - (PDLMachObjectAddress _Nonnull * _Nullable)categoryList:(size_t *)count {
@@ -537,12 +763,136 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
 
     struct method_list_t *m = (struct method_list_t *)[self realAddress:methodList];
     uint32_t size = m->list.count;
+    bool isSmall = m->list.entsizeAndFlags & 0x80000000;
     for (uint32_t i = 0; i < size; i++) {
-        struct method_t *method = &(m->methods.big[i]);
-        const char *name = [self realAddress:method->name];
-        const char *types = [self realAddress:(PDLMachObjectAddress)method->types];
-        intptr_t impOffset = [self offset:method->imp];
-        action(name, types, impOffset);
+        if (isSmall) {
+            struct small_method_t *method = &(m->methods.small[i]);
+            PDLMachObjectAddress *nameAddress = [self realAddress:(PDLMachObjectAddress)(((unsigned long)(void *)methodList) + ((unsigned long)(void *)&(method->name) - ((unsigned long)(void *)m) + method->name))];
+            PDLMachObjectAddress namePointer = *nameAddress;
+            const char *name = [self realAddress:namePointer];
+            const char *types = [self realAddress:(PDLMachObjectAddress)(((unsigned long)(void *)methodList) + ((unsigned long)(void *)&(method->types) - ((unsigned long)(void *)m) + method->types))];
+            PDLMachObjectAddress impAddress = [self validateAddress:(PDLMachObjectAddress)(((unsigned long)(void *)methodList) + ((unsigned long)(void *)&(method->imp) - ((unsigned long)(void *)m) + method->imp))];
+            intptr_t impOffset = [self offset:impAddress];
+            action(name, types, impOffset);
+        } else {
+            struct method_t *method = &(m->methods.big[i]);
+            const char *name = [self realAddress:method->name];
+            const char *types = [self realAddress:(PDLMachObjectAddress)method->types];
+            intptr_t impOffset = [self offset:method->imp];
+            action(name, types, impOffset);
+        }
+    }
+}
+
+static unsigned long read_intoffset(int32_t *data) {
+    int32_t offset = *data;
+    unsigned long ret = ((unsigned long)data) + offset;
+    return ret;
+}
+
+- (char *)swiftName:(struct swift_type *)swiftType {
+    uint32_t flags = swiftType->flags;
+    uint8_t kind = flags & 0x1F;
+    if (kind != SWIFT_CONTEXT_DESCRIPTOR_KIND_MODULE &&
+        kind != SWIFT_CONTEXT_DESCRIPTOR_KIND_EXTENSION &&
+        kind != SWIFT_CONTEXT_DESCRIPTOR_KIND_ANONYMOUS &&
+        kind != SWIFT_CONTEXT_DESCRIPTOR_KIND_PROTOCOL &&
+        kind != SWIFT_CONTEXT_DESCRIPTOR_KIND_OPAQUE_TYPE &&
+        kind != SWIFT_CONTEXT_DESCRIPTOR_KIND_CLASS &&
+        kind != SWIFT_CONTEXT_DESCRIPTOR_KIND_STRUCT &&
+        kind != SWIFT_CONTEXT_DESCRIPTOR_KIND_ENUM) {
+        return NULL;
+    }
+    struct swift_type_module *module = (struct swift_type_module *)swiftType;
+    if (!module->name) {
+        return NULL;
+    }
+
+    char *name = (void *)read_intoffset((int32_t *)&module->name);
+    return name;
+}
+
+- (void)enumerateSwiftTypes:(void(^)(NSString *className, PDLSwiftMethodKind methodKind, BOOL isInstance, BOOL isDynamic, intptr_t impOffset))action {
+    if (!action) {
+        return;
+    }
+
+    pdl_section *swift5typesSection = self.swift5typesSection;
+    if (!swift5typesSection) {
+        return;
+    }
+
+    uint32_t *data = ((void *)self.object->header) + swift5typesSection->offset;
+    size_t count = swift5typesSection->size / sizeof(uint32_t);
+    for (size_t i = 0; i < count; i++) {
+        struct swift_type *swiftType = (struct swift_type *)read_intoffset((int32_t *)(data + i));
+        uint32_t flags = swiftType->flags;
+        uint8_t kind = flags & 0x1F;
+        if (kind != SWIFT_CONTEXT_DESCRIPTOR_KIND_CLASS) {
+            continue;
+        }
+
+        struct swift_type_class *swiftClass = (struct swift_type_class *)swiftType;
+        char *name = (char *)read_intoffset((int32_t *)&swiftClass->name);
+        NSMutableArray *classNames = [NSMutableArray array];
+        [classNames addObject:@(name)];
+        if (swiftClass->parent) {
+            struct swift_type *parent = (void *)read_intoffset((int32_t *)&swiftClass->parent);
+            while (true) {
+                char *name = [self swiftName:parent];
+                if (!name) {
+                    break;
+                }
+
+                [classNames insertObject:@(name) atIndex:0];
+
+                if (!parent->parent) {
+                    break;
+                }
+
+                parent = (void *)read_intoffset((int32_t *)&parent->parent);
+            }
+        }
+
+        NSString *className = [classNames componentsJoinedByString:@"."];
+
+        intptr_t accessFunctionOffset = 0;
+        if (swiftClass->access_function) {
+            void *accessFunction = (void *)read_intoffset((int32_t *)&swiftClass->access_function);
+            accessFunctionOffset = accessFunction - ((void *)self.object->header);
+            action(className, PDLSwiftMethodKindAccess, NO, NO, accessFunctionOffset);
+        }
+
+        void *optional = swiftClass + 1;
+        uint16_t descriptorFlags = (flags >> 16) & 0xFFFF;
+        BOOL hasResilientSuperclass = descriptorFlags & (1 << Class_HasResilientSuperclass);
+        if (hasResilientSuperclass) {
+            optional += 4;
+        }
+        uint8_t metadataInitializationFlag = descriptorFlags & 0x3;
+        if (metadataInitializationFlag) {
+            optional += 12;
+        }
+        BOOL hasVTable = descriptorFlags & (1 << Class_HasVTable);
+        if (hasVTable) {
+            struct swift_vtable_descriptor_header *vtable = optional;
+            uint32_t count = vtable->size;
+            struct swift_vtable_descriptor *vtableDescriptor = optional + sizeof(struct swift_vtable_descriptor_header);
+            for (uint32_t j = 0; j < count; j++) {
+                uint32_t flags = vtableDescriptor->flags;
+                if (vtableDescriptor->imp) {
+                    PDLSwiftMethodKind methodKind = (flags & SWIFT_VTABLE_DESCRIPTOR_MASK_KIND);
+                    BOOL isInstance = flags & SWIFT_VTABLE_DESCRIPTOR_MASK_IS_INSTANCE;
+                    BOOL isDynamic = flags & SWIFT_VTABLE_DESCRIPTOR_MASK_IS_DYNAMIC;
+                    void *imp = (void *)read_intoffset((int32_t *)&vtableDescriptor->imp);
+                    intptr_t functionOffset = imp - ((void *)self.object->header);
+                    action(className, methodKind, isInstance, isDynamic, functionOffset);
+                }
+                vtableDescriptor++;
+            }
+        }
+
+        name = name;
     }
 }
 

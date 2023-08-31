@@ -13,6 +13,8 @@
 
 @property (nonatomic, copy) NSString *unnamedSymbolPrefix;
 @property (nonatomic, readonly) pdl_mach_object *machObject;
+@property (nonatomic, readonly) NSUInteger totalCount;
+@property (nonatomic, readonly) NSUInteger unnamedCount;
 
 - (instancetype)initWithObject:(pdl_mach_object)machObject;
 - (void)addSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset;

@@ -10,10 +10,8 @@ def PoodleCommonConfigurate(s)
     s.author = { "Poodle" => "250764090@qq.com" }
     s.source = { :git => "https://github.com/iOS-Developer-Sun/Poodle.git", :tag => "#{s.version}" }
     s.pod_target_xcconfig = {
-        'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 arm64e',
-        'OTHER_LDFLAGS' => '-lObjC'
+        'OTHER_LDFLAGS' => '$(inherited) -lObjC'
     }
-    s.user_target_xcconfig = { 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 arm64e' }
 end
 
 def PoodleSubspec(s, name, platform)
@@ -93,6 +91,13 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         s.ios.deployment_target = ios_version
 
         PoodleCommonConfigurate(s)
+
+        if is_library
+            s.pod_target_xcconfig ||= {}
+            s.pod_target_xcconfig['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64 arm64e'
+            s.user_target_xcconfig ||= {}
+            s.user_target_xcconfig['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64 arm64e'
+        end
 
         # varirables for subspec
         pod_name = name

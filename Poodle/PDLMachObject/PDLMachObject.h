@@ -13,6 +13,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 typedef void * PDLMachObjectAddress;
 
+typedef NS_ENUM(NSUInteger, PDLSwiftMethodKind) {
+    PDLSwiftMethodKindMethod,
+    PDLSwiftMethodKindInit,
+    PDLSwiftMethodKindGetter,
+    PDLSwiftMethodKindSetter,
+    PDLSwiftMethodKindModifyCoroutine,
+    PDLSwiftMethodKindReadCoroutine,
+    PDLSwiftMethodKindAccess,
+};
+
 @interface PDLMachObject : NSObject
 
 @property (nonatomic, assign, readonly) pdl_mach_object_t *object;
@@ -37,6 +47,8 @@ typedef void * PDLMachObjectAddress;
 
 - (uint32_t)methodCount:(PDLMachObjectAddress)methodList;
 - (void)enumerateMethodList:(PDLMachObjectAddress)methodList action:(void(^)(const char *name, const char *type, intptr_t impOffset))action;
+
+- (void)enumerateSwiftTypes:(void(^)(NSString *className, PDLSwiftMethodKind methodKind, BOOL isInstance, BOOL isDynamic, intptr_t impOffset))action;
 
 @end
 
