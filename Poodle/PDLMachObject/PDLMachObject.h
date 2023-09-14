@@ -50,6 +50,8 @@ typedef NS_ENUM(NSUInteger, PDLSwiftMethodKind) {
 
 - (void)enumerateSwiftTypes:(void(^)(NSString *className, PDLSwiftMethodKind methodKind, BOOL isInstance, BOOL isDynamic, intptr_t impOffset))action;
 
+- (void)enumerateBlockInvokes:(intptr_t)impOffset action:(void (^)(intptr_t))action;
+
 @end
 
 NS_ASSUME_NONNULL_END

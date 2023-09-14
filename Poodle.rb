@@ -9,9 +9,6 @@ def PoodleCommonConfigurate(s)
     s.license = "MIT"
     s.author = { "Poodle" => "250764090@qq.com" }
     s.source = { :git => "https://github.com/iOS-Developer-Sun/Poodle.git", :tag => "#{s.version}" }
-    s.pod_target_xcconfig = {
-        'OTHER_LDFLAGS' => '$(inherited) -lObjC'
-    }
 end
 
 def PoodleSubspec(s, name, platform)
@@ -50,6 +47,11 @@ def PoodleSubspec(s, name, platform)
             ss.osx.deployment_target = platform[:osx] if support_osx
             ss.ios.deployment_target = platform[:ios] if support_ios
             ss.source_files = base + name + '/' + '**/' + source_files
+            if is_macos
+                ss.vendored_library = base + name + '/lib/macos/**/' + library_files
+            else
+                ss.vendored_library = base + name + '/lib/ios/**/' + library_files
+            end
         end
         hash[:toolkit_osx].append name if support_osx
         hash[:toolkit_ios].append name if support_ios
@@ -93,10 +95,18 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         PoodleCommonConfigurate(s)
 
         if is_library
-            s.pod_target_xcconfig ||= {}
-            s.pod_target_xcconfig['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64 arm64e'
-            s.user_target_xcconfig ||= {}
-            s.user_target_xcconfig['EXCLUDED_ARCHS[sdk=iphonesimulator*]'] = 'arm64 arm64e'
+            s.pod_target_xcconfig = {
+                'OTHER_LDFLAGS' => '$(inherited) -lObjC',
+                'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 arm64e'
+            }
+            s.user_target_xcconfig = {
+                'OTHER_LDFLAGS' => '$(inherited) -lObjC',
+                'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 arm64e'
+            }
+        else
+            s.pod_target_xcconfig = {
+                'OTHER_LDFLAGS' => '$(inherited) -lObjC'
+            }
         end
 
         # varirables for subspec
