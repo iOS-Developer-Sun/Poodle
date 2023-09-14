@@ -110,6 +110,7 @@ typedef struct pdl_mach_object {
     const struct dyld_info_command *dyld_info_dyld_info_command;
     const struct dyld_info_command *dyld_info_only_dyld_info_command;
     const struct entry_point_command *entry_point_command;
+    const struct linkedit_data_command *dyld_chained_fixups_command;
 
     const struct uuid_command *uuid_command;
     const struct rpath_command *rpath_command;
@@ -196,6 +197,7 @@ typedef struct pdl_mach_object_64 {
     const struct dyld_info_command *dyld_info_dyld_info_command;
     const struct dyld_info_command *dyld_info_only_dyld_info_command;
     const struct entry_point_command *entry_point_command;
+    const struct linkedit_data_command *dyld_chained_fixups_command;
 
     const struct uuid_command *uuid_command;
     const struct rpath_command *rpath_command;
