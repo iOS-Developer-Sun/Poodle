@@ -239,14 +239,19 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
     _functionsSize = [functionsSize copy];
 }
 
-- (void)addSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset {
+- (BOOL)addSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset {
     assert(symbol);
     assert(offset > 0);
+    if (self.offsetToSymbol[@(offset)]) {
+        return NO;
+    }
+
     self.offsetToSymbol[@(offset)] = symbol;
     self.offsetToDebugName[@(offset)] = debugName ?: symbol;
     if (!self.functionsSize[@(offset)]) {
         [self.variables addObject:@(offset)];
     }
+    return YES;
 }
 
 - (BOOL)dump:(NSString *)path {
@@ -562,6 +567,8 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
             size_t stringOffset = strlen(s) + 1;
             str += stringOffset;
         }
+
+        assert(buffer + offset == str);
     }
 
     offset = page_align(offset);

@@ -8,6 +8,8 @@
 
 #import "PDLMachObject.h"
 #import <mach-o/fixup-chains.h>
+#import "pdl_block.h"
+#import "capstone.h"
 
 struct list_t {
     uint32_t entsizeAndFlags;
@@ -319,6 +321,108 @@ struct swift_field_descriptor
 
 @end
 
+typedef NS_ENUM(NSInteger, PDLKeyInstructionType) {
+    PDLKeyInstructionTypeNone,
+    PDLKeyInstructionTypeLDR,
+    PDLKeyInstructionTypeADR,
+    PDLKeyInstructionTypeBL,
+};
+
+typedef NS_ENUM(NSInteger, PDLKeyInstructionStorageType) {
+    PDLKeyInstructionStorageTypeNone,
+    PDLKeyInstructionStorageTypeSP,
+    PDLKeyInstructionStorageTypeFP,
+};
+
+@interface PDLKeyInstructionStorage : NSObject
+
+@property (nonatomic, assign) PDLKeyInstructionStorageType storageType;
+@property (nonatomic, assign) int storage;
+@property (nonatomic, assign) uint64_t begin;
+@property (nonatomic, assign) uint64_t end;
+
+@end
+
+@implementation PDLKeyInstructionStorage
+
+@end
+
+@interface PDLKeyInstruction : NSObject
+
+@property (nonatomic, assign) NSInteger instructionIndex;
+@property (nonatomic, assign) uint64_t address;
+@property (nonatomic, copy) NSString *symbol;
+@property (nonatomic, assign) NSInteger type;
+@property (nonatomic, assign) PDLMachObjectAddress target;
+@property (nonatomic, assign) intptr_t offset;
+@property (nonatomic, assign) pdl_section *section;
+@property (nonatomic, copy) NSString *instruction;
+@property (nonatomic, copy) NSString *nextInstruction;
+@property (nonatomic, assign) BOOL isMem;
+
+@property (nonatomic, copy) NSArray *storages;
+
+@property (readonly) BOOL isExecutable;
+@property (readonly) BOOL isData;
+@property (readonly) BOOL isGlobalBlock;
+@property (readonly) BOOL isStackBlock;
+
+@end
+
+static BOOL isSectionExecutable(const pdl_section *section) {
+    BOOL isExecutable = (strncmp(section->segname, "__TEXT", sizeof(section->segname)) == 0) && (strncmp(section->sectname, "__text", sizeof(section->sectname)) == 0);
+    return isExecutable;
+}
+
+@implementation PDLKeyInstruction
+
+- (BOOL)isExecutable {
+    return isSectionExecutable(self.section);
+}
+
+- (BOOL)isData {
+    BOOL isData = (strncmp(self.section->segname, "__DATA", sizeof(self.section->segname)) == 0)
+    || (strncmp(self.section->segname, "__DATA_CONST", sizeof(self.section->segname)) == 0)
+    || (strncmp(self.section->segname, "__DATA_DIRTY", sizeof(self.section->segname)) == 0);
+    isData = isData && self.section->offset > 0;
+    return isData;
+}
+
+- (BOOL)isGlobalBlock {
+    BOOL isGlobalBlock =  [self.symbol isEqualToString:@"__NSConcreteGlobalBlock"];
+    return isGlobalBlock;
+}
+
+- (BOOL)isStackBlock {
+    BOOL isStackBlock =  [self.symbol isEqualToString:@"__NSConcreteStackBlock"];
+    return isStackBlock;
+}
+
+- (BOOL)isStorageEqualTo:(PDLKeyInstruction *)target offset:(int)targetOffset {
+    for (PDLKeyInstructionStorage *storage in self.storages) {
+        for (PDLKeyInstructionStorage *targetStorage in target.storages) {
+            if (storage.storageType == targetStorage.storageType && storage.storage == targetStorage.storage + targetOffset) {
+                if (storage.begin > targetStorage.end || targetStorage.begin > storage.end) {
+                    continue;
+                }
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
+
+- (NSString *)description {
+    NSString *next = self.nextInstruction ? [NSString stringWithFormat:@"\n         \t%@,", self.nextInstruction] : @"";
+    NSMutableString *storageString = [NSMutableString string];
+    for (PDLKeyInstructionStorage *storage in self.storages) {
+        [storageString appendString:storage.storageType ? [NSString stringWithFormat:@"\t%@%@%@", storage.storageType == PDLKeyInstructionStorageTypeSP ? @"sp" : @"fp", storage.storage >=0 ? @"+" : @"", @(storage.storage)] : @""];
+    }
+    return [NSString stringWithFormat:@"%8ld:\t%@,%@\t0x%lX, %@", (long)self.instructionIndex, self.instruction, next, (unsigned long)self.target, storageString];
+}
+
+@end
+
 @interface PDLMachObject () {
     pdl_mach_object_t __object;
 }
@@ -326,8 +430,10 @@ struct swift_field_descriptor
 @property (nonatomic, copy, readonly) NSData *originalData;
 @property (nonatomic, strong, readonly) NSMutableData *data;
 @property (nonatomic, strong, readonly) NSMutableDictionary *bindInfo;
+@property (nonatomic, strong, readonly) NSMutableDictionary *dysymInfo;
 @property (nonatomic, strong, readonly) NSMutableArray *fixupImports;
 @property (nonatomic, strong, readonly) NSMutableDictionary *symbolsMap;
+@property (nonatomic, strong, readonly) NSMutableArray *symbols;
 @property (nonatomic, strong, readonly) NSMutableDictionary *externalFixupsSymbolMap;
 @property (nonatomic, readonly) NSDictionary *functionsSize;
 @property (nonatomic, readonly) NSArray *functions;
@@ -437,17 +543,47 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
     return result;
 }
 
+static unsigned long read_intoffset(int32_t *data) {
+    int32_t offset = *data;
+    unsigned long ret = ((unsigned long)data) + offset;
+    return ret;
+}
+
 static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t type, int libraryOrdinal, int64_t addend, const char* symbolName, bool lazyPointer, bool weakImport, PDLMachObject *self) {
 //    printf("segmentIndex: %d, segmentOffset: %llx, type: %d, libraryOrdinal: %d, addend: %llx, symbolName: %s, lazyPointer: %d, weakImport: %d\n", segmentIndex, segmentOffset, type, libraryOrdinal, addend, symbolName, lazyPointer, weakImport);
     const pdl_segment_command *segment = self.object->total_segments[segmentIndex];
     uintptr_t addr = segment->vmaddr + segmentOffset;
-    self.bindInfo[@(addr)] = @((unsigned long)symbolName);
+    self.bindInfo[@(addr)] = @(symbolName);
+}
+
+static bool pdl_insn_contains_group_type(cs_insn *instruction, uint8_t group_type) {
+    uint8_t groups_count = instruction->detail->groups_count;
+    for (uint8_t i = 0; i < groups_count; i++) {
+        cs_group_type type = instruction->detail->groups[i];
+        if (type == group_type) {
+            return true;
+        }
+    }
+    return false;
+}
+
+static bool pdl_insn_is_jump(cs_insn *instruction) {
+    return pdl_insn_contains_group_type(instruction, ARM64_GRP_JUMP)
+    || pdl_insn_contains_group_type(instruction, ARM64_GRP_CALL)
+    || pdl_insn_contains_group_type(instruction, ARM64_GRP_RET)
+    || pdl_insn_contains_group_type(instruction, ARM64_GRP_INT)
+    || pdl_insn_contains_group_type(instruction, ARM64_GRP_PRIVILEGE)
+    || pdl_insn_contains_group_type(instruction, ARM64_GRP_BRANCH_RELATIVE);
+}
+
+static bool pdl_reg_is_called_saved(uint32_t reg) {
+    return reg >= ARM64_REG_X19 && reg <= ARM64_REG_X28;
 }
 
 - (void)setup {
     [self setupFunctions];
+    [self setupSymbols];
     [self setupDyld];
-    [self setupDyldFixups];
 }
 
 - (void)setupFunctions {
@@ -503,6 +639,7 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
     }
 
     _symbolsMap = [NSMutableDictionary dictionary];
+    _symbols = [NSMutableArray array];
 
     const char *strtab = self.object->strtab;
     for (uint32_t i = 0; i < self.object->symtab_count; i++) {
@@ -514,10 +651,17 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
         u_long value = (u_long)nlist->n_value;
         const char *str = strtab + strx;
         self.symbolsMap[@(str)] = @(value);
+        [self.symbols addObject:@(str)];
     }
 }
 
 - (void)setupDyld {
+    [self setupDyldInfo];
+    [self setupDyldDysym];
+    [self setupDyldFixups];
+}
+
+- (void)setupDyldInfo {
     struct dyld_info_command const *dyld_info_command = self.object->dyld_info_dyld_info_command ?: self.object->dyld_info_only_dyld_info_command;
     if (!dyld_info_command) {
         return;
@@ -619,6 +763,62 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
     }
 }
 
+- (void)setupDyldDysym {
+    if (!self.object->dysymtab_command) {
+        return;
+    }
+
+    _dysymInfo = [NSMutableDictionary dictionary];
+
+    uint32_t *syms = ((void *)(self.object->header)) + self.object->dysymtab_command->indirectsymoff;
+    uint32_t nindsym = self.object->dysymtab_command->nindirectsyms;
+    for (uint32_t i = 0; i < nindsym; i++) {
+        uint32_t nsect = self.object->sections_count;
+        pdl_section *section = NULL;
+        while (--nsect > 0) {
+            section = (pdl_section *)self.object->sections[nsect];
+            if (((section->flags & SECTION_TYPE) != S_SYMBOL_STUBS &&
+                 (section->flags & SECTION_TYPE) != S_LAZY_SYMBOL_POINTERS &&
+                 (section->flags & SECTION_TYPE) != S_LAZY_DYLIB_SYMBOL_POINTERS &&
+                 (section->flags & SECTION_TYPE) != S_NON_LAZY_SYMBOL_POINTERS) ||
+                section->reserved1 > i) {
+                section = NULL;
+                continue;
+            }
+            break;
+        }
+
+        if (!section) {
+            continue;
+        }
+
+        NSString *symbolName = nil;
+        uint32_t length = (section->reserved2 > 0 ? section->reserved2 : sizeof(uint64_t));
+        uint64_t indirectAddress = section->addr + (i - section->reserved1) * length;
+        uint32_t indirectIndex = syms[i];
+        if ((indirectIndex & (INDIRECT_SYMBOL_LOCAL | INDIRECT_SYMBOL_ABS)) == 0) {
+            symbolName = self.symbols[indirectIndex];
+        } else {
+            switch (indirectIndex) {
+                case INDIRECT_SYMBOL_LOCAL: {
+                    uint64_t targetAddress = *(uint64_t *)[self realAddress:(PDLMachObjectAddress)indirectAddress];
+                    (void)targetAddress;
+                } break;
+                case INDIRECT_SYMBOL_ABS: {
+                    ;
+                } break;
+                default: {
+                    break;
+                }
+            }
+        }
+
+        if (symbolName) {
+            self.dysymInfo[@(indirectAddress)] = symbolName;
+        }
+    }
+}
+
 - (void)setupDyldFixups {
     struct linkedit_data_command const *dyld_chained_fixups_command = self.object->dyld_chained_fixups_command;
     if (!dyld_chained_fixups_command) {
@@ -640,8 +840,6 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
     if (header->symbols_format != 0) {
         return;
     }
-
-    [self setupSymbols];
 
     _fixupImports = [NSMutableArray array];
     _externalFixupsSymbolMap = [NSMutableDictionary dictionary];
@@ -715,15 +913,15 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
 
     // starts
     struct dyld_chained_starts_in_image *starts = headerPointer + header->starts_offset;
-    for (uint32 i = 0; i < starts->seg_count; i++) {
-        uint32 seg_info_offset = starts->seg_info_offset[i];
+    for (uint32_t i = 0; i < starts->seg_count; i++) {
+        uint32_t seg_info_offset = starts->seg_info_offset[i];
         if (!seg_info_offset) {
             continue;
         }
 
         const pdl_segment_command *segment = self.object->total_segments[i];
         struct dyld_chained_starts_in_segment *starts_in_segment = (((void *)starts) + seg_info_offset);
-        for (uint32 j = 0; j < starts_in_segment->page_count; j++) {
+        for (uint32_t j = 0; j < starts_in_segment->page_count; j++) {
             uint16_t firstOffset = starts_in_segment->page_start[j];
             if (firstOffset == DYLD_CHAINED_PTR_START_NONE) {
                 continue;
@@ -1014,16 +1212,10 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
     }
 
     PDLMachObjectAddress clsAddress = offsetof(struct category_t, cls) + cat;
-    const char *name = (const char *)[self.bindInfo[@((unsigned long)clsAddress)] unsignedLongValue];
+    NSString *name = self.bindInfo[@((unsigned long)clsAddress)];
     if (name) {
-        static const char *objc_class_prefix = "_OBJC_CLASS_$_";
-        size_t prefixLength = strlen(objc_class_prefix);
-        if (strncmp(objc_class_prefix, name, prefixLength) == 0) {
-            const char *ret = name + prefixLength;
-            return ret;
-        }
+        return [self classNameOfSymbol:name];
     }
-
     return NULL;
 }
 
@@ -1060,21 +1252,17 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
             const char *types = [self realAddress:(PDLMachObjectAddress)(((unsigned long)(void *)methodList) + ((unsigned long)(void *)&(method->types) - ((unsigned long)(void *)m) + method->types))];
             PDLMachObjectAddress impAddress = (PDLMachObjectAddress)(((unsigned long)(void *)methodList) + ((unsigned long)(void *)&(method->imp) - ((unsigned long)(void *)m) + method->imp));
             intptr_t impOffset = [self offset:impAddress];
+            assert(self.functionsSize[@(impOffset)]);
             action(name, types, impOffset);
         } else {
             struct method_t *method = &(m->methods.big[i]);
             const char *name = [self realAddress:method->name];
             const char *types = [self realAddress:(PDLMachObjectAddress)method->types];
             intptr_t impOffset = [self offset:method->imp];
+            assert(self.functionsSize[@(impOffset)]);
             action(name, types, impOffset);
         }
     }
-}
-
-static unsigned long read_intoffset(int32_t *data) {
-    int32_t offset = *data;
-    unsigned long ret = ((unsigned long)data) + offset;
-    return ret;
 }
 
 - (char *)swiftName:(struct swift_type *)swiftType {
@@ -1147,6 +1335,7 @@ static unsigned long read_intoffset(int32_t *data) {
         if (swiftClass->access_function) {
             void *accessFunction = (void *)read_intoffset((int32_t *)&swiftClass->access_function);
             accessFunctionOffset = accessFunction - ((void *)self.object->header);
+            assert(self.functionsSize[@(accessFunctionOffset)]);
             action(className, PDLSwiftMethodKindAccess, NO, NO, accessFunctionOffset);
         }
 
@@ -1173,6 +1362,7 @@ static unsigned long read_intoffset(int32_t *data) {
                     BOOL isDynamic = flags & SWIFT_VTABLE_DESCRIPTOR_MASK_IS_DYNAMIC;
                     void *imp = (void *)read_intoffset((int32_t *)&vtableDescriptor->imp);
                     intptr_t functionOffset = imp - ((void *)self.object->header);
+                    assert(self.functionsSize[@(functionOffset)]);
                     action(className, methodKind, isInstance, isDynamic, functionOffset);
                 }
                 vtableDescriptor++;
@@ -1181,6 +1371,295 @@ static unsigned long read_intoffset(int32_t *data) {
 
         name = name;
     }
+}
+
+- (void)enumerateBlockInvokes:(intptr_t)impOffset action:(void (^)(intptr_t))action {
+    if (!action) {
+        return;
+    }
+
+    unsigned long address = (unsigned long)[self address:impOffset];
+    NSUInteger functionSize = [self functionSize:impOffset];
+    uint8_t *function = (uint8_t *)((unsigned long)self.object->header) + impOffset;
+    if (functionSize == 0) {
+        return;
+    }
+
+    cs_arch target_arch;
+    cs_mode target_mode;
+    switch (self.object->header->cputype) {
+        case CPU_TYPE_I386:
+            target_arch = CS_ARCH_X86;
+            target_mode = CS_MODE_32;
+            break;
+        case CPU_TYPE_X86_64:
+            target_arch = CS_ARCH_X86;
+            target_mode = CS_MODE_64;
+            break;
+        case CPU_TYPE_ARM:
+            target_arch = CS_ARCH_ARM;
+            target_mode = CS_MODE_ARM;
+            break;
+        case CPU_TYPE_ARM64:
+            target_arch = CS_ARCH_ARM64;
+            target_mode = CS_MODE_ARM;
+            break;
+        default:
+            return;
+    }
+
+    csh handle = 0;
+    cs_err cserr = cs_open(target_arch, target_mode, &handle);
+    if (cserr != CS_ERR_OK) {
+        return;
+    }
+
+    cs_option(handle, CS_OPT_DETAIL, CS_OPT_ON);
+
+    cs_insn *instructions = NULL;
+    size_t disasm_count = cs_disasm(handle, function, functionSize, address, 0, &instructions);
+
+    // collect
+    NSMutableArray *keyInstructions = [NSMutableArray array];
+    NSMutableArray *instructionStrings = [NSMutableArray array];
+    cs_insn *out_bounds = instructions + disasm_count;
+    for (size_t i = 0; i < disasm_count; i++) {
+        cs_insn *current = instructions + i;
+        cs_regs_access(handle, current, current->detail->regs_read, &current->detail->regs_read_count, current->detail->regs_write, &current->detail->regs_write_count);
+    }
+
+    for (size_t i = 0; i < disasm_count; i++) {
+        cs_insn *current = instructions + i;
+        NSString *asm_string = [NSString stringWithFormat:@"%-10s\t%s", current->mnemonic, current->op_str];
+        [instructionStrings addObject:asm_string];
+        NSString *next_asm_string = nil;
+//        NSLog(@"%@", asm_string);
+        uint64_t target = 0;
+        PDLKeyInstructionType type = PDLKeyInstructionTypeNone;
+        NSMutableArray *storages = [NSMutableArray array];
+        uint64_t address = current->address;
+        BOOL isMem = NO;
+        if (target_arch == CS_ARCH_X86) {
+//            if (current->id != X86_INS_LEA) {
+//                continue;
+//            }
+//            target = current->address + current->size + current->detail->x86.disp;
+        } else if (target_arch == CS_ARCH_ARM64) {
+            if (current->id == ARM64_INS_ADR || current->id == ARM64_INS_ADRP) {
+                type = PDLKeyInstructionTypeADR;
+                assert(current->detail->arm64.op_count == 2);
+                assert(current->detail->arm64.operands[1].type == ARM64_OP_IMM);
+                target = current->detail->arm64.operands[1].imm;
+                cs_insn *next = current + 1;
+                arm64_reg reg = current->detail->regs_write[0];
+                if (next->id == ARM64_INS_ADD) {
+                    if (next->detail->arm64.op_count == 3
+                        && next->detail->arm64.operands[1].type == ARM64_OP_REG
+                        && next->detail->arm64.operands[1].reg == current->detail->arm64.operands[0].reg
+                        && next->detail->arm64.operands[2].type == ARM64_OP_IMM) {
+                        target += next->detail->arm64.operands[2].imm;
+                        next_asm_string = [NSString stringWithFormat:@"%-10s\t%s", next->mnemonic, next->op_str];
+                        assert(next->detail->arm64.operands[0].type == ARM64_OP_REG);
+                        reg = next->detail->arm64.operands[0].reg;
+                        next++;
+                    }
+                } else if (next->id == ARM64_INS_LDR) {
+                    if (next->detail->arm64.op_count == 2
+                        && next->detail->arm64.operands[1].type == ARM64_OP_MEM
+                        && next->detail->arm64.operands[1].mem.base == reg) {
+                        target += next->detail->arm64.operands[1].mem.disp;
+                        next_asm_string = [NSString stringWithFormat:@"%-10s\t%s", next->mnemonic, next->op_str];
+                        isMem = YES;
+                        assert(next->detail->arm64.operands[0].type == ARM64_OP_REG);
+                        reg = next->detail->arm64.operands[0].reg;
+                        next++;
+                    }
+                }
+
+                for (; next < out_bounds; next++) {
+                    __unused NSString *next_asm_string = [NSString stringWithFormat:@"%-10s\t%s", next->mnemonic, next->op_str];
+                    PDLKeyInstructionStorage *storage = nil;
+                    if (next->id == ARM64_INS_STR || next->id == ARM64_INS_STUR) {
+                        if (next->detail->arm64.op_count == 2
+                            && next->detail->arm64.operands[0].type == ARM64_OP_REG
+                            && next->detail->arm64.operands[0].reg == reg
+                            && next->detail->arm64.operands[1].type == ARM64_OP_MEM
+                            && (next->detail->arm64.operands[1].reg == ARM64_REG_SP || next->detail->arm64.operands[1].reg == ARM64_REG_FP)) {
+                            storage = [[PDLKeyInstructionStorage alloc] init];
+                            storage.storageType = next->detail->arm64.operands[1].reg == ARM64_REG_SP ? PDLKeyInstructionStorageTypeSP : PDLKeyInstructionStorageTypeFP;
+                            storage.storage = next->detail->arm64.operands[1].mem.disp;
+                            storage.begin = next->address;
+                            [storages addObject:storage];
+                        }
+                    } else if (next->id == ARM64_INS_STP) {
+                        if (next->detail->arm64.op_count == 3
+                            && next->detail->arm64.operands[2].type == ARM64_OP_MEM
+                            && (next->detail->arm64.operands[2].reg == ARM64_REG_SP || next->detail->arm64.operands[2].reg == ARM64_REG_FP)) {
+                            BOOL isFirst = (next->detail->arm64.operands[0].type == ARM64_OP_REG
+                                            && next->detail->arm64.operands[0].reg == reg);
+                            BOOL isSecond = (next->detail->arm64.operands[1].type == ARM64_OP_REG
+                                             && next->detail->arm64.operands[1].reg == reg);
+                            if ((isFirst || isSecond)) {
+                                storage = [[PDLKeyInstructionStorage alloc] init];
+                                storage.storageType = next->detail->arm64.operands[2].reg == ARM64_REG_SP ? PDLKeyInstructionStorageTypeSP : PDLKeyInstructionStorageTypeFP;
+                                storage.storage = next->detail->arm64.operands[2].mem.disp + (isFirst ? 0 : 8);
+                                storage.begin = next->address;
+                                [storages addObject:storage];
+                            }
+                        }
+                    } else if (pdl_insn_is_jump(next) && !pdl_reg_is_called_saved(reg)) {
+                        break;
+                    } else if (cs_reg_write(handle, next, reg)) {
+                        break;
+                    } else {
+                        continue;
+                    }
+                    if (storage) {
+                        arm64_reg storageReg = (storage.storageType == PDLKeyInstructionStorageTypeSP ? ARM64_REG_SP : ARM64_REG_FP);
+                        for (cs_insn *end = next + 1; end < out_bounds; end++) {
+                            __unused NSString *end_asm_string = [NSString stringWithFormat:@"%-10s\t%s", end->mnemonic, end->op_str];
+                            if (cs_reg_write(handle, end, storageReg)) {
+                                storage.end = end->address;
+                                break;
+                            }
+
+                            if (end->id == ARM64_INS_STR || end->id == ARM64_INS_STUR) {
+                                if (end->detail->arm64.op_count == 2
+                                    && end->detail->arm64.operands[1].type == ARM64_OP_MEM
+                                    && (end->detail->arm64.operands[1].reg == storageReg)
+                                    && end->detail->arm64.operands[1].mem.disp == storage.storage) {
+                                    storage.end = end->address;
+                                    break;
+                                }
+                            } else if (end->id == ARM64_INS_STP) {
+                                if (end->detail->arm64.op_count == 3
+                                    && end->detail->arm64.operands[2].type == ARM64_OP_MEM
+                                    && (end->detail->arm64.operands[1].reg == storageReg)
+                                    && end->detail->arm64.operands[1].mem.disp == storage.storage) {
+                                    storage.end = end->address;
+                                    break;
+                                }
+                            }
+                        }
+                        if (!storage.end) {
+                            storage.end = out_bounds[-1].address + out_bounds[-1].size;
+                        }
+                    }
+                }
+            } else {
+                continue;
+            }
+        } else {
+            continue;
+        }
+
+        intptr_t targetOffset = [self offset:(PDLMachObjectAddress)target];
+        const pdl_section *section = [self sectionOfOffset:targetOffset];
+        if (!section) {
+            continue;
+        }
+
+        NSString *symbol = self.bindInfo[@(target)] ?: self.externalFixupsSymbolMap[@(target)] ?: self.dysymInfo[@(target)];
+        PDLKeyInstruction *keyInstruction = [[PDLKeyInstruction alloc] init];
+        keyInstruction.symbol = symbol;
+        keyInstruction.target = (PDLMachObjectAddress)target;
+        keyInstruction.offset = targetOffset;
+        keyInstruction.address = address;
+        keyInstruction.section = (pdl_section *)section;
+        keyInstruction.type = type;
+        keyInstruction.instructionIndex = i;
+        keyInstruction.instruction = asm_string;
+        keyInstruction.nextInstruction = next_asm_string;
+        keyInstruction.isMem = isMem;
+        keyInstruction.storages = storages;
+        [keyInstructions addObject:keyInstruction];
+    }
+
+    // analyze
+    NSMutableSet *ignored = [NSMutableSet set];
+    for (NSInteger i = 0; i < keyInstructions.count; i++) {
+        if ([ignored containsObject:@(i)]) {
+            continue;
+        }
+
+        PDLKeyInstruction *keyInstruction = keyInstructions[i];
+        if (keyInstruction.type != PDLKeyInstructionTypeADR) {
+            continue;
+        }
+
+        if (keyInstruction.isGlobalBlock) {
+            pdl_block *block = (pdl_block *)[self realAddress:keyInstruction.target];
+            PDLMachObjectAddress blockInvoke = block->impl.FuncPtr;
+            intptr_t blockInvokeOffset = [self offset:blockInvoke];
+            assert(self.functionsSize[@(blockInvokeOffset)]);
+            action(blockInvokeOffset);
+            [ignored addObject:@(i)];
+            continue;
+        }
+
+        intptr_t blockInvokeOffset = keyInstruction.offset;
+        if (!self.functionsSize[@(blockInvokeOffset)]) {
+            continue;
+        }
+
+        if (!keyInstruction.isExecutable) {
+            continue;
+        }
+
+
+        if (keyInstruction.storages.count == 0) {
+            continue;
+        }
+
+        for (NSInteger j = 0; j < keyInstructions.count; j++) {
+            PDLKeyInstruction *pair = keyInstructions[j];
+            if (pair.type != PDLKeyInstructionTypeADR) {
+                continue;
+            }
+
+            if (pair.isStackBlock) {
+                int structOffset = offsetof(pdl_block_impl, FuncPtr) - offsetof(pdl_block_impl, isa);
+                if ([keyInstruction isStorageEqualTo:pair offset:structOffset]) {
+                    action(blockInvokeOffset);
+                    [ignored addObject:@(j)];
+                    break;
+                }
+            } else {
+                if (!pair.isData || pair.isGlobalBlock || pair.isStackBlock) {
+                    continue;
+                }
+
+                int structOffset = offsetof(pdl_block, Desc) - (offsetof(pdl_block, impl) + offsetof(pdl_block_impl, FuncPtr));
+                if ([pair isStorageEqualTo:keyInstruction offset:structOffset]) {
+                    action(blockInvokeOffset);
+                    [ignored addObject:@(i)];
+                }
+            }
+
+//            pdl_block_desc_object *object = [self realAddress:pair.target];
+//            if (object->reserved != 0 || object->Block_size == 0) {
+//                continue;
+//            }
+//
+//            PDLMachObjectAddress copy = object->copy;
+//            PDLMachObjectAddress dispose = object->dispose;
+//            if (copy) {
+//                const pdl_section *section = [self sectionOfAddress:copy];
+//                if (!section || !isSectionExecutable(section)) {
+//                    continue;
+//                }
+//            }
+//            if (dispose) {
+//                const pdl_section *section = [self sectionOfAddress:dispose];
+//                if (!section || !isSectionExecutable(section)) {
+//                    continue;
+//                }
+//            }
+        }
+    }
+
+    cs_free(instructions, disasm_count);
+    cs_close(&handle);
 }
 
 @end
