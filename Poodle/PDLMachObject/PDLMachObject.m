@@ -7,6 +7,7 @@
 //
 
 #import "PDLMachObject.h"
+#import <mach-o/fixup-chains.h>
 
 struct list_t {
     uint32_t entsizeAndFlags;
@@ -305,6 +306,19 @@ struct swift_field_descriptor
 
 #define PDLMachObjectUninitialized ((void *)(unsigned long)-1)
 
+@interface PDLFixupImport : NSObject
+
+@property (nonatomic, copy) NSString *symbol;
+@property (nonatomic, assign) NSUInteger libOrdinal;
+@property (nonatomic, assign) BOOL weak;
+@property (nonatomic, assign) NSUInteger appendex;
+
+@end
+
+@implementation PDLFixupImport
+
+@end
+
 @interface PDLMachObject () {
     pdl_mach_object_t __object;
 }
@@ -312,6 +326,11 @@ struct swift_field_descriptor
 @property (nonatomic, copy, readonly) NSData *originalData;
 @property (nonatomic, strong, readonly) NSMutableData *data;
 @property (nonatomic, strong, readonly) NSMutableDictionary *bindInfo;
+@property (nonatomic, strong, readonly) NSMutableArray *fixupImports;
+@property (nonatomic, strong, readonly) NSMutableDictionary *symbolsMap;
+@property (nonatomic, strong, readonly) NSMutableDictionary *externalFixupsSymbolMap;
+@property (nonatomic, readonly) NSDictionary *functionsSize;
+@property (nonatomic, readonly) NSArray *functions;
 
 @property (nonatomic, assign) pdl_section *classlistSection;
 @property (nonatomic, assign) pdl_section *catlistSection;
@@ -326,7 +345,11 @@ struct swift_field_descriptor
     self = [super init];
     if (self) {
         _object = &__object;
-        struct mach_header *header = (struct mach_header *)data.bytes;
+
+        _originalData = [data copy];
+        _data = [_originalData mutableCopy];
+
+        struct mach_header *header = (struct mach_header *)_data.bytes;
         BOOL ret = pdl_get_mach_object_with_header(header, -1, NULL, (pdl_mach_object *)_object);
         if (!ret) {
             return nil;
@@ -339,9 +362,6 @@ struct swift_field_descriptor
         if (!supported || !_object->is64) {
             return nil;
         }
-
-        _originalData = [data copy];
-        _data = [_originalData mutableCopy];
 
         _classlistSection = PDLMachObjectUninitialized;
         _catlistSection = PDLMachObjectUninitialized;
@@ -425,6 +445,79 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
 }
 
 - (void)setup {
+    [self setupFunctions];
+    [self setupDyld];
+    [self setupDyldFixups];
+}
+
+- (void)setupFunctions {
+    pdl_mach_object *machObject = (pdl_mach_object *)self.object;
+    const struct linkedit_data_command *function_starts =  machObject->function_starts_linkedit_data_command;
+    if (!function_starts || function_starts->datasize == 0) {
+        return;
+    }
+
+    unsigned char *data_begin = (unsigned char *)(machObject->linkedit_base + function_starts->dataoff);
+    unsigned char *data_end = data_begin + function_starts->datasize;
+    uint64_t currentOffset = read_uleb128(&data_begin, data_end);
+    NSMutableArray *functions = [NSMutableArray array];
+    NSMutableDictionary *functionsSize = [NSMutableDictionary dictionary];
+    while (true) {
+        uint64_t function_begin = currentOffset;
+        uint64_t size = read_uleb128(&data_begin, data_end);
+        if (size == 0) {
+            break;
+        }
+
+        currentOffset += size;
+        [functions addObject:@(function_begin)];
+        functionsSize[@(function_begin)] = @(size);
+    }
+
+    // last
+    pdl_segment_command *text = (pdl_segment_command *)machObject->text_segment_command;
+    NSInteger base = text->vmaddr;
+    pdl_section *textSection = NULL;
+    NSInteger value = base + currentOffset;
+    for (NSInteger i = 0; i < machObject->sections_count; i++) {
+        pdl_section *section = (pdl_section *)machObject->sections[i];
+        if (value >= section->addr && value < section->addr + section->size) {
+            textSection = section;
+            break;
+        }
+    }
+    if (textSection) {
+        uint64_t lastSize = (textSection->addr + textSection->size) - value;
+        [functions addObject:@(currentOffset)];
+        functionsSize[@(currentOffset)] = @(lastSize);
+    }
+
+    _functions = [functions copy];
+    _functionsSize = [functionsSize copy];
+}
+
+- (void)setupSymbols {
+    pdl_nlist *symtab_list = (pdl_nlist *)self.object->symtab_list;
+    if (!symtab_list) {
+        return;
+    }
+
+    _symbolsMap = [NSMutableDictionary dictionary];
+
+    const char *strtab = self.object->strtab;
+    for (uint32_t i = 0; i < self.object->symtab_count; i++) {
+        pdl_nlist *nlist = symtab_list + i;
+        uint32_t strx = nlist->n_un.n_strx;
+//        uint8_t type = nlist->n_type;
+//        uint8_t sect = nlist->n_sect;
+//        int16_t desc = nlist->n_desc;
+        u_long value = (u_long)nlist->n_value;
+        const char *str = strtab + strx;
+        self.symbolsMap[@(str)] = @(value);
+    }
+}
+
+- (void)setupDyld {
     struct dyld_info_command const *dyld_info_command = self.object->dyld_info_dyld_info_command ?: self.object->dyld_info_only_dyld_info_command;
     if (!dyld_info_command) {
         return;
@@ -526,6 +619,195 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
     }
 }
 
+- (void)setupDyldFixups {
+    struct linkedit_data_command const *dyld_chained_fixups_command = self.object->dyld_chained_fixups_command;
+    if (!dyld_chained_fixups_command) {
+        return;
+    }
+
+    uint32_t dataoff = dyld_chained_fixups_command->dataoff;
+    uint32_t datasize = dyld_chained_fixups_command->datasize;
+    if (dataoff == 0 || datasize == 0) {
+        return;
+    }
+
+    void *headerPointer = ((void *)self.object->header) + dataoff;
+    struct dyld_chained_fixups_header *header = headerPointer;
+    if (header->fixups_version != 0) {
+        return;
+    }
+
+    if (header->symbols_format != 0) {
+        return;
+    }
+
+    [self setupSymbols];
+
+    _fixupImports = [NSMutableArray array];
+    _externalFixupsSymbolMap = [NSMutableDictionary dictionary];
+
+    char *symbolsPool = headerPointer + header->symbols_offset;
+
+    // imports
+    uint32_t *imports = headerPointer + header->imports_offset;
+    int libOrdinal = 0;
+    switch (header->imports_format) {
+        case DYLD_CHAINED_IMPORT: {
+            for (uint32_t i = 0; i < header->imports_count; ++i) {
+                struct dyld_chained_import *import = &((struct dyld_chained_import *)imports)[i];
+                const char *symbolName = &symbolsPool[import->name_offset];
+                uint8_t libVal = import->lib_ordinal;
+                if ( libVal > 0xF0 ) {
+                    libOrdinal = (int8_t)libVal;
+                } else {
+                    libOrdinal = libVal;
+                }
+
+                PDLFixupImport *fixupImport = [[PDLFixupImport alloc] init];
+                fixupImport.libOrdinal = libOrdinal;
+                fixupImport.symbol = @(symbolName);
+                fixupImport.appendex = 0;
+                fixupImport.weak = import->weak_import;
+                [self.fixupImports addObject:fixupImport];
+            }
+        } break;
+        case DYLD_CHAINED_IMPORT_ADDEND: {
+            for (uint32_t i = 0; i < header->imports_count; ++i) {
+                struct dyld_chained_import_addend *import = &((struct dyld_chained_import_addend *)imports)[i];
+                const char *symbolName = &symbolsPool[import->name_offset];
+                uint8_t libVal = import->lib_ordinal;
+                if ( libVal > 0xF0 ) {
+                    libOrdinal = (int8_t)libVal;
+                } else {
+                    libOrdinal = libVal;
+                }
+
+                PDLFixupImport *fixupImport = [[PDLFixupImport alloc] init];
+                fixupImport.libOrdinal = libOrdinal;
+                fixupImport.symbol = @(symbolName);
+                fixupImport.appendex = import->addend;
+                fixupImport.weak = import->weak_import;
+                [self.fixupImports addObject:fixupImport];
+            }
+        } break;
+        case DYLD_CHAINED_IMPORT_ADDEND64: {
+            for (uint32_t i = 0; i < header->imports_count; ++i) {
+                struct dyld_chained_import_addend64 *import = &((struct dyld_chained_import_addend64 *)imports)[i];
+                const char *symbolName = &symbolsPool[import->name_offset];
+                uint8_t libVal = import->lib_ordinal;
+                if ( libVal > 0xF0 ) {
+                    libOrdinal = (int8_t)libVal;
+                } else {
+                    libOrdinal = libVal;
+                }
+
+                PDLFixupImport *fixupImport = [[PDLFixupImport alloc] init];
+                fixupImport.libOrdinal = libOrdinal;
+                fixupImport.symbol = @(symbolName);
+                fixupImport.appendex = import->addend;
+                fixupImport.weak = import->weak_import;
+                [self.fixupImports addObject:fixupImport];
+            }
+        } break;
+        default:
+            break;
+    }
+
+    // starts
+    struct dyld_chained_starts_in_image *starts = headerPointer + header->starts_offset;
+    for (uint32 i = 0; i < starts->seg_count; i++) {
+        uint32 seg_info_offset = starts->seg_info_offset[i];
+        if (!seg_info_offset) {
+            continue;
+        }
+
+        const pdl_segment_command *segment = self.object->total_segments[i];
+        struct dyld_chained_starts_in_segment *starts_in_segment = (((void *)starts) + seg_info_offset);
+        for (uint32 j = 0; j < starts_in_segment->page_count; j++) {
+            uint16_t firstOffset = starts_in_segment->page_start[j];
+            if (firstOffset == DYLD_CHAINED_PTR_START_NONE) {
+                continue;
+            }
+            uint32_t page = (uint32_t)(segment->fileoff + starts_in_segment->page_size * j + firstOffset);
+            switch (starts_in_segment->pointer_format) {
+//#if  __has_feature(ptrauth_calls)
+//                case DYLD_CHAINED_PTR_ARM64E:
+//                    fixupPageAuth64(pageContent, blob, segInfo, pageIndex, false);
+//                    break;
+//                case DYLD_CHAINED_PTR_ARM64E_USERLAND:
+//                case DYLD_CHAINED_PTR_ARM64E_USERLAND24:
+//                    fixupPageAuth64(pageContent, blob, segInfo, pageIndex, true);
+//                    break;
+//#endif
+                case DYLD_CHAINED_PTR_64:
+                    [self fixupPage64:page segInfo:starts_in_segment offsetBased:false];
+                    break;
+                case DYLD_CHAINED_PTR_64_OFFSET:
+                    [self fixupPage64:page segInfo:starts_in_segment offsetBased:true];
+                    break;
+                case DYLD_CHAINED_PTR_32:
+//                    fixupPage32(pageOffset, segInfo, pageIndex);
+                    break;
+                default:
+                    NSLog(@"*** Unsupported pointer format %d ***", starts_in_segment->pointer_format);
+                    break;
+            }
+        }
+    }
+}
+
+- (void)fixupPage64:(uint32_t)pageOffset segInfo:(struct dyld_chained_starts_in_segment *)segInfo offsetBased:(BOOL)offsetBased {
+    uint64_t targetAdjust = 0;
+    uint32_t offset = pageOffset;
+    uint64_t delta = 0;
+
+    do {
+        uint64_t value  = *(uint64_t *)(((void *)self.object->header) + offset);
+        bool isBind = (value & 0x8000000000000000ULL);
+        delta = (value >> 51) & 0xFFF;
+        if (isBind) {
+            // bind
+            uint32_t bindOrdinal = value & 0x00FFFFFF;
+            uint32_t addend = (value >> 24) & 0xFF;
+            if (bindOrdinal < self.fixupImports.count) {
+                PDLFixupImport *fixupImport = self.fixupImports[bindOrdinal];
+                NSString *symbol = fixupImport.symbol;
+                uint32_t libOrdinal = (uint32_t)fixupImport.libOrdinal;
+                if (libOrdinal == 0) {
+                    NSNumber *addressNumber = self.symbolsMap[symbol];
+                    if (addressNumber) {
+                        uint64_t address = [addressNumber unsignedLongLongValue];
+                        if (address) {
+                            uint64_t newValue = address + addend;
+                            [self.data replaceBytesInRange:NSMakeRange(offset, 8) withBytes:&newValue];
+//                            NSLog(@"fixup bind 0x%X -> 0x%llX", offset, newValue);
+                        } else {
+                            NSNumber *addressNumber = self.symbolsMap[symbol];
+                            if (addressNumber) {
+                                self.externalFixupsSymbolMap[@(value)] = symbol;
+                            }
+                        }
+                    }
+                } else {
+                    NSNumber *addressNumber = self.symbolsMap[symbol];
+                    if (addressNumber) {
+                        self.externalFixupsSymbolMap[@(value)] = symbol;
+                    }
+                }
+            }
+        } else {
+            // rebase
+            uint64_t target = value & 0xFFFFFFFFFULL;
+            uint64_t high8  = (value >> 36) & 0xFF;
+            high8 = high8;
+            uint64_t newValue = target + targetAdjust + (high8 << 56);
+            [self.data replaceBytesInRange:NSMakeRange(offset, 8) withBytes:&newValue];
+//            NSLog(@"fixup rebase 0x%X -> 0x%llX", offset, newValue);
+        }
+        offset = offset + ((uint32_t)delta * 4); // 4-byte stride
+    } while (delta != 0);
+}
+
 - (const pdl_section *)sectionWithSegmentName:(const char *)segname sectionName:(const char *)sectname {
     for (uint32_t i = 0; i < self.object->sections_count; i++) {
         const pdl_section *section = self.object->sections[i];
@@ -582,22 +864,13 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
     return address;
 }
 
-- (PDLMachObjectAddress)validateAddress:(PDLMachObjectAddress)address {
-#define ARM64E_MASK 0x000007FFFFFFFFFFUL
-    PDLMachObjectAddress ret = (PDLMachObjectAddress)(((unsigned long)address) & ARM64E_MASK);
-    if (ret != address) {
-        return NULL;
-    }
-    return ret;
+- (NSUInteger)functionSize:(ptrdiff_t)offset {
+    NSNumber *size = self.functionsSize[@(offset)];
+    return [size unsignedIntegerValue];
 }
 
 - (void *)realAddress:(PDLMachObjectAddress)address {
-    PDLMachObjectAddress a = [self validateAddress:address];
-    if (a == NULL) {
-        return NULL;
-    }
-
-    intptr_t offset = [self offset:a];
+    intptr_t offset = [self offset:address];
     void *ret = ((void *)self.object->header) + offset;
     return ret;
 }
@@ -615,7 +888,21 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
     return ((void *)self.object->header) + section->offset;
 }
 
+- (const char *)classNameOfSymbol:(NSString *)symbolName {
+    if (![symbolName hasPrefix:@"_OBJC_CLASS_$_"]) {
+        return NULL;
+    }
+
+    const char *cstring = [symbolName cStringUsingEncoding:NSUTF8StringEncoding];
+    return cstring + [@"_OBJC_CLASS_$_" length];
+}
+
 - (const char *)className:(PDLMachObjectAddress)cls {
+    if (((unsigned long)cls) & ~0x000007FFFFFFFFFFUL) {
+        NSString *symbolName = self.externalFixupsSymbolMap[@((unsigned long)cls)];
+        return [self classNameOfSymbol:symbolName];
+    }
+
     struct class_t *c = [self realAddress:cls];
     if (c == NULL) {
         return NULL;
@@ -771,7 +1058,7 @@ static void bindDyldInfoAt(uint8_t segmentIndex, uint64_t segmentOffset, uint8_t
             PDLMachObjectAddress namePointer = *nameAddress;
             const char *name = [self realAddress:namePointer];
             const char *types = [self realAddress:(PDLMachObjectAddress)(((unsigned long)(void *)methodList) + ((unsigned long)(void *)&(method->types) - ((unsigned long)(void *)m) + method->types))];
-            PDLMachObjectAddress impAddress = [self validateAddress:(PDLMachObjectAddress)(((unsigned long)(void *)methodList) + ((unsigned long)(void *)&(method->imp) - ((unsigned long)(void *)m) + method->imp))];
+            PDLMachObjectAddress impAddress = (PDLMachObjectAddress)(((unsigned long)(void *)methodList) + ((unsigned long)(void *)&(method->imp) - ((unsigned long)(void *)m) + method->imp));
             intptr_t impOffset = [self offset:impAddress];
             action(name, types, impOffset);
         } else {

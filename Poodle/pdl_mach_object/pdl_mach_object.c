@@ -239,6 +239,15 @@ bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t 
             case LC_BUILD_VERSION: {
                 ;
             } break;
+            case LC_DYLD_EXPORTS_TRIE: {
+                ;
+            } break;
+            case LC_DYLD_CHAINED_FIXUPS: {
+                mach_object->dyld_chained_fixups_command = (struct linkedit_data_command *)command_pointer;
+            } break;
+            case LC_FILESET_ENTRY: {
+                ;
+            } break;
 #endif
             default: {
                 ;
