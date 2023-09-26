@@ -277,8 +277,13 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
             continue;
         }
 
-        offsetToSymbol[offset] = [NSString stringWithFormat:@"%@%@", unnamedSymbolPrefix, @(unnamedIndex)];
-        offsetToDebugName[offset] = [NSString stringWithFormat:@"%@%@", unnamedSymbolPrefix, @(unnamedIndex)];
+        if (self.usesIndexForUnnamedSymbol) {
+            offsetToSymbol[offset] = [NSString stringWithFormat:@"%@%@", unnamedSymbolPrefix, @(unnamedIndex)];
+            offsetToDebugName[offset] = [NSString stringWithFormat:@"%@%@", unnamedSymbolPrefix, @(unnamedIndex)];
+        } else {
+            offsetToSymbol[offset] = [NSString stringWithFormat:@"%@_%lx", unnamedSymbolPrefix, offset.unsignedIntegerValue];
+            offsetToDebugName[offset] = [NSString stringWithFormat:@"%@_%lx", unnamedSymbolPrefix, offset.unsignedIntegerValue];
+        }
         unnamedIndex++;
     }
 

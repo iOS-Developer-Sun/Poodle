@@ -12,6 +12,7 @@
 @interface PDLDSym : NSObject
 
 @property (nonatomic, copy) NSString *unnamedSymbolPrefix;
+@property (nonatomic, assign) BOOL usesIndexForUnnamedSymbol;
 @property (nonatomic, readonly) pdl_mach_object *machObject;
 @property (nonatomic, readonly) NSUInteger totalCount;
 @property (nonatomic, readonly) NSUInteger unnamedCount;

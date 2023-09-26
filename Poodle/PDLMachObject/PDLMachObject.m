@@ -321,13 +321,6 @@ struct swift_field_descriptor
 
 @end
 
-typedef NS_ENUM(NSInteger, PDLKeyInstructionType) {
-    PDLKeyInstructionTypeNone,
-    PDLKeyInstructionTypeLDR,
-    PDLKeyInstructionTypeADR,
-    PDLKeyInstructionTypeBL,
-};
-
 typedef NS_ENUM(NSInteger, PDLKeyInstructionStorageType) {
     PDLKeyInstructionStorageTypeNone,
     PDLKeyInstructionStorageTypeSP,
@@ -352,7 +345,6 @@ typedef NS_ENUM(NSInteger, PDLKeyInstructionStorageType) {
 @property (nonatomic, assign) NSInteger instructionIndex;
 @property (nonatomic, assign) uint64_t address;
 @property (nonatomic, copy) NSString *symbol;
-@property (nonatomic, assign) NSInteger type;
 @property (nonatomic, assign) PDLMachObjectAddress target;
 @property (nonatomic, assign) intptr_t offset;
 @property (nonatomic, assign) pdl_section *section;
@@ -1046,8 +1038,8 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
     const pdl_section *section = [self sectionOfAddress:address];
     if (!section) {
         NSLog(@"*** cannot find address %p ***", address);
+        assert(false);
     }
-    assert(section);
     intptr_t fileOffset = (unsigned long)address - section->addr + section->offset;
     return fileOffset;
 }
@@ -1373,8 +1365,8 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
     }
 }
 
-- (void)enumerateBlockInvokes:(intptr_t)impOffset action:(void (^)(intptr_t))action {
-    if (!action) {
+- (void)enumerateBlockInvokes:(intptr_t)impOffset action:(void (^)(intptr_t, intptr_t, intptr_t))action byRefAction:(void (^)(intptr_t copyOffset, intptr_t disposeOffset))byRefAction {
+    if (!action && !byRefAction) {
         return;
     }
 
@@ -1428,6 +1420,79 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
         cs_regs_access(handle, current, current->detail->regs_read, &current->detail->regs_read_count, current->detail->regs_write, &current->detail->regs_write_count);
     }
 
+    void (^findStorage)(cs_insn *next, arm64_reg reg, NSMutableArray *storages) = ^(cs_insn *next, arm64_reg reg, NSMutableArray *storages) {
+        for (; next < out_bounds; next++) {
+            __unused NSString *next_asm_string = [NSString stringWithFormat:@"%-10s\t%s", next->mnemonic, next->op_str];
+            PDLKeyInstructionStorage *storage = nil;
+            if (next->id == ARM64_INS_STR || next->id == ARM64_INS_STUR) {
+                if (next->detail->arm64.op_count == 2
+                    && next->detail->arm64.operands[0].type == ARM64_OP_REG
+                    && next->detail->arm64.operands[0].reg == reg
+                    && next->detail->arm64.operands[1].type == ARM64_OP_MEM
+                    && (next->detail->arm64.operands[1].reg == ARM64_REG_SP || next->detail->arm64.operands[1].reg == ARM64_REG_FP)) {
+                    storage = [[PDLKeyInstructionStorage alloc] init];
+                    storage.storageType = next->detail->arm64.operands[1].reg == ARM64_REG_SP ? PDLKeyInstructionStorageTypeSP : PDLKeyInstructionStorageTypeFP;
+                    storage.storage = next->detail->arm64.operands[1].mem.disp;
+                    storage.begin = next->address;
+                    [storages addObject:storage];
+                }
+            } else if (next->id == ARM64_INS_STP) {
+                if (next->detail->arm64.op_count == 3
+                    && next->detail->arm64.operands[2].type == ARM64_OP_MEM
+                    && (next->detail->arm64.operands[2].reg == ARM64_REG_SP || next->detail->arm64.operands[2].reg == ARM64_REG_FP)) {
+                    BOOL isFirst = (next->detail->arm64.operands[0].type == ARM64_OP_REG
+                                    && next->detail->arm64.operands[0].reg == reg);
+                    BOOL isSecond = (next->detail->arm64.operands[1].type == ARM64_OP_REG
+                                     && next->detail->arm64.operands[1].reg == reg);
+                    if ((isFirst || isSecond)) {
+                        storage = [[PDLKeyInstructionStorage alloc] init];
+                        storage.storageType = next->detail->arm64.operands[2].reg == ARM64_REG_SP ? PDLKeyInstructionStorageTypeSP : PDLKeyInstructionStorageTypeFP;
+                        storage.storage = next->detail->arm64.operands[2].mem.disp + (isFirst ? 0 : 8);
+                        storage.begin = next->address;
+                        [storages addObject:storage];
+                    }
+                }
+            } else if (pdl_insn_is_jump(next) && !pdl_reg_is_called_saved(reg)) {
+                break;
+            } else if (cs_reg_write(handle, next, reg)) {
+                break;
+            } else {
+                continue;
+            }
+            if (storage) {
+                arm64_reg storageReg = (storage.storageType == PDLKeyInstructionStorageTypeSP ? ARM64_REG_SP : ARM64_REG_FP);
+                for (cs_insn *end = next + 1; end < out_bounds; end++) {
+                    __unused NSString *end_asm_string = [NSString stringWithFormat:@"%-10s\t%s", end->mnemonic, end->op_str];
+                    if (cs_reg_write(handle, end, storageReg)) {
+                        storage.end = end->address;
+                        break;
+                    }
+
+                    if (end->id == ARM64_INS_STR || end->id == ARM64_INS_STUR) {
+                        if (end->detail->arm64.op_count == 2
+                            && end->detail->arm64.operands[1].type == ARM64_OP_MEM
+                            && (end->detail->arm64.operands[1].reg == storageReg)
+                            && end->detail->arm64.operands[1].mem.disp == storage.storage) {
+                            storage.end = end->address;
+                            break;
+                        }
+                    } else if (end->id == ARM64_INS_STP) {
+                        if (end->detail->arm64.op_count == 3
+                            && end->detail->arm64.operands[2].type == ARM64_OP_MEM
+                            && (end->detail->arm64.operands[1].reg == storageReg)
+                            && end->detail->arm64.operands[1].mem.disp == storage.storage) {
+                            storage.end = end->address;
+                            break;
+                        }
+                    }
+                }
+                if (!storage.end) {
+                    storage.end = out_bounds[-1].address + out_bounds[-1].size;
+                }
+            }
+        }
+    };
+
     for (size_t i = 0; i < disasm_count; i++) {
         cs_insn *current = instructions + i;
         NSString *asm_string = [NSString stringWithFormat:@"%-10s\t%s", current->mnemonic, current->op_str];
@@ -1435,7 +1500,6 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
         NSString *next_asm_string = nil;
 //        NSLog(@"%@", asm_string);
         uint64_t target = 0;
-        PDLKeyInstructionType type = PDLKeyInstructionTypeNone;
         NSMutableArray *storages = [NSMutableArray array];
         uint64_t address = current->address;
         BOOL isMem = NO;
@@ -1446,12 +1510,11 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
 //            target = current->address + current->size + current->detail->x86.disp;
         } else if (target_arch == CS_ARCH_ARM64) {
             if (current->id == ARM64_INS_ADR || current->id == ARM64_INS_ADRP) {
-                type = PDLKeyInstructionTypeADR;
                 assert(current->detail->arm64.op_count == 2);
                 assert(current->detail->arm64.operands[1].type == ARM64_OP_IMM);
                 target = current->detail->arm64.operands[1].imm;
-                cs_insn *next = current + 1;
                 arm64_reg reg = current->detail->regs_write[0];
+                cs_insn *next = current + 1;
                 if (next->id == ARM64_INS_ADD) {
                     if (next->detail->arm64.op_count == 3
                         && next->detail->arm64.operands[1].type == ARM64_OP_REG
@@ -1476,80 +1539,27 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
                     }
                 }
 
-                for (; next < out_bounds; next++) {
-                    __unused NSString *next_asm_string = [NSString stringWithFormat:@"%-10s\t%s", next->mnemonic, next->op_str];
-                    PDLKeyInstructionStorage *storage = nil;
-                    if (next->id == ARM64_INS_STR || next->id == ARM64_INS_STUR) {
-                        if (next->detail->arm64.op_count == 2
-                            && next->detail->arm64.operands[0].type == ARM64_OP_REG
-                            && next->detail->arm64.operands[0].reg == reg
-                            && next->detail->arm64.operands[1].type == ARM64_OP_MEM
-                            && (next->detail->arm64.operands[1].reg == ARM64_REG_SP || next->detail->arm64.operands[1].reg == ARM64_REG_FP)) {
-                            storage = [[PDLKeyInstructionStorage alloc] init];
-                            storage.storageType = next->detail->arm64.operands[1].reg == ARM64_REG_SP ? PDLKeyInstructionStorageTypeSP : PDLKeyInstructionStorageTypeFP;
-                            storage.storage = next->detail->arm64.operands[1].mem.disp;
-                            storage.begin = next->address;
-                            [storages addObject:storage];
-                        }
-                    } else if (next->id == ARM64_INS_STP) {
-                        if (next->detail->arm64.op_count == 3
-                            && next->detail->arm64.operands[2].type == ARM64_OP_MEM
-                            && (next->detail->arm64.operands[2].reg == ARM64_REG_SP || next->detail->arm64.operands[2].reg == ARM64_REG_FP)) {
-                            BOOL isFirst = (next->detail->arm64.operands[0].type == ARM64_OP_REG
-                                            && next->detail->arm64.operands[0].reg == reg);
-                            BOOL isSecond = (next->detail->arm64.operands[1].type == ARM64_OP_REG
-                                             && next->detail->arm64.operands[1].reg == reg);
-                            if ((isFirst || isSecond)) {
-                                storage = [[PDLKeyInstructionStorage alloc] init];
-                                storage.storageType = next->detail->arm64.operands[2].reg == ARM64_REG_SP ? PDLKeyInstructionStorageTypeSP : PDLKeyInstructionStorageTypeFP;
-                                storage.storage = next->detail->arm64.operands[2].mem.disp + (isFirst ? 0 : 8);
-                                storage.begin = next->address;
-                                [storages addObject:storage];
-                            }
-                        }
-                    } else if (pdl_insn_is_jump(next) && !pdl_reg_is_called_saved(reg)) {
-                        break;
-                    } else if (cs_reg_write(handle, next, reg)) {
-                        break;
-                    } else {
-                        continue;
-                    }
-                    if (storage) {
-                        arm64_reg storageReg = (storage.storageType == PDLKeyInstructionStorageTypeSP ? ARM64_REG_SP : ARM64_REG_FP);
-                        for (cs_insn *end = next + 1; end < out_bounds; end++) {
-                            __unused NSString *end_asm_string = [NSString stringWithFormat:@"%-10s\t%s", end->mnemonic, end->op_str];
-                            if (cs_reg_write(handle, end, storageReg)) {
-                                storage.end = end->address;
-                                break;
-                            }
+                findStorage(next, reg, storages);
 
-                            if (end->id == ARM64_INS_STR || end->id == ARM64_INS_STUR) {
-                                if (end->detail->arm64.op_count == 2
-                                    && end->detail->arm64.operands[1].type == ARM64_OP_MEM
-                                    && (end->detail->arm64.operands[1].reg == storageReg)
-                                    && end->detail->arm64.operands[1].mem.disp == storage.storage) {
-                                    storage.end = end->address;
-                                    break;
-                                }
-                            } else if (end->id == ARM64_INS_STP) {
-                                if (end->detail->arm64.op_count == 3
-                                    && end->detail->arm64.operands[2].type == ARM64_OP_MEM
-                                    && (end->detail->arm64.operands[1].reg == storageReg)
-                                    && end->detail->arm64.operands[1].mem.disp == storage.storage) {
-                                    storage.end = end->address;
-                                    break;
-                                }
-                            }
-                        }
-                        if (!storage.end) {
-                            storage.end = out_bounds[-1].address + out_bounds[-1].size;
-                        }
-                    }
+            } else if (current->id == ARM64_INS_LDR) {
+                if (current->detail->arm64.op_count == 2
+                    && current->detail->arm64.operands[1].type == ARM64_OP_IMM) {
+                    assert(current->detail->arm64.operands[0].type == ARM64_OP_REG);
+                    target = current->detail->arm64.operands[1].imm;
+                    isMem = YES;
+                    arm64_reg reg = current->detail->regs_write[0];
+                    cs_insn *next = current + 1;
+
+                    findStorage(next, reg, storages);
                 }
             } else {
                 continue;
             }
         } else {
+            continue;
+        }
+
+        if (![self sectionOfAddress:(PDLMachObjectAddress)target]) {
             continue;
         }
 
@@ -1566,7 +1576,6 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
         keyInstruction.offset = targetOffset;
         keyInstruction.address = address;
         keyInstruction.section = (pdl_section *)section;
-        keyInstruction.type = type;
         keyInstruction.instructionIndex = i;
         keyInstruction.instruction = asm_string;
         keyInstruction.nextInstruction = next_asm_string;
@@ -1577,28 +1586,29 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
 
     // analyze
     NSMutableSet *ignored = [NSMutableSet set];
+    NSMutableSet *stackBlocks = [NSMutableSet set];
+    NSMutableDictionary *stackBlockByRefs = [NSMutableDictionary dictionary];
     for (NSInteger i = 0; i < keyInstructions.count; i++) {
         if ([ignored containsObject:@(i)]) {
             continue;
         }
 
         PDLKeyInstruction *keyInstruction = keyInstructions[i];
-        if (keyInstruction.type != PDLKeyInstructionTypeADR) {
-            continue;
-        }
-
         if (keyInstruction.isGlobalBlock) {
             pdl_block *block = (pdl_block *)[self realAddress:keyInstruction.target];
             PDLMachObjectAddress blockInvoke = block->impl.FuncPtr;
             intptr_t blockInvokeOffset = [self offset:blockInvoke];
             assert(self.functionsSize[@(blockInvokeOffset)]);
-            action(blockInvokeOffset);
+            if (action) {
+                action(blockInvokeOffset, 0, 0);
+            }
             [ignored addObject:@(i)];
             continue;
         }
 
         intptr_t blockInvokeOffset = keyInstruction.offset;
-        if (!self.functionsSize[@(blockInvokeOffset)]) {
+        size_t functionSize = [self.functionsSize[@(blockInvokeOffset)] unsignedIntegerValue];
+        if (!functionSize) {
             continue;
         }
 
@@ -1613,48 +1623,99 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
 
         for (NSInteger j = 0; j < keyInstructions.count; j++) {
             PDLKeyInstruction *pair = keyInstructions[j];
-            if (pair.type != PDLKeyInstructionTypeADR) {
-                continue;
-            }
-
             if (pair.isStackBlock) {
                 int structOffset = offsetof(pdl_block_impl, FuncPtr) - offsetof(pdl_block_impl, isa);
                 if ([keyInstruction isStorageEqualTo:pair offset:structOffset]) {
-                    action(blockInvokeOffset);
-                    [ignored addObject:@(j)];
-                    break;
+                    [stackBlocks addObject:@(blockInvokeOffset)];
+                    [ignored addObject:@(i)];
                 }
-            } else {
-                if (!pair.isData || pair.isGlobalBlock || pair.isStackBlock) {
-                    continue;
-                }
+                continue;
+            }
 
+            if (pair.isData && !pair.isGlobalBlock && !pair.isStackBlock && !pair.isMem) {
                 int structOffset = offsetof(pdl_block, Desc) - (offsetof(pdl_block, impl) + offsetof(pdl_block_impl, FuncPtr));
                 if ([pair isStorageEqualTo:keyInstruction offset:structOffset]) {
-                    action(blockInvokeOffset);
-                    [ignored addObject:@(i)];
+                    intptr_t copyOffset = 0;
+                    intptr_t disposeOffset = 0;
+
+                    [ignored addObject:@(j)];
+
+                    pdl_block_desc_object *object = [self realAddress:pair.target];
+                    if (object->reserved != 0 || object->Block_size == 0) {
+                        continue;
+                    }
+
+                    PDLMachObjectAddress copy = object->copy;
+                    PDLMachObjectAddress dispose = object->dispose;
+                    if (copy) {
+                        const pdl_section *section = [self sectionOfAddress:copy];
+                        if (section && isSectionExecutable(section)) {
+                            intptr_t offset = [self offset:copy];
+                            if (self.functionsSize[@(offset)]) {
+                                copyOffset = offset;
+                            }
+                        }
+                    }
+                    if (dispose) {
+                        const pdl_section *section = [self sectionOfAddress:dispose];
+                        if (section && isSectionExecutable(section)) {
+                            intptr_t offset = [self offset:dispose];
+                            if (self.functionsSize[@(offset)]) {
+                                disposeOffset = offset;
+                            }
+                        }
+                    }
+
+                    if (action) {
+                        action(blockInvokeOffset, copyOffset, disposeOffset);
+                    }
+                    if ([stackBlocks containsObject:@(blockInvokeOffset)]) {
+                        [stackBlocks removeObject:@(blockInvokeOffset)];
+                    }
+                }
+                continue;
+            }
+
+            if (pair.isExecutable) {
+                int structOffset = offsetof(pdl_block_byref_object, dispose) - offsetof(pdl_block_byref_object, copy);
+                if ([pair isStorageEqualTo:keyInstruction offset:structOffset]) {
+                    size_t pairSize = [self.functionsSize[@(pair.offset)] unsignedIntegerValue];
+                    if (pairSize == 8) {
+                        intptr_t copyOffset = blockInvokeOffset;
+                        if (stackBlockByRefs[@(copyOffset)]) {
+                            if (byRefAction) {
+                                byRefAction(copyOffset, pair.offset);
+                            }
+                            stackBlockByRefs[@(copyOffset)] = nil;
+                        } else {
+                            stackBlockByRefs[@(copyOffset)] = @(pair.offset);
+                        }
+                    }
                 }
             }
 
-//            pdl_block_desc_object *object = [self realAddress:pair.target];
-//            if (object->reserved != 0 || object->Block_size == 0) {
-//                continue;
-//            }
-//
-//            PDLMachObjectAddress copy = object->copy;
-//            PDLMachObjectAddress dispose = object->dispose;
-//            if (copy) {
-//                const pdl_section *section = [self sectionOfAddress:copy];
-//                if (!section || !isSectionExecutable(section)) {
-//                    continue;
-//                }
-//            }
-//            if (dispose) {
-//                const pdl_section *section = [self sectionOfAddress:dispose];
-//                if (!section || !isSectionExecutable(section)) {
-//                    continue;
-//                }
-//            }
+            if (pair.isMem) {
+                int structOffset = offsetof(pdl_block_byref_object, copy) - offsetof(pdl_block_byref_object, __flags);
+                intptr_t copyOffset = blockInvokeOffset;
+                if ([keyInstruction isStorageEqualTo:pair offset:structOffset]) {
+                    if (stackBlockByRefs[@(copyOffset)]) {
+                        if (byRefAction) {
+                            intptr_t disposeOffset = [stackBlockByRefs[@(copyOffset)] integerValue];
+                            byRefAction(copyOffset, disposeOffset);
+                        }
+                        stackBlockByRefs[@(copyOffset)] = nil;
+                    } else {
+                        stackBlockByRefs[@(copyOffset)] = @(pair.offset);
+                    }
+                }
+            }
+        }
+    }
+
+    for (NSNumber *stackBlock in stackBlocks) {
+        intptr_t blockInvokeOffset = stackBlock.longValue;
+        if (action) {
+            action(blockInvokeOffset, 0, 0);
         }
     }
 

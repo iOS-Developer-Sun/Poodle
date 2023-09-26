@@ -22,6 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 - (BOOL)startRecording;
 - (void)finishRecording;
 
++ (BOOL)isFitered:(id)object;
+
 @end
 
 NS_ASSUME_NONNULL_END

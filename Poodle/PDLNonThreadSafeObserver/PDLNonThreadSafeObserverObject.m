@@ -41,6 +41,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @implementation PDLNonThreadSafeObserverObject
 
+static void *PDLNonThreadSafeObserverObjectIsFilteredKey = &PDLNonThreadSafeObserverObjectIsFilteredKey;
+
 - (instancetype)initWithObject:(id)object {
     self = [super init];
     if (self) {
@@ -130,12 +132,16 @@ static void *recordKey(void) {
 
     BOOL isRegistering = [self isRegistering];
     if (isRegistering) {
+        objc_setAssociatedObject(object, PDLNonThreadSafeObserverObjectIsFilteredKey, @(1), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
         return;
     }
 
     isRegistering = YES;
     [self setIsRegistering:YES];
     observer = [[self alloc] initWithObject:object];
+    if (!observer) {
+        objc_setAssociatedObject(object, PDLNonThreadSafeObserverObjectIsFilteredKey, @(2), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    }
     objc_setAssociatedObject(object, (__bridge const void *)[self class], observer, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
     [self setIsRegistering:NO];
 }
@@ -183,6 +189,11 @@ static void *recordKey(void) {
     }
     assert(last == item);
     pdl_array_remove(array, count - 1);
+}
+
++ (BOOL)isFitered:(id)object {
+    NSNumber *isRegistering = objc_getAssociatedObject(object, PDLNonThreadSafeObserverObjectIsFilteredKey);
+    return isRegistering.boolValue;
 }
 
 @end

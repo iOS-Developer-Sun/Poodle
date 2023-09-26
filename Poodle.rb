@@ -71,7 +71,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         preserve_paths = '*.{md,sh,py,rb,plist}'.freeze
         library_files = '*.a'.freeze
         osx_version = '11.0'.freeze
-        ios_version = '11.0'.freeze
+        ios_version = '10.0'.freeze
 
         # extra storage
         class << s
@@ -96,12 +96,10 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         if is_library
             s.pod_target_xcconfig = {
-                'OTHER_LDFLAGS' => '$(inherited) -lObjC',
-                'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 arm64e'
+                'OTHER_LDFLAGS' => '$(inherited) -lObjC'
             }
             s.user_target_xcconfig = {
-                'OTHER_LDFLAGS' => '$(inherited) -lObjC',
-                'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'arm64 arm64e'
+                'OTHER_LDFLAGS' => '$(inherited) -lObjC'
             }
         else
             s.pod_target_xcconfig = {
@@ -427,6 +425,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'PDLMachObject', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_mach_object'
+            ss.dependency pod_name + '/pdl_block'
         end
 
         PoodleSubspec(s, 'PDLMemoryQueryViewController', platform_ios) do |ss|
@@ -571,7 +570,7 @@ def PoodleDynamicSpec(name, path: nil, is_library: false, is_macos: false, base_
         preserve_paths = '*.{md,sh,py,rb,plist}'.freeze
         library_files = '*.a'.freeze
         osx_version = '11.0'.freeze
-        ios_version = '11.0'.freeze
+        ios_version = '10.0'.freeze
 
         # extra storage
         class << s
