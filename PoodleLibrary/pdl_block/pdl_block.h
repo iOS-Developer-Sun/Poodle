@@ -22,13 +22,23 @@ typedef union {
 
 _Static_assert(sizeof(pdl_block_data) == 0, "");
 
-typedef struct pdl_block_byref {
+typedef struct pdl_block_byref_basic {
     void *__isa;
-    struct pdl_block_byref *__forwarding;
+    struct pdl_block_byref_basic *__forwarding;
     int __flags;
     int __size;
     pdl_block_data data;
-} pdl_block_byref;
+} pdl_block_byref_basic;
+
+typedef struct pdl_block_byref_object {
+    void *__isa;
+    struct pdl_block_byref_object *__forwarding;
+    int __flags;
+    int __size;
+    void (*copy)(struct pdl_block_byref_object *, struct pdl_block_byref_object *);
+    void (*dispose)(struct pdl_block_byref_object *);
+    pdl_block_data data;
+} pdl_block_byref_object;
 
 typedef struct {
     void *isa;

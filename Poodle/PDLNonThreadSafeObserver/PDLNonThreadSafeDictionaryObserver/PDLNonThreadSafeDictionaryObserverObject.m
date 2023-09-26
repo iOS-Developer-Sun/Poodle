@@ -19,4 +19,17 @@
     return [PDLNonThreadSafeDictionaryObserverDictionary class];
 }
 
++ (instancetype)observerObjectForObject:(id)object {
+    PDLNonThreadSafeDictionaryObserverObject *observer = [super observerObjectForObject:object];
+    if (!observer && [object isKindOfClass:[NSMutableDictionary class]]) {
+        // register __NSCFDictionary
+        @autoreleasepool {
+            [PDLNonThreadSafeDictionaryObserverObject registerObject:object];
+        }
+        observer = [super observerObjectForObject:object];
+    }
+    return observer;
+}
+
+
 @end

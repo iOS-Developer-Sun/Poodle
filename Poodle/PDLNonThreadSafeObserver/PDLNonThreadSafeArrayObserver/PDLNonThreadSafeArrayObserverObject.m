@@ -19,4 +19,16 @@
     return [PDLNonThreadSafeArrayObserverArray class];
 }
 
++ (instancetype)observerObjectForObject:(id)object {
+    PDLNonThreadSafeArrayObserverObject *observer = [super observerObjectForObject:object];
+    if (!observer && [object isKindOfClass:[NSMutableArray class]]) {
+        // register __NSCFArray
+        @autoreleasepool {
+            [PDLNonThreadSafeArrayObserverObject registerObject:object];
+        }
+        observer = [super observerObjectForObject:object];
+    }
+    return observer;
+}
+
 @end

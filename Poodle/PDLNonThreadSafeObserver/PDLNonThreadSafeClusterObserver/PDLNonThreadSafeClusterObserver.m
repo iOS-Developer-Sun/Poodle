@@ -19,11 +19,20 @@ void PDLNonThreadSafeClusterObserverLogBegin(__unsafe_unretained id self, Class 
         return;
     }
 
+    if ([PDLNonThreadSafeObserverObject isFitered:self]) {
+        return;
+    }
+
     PDLNonThreadSafeClusterObserverLogData *logData = (__bridge id)(data);
     Class clusterClass = logData.clusterClass;
     PDLNonThreadSafeClusterObserverObject *observer = [clusterClass observerObjectForObject:self];
+    BOOL isSetter = logData.isSetter;
     if (!observer) {
-        return;
+        if (!isSetter) {
+            return;
+        }
+
+        NSLog(@"!");
     }
 
     BOOL isExclusive = logData.isExclusive;
@@ -34,13 +43,16 @@ void PDLNonThreadSafeClusterObserverLogBegin(__unsafe_unretained id self, Class 
         }
     }
 
-    BOOL isSetter = logData.isSetter;
     [observer recordClass:aClass selectorString:NSStringFromSelector(sel) isSetter:isSetter];
 //    NSLog(@"%@ %@ %@", aClass, NSStringFromSelector(sel), @(isSetter));
 }
 
 void PDLNonThreadSafeClusterObserverLogEnd(__unsafe_unretained id self, Class aClass, SEL sel, void *data) {
     if ([PDLNonThreadSafeObserver ignoredForObject:self]) {
+        return;
+    }
+
+    if ([PDLNonThreadSafeObserverObject isFitered:self]) {
         return;
     }
 
