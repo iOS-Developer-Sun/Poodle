@@ -116,7 +116,7 @@ typedef unsigned long long uint64_t;
 
 #else
 // this system has inttypes.h by default
-#include <inttypes.h>
+//#include <inttypes.h> // Poodle
 #endif  // defined(CAPSTONE_HAS_OSXKERNEL) || (defined(_MSC_VER) && (_MSC_VER <= 1700 || defined(_KERNEL_MODE)))
 
 #endif
