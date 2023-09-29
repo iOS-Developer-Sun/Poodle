@@ -1227,6 +1227,26 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
     return count;
 }
 
+- (BOOL)checkFunction:(intptr_t)offset action:(void(^)(void))action {
+    BOOL ret = NO;
+    if (self.functionsSize) {
+        if (self.functionsSize[@(offset)]) {
+            ret = YES;
+            if (action) {
+                action();
+            }
+        }
+    } else {
+        if (isSectionExecutable([self sectionOfOffset:offset])) {
+            ret = YES;
+            if (action) {
+                action();
+            }
+        }
+    }
+    return ret;
+}
+
 - (void)enumerateMethodList:(PDLMachObjectAddress)methodList action:(void(^)(const char *name, const char *type, intptr_t impOffset))action {
     if (!action) {
         return;
@@ -1244,15 +1264,17 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
             const char *types = [self realAddress:(PDLMachObjectAddress)(((unsigned long)(void *)methodList) + ((unsigned long)(void *)&(method->types) - ((unsigned long)(void *)m) + method->types))];
             PDLMachObjectAddress impAddress = (PDLMachObjectAddress)(((unsigned long)(void *)methodList) + ((unsigned long)(void *)&(method->imp) - ((unsigned long)(void *)m) + method->imp));
             intptr_t impOffset = [self offset:impAddress];
-            assert(self.functionsSize[@(impOffset)]);
-            action(name, types, impOffset);
+            [self checkFunction:impOffset action:^{
+                action(name, types, impOffset);
+            }];
         } else {
             struct method_t *method = &(m->methods.big[i]);
             const char *name = [self realAddress:method->name];
             const char *types = [self realAddress:(PDLMachObjectAddress)method->types];
             intptr_t impOffset = [self offset:method->imp];
-            assert(self.functionsSize[@(impOffset)]);
-            action(name, types, impOffset);
+            [self checkFunction:impOffset action:^{
+                action(name, types, impOffset);
+            }];
         }
     }
 }
@@ -1327,8 +1349,9 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
         if (swiftClass->access_function) {
             void *accessFunction = (void *)read_intoffset((int32_t *)&swiftClass->access_function);
             accessFunctionOffset = accessFunction - ((void *)self.object->header);
-            assert(self.functionsSize[@(accessFunctionOffset)]);
-            action(className, PDLSwiftMethodKindAccess, NO, NO, accessFunctionOffset);
+            [self checkFunction:accessFunctionOffset action:^{
+                action(className, PDLSwiftMethodKindAccess, NO, NO, accessFunctionOffset);
+            }];
         }
 
         void *optional = swiftClass + 1;
@@ -1354,8 +1377,9 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
                     BOOL isDynamic = flags & SWIFT_VTABLE_DESCRIPTOR_MASK_IS_DYNAMIC;
                     void *imp = (void *)read_intoffset((int32_t *)&vtableDescriptor->imp);
                     intptr_t functionOffset = imp - ((void *)self.object->header);
-                    assert(self.functionsSize[@(functionOffset)]);
-                    action(className, methodKind, isInstance, isDynamic, functionOffset);
+                    [self checkFunction:functionOffset action:^{
+                        action(className, methodKind, isInstance, isDynamic, functionOffset);
+                    }];
                 }
                 vtableDescriptor++;
             }
@@ -1594,28 +1618,25 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
         }
 
         PDLKeyInstruction *keyInstruction = keyInstructions[i];
-        if (keyInstruction.isGlobalBlock) {
+        if (keyInstruction.isGlobalBlock && keyInstruction.isData) {
             pdl_block *block = (pdl_block *)[self realAddress:keyInstruction.target];
             PDLMachObjectAddress blockInvoke = block->impl.FuncPtr;
-            intptr_t blockInvokeOffset = [self offset:blockInvoke];
-            assert(self.functionsSize[@(blockInvokeOffset)]);
-            if (action) {
-                action(blockInvokeOffset, 0, 0);
+            if ([self sectionOfAddress:blockInvoke]) {
+                intptr_t blockInvokeOffset = [self offset:blockInvoke];
+                if (action) {
+                    [self checkFunction:blockInvokeOffset action:^{
+                        action(blockInvokeOffset, 0, 0);
+                    }];
+                }
+                [ignored addObject:@(i)];
+                continue;
             }
-            [ignored addObject:@(i)];
-            continue;
         }
 
         intptr_t blockInvokeOffset = keyInstruction.offset;
-        size_t functionSize = [self.functionsSize[@(blockInvokeOffset)] unsignedIntegerValue];
-        if (!functionSize) {
+        if (![self checkFunction:blockInvokeOffset action:nil]) {
             continue;
         }
-
-        if (!keyInstruction.isExecutable) {
-            continue;
-        }
-
 
         if (keyInstruction.storages.count == 0) {
             continue;
@@ -1635,8 +1656,8 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
             if (pair.isData && !pair.isGlobalBlock && !pair.isStackBlock && !pair.isMem) {
                 int structOffset = offsetof(pdl_block, Desc) - (offsetof(pdl_block, impl) + offsetof(pdl_block_impl, FuncPtr));
                 if ([pair isStorageEqualTo:keyInstruction offset:structOffset]) {
-                    intptr_t copyOffset = 0;
-                    intptr_t disposeOffset = 0;
+                    __block intptr_t copyOffset = 0;
+                    __block intptr_t disposeOffset = 0;
 
                     [ignored addObject:@(j)];
 
@@ -1649,20 +1670,20 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
                     PDLMachObjectAddress dispose = object->dispose;
                     if (copy) {
                         const pdl_section *section = [self sectionOfAddress:copy];
-                        if (section && isSectionExecutable(section)) {
+                        if (section) {
                             intptr_t offset = [self offset:copy];
-                            if (self.functionsSize[@(offset)]) {
+                            [self checkFunction:offset action:^{
                                 copyOffset = offset;
-                            }
+                            }];
                         }
                     }
                     if (dispose) {
                         const pdl_section *section = [self sectionOfAddress:dispose];
-                        if (section && isSectionExecutable(section)) {
+                        if (section) {
                             intptr_t offset = [self offset:dispose];
-                            if (self.functionsSize[@(offset)]) {
+                            [self checkFunction:offset action:^{
                                 disposeOffset = offset;
-                            }
+                            }];
                         }
                     }
 
@@ -1679,17 +1700,14 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
             if (pair.isExecutable) {
                 int structOffset = offsetof(pdl_block_byref_object, dispose) - offsetof(pdl_block_byref_object, copy);
                 if ([pair isStorageEqualTo:keyInstruction offset:structOffset]) {
-                    size_t pairSize = [self.functionsSize[@(pair.offset)] unsignedIntegerValue];
-                    if (pairSize == 8) {
-                        intptr_t copyOffset = blockInvokeOffset;
-                        if (stackBlockByRefs[@(copyOffset)]) {
-                            if (byRefAction) {
-                                byRefAction(copyOffset, pair.offset);
-                            }
-                            stackBlockByRefs[@(copyOffset)] = nil;
-                        } else {
-                            stackBlockByRefs[@(copyOffset)] = @(pair.offset);
+                    intptr_t copyOffset = blockInvokeOffset;
+                    if (stackBlockByRefs[@(copyOffset)]) {
+                        if (byRefAction) {
+                            byRefAction(copyOffset, pair.offset);
                         }
+                        stackBlockByRefs[@(copyOffset)] = nil;
+                    } else {
+                        stackBlockByRefs[@(copyOffset)] = @(pair.offset);
                     }
                 }
             }
