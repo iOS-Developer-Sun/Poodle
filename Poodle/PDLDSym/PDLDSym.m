@@ -140,9 +140,10 @@ static char PDLVariableItem[] = {
 
 @property (nonatomic, readonly) NSMutableDictionary *offsetToSymbol;
 @property (nonatomic, readonly) NSMutableDictionary *offsetToDebugName;
-@property (nonatomic, readonly) NSMutableArray *variables;
+@property (nonatomic, readonly) NSMutableSet *customVariables;
+@property (nonatomic, readonly) NSMutableSet *customFunctions;
 @property (nonatomic, readonly) NSDictionary *functionsSize;
-@property (nonatomic, readonly) NSArray *functions;
+@property (nonatomic, readonly) NSSet *functions;
 
 @end
 
@@ -163,7 +164,8 @@ static char PDLVariableItem[] = {
         _machObject = &_object;
         _offsetToSymbol = [NSMutableDictionary dictionary];
         _offsetToDebugName = [NSMutableDictionary dictionary];
-        _variables = [NSMutableArray array];
+        _customVariables = [NSMutableSet set];
+        _customFunctions = [NSMutableSet set];
         _unnamedSymbolPrefix = @"___pdl_unnamed_symbol";
         [self findFunctions];
     }
@@ -205,7 +207,7 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
     unsigned char *data_begin = (unsigned char *)(machObject->linkedit_base + function_starts->dataoff);
     unsigned char *data_end = data_begin + function_starts->datasize;
     uint64_t currentOffset = read_uleb128(&data_begin, data_end);
-    NSMutableArray *functions = [NSMutableArray array];
+    NSMutableSet *functions = [NSMutableSet set];
     NSMutableDictionary *functionsSize = [NSMutableDictionary dictionary];
     while (true) {
         uint64_t function_begin = currentOffset;
@@ -239,7 +241,15 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
     _functionsSize = [functionsSize copy];
 }
 
-- (BOOL)addSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset {
+- (BOOL)addFunctionSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset {
+    return [self addSymbol:symbol debugName:debugName offset:offset type:@encode(IMP)];
+}
+
+- (BOOL)addVariableSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset {
+    return [self addSymbol:symbol debugName:debugName offset:offset type:@encode(unsigned long)];
+}
+
+- (BOOL)addSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset type:(const char *)type {
     assert(symbol);
     assert(offset > 0);
     if (self.offsetToSymbol[@(offset)]) {
@@ -248,15 +258,19 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
 
     self.offsetToSymbol[@(offset)] = symbol;
     self.offsetToDebugName[@(offset)] = debugName ?: symbol;
-    if (!self.functionsSize[@(offset)]) {
-        [self.variables addObject:@(offset)];
+    if (strcmp(type, @encode(IMP)) == 0) {
+        [self.customFunctions addObject:@(offset)];
+    } else {
+        [self.customVariables addObject:@(offset)];
     }
     return YES;
 }
 
 - (BOOL)dump:(NSString *)path {
-    NSInteger functionCount = self.functions.count;
-    NSInteger variableCount = self.variables.count;
+    NSArray *functions = [[[self.functions ?: [NSSet set] setByAddingObjectsFromSet:self.customFunctions] allObjects] sortedArrayUsingSelector:@selector(compare:)];
+    NSInteger functionCount = functions.count;
+    NSArray *variables = [[self.customVariables allObjects] sortedArrayUsingSelector:@selector(compare:)];
+    NSInteger variableCount = variables.count;
     NSInteger symbolCount = functionCount + variableCount;
     size_t symtabSize = symbolCount * sizeof(pdl_nlist) *
 #if PDL_ADD_N_STAB
@@ -272,7 +286,7 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
     NSMutableDictionary *offsetToDebugName = [self.offsetToDebugName mutableCopy];
     NSInteger unnamedIndex = 1;
     NSString *unnamedSymbolPrefix = self.unnamedSymbolPrefix;
-    for (NSNumber *offset in self.functions) {
+    for (NSNumber *offset in functions) {
         if (offsetToSymbol[offset]) {
             continue;
         }
@@ -287,8 +301,10 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
         unnamedIndex++;
     }
 
+    assert(offsetToSymbol.count == symbolCount);
+
     _unnamedCount = unnamedIndex - 1;
-    _totalCount = self.functions.count;
+    _totalCount = functions.count;
 
     NSArray *offsets = [offsetToSymbol.allKeys sortedArrayUsingSelector:@selector(compare:)];
     NSArray *allStrings = [offsetToSymbol.allValues sortedArrayUsingSelector:@selector(compare:)];
@@ -667,12 +683,11 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
             for (int i = 0; i < functionCount; i++) {
                 char *checkBase = debug_info_current;
 
-                NSNumber *offsetOfSymbol = self.functions[i];
+                NSNumber *offsetOfSymbol = functions[i];
                 NSString *symbol = offsetToDebugName[offsetOfSymbol];
                 uint32_t n_strx = [symbolToDebugNameOffsets[symbol] unsignedIntValue];
                 unsigned long value = base + offsetOfSymbol.unsignedIntegerValue;
                 uint32_t length = [self.functionsSize[offsetOfSymbol] unsignedIntValue];
-                assert(length != 0);
 
                 // DW_TAG_subprogram, DW_CHILDREN_no
                 *debug_info_current = PDL_DIE_INDEX_FUNCTION;
@@ -697,7 +712,7 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
             for (int i = 0; i < variableCount; i++) {
                 char *checkBase = debug_info_current;
 
-                NSNumber *offsetOfSymbol = self.variables[i];
+                NSNumber *offsetOfSymbol = variables[i];
                 NSString *symbol = offsetToDebugName[offsetOfSymbol];
                 uint32_t n_strx = [symbolToDebugNameOffsets[symbol] unsignedIntValue];
                 uint32_t type_offset = variableTypeOffset;
