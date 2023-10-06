@@ -33,7 +33,7 @@ def PoodleSubspec(s, name, platform)
 
         ss.frameworks = 'Foundation'
         ss.preserve_paths = preserve_paths
-        ss.pod_target_xcconfig = { "DEFINES_MODULE" => "YES" }
+        #ss.pod_target_xcconfig = { "DEFINES_MODULE" => "YES" }
         if is_library
             ss.source_files = base + name + '/' + '**/' + source_files
             if is_macos
@@ -301,6 +301,11 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'pdl_spinlock', platform_universal)
 
+        PoodleSubspec(s, 'pdl_swift', platform_ios) do |ss|
+            ss.dependency pod_name + '/pdl_hook'
+            ss.dependency pod_name + '/pdl_utils'
+        end
+
         PoodleSubspec(s, 'pdl_system_leak', platform_ios) do |ss|
             ss.dependency pod_name + '/pdl_thread'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
@@ -448,7 +453,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLBacktrace'
             ss.dependency pod_name + '/PDLCrash'
             ss.dependency pod_name + '/pdl_dispatch'
-            ss.dependency pod_name + '/pdl_hook'
+            ss.dependency pod_name + '/pdl_swift'
             ss.dependency pod_name + '/pdl_mach_object'
             ss.dependency pod_name + '/pdl_thread_storage'
         end
