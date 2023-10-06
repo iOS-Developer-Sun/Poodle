@@ -11,11 +11,10 @@
 #import "NSObject+PDLImplementationInterceptor.h"
 #import "PDLNonThreadSafeObserver.h"
 #import "pdl_hook.h"
+#import "pdl_swift.h"
 #import "PDLCrash.h"
 #import "pdl_mach_object.h"
 #import <mach-o/getsect.h>
-#include <mach-o/ldsyms.h>
-#include <dlfcn.h>
 
 //#import "pdl_malloc.h"
 
@@ -131,104 +130,77 @@ static id pdl_nonThreadSafeSwiftVariableAllocWithZone(__unsafe_unretained id sel
 
 #pragma mark - public methods
 
-//extern void *swift_beginAccess(void *, void **, int8_t, int64_t);
-static void *(*pdl_swift_beginAccess_original)(void *, void **, int8_t, int64_t) = NULL;
-static void *pdl_swift_beginAccess(void *address, void **result, int8_t flags, int64_t reserved) {
-    void *ret = pdl_swift_beginAccess_original(address, result, flags, reserved);
+static void pdl_swift_beginAccessAction(void *address, void **result, int8_t flags, int64_t reserved, void *ret) {
     void *possibleObjectAddress = pdl_get_object(address);
     void *objectAddress = pdl_validate_object(possibleObjectAddress);
     intptr_t offset = address - objectAddress;
-    if (offset > 0 && offset < 0x10000 && objectAddress) {
-        Class aClass = object_getClass((__bridge __unsafe_unretained id)(objectAddress));
-        void *cls = (__bridge void *)aClass;
-        if ([pdl_classes containsObject:@((unsigned long)cls)]) {
-            NSString *className = NSStringFromClass(aClass);
-            className = [PDLCrash demangle:className] ?: className;
-            if (pdl_classFilter) {
-                if (!pdl_classFilter(className)) {
-                    return ret;
-                }
-            }
-            NSString *variableName = pdl_get_variable_name(aClass, offset);
-            if (!variableName) {
-                return ret;
-            }
-            if (pdl_classVariableFilter) {
-                PDLNonThreadSafeSwiftVariableObserver_VariableFilter variableFilter = pdl_classVariableFilter(className);
-                if (variableFilter) {
-                    if (!variableFilter(variableName)) {
-                        return ret;
-                    }
-                }
-            }
-            id object = (__bridge id)objectAddress;
-            BOOL isSetter = flags & 1;
-            PDLNonThreadSafeSwiftVariableObserverObject *observer = [PDLNonThreadSafeSwiftVariableObserverObject observerObjectForObject:object];
-            if (!observer) {
-                return ret;
-            }
+    if (!(offset > 0 && offset < 0x10000 && objectAddress)) {
+        return;
+    }
 
-            [observer recordClass:aClass variableName:variableName isSetter:isSetter];
+    Class aClass = object_getClass((__bridge __unsafe_unretained id)(objectAddress));
+    void *cls = (__bridge void *)aClass;
+    if (![pdl_classes containsObject:@((unsigned long)cls)]) {
+        return;
+    }
+
+    NSString *className = NSStringFromClass(aClass);
+    className = [PDLCrash demangle:className] ?: className;
+    if (pdl_classFilter) {
+        if (!pdl_classFilter(className)) {
+            return;
         }
     }
-    return ret;
+
+    NSString *variableName = pdl_get_variable_name(aClass, offset);
+    if (!variableName) {
+        return;
+    }
+
+    if (pdl_classVariableFilter) {
+        PDLNonThreadSafeSwiftVariableObserver_VariableFilter variableFilter = pdl_classVariableFilter(className);
+        if (variableFilter) {
+            if (!variableFilter(variableName)) {
+                return;
+            }
+        }
+    }
+
+    id object = (__bridge id)objectAddress;
+    BOOL isSetter = flags & 1;
+    PDLNonThreadSafeSwiftVariableObserverObject *observer = [PDLNonThreadSafeSwiftVariableObserverObject observerObjectForObject:object];
+    if (!observer) {
+        return;
+    }
+
+    [observer recordClass:aClass variableName:variableName isSetter:isSetter];
 }
 
-extern void *swift_endAccess(void **);
-static void **(*pdl_swift_endAccess_original)(void *) = NULL;
-static void **pdl_swift_endAccess(void **result) {
-    void *ret = pdl_swift_endAccess_original(result);
-    return ret;
-}
+//static void pdl_swift_endAccessAction(void **result, void *ret) {
+//    ;
+//}
 
-extern void *swift_allocObject(void *, size_t, size_t);
-static void *(*pdl_swift_allocObject_original)(void *, size_t, size_t) = NULL;
-static void *pdl_swift_allocObject(void *cls, size_t requiredSize, size_t requiredAlignmentMask) {
-    void *ret = pdl_swift_allocObject_original(cls, requiredSize, requiredAlignmentMask);
+static void pdl_swift_allocObjectAction(void *cls, size_t requiredSize, size_t requiredAlignmentMask, void *object) {
     void *superClass = pdl_get_swift_superclass(cls);
     if (pdl_is_class_available(superClass)) {
-        [PDLNonThreadSafeSwiftVariableObserverObject registerObject:(__bridge id)(ret)];
+        [PDLNonThreadSafeSwiftVariableObserverObject registerObject:(__bridge id)(object)];
     }
-    return ret;
 }
 
 + (void)observeWithClassFilter:(PDLNonThreadSafeSwiftVariableObserver_ClassFilter)classFilter classVariableFilter:(PDLNonThreadSafeSwiftVariableObserver_ClassVariableFilter)classVariableFilter {
-#if defined(__arm64__) || defined(__x86_64__)
-    void *handle = dlopen(NULL, RTLD_GLOBAL | RTLD_NOW);
-    pdl_swift_beginAccess_original = dlsym(handle, "swift_beginAccess");
-    pdl_swift_endAccess_original = dlsym(handle, "swift_endAccess");
-    pdl_swift_allocObject_original = dlsym(handle, "swift_allocObject");
-    dlclose(handle);
-
-    int count = 3;
-    pdl_hook_item items[count];
-    items[0] = (pdl_hook_item){
-        "swift_beginAccess",
-        NULL, // &swift_beginAccess,
-        &pdl_swift_beginAccess,
-        NULL, // (void **)&pdl_swift_beginAccess_original,
-    };
-    items[1] = (pdl_hook_item){
-        "swift_endAccess",
-        NULL, // &swift_endAccess,
-        &pdl_swift_endAccess,
-        NULL, // (void **)&pdl_swift_endAccess_original,
-    };
-    items[2] = (pdl_hook_item){
-        "swift_allocObject",
-        NULL, // &swift_allocObject,
-        &pdl_swift_allocObject,
-        NULL, // (void **)&pdl_swift_allocObject_original,
-    };
-    __unused int ret = pdl_hook(items, count);
-//    assert(ret == count);
+    pdl_swift_registerAllocAction(&pdl_swift_allocObjectAction);
+    pdl_swift_registerAccessBeginAction(&pdl_swift_beginAccessAction);
+//    pdl_swift_registerAccessEndAction(&pdl_swift_endAccessAction);
 
     NSMutableSet *classes = [NSMutableSet set];
     {
         unsigned long size = 0;
         uint8_t *section = getsectiondata((void *)pdl_execute_header(), "__DATA", "__objc_classlist", &size);
         if (!section) {
-            return;
+            section = getsectiondata((void *)pdl_execute_header(), "__DATA_CONST", "__objc_classlist", &size);
+            if (!section) {
+                return;
+            }
         }
 
         void **classList = (void **)section;
@@ -252,7 +224,6 @@ static void *pdl_swift_allocObject(void *cls, size_t requiredSize, size_t requir
     pdl_classFilter = classFilter;
     pdl_classVariableFilter = classVariableFilter;
     pdl_classes = [classes copy];
-#endif
 }
 
 @end
