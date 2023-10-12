@@ -31,8 +31,6 @@ void PDLNonThreadSafeClusterObserverLogBegin(__unsafe_unretained id self, Class 
         if (!isSetter) {
             return;
         }
-
-        NSLog(@"!");
     }
 
     BOOL isExclusive = logData.isExclusive;

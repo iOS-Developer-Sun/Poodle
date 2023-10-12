@@ -20,40 +20,6 @@
 
 @implementation PDLNonThreadSafeSwiftVariableObserver
 
-__attribute__((naked))
-static void *pdl_get_object(void *address) {
-#if defined(__arm64__)
-    __asm__ volatile ("mov x0, x20 \n ret");
-#elif defined(__x86_64__)
-    __asm__ volatile ("mov %r13, %rax \n ret");
-#endif
-}
-
-static void *pdl_validate_object(void *address) {
-//    void *header = NULL;
-//    pdl_malloc_find(address, NULL, &header);
-//    return header;
-
-    BOOL isNotPointer = address < (void *)0x100000000UL;
-    if (isNotPointer) {
-        return NULL;
-    }
-
-    pthread_t thread = pthread_self();
-    void *threadAddress = pthread_get_stackaddr_np(thread);
-    size_t threadSize = pthread_get_stacksize_np(thread);
-    BOOL isInStack = address < threadAddress && address > (threadAddress - threadSize);
-    if (isInStack) {
-        return NULL;
-    }
-
-    if (((unsigned long)address & 0xFFFFFFFF) == 0) {
-        return NULL;
-    }
-
-    return address;
-}
-
 static bool pdl_is_class_available(void *cls) {
     unsigned long address = (unsigned long)cls;
     return ((address & 0xFFFFFFFF) > 0x10000) && (!(address & 0x8000000000000000LL));
@@ -131,8 +97,8 @@ static id pdl_nonThreadSafeSwiftVariableAllocWithZone(__unsafe_unretained id sel
 #pragma mark - public methods
 
 static void pdl_swift_beginAccessAction(void *address, void **result, int8_t flags, int64_t reserved, void *ret) {
-    void *possibleObjectAddress = pdl_get_object(address);
-    void *objectAddress = pdl_validate_object(possibleObjectAddress);
+    void *possibleObjectAddress = pdl_swift_get_object();
+    void *objectAddress = pdl_swift_validate_object(possibleObjectAddress);
     intptr_t offset = address - objectAddress;
     if (!(offset > 0 && offset < 0x10000 && objectAddress)) {
         return;

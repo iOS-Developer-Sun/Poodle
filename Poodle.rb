@@ -301,7 +301,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'pdl_spinlock', platform_universal)
 
-        PoodleSubspec(s, 'pdl_swift', platform_ios) do |ss|
+        PoodleSubspec(s, 'pdl_swift', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_hook'
             ss.dependency pod_name + '/pdl_utils'
         end
@@ -319,6 +319,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'pdl_thread_storage', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_utils'
+            ss.dependency pod_name + '/pdl_spinlock'
         end
 
         PoodleSubspec(s, 'pdl_utils', platform_universal)
@@ -372,6 +373,16 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         PoodleSubspec(s, 'PDLCrash', platform_universal) do |ss|
             ss.dependency pod_name + '/PDLSystemImage'
             ss.dependency pod_name + '/PDLSharedCache'
+        end
+
+        PoodleSubspec(s, 'PDLDeadLockObserver', platform_universal) do |ss|
+            ss.dependency pod_name + '/pdl_hook'
+            ss.dependency pod_name + '/pdl_dispatch'
+            ss.dependency pod_name + '/pdl_thread_storage'
+            ss.dependency pod_name + '/pdl_spinlock'
+            ss.dependency pod_name + '/PDLProcessInfo'
+            ss.dependency pod_name + '/PDLBacktrace'
+            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
 
         PoodleSubspec(s, 'PDLDebug', platform_universal) do |ss|

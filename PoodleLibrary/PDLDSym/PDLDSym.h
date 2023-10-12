@@ -18,7 +18,8 @@
 @property (nonatomic, readonly) NSUInteger unnamedCount;
 
 - (instancetype)initWithObject:(pdl_mach_object)machObject;
-- (BOOL)addSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset;
+- (BOOL)addFunctionSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset;
+- (BOOL)addVariableSymbol:(NSString *)symbol debugName:(NSString *)debugName offset:(ptrdiff_t)offset;
 - (BOOL)dump:(NSString *)path;
 
 @end

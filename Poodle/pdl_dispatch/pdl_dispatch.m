@@ -246,6 +246,7 @@ int pdl_dispatch_queue_enable(void) {
     };
 
     int ret = pdl_hook(items, count);
+    pdl_dispatch_init();
     pdl_dispatch_queue_enabled = true;
     return ret;
 }
