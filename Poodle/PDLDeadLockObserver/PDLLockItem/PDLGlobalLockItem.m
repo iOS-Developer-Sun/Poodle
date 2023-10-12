@@ -18,18 +18,20 @@ static NSMapTable *_map = nil;
     }
 }
 
-+ (NSMapTable *)map {
-    return _map;
++ (instancetype)lockItemWithObject:(NSUInteger)object {
+    @synchronized (_map) {
+        PDLGlobalLockItem *lockItem = [_map objectForKey:@(object)];
+        if (!lockItem) {
+            lockItem = [[PDLGlobalLockItem alloc] init];
+            lockItem.object = object;
+            [_map setObject:lockItem forKey:@(object)];
+        }
+        return lockItem;
+    }
 }
 
-+ (instancetype)lockItemWithObject:(NSUInteger)object {
-    PDLGlobalLockItem *lockItem = [_map objectForKey:@(object)];
-    if (!lockItem) {
-        lockItem = [[PDLGlobalLockItem alloc] init];
-        lockItem.object = object;
-        [_map setObject:lockItem forKey:@(object)];
-    }
-    return lockItem;
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@, 0x%lx>", [super description], self.object];
 }
 
 @end

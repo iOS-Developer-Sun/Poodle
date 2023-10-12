@@ -23,7 +23,6 @@
         _queueLabel = @(queue ? (dispatch_queue_get_label(queue) ?: "") : "");
         _time = [[NSDate date] timeIntervalSinceDate:self.class.processStartDate];
         PDLBacktrace *bt = [[PDLBacktrace alloc] init];
-        [bt record:4];
         _backtrace = bt;
     }
     return self;
@@ -31,22 +30,44 @@
 
 - (NSString *)description {
     NSString *typeString = @"";
-    switch (self.type) {
-        case PDLLockItemActionTypeLock:
-            typeString = @"LOCK";
+    switch (self.subtype) {
+        case PDLLockItemActionSubtypeNSLock:
+            typeString = @"NSLock";
             break;
-        case PDLLockItemActionTypeWait:
-            typeString = @"WAIT";
+        case PDLLockItemActionSubtypeNSRecursiveLock:
+            typeString = @"NSRecursiveLock";
             break;
-        default:
+        case PDLLockItemActionSubtypePthreadMutex:
+            typeString = @"PthreadMutex";
             break;
+        case PDLLockItemActionSubtypePthreadRWLock:
+            typeString = @"PthreadRWLock";
+            break;
+        case PDLLockItemActionSubtypeSynchronized:
+            typeString = @"Synchronized";
+            break;
+        case PDLLockItemActionSubtypeDispatchOnce:
+            typeString = @"DispatchOnce";
+            break;
+        default: {
+            switch (self.type) {
+                case PDLLockItemActionTypeLock:
+                    typeString = @"LOCK";
+                    break;
+                case PDLLockItemActionTypeWait:
+                    typeString = @"WAIT";
+                    break;
+                default:
+                    break;
+            }
+        } break;
     }
     NSString *threadString = [NSString stringWithFormat:@"[t%@]", @(self.thread)];
     NSString *queueString = self.queueIdentifier ? [NSString stringWithFormat:@"[q%@(%@)]", self.queueIdentifier, self.queueLabel] : @"";
     NSString *targetQueueString = self.targetQueueIdentifier ? [NSString stringWithFormat:@"[q%@(%@)]", self.targetQueueIdentifier, self.targetQueueLabel] : @"";
     NSString *timeString = [NSString stringWithFormat:@"[%.3f]", self.time];
 
-    NSString *actionString = [NSString stringWithFormat:@"%@%@%@%@%@<%p>", typeString, threadString, queueString, targetQueueString, timeString, self];
+    NSString *actionString = [NSString stringWithFormat:@"<%@>%@%@%@%@%@<%p>", self.item, typeString, threadString, queueString, targetQueueString, timeString, self];
     return actionString;
 }
 
