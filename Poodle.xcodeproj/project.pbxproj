@@ -507,10 +507,21 @@
 		C010A6F527114ECA00A785E9 /* PDLNonThreadSafePropertyObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C827114D8300A785E9 /* PDLNonThreadSafePropertyObserver.h */; };
 		C010A6F627114ECA00A785E9 /* PDLNonThreadSafePropertyObserverObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C927114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.h */; };
 		C010A6F727114ECA00A785E9 /* PDLNonThreadSafePropertyObserverProperty.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C010A6C727114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.h */; };
+		C0123A462AD79604009EB95A /* PDLObjectLockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C0123A3E2AD79604009EB95A /* PDLObjectLockItem.m */; };
+		C0123A472AD79604009EB95A /* PDLObjectLockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C0123A3E2AD79604009EB95A /* PDLObjectLockItem.m */; };
+		C0123A482AD79604009EB95A /* PDLGlobalLockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C0123A3F2AD79604009EB95A /* PDLGlobalLockItem.m */; };
+		C0123A492AD79604009EB95A /* PDLGlobalLockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C0123A3F2AD79604009EB95A /* PDLGlobalLockItem.m */; };
+		C0123A4A2AD79604009EB95A /* PDLLockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C0123A432AD79604009EB95A /* PDLLockItem.m */; };
+		C0123A4B2AD79604009EB95A /* PDLLockItem.m in Sources */ = {isa = PBXBuildFile; fileRef = C0123A432AD79604009EB95A /* PDLLockItem.m */; };
+		C0123A4C2AD79604009EB95A /* PDLLockItemAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C0123A442AD79604009EB95A /* PDLLockItemAction.m */; };
+		C0123A4D2AD79604009EB95A /* PDLLockItemAction.m in Sources */ = {isa = PBXBuildFile; fileRef = C0123A442AD79604009EB95A /* PDLLockItemAction.m */; };
 		C019BB3828D0B80100914A69 /* pdl_pac.m in Sources */ = {isa = PBXBuildFile; fileRef = C019BB3728D0B80000914A69 /* pdl_pac.m */; };
 		C01B8B2A272A8DFF0083030A /* NSMutableDictionary+PDLThreadSafety.m in Sources */ = {isa = PBXBuildFile; fileRef = C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */; };
 		C01B8B34272A8E880083030A /* NSMutableDictionary+PDLThreadSafety.m in Sources */ = {isa = PBXBuildFile; fileRef = C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */; };
 		C01B8B35272A8E8C0083030A /* NSMutableDictionary+PDLThreadSafety.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C01B8B29272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.h */; };
+		C03C40242AD55EE0005836A4 /* PDLDeadLockObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C03C40232AD55EE0005836A4 /* PDLDeadLockObserver.m */; };
+		C03C402E2AD5604F005836A4 /* PDLDeadLockObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C03C40232AD55EE0005836A4 /* PDLDeadLockObserver.m */; };
+		C03C402F2AD56056005836A4 /* PDLDeadLockObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C03C40222AD55EE0005836A4 /* PDLDeadLockObserver.h */; };
 		C03D59172A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D590D2A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m */; };
 		C03D59182A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D590D2A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m */; };
 		C03D59192A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.m in Sources */ = {isa = PBXBuildFile; fileRef = C03D590E2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.m */; };
@@ -1289,6 +1300,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = C01B8B2B272A8E710083030A;
 			remoteInfo = "NSMutableDictionary+PDLThreadSafety";
+		};
+		C03C40302AD5606D005836A4 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C03C40252AD56036005836A4;
+			remoteInfo = PDLDeadLockObserver;
 		};
 		C03D87792A8E2C2E008ABFD3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2440,6 +2458,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C03C40282AD56036005836A4 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				C03C402F2AD56056005836A4 /* PDLDeadLockObserver.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C03D876D2A8E2BA9008ABFD3 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -3003,10 +3031,21 @@
 		C010A6D627114D8300A785E9 /* PDLNonThreadSafeDictionaryObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeDictionaryObserver.m; sourceTree = "<group>"; };
 		C010A6D727114D8300A785E9 /* PDLNonThreadSafeObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverObject.h; sourceTree = "<group>"; };
 		C010A6D827114D8300A785E9 /* PDLNonThreadSafeObserverChecker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverChecker.h; sourceTree = "<group>"; };
+		C0123A3E2AD79604009EB95A /* PDLObjectLockItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLObjectLockItem.m; sourceTree = "<group>"; };
+		C0123A3F2AD79604009EB95A /* PDLGlobalLockItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLGlobalLockItem.m; sourceTree = "<group>"; };
+		C0123A402AD79604009EB95A /* PDLLockItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLLockItem.h; sourceTree = "<group>"; };
+		C0123A412AD79604009EB95A /* PDLObjectLockItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLObjectLockItem.h; sourceTree = "<group>"; };
+		C0123A422AD79604009EB95A /* PDLGlobalLockItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLGlobalLockItem.h; sourceTree = "<group>"; };
+		C0123A432AD79604009EB95A /* PDLLockItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLLockItem.m; sourceTree = "<group>"; };
+		C0123A442AD79604009EB95A /* PDLLockItemAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLLockItemAction.m; sourceTree = "<group>"; };
+		C0123A452AD79604009EB95A /* PDLLockItemAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLLockItemAction.h; sourceTree = "<group>"; };
 		C019BB3728D0B80000914A69 /* pdl_pac.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_pac.m; sourceTree = "<group>"; };
 		C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+PDLThreadSafety.m"; sourceTree = "<group>"; };
 		C01B8B29272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+PDLThreadSafety.h"; sourceTree = "<group>"; };
 		C01B8B33272A8E710083030A /* libNSMutableDictionary+PDLThreadSafety.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSMutableDictionary+PDLThreadSafety.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C03C40222AD55EE0005836A4 /* PDLDeadLockObserver.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLDeadLockObserver.h; sourceTree = "<group>"; };
+		C03C40232AD55EE0005836A4 /* PDLDeadLockObserver.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLDeadLockObserver.m; sourceTree = "<group>"; };
+		C03C402D2AD56036005836A4 /* libPDLDeadLockObserver.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLDeadLockObserver.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C03D590A2A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeArrayObserverObject.h; sourceTree = "<group>"; };
 		C03D590B2A3B03540039053F /* PDLNonThreadSafeArrayObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeArrayObserver.h; sourceTree = "<group>"; };
 		C03D590C2A3B03540039053F /* PDLNonThreadSafeArrayObserverArray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeArrayObserverArray.h; sourceTree = "<group>"; };
@@ -3809,6 +3848,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C03C40272AD56036005836A4 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C03D876C2A8E2BA9008ABFD3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -4363,6 +4409,7 @@
 				C079F6E42A7BBECE00D4FA0B /* libPDLDSym.a */,
 				C03D87722A8E2BA9008ABFD3 /* libPDLMachObject.a */,
 				C0E172BA2ACEC92B0075DB1C /* libpdl_swift.a */,
+				C03C402D2AD56036005836A4 /* libPDLDeadLockObserver.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5229,6 +5276,7 @@
 				B897B5AE260112B100696E06 /* PDLColor */,
 				B84C840625CD3BF10086CD36 /* PDLCrash */,
 				B8E56E6D23D70018008D2DA1 /* PDLDatabase */,
+				C03C40212AD55EAB005836A4 /* PDLDeadLockObserver */,
 				B80A5A9D262527E0003EAA7D /* PDLDebug */,
 				C079F6E52A7BBF7A00D4FA0B /* PDLDSym */,
 				B88668CB260783B300458D3F /* PDLFileSystem */,
@@ -5325,6 +5373,19 @@
 			path = PDLNonThreadSafeDictionaryObserver;
 			sourceTree = "<group>";
 		};
+		C0123A3D2AD79604009EB95A /* PDLLockItem */ = {
+			isa = PBXGroup;
+			children = (
+				C0123A422AD79604009EB95A /* PDLGlobalLockItem.h */,
+				C0123A3F2AD79604009EB95A /* PDLGlobalLockItem.m */,
+				C0123A402AD79604009EB95A /* PDLLockItem.h */,
+				C0123A432AD79604009EB95A /* PDLLockItem.m */,
+				C0123A412AD79604009EB95A /* PDLObjectLockItem.h */,
+				C0123A3E2AD79604009EB95A /* PDLObjectLockItem.m */,
+			);
+			path = PDLLockItem;
+			sourceTree = "<group>";
+		};
 		C01B8B27272A8DD80083030A /* NSMutableDictionary+PDLThreadSafety */ = {
 			isa = PBXGroup;
 			children = (
@@ -5332,6 +5393,18 @@
 				C01B8B28272A8DFE0083030A /* NSMutableDictionary+PDLThreadSafety.m */,
 			);
 			path = "NSMutableDictionary+PDLThreadSafety";
+			sourceTree = "<group>";
+		};
+		C03C40212AD55EAB005836A4 /* PDLDeadLockObserver */ = {
+			isa = PBXGroup;
+			children = (
+				C03C40222AD55EE0005836A4 /* PDLDeadLockObserver.h */,
+				C03C40232AD55EE0005836A4 /* PDLDeadLockObserver.m */,
+				C0123A3D2AD79604009EB95A /* PDLLockItem */,
+				C0123A452AD79604009EB95A /* PDLLockItemAction.h */,
+				C0123A442AD79604009EB95A /* PDLLockItemAction.m */,
+			);
+			path = PDLDeadLockObserver;
 			sourceTree = "<group>";
 		};
 		C03D59092A3B03540039053F /* PDLNonThreadSafeArrayObserver */ = {
@@ -6298,6 +6371,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				C03C40312AD5606D005836A4 /* PBXTargetDependency */,
 				C079F6EC2A7BBFA300D4FA0B /* PBXTargetDependency */,
 				C0E172BE2ACECAC40075DB1C /* PBXTargetDependency */,
 				C03D877A2A8E2C2E008ABFD3 /* PBXTargetDependency */,
@@ -7512,6 +7586,24 @@
 			productReference = C01B8B33272A8E710083030A /* libNSMutableDictionary+PDLThreadSafety.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		C03C40252AD56036005836A4 /* PDLDeadLockObserver */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C03C402A2AD56036005836A4 /* Build configuration list for PBXNativeTarget "PDLDeadLockObserver" */;
+			buildPhases = (
+				C03C40262AD56036005836A4 /* Sources */,
+				C03C40272AD56036005836A4 /* Frameworks */,
+				C03C40282AD56036005836A4 /* CopyFiles */,
+				C03C40292AD56036005836A4 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PDLDeadLockObserver;
+			productName = "CAAnimation+PDLExtension";
+			productReference = C03C402D2AD56036005836A4 /* libPDLDeadLockObserver.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 		C03D876A2A8E2BA9008ABFD3 /* PDLMachObject */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = C03D876F2A8E2BA9008ABFD3 /* Build configuration list for PBXNativeTarget "PDLMachObject" */;
@@ -7765,6 +7857,7 @@
 				B897B6C62601174900696E06 /* PDLColor */,
 				B84C81DB25CD3B580086CD36 /* PDLCrash */,
 				B8B9A562234F9A100069476E /* PDLDatabase */,
+				C03C40252AD56036005836A4 /* PDLDeadLockObserver */,
 				B80A5AA1262527EC003EAA7D /* PDLDebug */,
 				C079F6DC2A7BBECE00D4FA0B /* PDLDSym */,
 				B886698D260784EB00458D3F /* PDLFileSystem */,
@@ -9723,6 +9816,24 @@
 			shellPath = /bin/sh;
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
+		C03C40292AD56036005836A4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
 		C03D876E2A8E2BA9008ABFD3 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			alwaysOutOfDate = 1;
@@ -10043,6 +10154,7 @@
 				B85D461B240E861A00CBF758 /* pdl_lldb_hook.c in Sources */,
 				B88865FB24C03FB300D58BC7 /* NSObject+PDLMethod-arm.s in Sources */,
 				B85D461C240E861A00CBF758 /* pdl_mach_o_symbols.c in Sources */,
+				C03C40242AD55EE0005836A4 /* PDLDeadLockObserver.m in Sources */,
 				C010A6DB27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */,
 				B8795335248688D800798005 /* pdl_thread-x86_64.s in Sources */,
 				B85D461D240E861A00CBF758 /* pdl_mach_object.c in Sources */,
@@ -10054,6 +10166,7 @@
 				B84C805625CD1E280086CD36 /* PDLCrashViewController.m in Sources */,
 				B85D4621240E861A00CBF758 /* pdl_array.c in Sources */,
 				B85D4622240E861A00CBF758 /* pdl_dictionary.c in Sources */,
+				C0123A482AD79604009EB95A /* PDLGlobalLockItem.m in Sources */,
 				B85D4623240E861A00CBF758 /* pdl_hash.c in Sources */,
 				B85D4625240E861A00CBF758 /* PDLDirectoryViewControllerResources.c in Sources */,
 				B842DD89267A0A0E00DD5A5F /* PDLSearchBarTableViewController.m in Sources */,
@@ -10069,6 +10182,8 @@
 				B8795331248688D800798005 /* pdl_thread-arm.s in Sources */,
 				B8795305248512A200798005 /* PDLBacktrace.m in Sources */,
 				B85D460B240E85A600CBF758 /* NSObject+PDLSelectorProxy-i386.s in Sources */,
+				C0123A4A2AD79604009EB95A /* PDLLockItem.m in Sources */,
+				C0123A462AD79604009EB95A /* PDLObjectLockItem.m in Sources */,
 				B85D460C240E85A600CBF758 /* NSObject+PDLSelectorProxy-x86_64.s in Sources */,
 				B85D460D240E85A600CBF758 /* pdl_die-arm.s in Sources */,
 				B890851D24AF48C700DAC261 /* pdl_dispatch.m in Sources */,
@@ -10208,6 +10323,7 @@
 				B85D45F6240E859000CBF758 /* PDLPropertyDebuggerView.m in Sources */,
 				B899F9EF245065DA00EFBB39 /* PDLViewControllerListViewController.m in Sources */,
 				B80AF8D524769E78009B9AF8 /* pdl_malloc_zone.c in Sources */,
+				C0123A4C2AD79604009EB95A /* PDLLockItemAction.m in Sources */,
 				C03D59212A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m in Sources */,
 				B85D45F7240E859000CBF758 /* PDLScreenDebugger.m in Sources */,
 				B88865D024BF21AE00D58BC7 /* NSObject+PDLMethod.m in Sources */,
@@ -10972,6 +11088,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C03C40262AD56036005836A4 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0123A4B2AD79604009EB95A /* PDLLockItem.m in Sources */,
+				C0123A4D2AD79604009EB95A /* PDLLockItemAction.m in Sources */,
+				C03C402E2AD5604F005836A4 /* PDLDeadLockObserver.m in Sources */,
+				C0123A472AD79604009EB95A /* PDLObjectLockItem.m in Sources */,
+				C0123A492AD79604009EB95A /* PDLGlobalLockItem.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		C03D876B2A8E2BA9008ABFD3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -11556,6 +11684,11 @@
 			isa = PBXTargetDependency;
 			target = C01B8B2B272A8E710083030A /* NSMutableDictionary+PDLThreadSafety */;
 			targetProxy = C01B8B36272A8E970083030A /* PBXContainerItemProxy */;
+		};
+		C03C40312AD5606D005836A4 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C03C40252AD56036005836A4 /* PDLDeadLockObserver */;
+			targetProxy = C03C40302AD5606D005836A4 /* PBXContainerItemProxy */;
 		};
 		C03D877A2A8E2C2E008ABFD3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -14149,6 +14282,28 @@
 			};
 			name = Release;
 		};
+		C03C402B2AD56036005836A4 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C03C402C2AD56036005836A4 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		C03D87702A8E2BA9008ABFD3 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -15314,6 +15469,15 @@
 			buildConfigurations = (
 				C01B8B31272A8E710083030A /* Debug */,
 				C01B8B32272A8E710083030A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C03C402A2AD56036005836A4 /* Build configuration list for PBXNativeTarget "PDLDeadLockObserver" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C03C402B2AD56036005836A4 /* Debug */,
+				C03C402C2AD56036005836A4 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

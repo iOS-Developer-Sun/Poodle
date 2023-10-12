@@ -9,7 +9,7 @@
 #include "pdl_thread_storage.h"
 #include <stdbool.h>
 #include <pthread.h>
-#include <malloc/_malloc.h>
+#include "pdl_spinlock.h"
 #include "pdl_dictionary.h"
 
 #define PDL_PTHREAD_KEY_INVALID -1
@@ -17,7 +17,7 @@
 static pthread_key_t pdl_pthread_key = PDL_PTHREAD_KEY_INVALID;
 
 static pdl_dictionary_t *pdl_registration = NULL;
-static pthread_mutex_t pdl_registration_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pdl_spinlock pdl_registration_lock = PDL_SPINLOCK_INIT;
 
 static void pdl_thread_storage_destroy(void *arg) {
     pdl_dictionary_t storage = (typeof(storage))arg;
@@ -28,18 +28,18 @@ static void pdl_thread_storage_destroy(void *arg) {
         void *key = keys[i];
         void **value = pdl_dictionary_get(storage, key);
         if (value) {
-            pthread_mutex_lock(&pdl_registration_mutex);
+            pdl_spinlock_lock(&pdl_registration_lock);
             void **destructor = pdl_dictionary_get(pdl_registration, key);
             if (destructor) {
                 destructor = *destructor;
             }
-            pthread_mutex_unlock(&pdl_registration_mutex);
+            pdl_spinlock_unlock(&pdl_registration_lock);
             if (destructor) {
                 ((void(*)(void *))destructor)(*value);
             }
         }
     }
-    free(keys);
+    pdl_dictionary_destroy_keys(storage, keys);
     pdl_dictionary_destroy(storage);
 }
 
@@ -74,9 +74,9 @@ bool pdl_thread_storage_enabled(void) {
 
 void pdl_thread_storage_register(void *key, void(*destructor)(void *)) {
     pdl_thread_storage_enable();
-    pthread_mutex_lock(&pdl_registration_mutex);
+    pdl_spinlock_lock(&pdl_registration_lock);
     pdl_dictionary_set(pdl_registration, key, (void **)&destructor);
-    pthread_mutex_unlock(&pdl_registration_mutex);
+    pdl_spinlock_unlock(&pdl_registration_lock);
 }
 
 void **pdl_thread_storage_get(void *key) {
