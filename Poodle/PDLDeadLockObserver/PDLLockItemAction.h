@@ -17,6 +17,16 @@ typedef NS_ENUM(NSInteger, PDLLockItemActionType) {
     PDLLockItemActionTypeWait,
 };
 
+typedef NS_ENUM(NSInteger, PDLLockItemActionSubtype) {
+    PDLLockItemActionSubtypeNone,
+    PDLLockItemActionSubtypeNSLock,
+    PDLLockItemActionSubtypeNSRecursiveLock,
+    PDLLockItemActionSubtypePthreadMutex,
+    PDLLockItemActionSubtypePthreadRWLock,
+    PDLLockItemActionSubtypeSynchronized,
+    PDLLockItemActionSubtypeDispatchOnce,
+};
+
 @class PDLLockItem;
 
 @interface PDLLockItemAction : NSObject
@@ -29,11 +39,12 @@ typedef NS_ENUM(NSInteger, PDLLockItemActionType) {
 @property (nonatomic, copy) NSString *_Nullable queueIdentifier;
 @property (nonatomic, copy) NSString *_Nullable queueLabel;
 @property (nonatomic, assign) PDLLockItemActionType type;
+@property (nonatomic, assign) PDLLockItemActionSubtype subtype;
 @property (nonatomic, assign) NSTimeInterval time;
 
 @property (nonatomic, copy) NSString *_Nullable targetQueueIdentifier;
 @property (nonatomic, copy) NSString *_Nullable targetQueueLabel;
-@property (nonatomic, strong) PDLBacktrace *backtrace;
+@property (nonatomic, strong, readonly) PDLBacktrace *backtrace;
 
 @end
 

@@ -106,6 +106,12 @@ int pdl_thread_frames(void *link_register, void *frame_pointer, void **frames, i
 #define    ISALIGNED(a)    ((((uintptr_t)(a)) & 0x1) == 0)
 #endif
 
+#if defined(__LP64__)
+#define    ISPOINTER(a)    (((uintptr_t)(a)) >= 0x100000000UL)
+#else
+#define    ISPOINTER(a)    (((uintptr_t)(a)) >= 0x10000UL)
+#endif
+
 int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void **frames, int count, pdl_thread_frame_filter *filter) {
     int ret = 0;
     void *lr = (void *)link_register;
@@ -135,7 +141,7 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
             ret++;
         }
 
-        if (!fp || !ISALIGNED(fp)) {
+        if (!ISPOINTER(fp) || !ISALIGNED(fp)) {
             break;
         }
 
@@ -143,8 +149,9 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
             break;
         }
 
+        void **previous = fp;
         fp = *fp;
-        if (fp && ISALIGNED(fp)) {
+        if (previous < fp && ISPOINTER(fp) && ISALIGNED(fp)) {
             lr = *(fp + 1);
             lr = pdl_ptrauth_strip_function(lr);
         } else {

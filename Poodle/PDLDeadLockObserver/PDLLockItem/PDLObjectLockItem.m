@@ -22,5 +22,9 @@
     return lockItem;
 }
 
+- (NSString *)description {
+    return [NSString stringWithFormat:@"<%@, %p>", [super description], self.object];
+}
+
 @end
 
