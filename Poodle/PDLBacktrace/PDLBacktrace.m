@@ -100,6 +100,10 @@
     pdl_backtrace_thread_show_with_start(self.backtrace, YES, thread_create);
 }
 
+- (void)showWithBlock:(void(^)(void(^start)(void)))block {
+    pdl_backtrace_thread_show_with_block(self.backtrace, YES, block);
+}
+
 - (void)hide {
     pdl_backtrace_thread_hide(self.backtrace);
 }

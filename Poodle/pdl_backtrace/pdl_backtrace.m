@@ -311,6 +311,35 @@ void pdl_backtrace_thread_show_with_start(pdl_backtrace_t backtrace, bool wait, 
     }
 }
 
+void pdl_backtrace_thread_show_with_block(pdl_backtrace_t backtrace, bool wait, void(^block)(void(^start)(void))) {
+    pdl_backtrace *bt = (pdl_backtrace *)backtrace;
+    if (!bt) {
+        return;
+    }
+
+    if (bt->thread) {
+        return;
+    }
+
+    if (!block) {
+        return;
+    }
+
+    pthread_mutex_t *wait_lock = &(bt->wait_lock);
+    pthread_mutex_lock(wait_lock);
+    [NSThread detachNewThreadWithBlock:^{
+        block(^{
+            bt->thread = pthread_self();
+            pdl_backtrace_thread_main(bt);
+        });
+    }];
+
+    if (wait) {
+        pthread_mutex_lock(wait_lock);
+        pthread_mutex_unlock(wait_lock);
+    }
+}
+
 bool pdl_backtrace_thread_is_shown(pdl_backtrace_t backtrace) {
     pdl_backtrace *bt = (pdl_backtrace *)backtrace;
     if (!bt) {

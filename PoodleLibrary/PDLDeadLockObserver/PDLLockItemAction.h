@@ -31,11 +31,12 @@ typedef NS_ENUM(NSInteger, PDLLockItemActionSubtype) {
 
 @interface PDLLockItemAction : NSObject
 
-@property (nonatomic, strong, class) NSDate *processStartDate;
+@property (nonatomic, weak) PDLLockItemAction *parent;
 
 @property (nonatomic, weak) PDLLockItem *item;
 
 @property (nonatomic, assign) mach_port_t thread;
+@property (nonatomic, assign) BOOL isSerialQueue;
 @property (nonatomic, copy) NSString *_Nullable queueIdentifier;
 @property (nonatomic, copy) NSString *_Nullable queueLabel;
 @property (nonatomic, assign) PDLLockItemActionType type;
@@ -45,6 +46,14 @@ typedef NS_ENUM(NSInteger, PDLLockItemActionSubtype) {
 @property (nonatomic, copy) NSString *_Nullable targetQueueIdentifier;
 @property (nonatomic, copy) NSString *_Nullable targetQueueLabel;
 @property (nonatomic, strong, readonly) PDLBacktrace *backtrace;
+
+@property (nonatomic, strong) NSMutableArray <PDLLockItemAction *>*children;
+
+@property (nonatomic, copy, readonly) NSString *queueThreadId;
+
+- (NSArray *)decendants;
+- (BOOL)showBacktrace:(NSString *)name;
+- (void)hideBacktrace;
 
 @end
 

@@ -129,6 +129,15 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
             break;
         }
 
+        if (!ISPOINTER(fp) || !ISALIGNED(fp)) {
+            break;
+        }
+
+        void **next = *fp;
+        if (next <= fp) {
+            break;
+        }
+
         bool available = true;
         if (filter && filter->is_valid) {
             available = filter->is_valid(filter, lr);
@@ -141,21 +150,12 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
             ret++;
         }
 
-        if (!ISPOINTER(fp) || !ISALIGNED(fp)) {
-            break;
-        }
+        fp = next;
+        lr = *(fp + 1);
+        lr = pdl_ptrauth_strip_function(lr);
 
         if (!lr) {
             break;
-        }
-
-        void **previous = fp;
-        fp = *fp;
-        if (previous < fp && ISPOINTER(fp) && ISALIGNED(fp)) {
-            lr = *(fp + 1);
-            lr = pdl_ptrauth_strip_function(lr);
-        } else {
-            lr = NULL;
         }
     }
 
@@ -165,6 +165,11 @@ int pdl_thread_frames_with_filter(void *link_register, void *frame_pointer, void
             return 0;
         }
     }
+
+    if (frames) {
+        frames[ret] = 0;
+    }
+    ret++;
 
     return ret;
 }
