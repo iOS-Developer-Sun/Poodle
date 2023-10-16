@@ -178,7 +178,7 @@ unsigned long pdl_dispatch_get_queue_width(dispatch_queue_t queue) {
 
 unsigned long pdl_dispatch_get_queue_unique_identifier(dispatch_queue_t queue) {
     if (!queue) {
-        return  0;
+        return 0;
     }
 
     pdl_dispatch_queue *q = (__bridge pdl_dispatch_queue *)dispatch_queue_get_specific(queue, &pdl_dispatch_queue_key);

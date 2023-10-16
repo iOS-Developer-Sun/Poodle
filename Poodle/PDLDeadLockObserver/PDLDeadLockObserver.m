@@ -7,15 +7,14 @@
 //
 
 #import "PDLDeadLockObserver.h"
+#import <objc/objc-sync.h>
+#import <pthread/pthread.h>
 #import "PDLGlobalLockItem.h"
 #import "PDLObjectLockItem.h"
 #import "pdl_hook.h"
 #import "pdl_dispatch.h"
 #import "pdl_thread_storage.h"
-#import "PDLProcessInfo.h"
 #import "NSObject+PDLImplementationInterceptor.h"
-#import <objc/objc-sync.h>
-#import <pthread/pthread.h>
 
 @interface PDLDeadLockObserverSyncObject : NSObject
 
@@ -30,8 +29,9 @@
 @interface PDLDeadLockObserverThreadStorage : NSObject
 
 @property (nonatomic, assign) BOOL isObserving;
-@property (nonatomic, strong) NSMutableArray *items;
-@property (nonatomic, strong) NSMutableArray *waitingItemsList;
+@property (nonatomic, strong) NSMutableArray *actions;
+@property (nonatomic, strong) NSMutableArray *waitingActions;
+@property (nonatomic, strong) NSMutableArray *upstreamActionsList;
 
 @end
 
@@ -40,8 +40,9 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        _items = [NSMutableArray array];
-        _waitingItemsList = [NSMutableArray array];
+        _actions = [NSMutableArray array];
+        _waitingActions = [NSMutableArray array];
+        _upstreamActionsList = [NSMutableArray array];
     }
     return self;
 }
@@ -71,11 +72,16 @@ __unused static void pdl_lock_items_destroy(void *arg) {
     return storage;
 }
 
-+ (NSMutableArray *)items {
-    return [self storage].items;
++ (NSMutableArray *)actions {
+    return [self storage].actions;
 }
-+ (NSMutableArray *)waitingItemsList {
-    return [self storage].waitingItemsList;
+
++ (NSMutableArray *)waitingActions {
+    return [self storage].waitingActions;
+}
+
++ (NSMutableArray *)upstreamActionsList {
+    return [self storage].upstreamActionsList;
 }
 
 + (PDLDeadLockObserverSyncObject *)syncObject:(id)object {
@@ -89,39 +95,46 @@ __unused static void pdl_lock_items_destroy(void *arg) {
     return syncObject;
 }
 
-+ (PDLLockItemAction *)lock:(PDLLockItem *)lockItem {
-    NSArray *lockItems = [PDLDeadLockObserver items];
-    PDLLockItemAction *action = [lockItem lock];
-    for (PDLLockItem *each in lockItems) {
-        if (each != lockItem) {
-            [each addAction:action];
-        }
-    }
-    return action;
-}
-
-+ (void)pushWaitingItems:(NSArray *)waitingItems {
-    if (waitingItems) {
-        [[self waitingItemsList] addObject:waitingItems];
++ (void)pushWaitingAction:(PDLLockItemAction *)waitingAction {
+    if (waitingAction) {
+        [[self waitingActions] addObject:waitingAction];
     }
 }
 
-+ (void)popWaitingItems:(NSArray *)waitingItems {
-    if (waitingItems) {
-        assert([self waitingItemsList].lastObject == waitingItems);
-        [[self waitingItemsList] removeLastObject];
++ (void)popWaitingAction:(PDLLockItemAction *)waitingAction {
+    if (waitingAction) {
+        assert([self waitingActions].lastObject == waitingAction);
+        [[self waitingActions] removeLastObject];
     }
 }
 
-+ (void)push:(PDLLockItem *)lockItem {
-    NSMutableArray *items = [self items];
-    [items addObject:lockItem];
++ (void)pushUpstreamActions:(NSArray *)upstreamActions {
+    if (upstreamActions.count > 0) {
+        [[self upstreamActionsList] addObject:upstreamActions];
+    }
+}
+
++ (void)popUpstreamActions:(NSArray *)upstreamActions {
+    if (upstreamActions.count > 0) {
+        assert([self upstreamActionsList].lastObject == upstreamActions);
+        [[self upstreamActionsList] removeLastObject];
+    }
+}
+
++ (void)push:(PDLLockItemAction *)action {
+    NSMutableArray *actions = [self actions];
+    PDLLockItemAction *last = actions.lastObject;
+    [actions addObject:action];
+    [last.item action:last addChild:action];
 }
 
 + (void)pop:(PDLLockItem *)lockItem {
-    NSMutableArray *items = [self items];
-    if (items.lastObject == lockItem) {
-        [items removeLastObject];
+    NSMutableArray *actions = [self actions];
+    PDLLockItemAction *action = actions.lastObject;
+    if (action.item == lockItem) {
+        [actions removeLastObject];
+    } else {
+        assert(0);
     }
 }
 
@@ -142,16 +155,41 @@ __unused static void pdl_lock_items_destroy(void *arg) {
 #define PDL_DEADLOCK_OBSERVING_ENTER if ([PDLDeadLockObserver enterObserving]) {
 #define PDL_DEADLOCK_OBSERVING_LEAVE [PDLDeadLockObserver leaveObserving];}
 
++ (PDLLockItem *)globalWaitItem {
+    static PDLLockItem *_globalWaitItem = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        _globalWaitItem = [[PDLGlobalLockItem alloc] init];
+    });
+    return _globalWaitItem;
+}
+
++ (PDLLockItemAction *)syncWait:(dispatch_queue_t)queue {
+    NSString *queueIdentifier = @(pdl_dispatch_get_queue_unique_identifier(queue)).stringValue;
+    NSString *queueLabel = @(queue ? (dispatch_queue_get_label(queue) ?: "") : "");
+
+    PDLLockItemAction *action = [[PDLLockItemAction alloc] init];
+    action.item = [self globalWaitItem];
+    [action.backtrace record:3];
+    action.type = PDLLockItemActionTypeWait;
+    action.targetQueueLabel = queueLabel;
+    action.targetQueueIdentifier = queueIdentifier;
+    return action;
+}
+
 #pragma mark -
 
 #undef dispatch_once
 static void (*pdl_dispatch_once_original)(dispatch_once_t *predicate, DISPATCH_NOESCAPE dispatch_block_t block) = NULL;
 static void pdl_dispatch_once(dispatch_once_t *predicate, DISPATCH_NOESCAPE dispatch_block_t block) {
     PDLLockItem *lockItem = nil;
+    PDLLockItemAction *action = nil;
     PDL_DEADLOCK_OBSERVING_ENTER;
     lockItem = [PDLGlobalLockItem lockItemWithObject:(NSUInteger)predicate];
-    [PDLDeadLockObserver push:lockItem];
-    [PDLDeadLockObserver lock:lockItem].subtype = PDLLockItemActionSubtypeDispatchOnce;
+    action = [lockItem lock];
+    action.subtype = PDLLockItemActionSubtypeDispatchOnce;
+    [PDLDeadLockObserver push:action];
+    [lockItem check:action];
     PDL_DEADLOCK_OBSERVING_LEAVE;
     pdl_dispatch_once_original(predicate, block);
     PDL_DEADLOCK_OBSERVING_ENTER;
@@ -161,18 +199,22 @@ static void pdl_dispatch_once(dispatch_once_t *predicate, DISPATCH_NOESCAPE disp
 
 static void (*pdl_dispatch_sync_original)(dispatch_queue_t queue, DISPATCH_NOESCAPE dispatch_block_t block) = NULL;
 static void pdl_dispatch_sync(dispatch_queue_t queue, DISPATCH_NOESCAPE dispatch_block_t block) {
-    NSArray *lockItems = nil;
     BOOL isSerialQueue = pdl_dispatch_get_queue_width(queue) == 1;
+    PDLLockItemAction *child = nil;
+    NSArray *actions = nil;
     PDL_DEADLOCK_OBSERVING_ENTER;
     if (isSerialQueue) {
-        lockItems = [PDLDeadLockObserver items];
-        for (PDLLockItem *lockItem in lockItems) {
-            [lockItem syncWait:queue];
-        }
-        NSArray *waitingItemsList = [PDLDeadLockObserver waitingItemsList];
-        for (NSArray *waitingItems in waitingItemsList) {
-            for (PDLLockItem *lockItem in waitingItems) {
-                [lockItem syncWait:queue];
+        child = [PDLDeadLockObserver syncWait:queue];
+        actions = [PDLDeadLockObserver actions];
+        PDLLockItemAction *action = actions.lastObject;
+        [action.item action:action addChild:child];
+        NSArray *waitingActions = [PDLDeadLockObserver waitingActions];
+        PDLLockItemAction *waitingAction = waitingActions.lastObject;
+        [waitingAction.item action:waitingAction addChild:child];
+        [action.item check:child];
+        for (NSArray *upstreamActions in [PDLDeadLockObserver upstreamActionsList]) {
+            for (PDLLockItemAction *upstreamAction in upstreamActions) {
+                [upstreamAction.item check:child];
             }
         }
     }
@@ -180,11 +222,13 @@ static void pdl_dispatch_sync(dispatch_queue_t queue, DISPATCH_NOESCAPE dispatch
     pdl_dispatch_sync_original(queue, ^{
         if (isSerialQueue) {
             PDL_DEADLOCK_OBSERVING_ENTER;
-            [PDLDeadLockObserver pushWaitingItems:lockItems];
+            [PDLDeadLockObserver pushWaitingAction:child];
+            [PDLDeadLockObserver pushUpstreamActions:actions];
             PDL_DEADLOCK_OBSERVING_LEAVE;
             block();
             PDL_DEADLOCK_OBSERVING_ENTER;
-            [PDLDeadLockObserver popWaitingItems:lockItems];
+            [PDLDeadLockObserver popWaitingAction:child];
+            [PDLDeadLockObserver popUpstreamActions:actions];
             PDL_DEADLOCK_OBSERVING_LEAVE;
         } else {
             block();
@@ -199,8 +243,10 @@ static int pdl_objc_sync_enter(id object) {
         PDL_DEADLOCK_OBSERVING_ENTER;
         PDLDeadLockObserverSyncObject *syncObject = [PDLDeadLockObserver syncObject:object];
         PDLLockItem *lockItem = [PDLObjectLockItem lockItemWithObject:syncObject];
-        [PDLDeadLockObserver push:lockItem];
-        [PDLDeadLockObserver lock:lockItem].subtype = PDLLockItemActionSubtypeSynchronized;
+        PDLLockItemAction *action = [lockItem lock];
+        action.subtype = PDLLockItemActionSubtypeSynchronized;
+        [PDLDeadLockObserver push:action];
+        [lockItem check:action];
         PDL_DEADLOCK_OBSERVING_LEAVE;
     }
     return ret;
@@ -211,7 +257,7 @@ static int pdl_objc_sync_exit(id object) {
     int ret = pdl_objc_sync_exit_original(object);
     if (object) {
         PDL_DEADLOCK_OBSERVING_ENTER;
-        id syncObject = [PDLDeadLockObserver syncObject:object];
+        PDLDeadLockObserverSyncObject *syncObject = [PDLDeadLockObserver syncObject:object];
         PDLLockItem *lockItem = [PDLObjectLockItem lockItemWithObject:syncObject];
         [PDLDeadLockObserver pop:lockItem];
         PDL_DEADLOCK_OBSERVING_LEAVE;
@@ -226,8 +272,10 @@ static int pdl_pthread_mutex_lock(pthread_mutex_t *lock) {
     int ret = pdl_pthread_mutex_lock_original(lock);
     PDL_DEADLOCK_OBSERVING_ENTER;
     PDLLockItem *lockItem = [PDLGlobalLockItem lockItemWithObject:(NSUInteger)lock];
-    [PDLDeadLockObserver push:lockItem];
-    [PDLDeadLockObserver lock:lockItem].subtype = PDLLockItemActionSubtypePthreadMutex;
+    PDLLockItemAction *action = [lockItem lock];
+    action.subtype = PDLLockItemActionSubtypePthreadMutex;
+    [PDLDeadLockObserver push:action];
+    [lockItem check:action];
     PDL_DEADLOCK_OBSERVING_LEAVE;
     return ret;
 }
@@ -238,8 +286,10 @@ static int pdl_pthread_mutex_trylock(pthread_mutex_t *lock) {
     if (ret == 0) {
         PDL_DEADLOCK_OBSERVING_ENTER;
         PDLLockItem *lockItem = [PDLGlobalLockItem lockItemWithObject:(NSUInteger)lock];
-        [PDLDeadLockObserver push:lockItem];
-        [PDLDeadLockObserver lock:lockItem].subtype = PDLLockItemActionSubtypePthreadMutex;
+        PDLLockItemAction *action = [lockItem lock];
+        action.subtype = PDLLockItemActionSubtypePthreadMutex;
+        [PDLDeadLockObserver push:action];
+        [lockItem check:action];
         PDL_DEADLOCK_OBSERVING_LEAVE;
     }
     return ret;
@@ -262,8 +312,10 @@ static int pdl_pthread_rwlock_rdlock(pthread_rwlock_t *lock) {
     int ret = pdl_pthread_rwlock_rdlock_original(lock);
     PDL_DEADLOCK_OBSERVING_ENTER;
     PDLLockItem *lockItem = [PDLGlobalLockItem lockItemWithObject:(NSUInteger)lock];
-    [PDLDeadLockObserver push:lockItem];
-    [PDLDeadLockObserver lock:lockItem].subtype = PDLLockItemActionSubtypePthreadRWLock;
+    PDLLockItemAction *action = [lockItem lock];
+    action.subtype = PDLLockItemActionSubtypePthreadRWLock;
+    [PDLDeadLockObserver push:action];
+    [lockItem check:action];
     PDL_DEADLOCK_OBSERVING_LEAVE;
     return ret;
 }
@@ -273,8 +325,10 @@ static int pdl_pthread_rwlock_wrlock(pthread_rwlock_t *lock) {
     int ret = pdl_pthread_rwlock_wrlock_original(lock);
     PDL_DEADLOCK_OBSERVING_ENTER;
     PDLLockItem *lockItem = [PDLGlobalLockItem lockItemWithObject:(NSUInteger)lock];
-    [PDLDeadLockObserver push:lockItem];
-    [PDLDeadLockObserver lock:lockItem].subtype = PDLLockItemActionSubtypePthreadRWLock;
+    PDLLockItemAction *action = [lockItem lock];
+    action.subtype = PDLLockItemActionSubtypePthreadRWLock;
+    [PDLDeadLockObserver push:action];
+    [lockItem check:action];
     PDL_DEADLOCK_OBSERVING_LEAVE;
     return ret;
 }
@@ -285,8 +339,10 @@ static int pdl_pthread_rwlock_tryrdlock(pthread_rwlock_t *lock) {
     if (ret == 0) {
         PDL_DEADLOCK_OBSERVING_ENTER;
         PDLLockItem *lockItem = [PDLGlobalLockItem lockItemWithObject:(NSUInteger)lock];
-        [PDLDeadLockObserver push:lockItem];
-        [PDLDeadLockObserver lock:lockItem].subtype = PDLLockItemActionSubtypePthreadRWLock;
+        PDLLockItemAction *action = [lockItem lock];
+        action.subtype = PDLLockItemActionSubtypePthreadRWLock;
+        [PDLDeadLockObserver push:action];
+        [lockItem check:action];
         PDL_DEADLOCK_OBSERVING_LEAVE;
     }
     return ret;
@@ -298,8 +354,10 @@ static int pdl_pthread_rwlock_trywrlock(pthread_rwlock_t *lock) {
     if (ret == 0) {
         PDL_DEADLOCK_OBSERVING_ENTER;
         PDLLockItem *lockItem = [PDLGlobalLockItem lockItemWithObject:(NSUInteger)lock];
-        [PDLDeadLockObserver push:lockItem];
-        [PDLDeadLockObserver lock:lockItem].subtype = PDLLockItemActionSubtypePthreadRWLock;
+        PDLLockItemAction *action = [lockItem lock];
+        action.subtype = PDLLockItemActionSubtypePthreadRWLock;
+        [PDLDeadLockObserver push:action];
+        [lockItem check:action];
         PDL_DEADLOCK_OBSERVING_LEAVE;
     }
     return ret;
@@ -324,8 +382,10 @@ static void pdl_lock_unlock(__unsafe_unretained id self, SEL _cmd) {
     PDL_DEADLOCK_OBSERVING_ENTER;
     PDLLockItem *lockItem = [PDLObjectLockItem lockItemWithObject:self];
     if (sel_isEqual(_cmd, @selector(lock))) {
-        [PDLDeadLockObserver push:lockItem];
-        [PDLDeadLockObserver lock:lockItem].subtype = _class == [NSRecursiveLock class] ? PDLLockItemActionSubtypeNSRecursiveLock : PDLLockItemActionSubtypeNSLock;
+        PDLLockItemAction *action = [lockItem lock];
+        action.subtype = _class == [NSRecursiveLock class] ? PDLLockItemActionSubtypeNSRecursiveLock : PDLLockItemActionSubtypeNSLock;
+        [PDLDeadLockObserver push:action];
+        [lockItem check:action];
     } else {
         [PDLDeadLockObserver pop:lockItem];
     }
@@ -338,8 +398,10 @@ static BOOL pdl_tryLock(__unsafe_unretained id self, SEL _cmd) {
     if (ret) {
         PDL_DEADLOCK_OBSERVING_ENTER;
         PDLLockItem *lockItem = [PDLObjectLockItem lockItemWithObject:self];
-        [PDLDeadLockObserver push:lockItem];
-        [PDLDeadLockObserver lock:lockItem].subtype = _class == [NSRecursiveLock class] ? PDLLockItemActionSubtypeNSRecursiveLock : PDLLockItemActionSubtypeNSLock;
+        PDLLockItemAction *action = [lockItem lock];
+        action.subtype = _class == [NSRecursiveLock class] ? PDLLockItemActionSubtypeNSRecursiveLock : PDLLockItemActionSubtypeNSLock;
+        [PDLDeadLockObserver push:action];
+        [lockItem check:action];
         PDL_DEADLOCK_OBSERVING_LEAVE;
     }
     return ret;
@@ -351,8 +413,10 @@ static BOOL pdl_lockBeforeDate(__unsafe_unretained id self, SEL _cmd, id date) {
     if (ret) {
         PDL_DEADLOCK_OBSERVING_ENTER;
         PDLLockItem *lockItem = [PDLObjectLockItem lockItemWithObject:self];
-        [PDLDeadLockObserver push:lockItem];
-        [PDLDeadLockObserver lock:lockItem].subtype = _class == [NSRecursiveLock class] ? PDLLockItemActionSubtypeNSRecursiveLock : PDLLockItemActionSubtypeNSLock;
+        PDLLockItemAction *action = [lockItem lock];
+        action.subtype = _class == [NSRecursiveLock class] ? PDLLockItemActionSubtypeNSRecursiveLock : PDLLockItemActionSubtypeNSLock;
+        [PDLDeadLockObserver push:action];
+        [lockItem check:action];
         PDL_DEADLOCK_OBSERVING_LEAVE;
     }
     return ret;
@@ -363,7 +427,6 @@ static BOOL pdl_lockBeforeDate(__unsafe_unretained id self, SEL _cmd, id date) {
 }
 
 + (void)observe {
-    PDLLockItemAction.processStartDate = [PDLProcessInfo sharedInstance].processStartDate;
     pdl_thread_storage_register(_pdl_storage_key, &pdl_lock_items_destroy);
 
     pdl_thread_storage_enabled();

@@ -14,13 +14,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic, strong) NSMutableArray <PDLLockItemAction *>*actions;
 @property (nonatomic, strong, readonly) PDLLockItemAction *keyAction;
+@property (nonatomic, copy, readonly) NSArray *suspiciousActions;
 @property (nonatomic, copy, readonly) NSString *suspiciousReason;
+@property (nonatomic, assign, readonly) BOOL isSuspicious;
 
 - (PDLLockItemAction *)lock;
-- (PDLLockItemAction *)syncWait:(dispatch_queue_t)queue;
 - (void)addAction:(PDLLockItemAction *)action;
+- (void)action:(PDLLockItemAction *)action addChild:(PDLLockItemAction *)child;
 
-- (BOOL)isSuspicious;
+- (void)check:(PDLLockItemAction *)checkedAction;
 
 + (NSArray *)suspiciousDeadLockItems;
 

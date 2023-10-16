@@ -16,6 +16,9 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSArray <PDLLockItem *>*)suspiciousDeadLockItems;
 + (void)observe;
 
++ (BOOL)enterObserving;
++ (void)leaveObserving;
+
 @end
 
 NS_ASSUME_NONNULL_END
