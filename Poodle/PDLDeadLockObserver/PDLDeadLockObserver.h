@@ -14,7 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLDeadLockObserver : NSObject
 
 + (NSArray <PDLLockItem *>*)suspiciousDeadLockItems;
-+ (void)observe;
++ (void)observe:(BOOL)realtime;
++ (void)check;
 
 + (BOOL)enterObserving;
 + (void)leaveObserving;

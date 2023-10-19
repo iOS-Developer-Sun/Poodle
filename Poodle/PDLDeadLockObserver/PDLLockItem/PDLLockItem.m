@@ -11,13 +11,18 @@
 #import "pdl_spinlock.h"
 
 @interface PDLLockItem () {
+    NSMutableArray <PDLLockItemAction *>*_actions;
     pdl_spinlock _spinlock;
     NSString *_suspiciousReason;
+    NSString *_identifier;
 }
 
 @end
 
 @implementation PDLLockItem
+
+static NSMutableSet *_lockItems = nil;
+static NSMutableSet *_suspiciousDeadLockItems = nil;
 
 - (instancetype)init {
     self = [super init];
@@ -25,26 +30,56 @@
         _actions = [NSMutableArray array];
         pdl_spinlock spinlock = PDL_SPINLOCK_INIT;
         _spinlock = spinlock;
+
+        @synchronized (_lockItems) {
+            [_lockItems addObject:self];
+        }
     }
     return self;
 }
 
+- (NSArray<PDLLockItemAction *> *)actions {
+    @synchronized (_actions) {
+        return [_actions copy];
+    }
+}
+
+- (NSString *)identifier {
+    if (_identifier) {
+        return _identifier;
+    }
+
+    PDLLockItemAction *action = self.actions.firstObject;
+    if (!action) {
+        return nil;
+    }
+
+    __block NSString *firstSymbol = nil;
+    [action.backtrace enumerateFrames:^(NSInteger index, void *address, NSString *symbol, NSString *image, BOOL *stops) {
+        if (symbol) {
+            firstSymbol = symbol;
+        } else {
+            firstSymbol = [NSString stringWithFormat:@"%p", address];
+        }
+        *stops = YES;
+    }];
+
+    _identifier = firstSymbol;
+    return _identifier;
+}
+
 - (void)addAction:(PDLLockItemAction *)action {
-    @synchronized ([PDLLockItem class]) {
-        [self.actions addObject:action];
+    @synchronized (_actions) {
+        [_actions addObject:action];
     }
 }
 
 - (void)action:(PDLLockItemAction *)action addChild:(PDLLockItemAction *)child {
-    @synchronized ([PDLLockItem class]) {
-        [action.children addObject:child];
-        child.parent = action;
-    }
+    [action addChild:child];
 }
 
 - (PDLLockItemAction *)lock {
     PDLLockItemAction *action = [[PDLLockItemAction alloc] init];
-    [action.backtrace record:3];
     action.item = self;
     action.type = PDLLockItemActionTypeLock;
     [self addAction:action];
@@ -101,42 +136,42 @@
     return nil;
 }
 
-- (void)check:(PDLLockItemAction *)checkedAction {
-    @synchronized ([PDLLockItem class]) {
-        if (_isSuspicious) {
-            return;
-        }
+- (void)check {
+    if (_isSuspicious) {
+        return;
+    }
 
-        for (PDLLockItemAction *action in self.actions) {
-            for (PDLLockItemAction *child in action.children) {
-                if (child.item != self) {
-                    if (child.type == PDLLockItemActionTypeLock) {
-                        NSMutableArray *decendants = [[child decendants] mutableCopy];
-                        [decendants addObject:child];
-                        for (PDLLockItemAction *decendant in decendants) {
-                            NSMutableSet *exceptions = [NSMutableSet set];
-                            [exceptions addObject:self];
-                            PDLLockItemAction *lockAction = [decendant.item childContainsItem:self notInQueueThread:action.queueThreadId exceptions:exceptions];
-                            if (lockAction) {
-                                _isSuspicious = YES;
-                                _suspiciousReason = [NSString stringWithFormat:@"<%@ %p> conflicts with <%@ %p>", decendant.class, decendant, lockAction.class, lockAction];
-                                _suspiciousActions = @[decendant, lockAction];
-                                _keyAction = checkedAction;
-                                [PDLLockItem addSuspicious:self];
-                                return;
-                            }
-                        }
-                    } else if (child.type == PDLLockItemActionTypeWait) {
-                        PDLLockItemAction *waitAction = [self waitAction:child];
-                        if (waitAction) {
+    NSArray *actions = nil;
+    @synchronized (self.actions) {
+        actions = [self.actions copy];
+    }
+    for (PDLLockItemAction *action in actions) {
+        for (PDLLockItemAction *child in action.children) {
+            if (child.item != self) {
+                if (child.type == PDLLockItemActionTypeLock) {
+                    NSMutableArray *decendants = [[child decendants] mutableCopy];
+                    [decendants addObject:child];
+                    for (PDLLockItemAction *decendant in decendants) {
+                        NSMutableSet *exceptions = [NSMutableSet set];
+                        [exceptions addObject:self];
+                        PDLLockItemAction *lockAction = [decendant.item childContainsItem:self notInQueueThread:action.queueThreadId exceptions:exceptions];
+                        if (lockAction) {
                             _isSuspicious = YES;
-                            NSString *targetQueueString = child.targetQueueIdentifier ? [NSString stringWithFormat:@"[q%@(%@)]", child.targetQueueIdentifier, child.targetQueueLabel] : @"";
-                            _suspiciousReason = [NSString stringWithFormat:@"<%@ %p> is waiting for %@ while <%@ %p> locks it.", child.class, child, targetQueueString, waitAction.class, waitAction];
-                            _suspiciousActions = @[child, waitAction];
-                            _keyAction = checkedAction;
+                            _suspiciousReason = [NSString stringWithFormat:@"<%@ %p> conflicts with <%@ %p>", decendant.class, decendant, lockAction.class, lockAction];
+                            _suspiciousActions = @[decendant, lockAction];
                             [PDLLockItem addSuspicious:self];
                             return;
                         }
+                    }
+                } else if (child.type == PDLLockItemActionTypeWait) {
+                    PDLLockItemAction *waitAction = [self waitAction:child];
+                    if (waitAction) {
+                        _isSuspicious = YES;
+                        NSString *targetQueueString = child.targetQueueIdentifier ? [NSString stringWithFormat:@"[q%@(%@)]", child.targetQueueIdentifier, child.targetQueueLabel] : @"";
+                        _suspiciousReason = [NSString stringWithFormat:@"<%@ %p> is waiting for %@ while <%@ %p> locks it.", child.class, child, targetQueueString, waitAction.class, waitAction];
+                        _suspiciousActions = @[child, waitAction];
+                        [PDLLockItem addSuspicious:self];
+                        return;
                     }
                 }
             }
@@ -144,11 +179,10 @@
     }
 }
 
-static NSMutableSet *_suspiciousDeadLockItems = nil;
-
 + (void)initialize {
     if (self == [PDLLockItem self]) {
         _suspiciousDeadLockItems = [NSMutableSet set];
+        _lockItems = [NSMutableSet set];
     }
 }
 
@@ -161,6 +195,12 @@ static NSMutableSet *_suspiciousDeadLockItems = nil;
 + (NSArray *)suspiciousDeadLockItems {
     @synchronized (_suspiciousDeadLockItems) {
         return _suspiciousDeadLockItems.allObjects;
+    }
+}
+
++ (NSArray *)lockItems {
+    @synchronized (_lockItems) {
+        return [_lockItems allObjects];
     }
 }
 

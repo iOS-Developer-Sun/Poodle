@@ -13,6 +13,12 @@
 #import "pdl_dispatch.h"
 #import "PDLProcessInfo.h"
 
+@interface PDLLockItemAction () {
+    NSMutableArray <PDLLockItemAction *>*_children;
+}
+
+@end
+
 @implementation PDLLockItemAction
 
 - (instancetype)init {
@@ -98,10 +104,24 @@
     return actionString;
 }
 
+- (NSArray<PDLLockItemAction *> *)children {
+    @synchronized (_children) {
+        return [_children copy];
+    }
+}
+
+- (void)addChild:(PDLLockItemAction *)child {
+    @synchronized (_children) {
+        [_children addObject:child];
+        child.parent = self;
+    }
+}
+
 - (NSArray *)decendants {
     NSMutableArray *array = [NSMutableArray array];
-    [array addObjectsFromArray:self.children];
-    for (PDLLockItemAction *child in self.children) {
+    NSArray *children = self.children;
+    [array addObjectsFromArray:children];
+    for (PDLLockItemAction *child in children) {
         [array addObjectsFromArray:[child decendants]];
     }
     return [array copy];
@@ -126,6 +146,5 @@
 - (void)hideBacktrace {
     [self.backtrace hide];
 }
-
 
 @end
