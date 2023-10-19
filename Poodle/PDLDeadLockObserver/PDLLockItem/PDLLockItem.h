@@ -12,19 +12,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLLockItem : NSObject
 
-@property (nonatomic, strong) NSMutableArray <PDLLockItemAction *>*actions;
-@property (nonatomic, strong, readonly) PDLLockItemAction *keyAction;
+@property (nonatomic, copy, readonly) NSArray <PDLLockItemAction *>*actions;
 @property (nonatomic, copy, readonly) NSArray *suspiciousActions;
 @property (nonatomic, copy, readonly) NSString *suspiciousReason;
 @property (nonatomic, assign, readonly) BOOL isSuspicious;
+@property (nonatomic, copy, readonly) NSString *identifier;
 
 - (PDLLockItemAction *)lock;
 - (void)addAction:(PDLLockItemAction *)action;
 - (void)action:(PDLLockItemAction *)action addChild:(PDLLockItemAction *)child;
-
-- (void)check:(PDLLockItemAction *)checkedAction;
+- (void)check;
 
 + (NSArray *)suspiciousDeadLockItems;
++ (NSArray *)lockItems;
 
 @end
 

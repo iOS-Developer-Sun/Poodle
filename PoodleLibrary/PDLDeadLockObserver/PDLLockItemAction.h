@@ -47,10 +47,11 @@ typedef NS_ENUM(NSInteger, PDLLockItemActionSubtype) {
 @property (nonatomic, copy) NSString *_Nullable targetQueueLabel;
 @property (nonatomic, strong, readonly) PDLBacktrace *backtrace;
 
-@property (nonatomic, strong) NSMutableArray <PDLLockItemAction *>*children;
+@property (nonatomic, copy, readonly) NSArray <PDLLockItemAction *>*children;
 
 @property (nonatomic, copy, readonly) NSString *queueThreadId;
 
+- (void)addChild:(PDLLockItemAction *)child;
 - (NSArray *)decendants;
 - (BOOL)showBacktrace:(NSString *)name;
 - (void)hideBacktrace;
