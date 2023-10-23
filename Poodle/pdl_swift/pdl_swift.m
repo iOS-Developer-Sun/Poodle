@@ -197,40 +197,46 @@ bool pdl_swift_registerAccessEndAction(void(*action)(void **result, void *ret)) 
 
 #pragma mark - Swift.Dictionary.subscript.getter
 
-extern void $sSDyq_Sgxcig(void **value, void **key, void **meta, void *a, void *b, void *c);
+__attribute__((swiftcall))
+extern void $sSDyq_Sgxcig(__attribute__((swift_indirect_result))void **indirect_result, void **value, void **key, void **meta, void *a, void *b, __attribute__((swift_context)) void **context);
 
 __attribute__((swiftcall))
-static void pdl_sSDyq_Sgxcig(void **value, void **key, void **meta, void *a, void *b, __attribute__((swift_context)) void *c) {
-    void **objectAddress = pdl_swift_get_object();
-    void *object = *objectAddress;
+static void pdl_sSDyq_Sgxcig(__attribute__((swift_indirect_result))void **indirect_result, void **value, void **key, void **meta, void *a, void *b, __attribute__((swift_context)) void **context) {
+    void *object = *context;
     void *k = &pdl_sSDyq_Sgxcig;
     typeof(&pdl_sSDyq_Sgxcig) original = pdl_swift_getOriginal(k);
-    original(value, key, meta, a, b, c);
+    original(indirect_result, value, key, meta, a, b, context);
+    assert(object == *context);
+
     pdl_array_t actions = pdl_swift_actions(k);
     if (actions) {
         unsigned int count = pdl_array_count(actions);
         for (unsigned int i = 0; i < count; i++) {
-            void(*action)(void **value, void **key, void **meta, void *a, void *b, void *c, void *object) = pdl_array_get(actions, i);
+            void(*action)(void **value, void **key, void **meta, void *object) = pdl_array_get(actions, i);
             if (action) {
-                action(value, key, meta, a, b, c, object);
+                action(value, key, meta, object);
             }
         }
     }
 }
 
-bool pdl_swift_registerDictionaryGetterAction(void(*action)(void **value, void **key, void **meta, void *a, void *b, void *c, void *object)) {
+bool pdl_swift_registerDictionaryGetterAction(void(*action)(void **value, void **key, void **meta, void *object)) {
     return pdl_swift_registerAction((void *)action, "$sSDyq_Sgxcig", (void *)&pdl_sSDyq_Sgxcig);
 }
 
 #pragma mark - Swift.Dictionary.subscript.setter
 
-extern void $sSDyq_Sgxcis(void **value, void **key, void **meta);
-static void pdl_sSDyq_Sgxcis(void **value, void **key, void **meta) {
-    void **objectAddress = pdl_swift_get_object();
-    void *object = *objectAddress;
+__attribute__((swiftcall))
+extern void $sSDyq_Sgxcis(void **value, void **key, void **meta, __attribute__((swift_context)) void **context);
+
+__attribute__((swiftcall))
+static void pdl_sSDyq_Sgxcis(void **value, void **key, void **meta, __attribute__((swift_context)) void **context) {
+    void *object = *context;
     void *k = &pdl_sSDyq_Sgxcis;
     typeof(&pdl_sSDyq_Sgxcis) original = pdl_swift_getOriginal(k);
-    original(value, key, meta);
+    original(value, key, meta, context);
+    object = *context;
+
     pdl_array_t actions = pdl_swift_actions(k);
     if (actions) {
         unsigned int count = pdl_array_count(actions);
@@ -249,13 +255,17 @@ bool pdl_swift_registerDictionarySetterAction(void(*action)(void **value, void *
 
 #pragma mark - Swift.Dictionary.subscript.modifier
 
-extern pdl_swift_dictionary_modify_ret $sSDyq_SgxciM(void **value, void **key, void **meta);
-static pdl_swift_dictionary_modify_ret pdl_sSDyq_SgxciM(void **value, void **key, void **meta) {
-    void **objectAddress = pdl_swift_get_object();
-    void *object = *objectAddress;
+__attribute__((swiftcall))
+extern pdl_swift_dictionary_modify_ret $sSDyq_SgxciM(void **value, void **key, void **meta, __attribute__((swift_context)) void **context);
+
+__attribute__((swiftcall))
+static pdl_swift_dictionary_modify_ret pdl_sSDyq_SgxciM(void **value, void **key, void **meta, __attribute__((swift_context)) void **context) {
+    void *object = *context;
     void *k = &pdl_sSDyq_SgxciM;
     typeof(&pdl_sSDyq_SgxciM) original = pdl_swift_getOriginal(k);
-    pdl_swift_dictionary_modify_ret ret = original(value, key, meta);
+    assert(object == *context);
+
+    pdl_swift_dictionary_modify_ret ret = original(value, key, meta, context);
     pdl_array_t actions = pdl_swift_actions(k);
     if (actions) {
         unsigned int count = pdl_array_count(actions);

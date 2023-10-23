@@ -13,7 +13,7 @@
 @implementation PDLNonThreadSafeSwiftObjectObserver
 
 static void getter(void **value, void **key, void **meta, void *object) {
-    void *objectAddress = pdl_swift_validate_object(*(void **)pdl_swift_get_object());
+    void *objectAddress = pdl_swift_validate_object(object);
     id dictionary = (__bridge id)(objectAddress);
 
     Class aClass = NSClassFromString(@"__SwiftNativeNSDictionaryBase");
@@ -25,13 +25,13 @@ static void getter(void **value, void **key, void **meta, void *object) {
         [PDLNonThreadSafeSwiftObjectObserverObject registerObject:dictionary];
     }
 
-    NSLog(@"getter %@", dictionary);
+//    NSLog(@"getter %@", dictionary);
     PDLNonThreadSafeSwiftObjectObserverObject *observer = [PDLNonThreadSafeSwiftObjectObserverObject observerObjectForObject:dictionary];
     [observer record:NO];
 }
 
 static void setter(void **value, void **key, void **meta, void *object) {
-    void *objectAddress = pdl_swift_validate_object(*(void **)pdl_swift_get_object());
+    void *objectAddress = pdl_swift_validate_object(object);
     id dictionary = (__bridge id)(objectAddress);
 
     Class aClass = NSClassFromString(@"__SwiftNativeNSDictionaryBase");
@@ -43,7 +43,7 @@ static void setter(void **value, void **key, void **meta, void *object) {
         [PDLNonThreadSafeSwiftObjectObserverObject registerObject:dictionary];
     }
 
-    NSLog(@"setter %@", dictionary);
+//    NSLog(@"setter %@", dictionary);
     PDLNonThreadSafeSwiftObjectObserverObject *observer = [PDLNonThreadSafeSwiftObjectObserverObject observerObjectForObject:dictionary];
     [observer record:YES];
 }
@@ -59,7 +59,7 @@ static void modify(void **value, void **key, void **meta, pdl_swift_dictionary_m
         [PDLNonThreadSafeSwiftObjectObserverObject registerObject:dictionary];
     }
 
-    NSLog(@"modify %@", object);
+//    NSLog(@"modify %@", object);
     PDLNonThreadSafeSwiftObjectObserverObject *observer = [PDLNonThreadSafeSwiftObjectObserverObject observerObjectForObject:dictionary];
     [observer record:YES];
 }
