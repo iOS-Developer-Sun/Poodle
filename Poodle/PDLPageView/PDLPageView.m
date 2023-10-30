@@ -91,7 +91,7 @@ static void init(PDLPageView *self) {
     _delegateRespondsDidEndScrollingAnimation = [delegate respondsToSelector:@selector(pageViewDidEndScrollingAnimation:)];
     _delegateRespondsDidScrollToIndex = [delegate respondsToSelector:@selector(pageView:didScrollToIndex:)];
     _delegateRespondsDidEndDecelerating = [delegate respondsToSelector:@selector(pageViewDidEndDecelerating:)];
-    _delegateRespondsDidEndDraggingWillDecelerate  = [delegate respondsToSelector:@selector(pageViewDidEndDragging:willDecelerate:)];
+    _delegateRespondsDidEndDraggingWillDecelerate = [delegate respondsToSelector:@selector(pageViewDidEndDragging:willDecelerate:)];
 
     [self.pageController reloadData];
 }

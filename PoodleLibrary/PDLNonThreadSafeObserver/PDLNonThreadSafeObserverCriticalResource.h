@@ -23,6 +23,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 - (PDLNonThreadSafeObserverAction *)record:(BOOL)isSetter;
 + (BOOL)recordsBacktrace;
+- (void)showActions;
+- (void)hideActions;
 
 @end
 

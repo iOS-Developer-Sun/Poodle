@@ -18,7 +18,7 @@
 @implementation PDLFloatPropertyDebugger
 
 - (instancetype)init {
-    self =  [super init];
+    self = [super init];
     if (self) {
         _maximumValue = 1;
         _minimumValue = 0;

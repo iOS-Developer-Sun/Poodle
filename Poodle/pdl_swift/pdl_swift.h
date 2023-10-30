@@ -12,14 +12,13 @@
 extern "C" {
 #endif
 
-extern void *pdl_swift_get_object(void);
 extern void *pdl_swift_validate_object(void *address);
 
 extern bool pdl_swift_registerAllocAction(void(*action)(void *cls, size_t requiredSize, size_t requiredAlignmentMask, void *ret));
-extern bool pdl_swift_registerAccessBeginAction(void(*action)(void *address, void **result, int8_t flags, int64_t reserved, void *ret));
-extern bool pdl_swift_registerAccessEndAction(void(*action)(void **result, void *ret));
+extern bool pdl_swift_registerAccessBeginAction(void(*action)(void *address, void **result, int8_t flags, int64_t reserved, void *ret, void *object));
+extern bool pdl_swift_registerAccessEndAction(void(*action)(void **result, void *ret, void *object));
 
-extern bool pdl_swift_registerDictionaryGetterAction(void(*action)(void **value, void **key, void **meta, void *object));
+extern bool pdl_swift_registerDictionaryGetterAction(void(*action)(void **key, void *object, void **meta));
 extern bool pdl_swift_registerDictionarySetterAction(void(*action)(void **value, void **key, void **meta, void *object));
 
 typedef struct {

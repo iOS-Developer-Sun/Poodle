@@ -381,12 +381,12 @@ static BOOL isSectionExecutable(const pdl_section *section) {
 }
 
 - (BOOL)isGlobalBlock {
-    BOOL isGlobalBlock =  [self.symbol isEqualToString:@"__NSConcreteGlobalBlock"];
+    BOOL isGlobalBlock = [self.symbol isEqualToString:@"__NSConcreteGlobalBlock"];
     return isGlobalBlock;
 }
 
 - (BOOL)isStackBlock {
-    BOOL isStackBlock =  [self.symbol isEqualToString:@"__NSConcreteStackBlock"];
+    BOOL isStackBlock = [self.symbol isEqualToString:@"__NSConcreteStackBlock"];
     return isStackBlock;
 }
 
@@ -580,7 +580,7 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
 
 - (void)setupFunctions {
     pdl_mach_object *machObject = (pdl_mach_object *)self.object;
-    const struct linkedit_data_command *function_starts =  machObject->function_starts_linkedit_data_command;
+    const struct linkedit_data_command *function_starts = machObject->function_starts_linkedit_data_command;
     if (!function_starts || function_starts->datasize == 0) {
         return;
     }
@@ -952,7 +952,7 @@ static bool pdl_reg_is_called_saved(uint32_t reg) {
     uint64_t delta = 0;
 
     do {
-        uint64_t value  = *(uint64_t *)(((void *)self.object->header) + offset);
+        uint64_t value = *(uint64_t *)(((void *)self.object->header) + offset);
         bool isBind = (value & 0x8000000000000000ULL);
         delta = (value >> 51) & 0xFFF;
         if (isBind) {

@@ -9,7 +9,6 @@
 #import "NSObject+PDLMethod.h"
 #import <pthread.h>
 #import <objc/runtime.h>
-#import "NSObject+PDLImplementationInterceptor.h"
 #import "pdl_list.h"
 #import "pdl_thread_storage.h"
 
@@ -62,11 +61,12 @@ extern void PDLMethodEntryFull_stret(__unsafe_unretained id, SEL);
 
 __attribute__((visibility("hidden")))
 void PDLMethodBefore(__unsafe_unretained id self, SEL _cmd) {
+    struct PDLImplementationInterceptorData *interceptorData = (struct PDLImplementationInterceptorData *)(void *)_cmd;
     PDLImplementationInterceptorRecover(_cmd);
     PDLMethodActions *actions = _data;
-    void(*beforeAction)(id, SEL) = (typeof(beforeAction))actions->beforeAction;
+    void(*beforeAction)(id, struct PDLImplementationInterceptorData *) = (typeof(beforeAction))actions->beforeAction;
     if (beforeAction) {
-        beforeAction(self, _cmd);
+        beforeAction(self, interceptorData);
     }
 }
 
@@ -81,11 +81,12 @@ void PDLMethodFullBefore(__unsafe_unretained id self, SEL _cmd, void *lr) {
     data->data.lr = lr;
     pdl_list_add_tail(list, node);
 
+    struct PDLImplementationInterceptorData *interceptorData = (struct PDLImplementationInterceptorData *)(void *)_cmd;
     PDLImplementationInterceptorRecover(_cmd);
     PDLMethodActions *actions = _data;
-    void(*beforeAction)(id, SEL) = (typeof(beforeAction))actions->beforeAction;
+    void(*beforeAction)(id, struct PDLImplementationInterceptorData *) = (typeof(beforeAction))actions->beforeAction;
     if (beforeAction) {
-        beforeAction(self, _cmd);
+        beforeAction(self, interceptorData);
     }
 }
 
@@ -98,12 +99,13 @@ void *PDLMethodFullAfter(void) {
     __unsafe_unretained id self = data->data.self;
     SEL _cmd = (SEL)(void *)data->data.data;
     void *lr = data->data.lr;
+    struct PDLImplementationInterceptorData *interceptorData = (struct PDLImplementationInterceptorData *)(void *)_cmd;
     pdl_list_destroy_node(list, node);
     PDLImplementationInterceptorRecover(_cmd);
     PDLMethodActions *actions = _data;
-    void(*afterAction)(id, SEL) = (typeof(afterAction))actions->afterAction;
+    void(*afterAction)(id, struct PDLImplementationInterceptorData *) = (typeof(afterAction))actions->afterAction;
     if (afterAction) {
-        afterAction(self, _cmd);
+        afterAction(self, interceptorData);
     }
     return lr;
 }
@@ -186,7 +188,7 @@ static NSInteger addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAct
     return addInstanceMethodsActions(self, beforeAction, afterAction, methodFilter);
 }
 
-NSInteger pdl_addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(*_Nullable methodFilter)(SEL selector)) {
+NSInteger pdl_addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
     BOOL(^_Nullable filter)(SEL selector) = nil;
     if (methodFilter) {
         filter = ^BOOL(SEL selector) {

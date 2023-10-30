@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "NSObject+PDLImplementationInterceptor.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,7 +31,7 @@ NS_ASSUME_NONNULL_BEGIN
 /// @param afterAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @param methodFilter  return YES if you want to add.
 /// @return count added
-extern NSInteger pdl_addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(*_Nullable methodFilter)(SEL selector));
+extern NSInteger pdl_addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector));
 
 @end
 

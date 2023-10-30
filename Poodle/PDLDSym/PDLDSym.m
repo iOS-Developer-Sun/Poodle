@@ -199,7 +199,7 @@ static uint64_t read_uleb128(uint8_t **pointer, uint8_t *end) {
 
 - (void)findFunctions {
     pdl_mach_object *machObject = self.machObject;
-    const struct linkedit_data_command *function_starts =  machObject->function_starts_linkedit_data_command;
+    const struct linkedit_data_command *function_starts = machObject->function_starts_linkedit_data_command;
     if (!function_starts || function_starts->datasize == 0) {
         return;
     }

@@ -12,7 +12,7 @@
 
 @implementation PDLNonThreadSafeSwiftObjectObserver
 
-static void getter(void **value, void **key, void **meta, void *object) {
+static void getter(void **key, void *object, void **meta) {
     void *objectAddress = pdl_swift_validate_object(object);
     id dictionary = (__bridge id)(objectAddress);
 

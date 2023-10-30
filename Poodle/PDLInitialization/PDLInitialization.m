@@ -117,7 +117,7 @@ static void pdl_load(__unsafe_unretained id self, SEL _cmd) {
         }
 
         const char *name = pdl_objc_runtime_category_get_name(category);
-        Class aClass = pdl_objc_runtime_category_get_class(category);
+        Class aClass = (__bridge Class)(pdl_objc_runtime_category_get_class(category));
         pdl_objc_runtime_method_list method_list = pdl_objc_runtime_category_get_class_method_list(category);
         if (!method_list) {
             continue;
@@ -161,9 +161,9 @@ static void pdl_load(__unsafe_unretained id self, SEL _cmd) {
     }
 
     size_t classCount = 0;
-    Class *classes = pdl_objc_runtime_nonlazy_classes(header, &classCount);
+    pdl_objc_runtime_class *classes = pdl_objc_runtime_nonlazy_classes(header, &classCount);
     for (unsigned int i = 0; i < classCount; i++) {
-        Class aClass = classes[i];
+        Class aClass = (__bridge Class)(classes[i]);
         assert(aClass);
         unsigned int methodCount = 0;
         Method *methodList = class_copyMethodList(object_getClass(aClass), &methodCount);
