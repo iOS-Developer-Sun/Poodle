@@ -151,11 +151,13 @@ void pdl_debug_halt(void) {
 
 __attribute__((used))
 static void pdl_instanceBefore(__unsafe_unretained id self, SEL _cmd) {
+    PDLImplementationInterceptorRecover(_cmd);
     printf("-[<%s:%p> %s]\n", class_getName(object_getClass(self)), self, sel_getName(_cmd));
 }
 
 __attribute__((used))
 static void pdl_classBefore(__unsafe_unretained id self, SEL _cmd) {
+    PDLImplementationInterceptorRecover(_cmd);
     printf("+[<%s:%p> %s]\n", class_getName(object_getClass(self)), self, sel_getName(_cmd));
 }
 

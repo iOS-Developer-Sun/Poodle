@@ -96,9 +96,8 @@ static id pdl_nonThreadSafeSwiftVariableAllocWithZone(__unsafe_unretained id sel
 
 #pragma mark - public methods
 
-static void pdl_swift_beginAccessAction(void *address, void **result, int8_t flags, int64_t reserved, void *ret) {
-    void *possibleObjectAddress = pdl_swift_get_object();
-    void *objectAddress = pdl_swift_validate_object(possibleObjectAddress);
+static void pdl_swift_beginAccessAction(void *address, void **result, int8_t flags, int64_t reserved, void *ret, void *object) {
+    void *objectAddress = pdl_swift_validate_object(object);
     intptr_t offset = address - objectAddress;
     if (!(offset > 0 && offset < 0x10000 && objectAddress)) {
         return;
@@ -132,19 +131,15 @@ static void pdl_swift_beginAccessAction(void *address, void **result, int8_t fla
         }
     }
 
-    id object = (__bridge id)objectAddress;
+    id ocObject = (__bridge id)objectAddress;
     BOOL isSetter = flags & 1;
-    PDLNonThreadSafeSwiftVariableObserverObject *observer = [PDLNonThreadSafeSwiftVariableObserverObject observerObjectForObject:object];
+    PDLNonThreadSafeSwiftVariableObserverObject *observer = [PDLNonThreadSafeSwiftVariableObserverObject observerObjectForObject:ocObject];
     if (!observer) {
         return;
     }
 
     [observer recordClass:aClass variableName:variableName isSetter:isSetter];
 }
-
-//static void pdl_swift_endAccessAction(void **result, void *ret) {
-//    ;
-//}
 
 static void pdl_swift_allocObjectAction(void *cls, size_t requiredSize, size_t requiredAlignmentMask, void *object) {
     void *superClass = pdl_get_swift_superclass(cls);
@@ -156,7 +151,6 @@ static void pdl_swift_allocObjectAction(void *cls, size_t requiredSize, size_t r
 + (void)observeWithClassFilter:(PDLNonThreadSafeSwiftVariableObserver_ClassFilter)classFilter classVariableFilter:(PDLNonThreadSafeSwiftVariableObserver_ClassVariableFilter)classVariableFilter {
     pdl_swift_registerAllocAction(&pdl_swift_allocObjectAction);
     pdl_swift_registerAccessBeginAction(&pdl_swift_beginAccessAction);
-//    pdl_swift_registerAccessEndAction(&pdl_swift_endAccessAction);
 
     NSMutableSet *classes = [NSMutableSet set];
     {

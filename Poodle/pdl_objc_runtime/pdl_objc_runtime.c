@@ -124,18 +124,18 @@ static uint8_t *getDataSection(const void *mhdr, const char *sectname, size_t *o
 
 #pragma mark -
 
-Class *pdl_objc_runtime_classes(const void *header, size_t *count) {
+pdl_objc_runtime_class *pdl_objc_runtime_classes(const void *header, size_t *count) {
     size_t size = 0;
-    Class *data = (Class *)getDataSection(header, "__objc_classlist", &size);
+    pdl_objc_runtime_class *data = (pdl_objc_runtime_class *)getDataSection(header, "__objc_classlist", &size);
     if (count) {
         *count = size / sizeof(Class);
     }
     return data;
 }
 
-Class *pdl_objc_runtime_nonlazy_classes(const void *header, size_t *count) {
+pdl_objc_runtime_class *pdl_objc_runtime_nonlazy_classes(const void *header, size_t *count) {
     size_t size = 0;
-    Class *data = (Class *)getDataSection(header, "__objc_nlclslist", &size);
+    pdl_objc_runtime_class *data = (pdl_objc_runtime_class *)getDataSection(header, "__objc_nlclslist", &size);
     if (count) {
         *count = size / sizeof(Class);
     }
@@ -160,12 +160,25 @@ pdl_objc_runtime_category *pdl_objc_runtime_nonlazy_categories(const void *heade
     return data;
 }
 
+pdl_objc_runtime_method_list pdl_objc_runtime_class_get_class_method_list(pdl_objc_runtime_class cls) {
+    struct class_t *c = (struct class_t *)cls;
+    struct class_t *meta = c->isa;
+    struct class_ro_t *ro = meta->ro;
+    return pdl_ptrauth_strip_function(ro->methods);
+}
+
+pdl_objc_runtime_method_list pdl_objc_runtime_class_get_instance_method_list(pdl_objc_runtime_class cls) {
+    struct class_t *c = (struct class_t *)cls;
+    struct class_ro_t *ro = c->ro;
+    return pdl_ptrauth_strip_function(ro->methods);
+}
+
 const char *pdl_objc_runtime_category_get_name(pdl_objc_runtime_category category) {
     struct category_t *c = (struct category_t *)category;
     return c->name;
 }
 
-Class pdl_objc_runtime_category_get_class(pdl_objc_runtime_category category) {
+pdl_objc_runtime_class pdl_objc_runtime_category_get_class(pdl_objc_runtime_category category) {
     struct category_t *c = (struct category_t *)category;
     return c->cls;
 }

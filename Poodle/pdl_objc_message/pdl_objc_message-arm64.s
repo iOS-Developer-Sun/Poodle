@@ -25,7 +25,11 @@ _pdl_objc_msgSend:
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     adrp    x9, _pdl_objc_msgSend_original@PAGE
     ldr     x9, [x9, _pdl_objc_msgSend_original@PAGEOFF]
+#ifdef __arm64e__
+    braaz   x9
+#else
     br      x9
+#endif
 
 _pdl_objc_msgSendFull:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
@@ -52,7 +56,11 @@ _pdl_objc_msgSendSuper:
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     adrp    x9, _pdl_objc_msgSendSuper_original@PAGE
     ldr     x9, [x9, _pdl_objc_msgSendSuper_original@PAGEOFF]
+#ifdef __arm64e__
+    braaz   x9
+#else
     br      x9
+#endif
 
 _pdl_objc_msgSendSuperFull:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
@@ -79,7 +87,11 @@ _pdl_objc_msgSendSuper2:
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     adrp    x9, _pdl_objc_msgSendSuper2_original@PAGE
     ldr     x9, [x9, _pdl_objc_msgSendSuper2_original@PAGEOFF]
+#ifdef __arm64e__
+    braaz   x9
+#else
     br      x9
+#endif
 
 _pdl_objc_msgSendSuper2Full:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
@@ -98,6 +110,6 @@ _pdl_objc_msgSendSuper2Full:
     mov     x9, x0
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     mov     lr, x9
-ret
+    ret
 
 #endif

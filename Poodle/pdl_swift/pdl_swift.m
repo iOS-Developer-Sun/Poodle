@@ -13,21 +13,21 @@
 #import <dlfcn.h>
 #import <pthread/pthread.h>
 
-__attribute__((naked))
-void *pdl_swift_get_object(void) {
-#if defined(__arm64__)
-    __asm__ volatile ("mov x0, x20 \n ret");
-#elif defined(__x86_64__)
-    __asm__ volatile ("mov %r13, %rax \n ret");
-#endif
-}
+//__attribute__((naked))
+//void *pdl_swift_get_object(void) {
+//#if defined(__arm64__)
+//    __asm__ volatile ("mov x0, x20 \n ret");
+//#elif defined(__x86_64__)
+//    __asm__ volatile ("mov %r13, %rax \n ret");
+//#endif
+//}
 
 void *pdl_swift_validate_object(void *address) {
 //    void *header = NULL;
 //    pdl_malloc_find(address, NULL, &header);
 //    return header;
 
-    BOOL isNotPointer = address < (void *)0x100000000UL;
+    BOOL isNotPointer = address < (void *)0x100000000UL || address > (void *)0x000007FFFFFFFFFFUL;
     if (isNotPointer) {
         return NULL;
     }
@@ -130,6 +130,7 @@ static void *pdl_swift_allocObject(void *cls, size_t requiredSize, size_t requir
     void *k = &pdl_swift_allocObject;
     typeof(&pdl_swift_allocObject) original = pdl_swift_getOriginal(k);
     void *ret = original(cls, requiredSize, requiredAlignmentMask);
+
     pdl_array_t actions = pdl_swift_actions(k);
     if (actions) {
         unsigned int count = pdl_array_count(actions);
@@ -149,78 +150,84 @@ bool pdl_swift_registerAllocAction(void(*action)(void *cls, size_t requiredSize,
 
 #pragma mark - swift_beginAccess
 
-extern void *swift_beginAccess(void *address, void **result, int8_t flags, int64_t reserved);
-static void *pdl_swift_beginAccess(void *address, void **result, int8_t flags, int64_t reserved) {
+__attribute__((swiftcall))
+extern void *swift_beginAccess(void *address, void **result, int8_t flags, int64_t reserved, __attribute__((swift_context)) void *object);
+
+__attribute__((swiftcall))
+static void *pdl_swift_beginAccess(void *address, void **result, int8_t flags, int64_t reserved, __attribute__((swift_context)) void *object) {
     void *k = &pdl_swift_beginAccess;
     typeof(&pdl_swift_beginAccess) original = pdl_swift_getOriginal(k);
-    void *ret = original(address, result, flags, reserved);
+    void *ret = original(address, result, flags, reserved, object);
+
     pdl_array_t actions = pdl_swift_actions(k);
     if (actions) {
         unsigned int count = pdl_array_count(actions);
         for (unsigned int i = 0; i < count; i++) {
-            void(*action)(void *address, void **result, int8_t flags, int64_t reserved, void *ret) = pdl_array_get(actions, i);
+            void(*action)(void *address, void **result, int8_t flags, int64_t reserved, void *ret, void *object) = pdl_array_get(actions, i);
             if (action) {
-                action(address, result, flags, reserved, ret);
+                action(address, result, flags, reserved, ret, object);
             }
         }
     }
     return ret;
 }
 
-bool pdl_swift_registerAccessBeginAction(void(*action)(void *address, void **result, int8_t flags, int64_t reserved, void *ret)) {
+bool pdl_swift_registerAccessBeginAction(void(*action)(void *address, void **result, int8_t flags, int64_t reserved, void *ret, void *object)) {
     return pdl_swift_registerAction((void *)action, "swift_beginAccess", (void *)&pdl_swift_beginAccess);
 }
 
 #pragma mark - swift_endAccess
 
-extern void *swift_endAccess(void **result);
-static void *pdl_swift_endAccess(void **result) {
+__attribute__((swiftcall))
+extern void *swift_endAccess(void **result, __attribute__((swift_context)) void *object);
+
+__attribute__((swiftcall))
+static void *pdl_swift_endAccess(void **result, __attribute__((swift_context)) void *object) {
     void *k = &pdl_swift_endAccess;
     typeof(&pdl_swift_endAccess) original = pdl_swift_getOriginal(k);
-    void *ret = original(result);
+    void *ret = original(result, object);
+
     pdl_array_t actions = pdl_swift_actions(k);
     if (actions) {
         unsigned int count = pdl_array_count(actions);
         for (unsigned int i = 0; i < count; i++) {
-            void(*action)(void **result, void *ret) = pdl_array_get(actions, i);
+            void(*action)(void **result, void *ret, void *object) = pdl_array_get(actions, i);
             if (action) {
-                action(result, ret);
+                action(result, ret, object);
             }
         }
     }
     return ret;
 }
 
-bool pdl_swift_registerAccessEndAction(void(*action)(void **result, void *ret)) {
+bool pdl_swift_registerAccessEndAction(void(*action)(void **result, void *ret, void *object)) {
     return pdl_swift_registerAction((void *)action, "swift_endAccess", (void *)&pdl_swift_endAccess);
 }
 
 #pragma mark - Swift.Dictionary.subscript.getter
 
 __attribute__((swiftcall))
-extern void $sSDyq_Sgxcig(__attribute__((swift_indirect_result))void **indirect_result, void **value, void **key, void **meta, void *a, void *b, __attribute__((swift_context)) void **context);
+extern void $sSDyq_Sgxcig(__attribute__((swift_indirect_result))void **indirect_result, void **key, void *dictionary, void **meta, void *a, void *b, __attribute__((swift_context)) void **context);
 
 __attribute__((swiftcall))
-static void pdl_sSDyq_Sgxcig(__attribute__((swift_indirect_result))void **indirect_result, void **value, void **key, void **meta, void *a, void *b, __attribute__((swift_context)) void **context) {
-    void *object = *context;
+static void pdl_sSDyq_Sgxcig(__attribute__((swift_indirect_result))void **indirect_result, void **key, void *dictionary, void **meta, void *a, void *b, __attribute__((swift_context)) void **context) {
     void *k = &pdl_sSDyq_Sgxcig;
     typeof(&pdl_sSDyq_Sgxcig) original = pdl_swift_getOriginal(k);
-    original(indirect_result, value, key, meta, a, b, context);
-    assert(object == *context);
+    original(indirect_result, key, dictionary, meta, a, b, context);
 
     pdl_array_t actions = pdl_swift_actions(k);
     if (actions) {
         unsigned int count = pdl_array_count(actions);
         for (unsigned int i = 0; i < count; i++) {
-            void(*action)(void **value, void **key, void **meta, void *object) = pdl_array_get(actions, i);
+            void(*action)(void **key, void *object, void **meta) = pdl_array_get(actions, i);
             if (action) {
-                action(value, key, meta, object);
+                action(key, dictionary, meta);
             }
         }
     }
 }
 
-bool pdl_swift_registerDictionaryGetterAction(void(*action)(void **value, void **key, void **meta, void *object)) {
+bool pdl_swift_registerDictionaryGetterAction(void(*action)(void **key, void *object, void **meta)) {
     return pdl_swift_registerAction((void *)action, "$sSDyq_Sgxcig", (void *)&pdl_sSDyq_Sgxcig);
 }
 
@@ -263,9 +270,8 @@ static pdl_swift_dictionary_modify_ret pdl_sSDyq_SgxciM(void **value, void **key
     void *object = *context;
     void *k = &pdl_sSDyq_SgxciM;
     typeof(&pdl_sSDyq_SgxciM) original = pdl_swift_getOriginal(k);
-    assert(object == *context);
-
     pdl_swift_dictionary_modify_ret ret = original(value, key, meta, context);
+
     pdl_array_t actions = pdl_swift_actions(k);
     if (actions) {
         unsigned int count = pdl_array_count(actions);
@@ -282,3 +288,5 @@ static pdl_swift_dictionary_modify_ret pdl_sSDyq_SgxciM(void **value, void **key
 bool pdl_swift_registerDictionaryModifyAction(void(*action)(void **value, void **key, void **meta, pdl_swift_dictionary_modify_ret ret, void *object)) {
     return pdl_swift_registerAction((void *)action, "$sSDyq_SgxciM", (void *)&pdl_sSDyq_SgxciM);
 }
+
+// sSayxSiciM

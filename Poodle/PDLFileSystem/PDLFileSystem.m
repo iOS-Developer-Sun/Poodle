@@ -110,7 +110,7 @@
     NSString *bundleIdentifier = [NSBundle mainBundle].bundleIdentifier;
     for (NSString *filename in filenames) {
         if ([filename.pathExtension isEqualToString:@"plist"]) {
-            NSString *suiteName =  filename.stringByDeletingPathExtension;
+            NSString *suiteName = filename.stringByDeletingPathExtension;
             if (![suiteName isEqualToString:bundleIdentifier]) {
                 NSUserDefaults *userDefaults = [[NSUserDefaults alloc] initWithSuiteName:suiteName];
                 clear(userDefaults);
@@ -173,7 +173,7 @@
     if (data) {
         NSUInteger length = data.length;
         const unsigned char *bytes = (const unsigned char *)data.bytes;
-        NSMutableString *hexString  = [NSMutableString string];
+        NSMutableString *hexString = [NSMutableString string];
         for (NSUInteger i = 0; i < length; i++) {
             [hexString appendFormat:@"%02x", bytes[i]];
         }

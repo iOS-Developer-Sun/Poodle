@@ -27,10 +27,12 @@ static id pdl_threadSafeMethodLock(__unsafe_unretained id self) {
 }
 
 __unused static void PDLThreadSafetifyMethodBefore(__unsafe_unretained id self, SEL _cmd) {
+    PDLImplementationInterceptorRecover(_cmd);
     objc_sync_enter(pdl_threadSafeMethodLock(self));
 }
 
 __unused static void PDLThreadSafetifyMethodAfter(__unsafe_unretained id self, SEL _cmd) {
+    PDLImplementationInterceptorRecover(_cmd);
     objc_sync_exit(pdl_threadSafeMethodLock(self));
 }
 

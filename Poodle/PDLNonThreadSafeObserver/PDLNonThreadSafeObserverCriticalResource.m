@@ -95,6 +95,19 @@
     }
 }
 
+- (void)showActions {
+    for (PDLNonThreadSafeObserverAction *action in self.actions) {
+        action.backtrace.name = [NSString stringWithFormat:@"%@-%p", self.class, self];
+        [action.backtrace show];
+    }
+}
+
+- (void)hideActions {
+    for (PDLNonThreadSafeObserverAction *action in self.actions) {
+        [action.backtrace hide];
+    }
+}
+
 + (BOOL)recordsBacktrace {
     return NO;
 }

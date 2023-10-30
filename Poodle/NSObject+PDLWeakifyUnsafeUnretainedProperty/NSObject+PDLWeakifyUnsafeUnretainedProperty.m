@@ -64,7 +64,7 @@ static id pdl_weakPropertyLock(__unsafe_unretained id self, Class aClass, ptrdif
 }
 
 static void pdl_addCxxDestructor(__unsafe_unretained id self, Class aClass, ptrdiff_t offset) {
-    PDLWeakifyUnsafeUnretainedPropertyCxxDestructor *cxxDestructor =  objc_getAssociatedObject(self, &pdl_addCxxDestructor);
+    PDLWeakifyUnsafeUnretainedPropertyCxxDestructor *cxxDestructor = objc_getAssociatedObject(self, &pdl_addCxxDestructor);
     @synchronized (pdl_weakPropertyLock(self, aClass, offset)) {
         if (cxxDestructor == nil) {
             cxxDestructor = [[PDLWeakifyUnsafeUnretainedPropertyCxxDestructor alloc] init];
