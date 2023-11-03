@@ -149,10 +149,7 @@ static NSInteger addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAct
             continue;
         }
 
-        BOOL result = pdl_intercept(aClass, selector, nil, ^IMP(BOOL exists, NSNumber **isStructRetNumber, Method method, void **data) {
-            if (!exists) {
-                return NULL;
-            }
+        BOOL result = pdl_interceptMethod(aClass, method, nil, ^IMP(NSNumber *__autoreleasing *isStructRetNumber, void **data) {
             NSNumber *number = *isStructRetNumber;
             if (number) {
                 *data = actions;
