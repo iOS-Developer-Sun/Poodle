@@ -110,13 +110,26 @@ void *PDLMethodFullAfter(void) {
     return lr;
 }
 
+static bool pdl_initialize(void) {
+    static bool enabled = false;
+    static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&lock);
+    static bool init = false;
+    if (!init) {
+        pdl_thread_storage_register(_pdl_storage_key, &pdl_methods_list_destroy);
+        init = true;
+        enabled = pdl_thread_storage_enabled();
+    }
+    pthread_mutex_unlock(&lock);
+    return enabled;
+}
+
 static NSInteger addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
 #ifdef __i386__
     return 0;
 #else
     NSUInteger ret = -1;
-    pdl_thread_storage_register(_pdl_storage_key, &pdl_methods_list_destroy);
-    if (!pdl_thread_storage_enabled()) {
+    if (!pdl_initialize()) {
         return -1;
     }
 
@@ -193,6 +206,58 @@ NSInteger pdl_addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction
         };
     }
     return addInstanceMethodsActions(aClass, beforeAction, afterAction, filter);
+}
+
+BOOL pdl_addInstanceMethodActions(Class aClass, Method method, IMP _Nullable beforeAction, IMP _Nullable afterAction) {
+#ifdef __i386__
+    return NO;
+#else
+    BOOL ret = NO;
+    if (!pdl_initialize()) {
+        return NO;
+    }
+
+    if (!beforeAction && !afterAction) {
+        return NO;
+    }
+
+    PDLMethodActions *actions = malloc(sizeof(PDLMethodActions));
+    if (!actions) {
+        return NO;
+    }
+
+    actions->beforeAction = beforeAction;
+    actions->afterAction = afterAction;
+
+    IMP imp = (IMP)&PDLMethodEntry;
+    IMP imp_stret = (IMP)&PDLMethodEntry_stret;
+    if (afterAction) {
+        imp = (IMP)&PDLMethodEntryFull;
+        imp_stret = (IMP)&PDLMethodEntryFull_stret;
+    }
+
+    BOOL result = pdl_interceptMethod(aClass, method, nil, ^IMP(NSNumber *__autoreleasing *isStructRetNumber, void **data) {
+        NSNumber *number = *isStructRetNumber;
+        if (number) {
+            *data = actions;
+            if (number.boolValue) {
+                return imp_stret;
+            } else {
+                return imp;
+            }
+        } else {
+            return NULL;
+        }
+    });
+
+    if (result) {
+        ret = YES;
+    }
+    if (!ret) {
+        free(actions);
+    }
+    return ret;
+#endif
 }
 
 @end
