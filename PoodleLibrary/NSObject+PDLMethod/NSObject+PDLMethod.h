@@ -27,11 +27,19 @@ NS_ASSUME_NONNULL_BEGIN
 + (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP _Nullable)beforeAction afterAction:(IMP _Nullable)afterAction methodFilter:(BOOL(^_Nullable)(SEL selector))methodFilter;
 
 /// hook all instance methods for class aClass
+/// @param aClass Class
 /// @param beforeAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @param afterAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @param methodFilter  return YES if you want to add.
 /// @return count added
 extern NSInteger pdl_addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector));
+
+/// hook instance method for class aClass
+/// @param aClass Class
+/// @param beforeAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
+/// @param afterAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
+/// @return sucessed or not
+extern BOOL pdl_addInstanceMethodActions(Class aClass, Method method, IMP _Nullable beforeAction, IMP _Nullable afterAction);
 
 @end
 
