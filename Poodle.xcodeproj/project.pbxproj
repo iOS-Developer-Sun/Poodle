@@ -581,6 +581,11 @@
 		C0E172B12ACEC91A0075DB1C /* pdl_swift.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E172B02ACEC9190075DB1C /* pdl_swift.m */; };
 		C0E172BB2ACEC94E0075DB1C /* pdl_swift.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E172B02ACEC9190075DB1C /* pdl_swift.m */; };
 		C0E172BC2ACEC9570075DB1C /* pdl_swift.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0E172AF2ACEC9190075DB1C /* pdl_swift.h */; };
+		C0E537952AFB74E300C5566A /* pdl_trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = C0E537932AFB74E300C5566A /* pdl_trampoline.c */; };
+		C0E5379F2AFB75AD00C5566A /* pdl_trampoline.c in Sources */ = {isa = PBXBuildFile; fileRef = C0E537932AFB74E300C5566A /* pdl_trampoline.c */; };
+		C0E537A02AFB75B600C5566A /* pdl_trampoline.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0E537942AFB74E300C5566A /* pdl_trampoline.h */; };
+		C0E537A42AFB7E2E00C5566A /* pdl_trampoline-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = C0E537A32AFB7E2E00C5566A /* pdl_trampoline-arm64.s */; };
+		C0E537A52AFB7E2E00C5566A /* pdl_trampoline-arm64.s in Sources */ = {isa = PBXBuildFile; fileRef = C0E537A32AFB7E2E00C5566A /* pdl_trampoline-arm64.s */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -1367,6 +1372,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = C0E172B22ACEC92B0075DB1C;
 			remoteInfo = pdl_swift;
+		};
+		C0E537A12AFB75C200C5566A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B88DB4BF22EAF14B003D20F6 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = C0E537962AFB74F700C5566A;
+			remoteInfo = pdl_trampoline;
 		};
 /* End PBXContainerItemProxy section */
 
@@ -2547,6 +2559,16 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0E537992AFB74F700C5566A /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "${TARGETNAME}";
+			dstSubfolderSpec = 16;
+			files = (
+				C0E537A02AFB75B600C5566A /* pdl_trampoline.h in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
@@ -3116,6 +3138,10 @@
 		C0E172AF2ACEC9190075DB1C /* pdl_swift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_swift.h; sourceTree = "<group>"; };
 		C0E172B02ACEC9190075DB1C /* pdl_swift.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = pdl_swift.m; sourceTree = "<group>"; };
 		C0E172BA2ACEC92B0075DB1C /* libpdl_swift.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_swift.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0E537932AFB74E300C5566A /* pdl_trampoline.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_trampoline.c; sourceTree = "<group>"; };
+		C0E537942AFB74E300C5566A /* pdl_trampoline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_trampoline.h; sourceTree = "<group>"; };
+		C0E5379E2AFB74F700C5566A /* libpdl_trampoline.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_trampoline.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0E537A32AFB7E2E00C5566A /* pdl_trampoline-arm64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "pdl_trampoline-arm64.s"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -3917,6 +3943,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0E537982AFB74F700C5566A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -4414,6 +4447,7 @@
 				C03D87722A8E2BA9008ABFD3 /* libPDLMachObject.a */,
 				C0E172BA2ACEC92B0075DB1C /* libpdl_swift.a */,
 				C03C402D2AD56036005836A4 /* libPDLDeadLockObserver.a */,
+				C0E5379E2AFB74F700C5566A /* libpdl_trampoline.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -5267,6 +5301,7 @@
 				B8E56E0223D70016008D2DA1 /* pdl_systemcall */,
 				B879531A2486856000798005 /* pdl_thread */,
 				B88865DE24C02A9D00D58BC7 /* pdl_thread_storage */,
+				C0E537922AFB74E300C5566A /* pdl_trampoline */,
 				B8E56EC823D7001A008D2DA1 /* pdl_utils */,
 				B85C3E41263945C70037EE57 /* pdl_vm */,
 				B8A73D68269821BB00713B8B /* pdl_zombie */,
@@ -5570,6 +5605,16 @@
 				C0E172B02ACEC9190075DB1C /* pdl_swift.m */,
 			);
 			path = pdl_swift;
+			sourceTree = "<group>";
+		};
+		C0E537922AFB74E300C5566A /* pdl_trampoline */ = {
+			isa = PBXGroup;
+			children = (
+				C0E537A32AFB7E2E00C5566A /* pdl_trampoline-arm64.s */,
+				C0E537932AFB74E300C5566A /* pdl_trampoline.c */,
+				C0E537942AFB74E300C5566A /* pdl_trampoline.h */,
+			);
+			path = pdl_trampoline;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -6483,6 +6528,7 @@
 				B8B873B8264682D6004D9656 /* PBXTargetDependency */,
 				B8B873BA264682D6004D9656 /* PBXTargetDependency */,
 				B8B873BC264682D6004D9656 /* PBXTargetDependency */,
+				C0E537A22AFB75C200C5566A /* PBXTargetDependency */,
 				B8B873BE264682D6004D9656 /* PBXTargetDependency */,
 				B8B873C0264682D6004D9656 /* PBXTargetDependency */,
 				B8A73D782698292B00713B8B /* PBXTargetDependency */,
@@ -7752,6 +7798,24 @@
 			productReference = C0E172BA2ACEC92B0075DB1C /* libpdl_swift.a */;
 			productType = "com.apple.product-type.library.static";
 		};
+		C0E537962AFB74F700C5566A /* pdl_trampoline */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = C0E5379B2AFB74F700C5566A /* Build configuration list for PBXNativeTarget "pdl_trampoline" */;
+			buildPhases = (
+				C0E537972AFB74F700C5566A /* Sources */,
+				C0E537982AFB74F700C5566A /* Frameworks */,
+				C0E537992AFB74F700C5566A /* CopyFiles */,
+				C0E5379A2AFB74F700C5566A /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = pdl_trampoline;
+			productName = "CAAnimation+PDLExtension";
+			productReference = C0E5379E2AFB74F700C5566A /* libpdl_trampoline.a */;
+			productType = "com.apple.product-type.library.static";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -7848,6 +7912,7 @@
 				B8FC6CDD22EF0723005B91DE /* pdl_systemcall */,
 				B87953202486862E00798005 /* pdl_thread */,
 				B88865E224C02AA600D58BC7 /* pdl_thread_storage */,
+				C0E537962AFB74F700C5566A /* pdl_trampoline */,
 				B8FC6D5422EF0A9B005B91DE /* pdl_utils */,
 				B85C3F71263947030037EE57 /* pdl_vm */,
 				B8A73D6C2698290100713B8B /* pdl_zombie */,
@@ -9964,6 +10029,24 @@
 			shellPath = /bin/sh;
 			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
 		};
+		C0E5379A2AFB74F700C5566A /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "sh \"${PROJECT_DIR}/PoodleLibraryMerge.sh\"\n";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -10283,6 +10366,7 @@
 				B8A6F4F025428B7400426AD1 /* PDLFormViewCell.m in Sources */,
 				B8528195255132CA00B74F87 /* PDLBacktraceRecorder.m in Sources */,
 				B85D45E1240E859000CBF758 /* PDLFontViewController.m in Sources */,
+				C0E537952AFB74E300C5566A /* pdl_trampoline.c in Sources */,
 				B85D45E2240E859000CBF758 /* PDLFormView.m in Sources */,
 				B8672A5D259B1014008082E5 /* PDLSessionTaskStatistics.m in Sources */,
 				C010A6D927114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */,
@@ -10341,6 +10425,7 @@
 				B88865F324C02F1A00D58BC7 /* pdl_thread_storage.c in Sources */,
 				B8220D352681DFA4002018D8 /* dsc_iterator.cpp in Sources */,
 				C03D591F2A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.m in Sources */,
+				C0E537A42AFB7E2E00C5566A /* pdl_trampoline-arm64.s in Sources */,
 				B8528194255132CA00B74F87 /* PDLBacktraceRecord.m in Sources */,
 				C010A6E027114D8300A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */,
 				B85D45FD240E859000CBF758 /* PDLPropertyDebugger.m in Sources */,
@@ -11171,6 +11256,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		C0E537972AFB74F700C5566A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				C0E537A52AFB7E2E00C5566A /* pdl_trampoline-arm64.s in Sources */,
+				C0E5379F2AFB75AD00C5566A /* pdl_trampoline.c in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -11733,6 +11827,11 @@
 			isa = PBXTargetDependency;
 			target = C0E172B22ACEC92B0075DB1C /* pdl_swift */;
 			targetProxy = C0E172BD2ACECAC40075DB1C /* PBXContainerItemProxy */;
+		};
+		C0E537A22AFB75C200C5566A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = C0E537962AFB74F700C5566A /* pdl_trampoline */;
+			targetProxy = C0E537A12AFB75C200C5566A /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -14511,6 +14610,28 @@
 			};
 			name = Release;
 		};
+		C0E5379C2AFB74F700C5566A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		C0E5379D2AFB74F700C5566A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -15554,6 +15675,15 @@
 			buildConfigurations = (
 				C0E172B82ACEC92B0075DB1C /* Debug */,
 				C0E172B92ACEC92B0075DB1C /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		C0E5379B2AFB74F700C5566A /* Build configuration list for PBXNativeTarget "pdl_trampoline" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				C0E5379C2AFB74F700C5566A /* Debug */,
+				C0E5379D2AFB74F700C5566A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
