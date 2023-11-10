@@ -260,4 +260,42 @@ BOOL pdl_addInstanceMethodActions(Class aClass, Method method, IMP _Nullable bef
 #endif
 }
 
+#pragma mark - Swift
+
+struct PDLTargetClassMetadata {
+    void *metaClass;
+    void *superClass;
+    void *cacheData1;
+    void *cacheData2;
+    void *data;
+    uint32_t flags;
+    uint32_t instanceAddressPoint;
+    uint32_t instanceSize;
+    uint16_t instanceAlignMask;
+    uint16_t reserved;
+    uint32_t classSize;
+    uint32_t classAddressPoint;
+    void *description;
+    IMP ivarDestroyer;
+
+    // After this come the class members, laid out as follows:
+    //   - class members for the superclass (recursively)
+    //   - metadata reference for the parent, if applicable
+    //   - generic parameters for this class
+    //   - class variables (if we choose to support these)
+    //   - "tabulated" virtual methods
+};
+
+NSInteger pdl_addSwiftMethodActions(Class aClass, PDLSwiftMethodAction _Nullable beforeAction, PDLSwiftMethodAction _Nullable afterAction, BOOL(^_Nullable methodFilter)(void *imp)) {
+    struct PDLTargetClassMetadata *meta = (__bridge struct PDLTargetClassMetadata *)(aClass);
+    void **begin = (void **)&meta->ivarDestroyer;
+    void **end = ((void *)meta) - meta->classAddressPoint + meta->classSize;
+    for (void **current = begin; current < end; current++) {
+        IMP imp = *current;
+        *current = imp;
+    }
+
+    return 0;
+}
+
 @end

@@ -13,6 +13,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSObject (PDLMethod)
 
+typedef void (*PDLSwiftMethodAction)(void *_Nonnull);
+
 /// hook all instance methods for class self
 /// @param beforeAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @param afterAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
@@ -36,10 +38,19 @@ extern NSInteger pdl_addInstanceMethodsActions(Class aClass, IMP _Nullable befor
 
 /// hook instance method for class aClass
 /// @param aClass Class
+/// @param method Method
 /// @param beforeAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @param afterAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @return sucessed or not
 extern BOOL pdl_addInstanceMethodActions(Class aClass, Method method, IMP _Nullable beforeAction, IMP _Nullable afterAction);
+
+/// hook instance method for class aClass
+/// @param aClass Class
+/// @param beforeAction PDLSwiftMethodAction like static void beforeAction(void *_imp);
+/// @param afterAction PDLSwiftMethodAction like static void beforeAction(void *_imp);
+/// @param methodFilter  return YES if you want to add.
+/// @return count added
+extern NSInteger pdl_addSwiftMethodActions(Class aClass, PDLSwiftMethodAction _Nullable beforeAction, PDLSwiftMethodAction _Nullable afterAction, BOOL(^_Nullable methodFilter)(void *imp));
 
 @end
 

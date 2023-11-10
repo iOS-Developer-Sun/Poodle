@@ -322,6 +322,13 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/pdl_spinlock'
         end
 
+        PoodleSubspec(s, 'pdl_trampoline', platform_universal) do |ss|
+            ss.dependency pod_name + '/pdl_vm'
+            ss.dependency pod_name + '/pdl_utils'
+            ss.dependency pod_name + '/pdl_pac'
+            ss.dependency pod_name + '/pdl_thread_storage'
+        end
+
         PoodleSubspec(s, 'pdl_utils', platform_universal)
 
         PoodleSubspec(s, 'pdl_vm', platform_universal)
