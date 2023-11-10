@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <mach/vm_map.h>
-#include <mach/mach_init.h>
 #include <assert.h>
+#include "pdl_vm.h"
 #include "pdl_lldb_hook.h"
 #include "pdl_list.h"
 #include "pdl_pac.h"
@@ -143,26 +143,6 @@ static void print_lldb_command(uintptr_t hooked_function, uintptr_t custom_funct
     strcat(_pdl_lldb_command, "\n");
 }
 
-static uintptr_t lldb_page(void) {
-    vm_address_t dataAddress = 0;
-    mach_port_t task = mach_task_self();
-    kern_return_t result = vm_allocate(task, &dataAddress, PAGE_MAX_SIZE * 2, VM_FLAGS_ANYWHERE | VM_MAKE_TAG(VM_MEMORY_FOUNDATION));
-    if (result != KERN_SUCCESS) {
-        return 0;
-    }
-
-    vm_address_t codeAddress = dataAddress + PAGE_MAX_SIZE;
-    vm_address_t codePage = (vm_address_t)&pdl_lldb_hook_page_begin;
-    vm_prot_t currentProtection = 0;
-    vm_prot_t maxProtection = 0;
-    result = vm_remap(task, &codeAddress, PAGE_MAX_SIZE, 0, VM_FLAGS_FIXED | VM_FLAGS_OVERWRITE, task, codePage, true, &currentProtection, &maxProtection, VM_INHERIT_SHARE);
-    if (result != KERN_SUCCESS) {
-        return 0;
-    }
-
-    return dataAddress;
-}
-
 static pdl_page *lldb_hook_available_page(void) {
     if (!pdl_page_list) {
         pdl_page_list = pdl_list_create(NULL, NULL);
@@ -175,7 +155,7 @@ static pdl_page *lldb_hook_available_page(void) {
     if (!page || page->current_index == page->total_count) {
         page = (pdl_page *)pdl_list_create_node(pdl_page_list, sizeof(pdl_page) - sizeof(pdl_list_node));
         if (page) {
-            page->entries = (pdl_entry *)lldb_page();
+            page->entries = (pdl_entry *)pdl_vm_allocate_page_pair(&pdl_lldb_hook_page_begin);
             page->total_count = PAGE_MAX_SIZE / (pdl_instructions_count * pdl_bytes_per_instruction);
             page->current_index = 0;
             pdl_list_add_tail(pdl_page_list, (pdl_list_node *)page);
