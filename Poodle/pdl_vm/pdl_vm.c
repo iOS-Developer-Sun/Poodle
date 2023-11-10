@@ -9,6 +9,7 @@
 #include "pdl_vm.h"
 #include <mach/vm_region.h>
 #include <mach/mach.h>
+#include <mach/vm_map.h>
 
 vm_prot_t pdl_vm_get_protection(void *address) {
     mach_port_t task = mach_task_self();
@@ -49,4 +50,24 @@ bool pdl_vm_write(void **address, void *value, void **original) {
         vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot);
     }
     return true;
+}
+
+vm_address_t pdl_vm_allocate_page_pair(void *code) {
+    vm_address_t dataAddress = 0;
+    mach_port_t task = mach_task_self();
+    kern_return_t result = vm_allocate(task, &dataAddress, PAGE_MAX_SIZE * 2, VM_FLAGS_ANYWHERE | VM_MAKE_TAG(VM_MEMORY_FOUNDATION));
+    if (result != KERN_SUCCESS) {
+        return 0;
+    }
+
+    vm_address_t codeAddress = dataAddress + PAGE_MAX_SIZE;
+    vm_address_t codePage = (vm_address_t)code;
+    vm_prot_t currentProtection = 0;
+    vm_prot_t maxProtection = 0;
+    result = vm_remap(task, &codeAddress, PAGE_MAX_SIZE, 0, VM_FLAGS_FIXED | VM_FLAGS_OVERWRITE, task, codePage, true, &currentProtection, &maxProtection, VM_INHERIT_SHARE);
+    if (result != KERN_SUCCESS) {
+        return 0;
+    }
+
+    return dataAddress;
 }
