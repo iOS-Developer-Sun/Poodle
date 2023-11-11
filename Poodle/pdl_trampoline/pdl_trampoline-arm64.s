@@ -20,8 +20,9 @@
 .private_extern _pdl_trampoline_entry
 
 .macro PDL_TRAMPOLINE_STUB
+.align 3
     adr x9, -PAGE_MAX_SIZE
-    b _pdl_trampoline_page_begin + 8
+    b   _pdl_trampoline_page_begin + 4
 .endmacro
 
 .macro PDL_TRAMPOLINE_STUB_16
@@ -72,17 +73,12 @@
 
 _pdl_trampoline_page_begin:
     nop
-    nop
-    ldr     x10, [x9] // _pdl_trampoline_entry
-#ifdef __arm64e__
-    braaz  x10
-#else
+    ldr     x9, [x9]
+    ldr     x10, [x9]
     br     x10
-#endif
 
 .align 3
 _pdl_trampoline_page_stubs:
-
     // 2046
     PDL_TRAMPOLINE_STUB_256
     PDL_TRAMPOLINE_STUB_256
