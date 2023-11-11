@@ -7,9 +7,7 @@
 //
 
 #include "pdl_trampoline.h"
-#include <stddef.h>
 #include <stdio.h>
-#include <string.h>
 #include <mach/mach_init.h>
 #include <assert.h>
 #include <stdlib.h>
@@ -17,16 +15,18 @@
 #include "pdl_list.h"
 #include "pdl_vm.h"
 #include "pdl_thread_storage.h"
+#include "pdl_pac.h"
 
-extern void pdl_trampoline_page_begin(void);
-extern void pdl_trampoline_page_stubs(void);
-extern void pdl_trampoline_page_end(void);
-extern void pdl_trampoline_entry(void);
+extern char pdl_trampoline_page_begin;
+extern char pdl_trampoline_page_stubs;
+extern char pdl_trampoline_page_end;
+extern char pdl_trampoline_entry;
 
 static pdl_list *pdl_page_list = NULL;
 static void *_pdl_storage_key = &_pdl_storage_key;
 
 typedef struct {
+    void *entry; // pdl_trampoline_entry
     void *original;
     void(*before)(void *original, void *data);
     void(*after)(void *original, void *data);
@@ -34,7 +34,6 @@ typedef struct {
 } pdl_trampoline_object;
 
 typedef struct {
-    void *entry;
     pdl_trampoline_object *trampoline;
 } pdl_trampoline_stub;
 
@@ -93,6 +92,7 @@ static pdl_trampoline_page *pdl_trampoline_available_page(void) {
             page->current_index = 0;
             pdl_list_add_tail(pdl_page_list, (pdl_list_node *)page);
 
+            assert(stubs_offset == 16);
             assert((&pdl_trampoline_page_end - &pdl_trampoline_entry) == 0);
             assert((&pdl_trampoline_page_end - &pdl_trampoline_page_begin) == PAGE_MAX_SIZE);
         }
@@ -114,8 +114,7 @@ static pdl_list *pdl_thread_list(void) {
 }
 
 __attribute__((visibility("hidden")))
-void *pdl_trampoline_before(pdl_trampoline_stub *stub, void *lr) {
-    pdl_trampoline_object *object = stub->trampoline;
+void *pdl_trampoline_before(pdl_trampoline_object *object, void *lr) {
     void(*before)(void *, void *) = object->before;
     void *original = object->original;
     if (before) {
@@ -161,6 +160,7 @@ void *pdl_trampoline(void *original, void(*before)(void *original, void *data), 
         return NULL;
     }
 
+    object->entry = &pdl_trampoline_entry;
     object->original = original;
     object->before = before;
     object->after = after;
@@ -168,11 +168,11 @@ void *pdl_trampoline(void *original, void(*before)(void *original, void *data), 
 
     pdl_trampoline_stub *stub = page->stubs + page->current_index;
     assert(stub->trampoline == NULL);
-    stub->entry = &pdl_trampoline_entry;
     stub->trampoline = object;
     page->current_index++;
 
     void *ret = ((void *)stub) + PAGE_MAX_SIZE;
+    ret = pdl_ptrauth_sign_unauthenticated_function(ret, NULL);
     return ret;
 #else
     return NULL;
