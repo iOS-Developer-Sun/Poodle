@@ -11,6 +11,7 @@
 #import <objc/runtime.h>
 #import "pdl_list.h"
 #import "pdl_thread_storage.h"
+#import "pdl_trampoline.h"
 
 @implementation NSObject (PDLMethod)
 
@@ -286,16 +287,48 @@ struct PDLTargetClassMetadata {
     //   - "tabulated" virtual methods
 };
 
+static void swiftBefore(void *original, void *data) {
+    PDLSwiftMethodAction action = ((void **)data)[0];
+    if (action) {
+        action(original);
+    }
+}
+
+static void swiftAfter(void *original, void *data) {
+    PDLSwiftMethodAction action = ((void **)data)[1];
+    if (action) {
+        action(original);
+    }
+}
+
 NSInteger pdl_addSwiftMethodActions(Class aClass, PDLSwiftMethodAction _Nullable beforeAction, PDLSwiftMethodAction _Nullable afterAction, BOOL(^_Nullable methodFilter)(void *imp)) {
+    NSInteger count = 0;
     struct PDLTargetClassMetadata *meta = (__bridge struct PDLTargetClassMetadata *)(aClass);
     void **begin = (void **)&meta->ivarDestroyer;
     void **end = ((void *)meta) - meta->classAddressPoint + meta->classSize;
+    void **data = NULL;
     for (void **current = begin; current < end; current++) {
         IMP imp = *current;
-        *current = imp;
+        BOOL isValid = YES;
+        if (methodFilter) {
+            isValid = methodFilter(imp);
+        }
+        if (!isValid) {
+            continue;
+        }
+
+        if (!data) {
+            data = malloc(sizeof(void *) * 2);
+            data[0] = beforeAction;
+            data[1] = afterAction;
+        }
+
+        IMP *trampoline = pdl_trampoline(imp, &swiftBefore, &swiftAfter, data);
+        *current = trampoline;
+        count++;
     }
 
-    return 0;
+    return count;
 }
 
 @end

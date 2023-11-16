@@ -168,6 +168,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
             ss.dependency pod_name + '/pdl_utils'
             ss.dependency pod_name + '/pdl_thread_storage'
+            ss.dependency pod_name + '/pdl_trampoline'
         end
 
         PoodleSubspec(s, 'NSObject+PDLSelectorProxy', platform_universal) do |ss|
