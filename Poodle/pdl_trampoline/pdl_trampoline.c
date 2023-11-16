@@ -150,15 +150,23 @@ void *pdl_trampoline_after(void) {
 
 void *pdl_trampoline(void *original, void(*before)(void *original, void *data), void(*after)(void *original, void *data), void *data) {
 #ifdef __LP64__
+    static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
+    pthread_mutex_lock(&lock);
     pdl_trampoline_page *page = pdl_trampoline_available_page();
     if (!page) {
+        pthread_mutex_unlock(&lock);
         return NULL;
     }
 
     pdl_trampoline_object *object = malloc(sizeof(pdl_trampoline_object));
     if (!object) {
+        pthread_mutex_unlock(&lock);
         return NULL;
     }
+
+    pdl_trampoline_stub *stub = page->stubs + page->current_index;
+    page->current_index++;
+    pthread_mutex_unlock(&lock);
 
     object->entry = &pdl_trampoline_entry;
     object->original = original;
@@ -166,10 +174,8 @@ void *pdl_trampoline(void *original, void(*before)(void *original, void *data), 
     object->after = after;
     object->data = data;
 
-    pdl_trampoline_stub *stub = page->stubs + page->current_index;
     assert(stub->trampoline == NULL);
     stub->trampoline = object;
-    page->current_index++;
 
     void *ret = ((void *)stub) + PAGE_MAX_SIZE;
     ret = pdl_ptrauth_sign_unauthenticated_function(ret, NULL);
