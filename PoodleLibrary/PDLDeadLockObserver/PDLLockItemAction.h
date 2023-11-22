@@ -25,6 +25,7 @@ typedef NS_ENUM(NSInteger, PDLLockItemActionSubtype) {
     PDLLockItemActionSubtypePthreadRWLock,
     PDLLockItemActionSubtypeSynchronized,
     PDLLockItemActionSubtypeDispatchOnce,
+    PDLLockItemActionSubtypeOSUnfairLock,
 };
 
 @class PDLLockItem;
