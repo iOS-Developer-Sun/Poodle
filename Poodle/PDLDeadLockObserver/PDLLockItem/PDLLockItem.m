@@ -8,11 +8,9 @@
 
 #import "PDLLockItem.h"
 #import "pdl_dispatch.h"
-#import "pdl_spinlock.h"
 
 @interface PDLLockItem () {
     NSMutableArray <PDLLockItemAction *>*_actions;
-    pdl_spinlock _spinlock;
     NSString *_suspiciousReason;
     NSString *_identifier;
 }
@@ -21,18 +19,16 @@
 
 @implementation PDLLockItem
 
-static NSMutableSet *_lockItems = nil;
-static NSMutableSet *_suspiciousDeadLockItems = nil;
+static NSMutableSet *PDLLockItemLockItems = nil;
+static NSMutableSet *PDLLockItemSuspiciousDeadLockItems = nil;
 
 - (instancetype)init {
     self = [super init];
     if (self) {
         _actions = [NSMutableArray array];
-        pdl_spinlock spinlock = PDL_SPINLOCK_INIT;
-        _spinlock = spinlock;
 
-        @synchronized (_lockItems) {
-            [_lockItems addObject:self];
+        @synchronized (PDLLockItemLockItems) {
+            [PDLLockItemLockItems addObject:self];
         }
     }
     return self;
@@ -145,8 +141,11 @@ static NSMutableSet *_suspiciousDeadLockItems = nil;
     @synchronized (self.actions) {
         actions = [self.actions copy];
     }
-    for (PDLLockItemAction *action in actions) {
-        for (PDLLockItemAction *child in action.children) {
+    for (NSInteger i = 0; i < actions.count; i++) {
+        PDLLockItemAction *action = actions[i];
+        NSArray *children = action.children;
+        for (NSInteger j = 0; j < children.count; j++) {
+            PDLLockItemAction *child = children[j];
             if (child.item != self) {
                 if (child.type == PDLLockItemActionTypeLock) {
                     NSMutableArray *decendants = [[child decendants] mutableCopy];
@@ -181,26 +180,26 @@ static NSMutableSet *_suspiciousDeadLockItems = nil;
 
 + (void)initialize {
     if (self == [PDLLockItem self]) {
-        _suspiciousDeadLockItems = [NSMutableSet set];
-        _lockItems = [NSMutableSet set];
+        PDLLockItemSuspiciousDeadLockItems = [NSMutableSet set];
+        PDLLockItemLockItems = [NSMutableSet set];
     }
 }
 
 + (void)addSuspicious:(PDLLockItem *)item {
-    @synchronized (_suspiciousDeadLockItems) {
-        [_suspiciousDeadLockItems addObject:item];
+    @synchronized (PDLLockItemSuspiciousDeadLockItems) {
+        [PDLLockItemSuspiciousDeadLockItems addObject:item];
     }
 }
 
 + (NSArray *)suspiciousDeadLockItems {
-    @synchronized (_suspiciousDeadLockItems) {
-        return _suspiciousDeadLockItems.allObjects;
+    @synchronized (PDLLockItemSuspiciousDeadLockItems) {
+        return PDLLockItemSuspiciousDeadLockItems.allObjects;
     }
 }
 
 + (NSArray *)lockItems {
-    @synchronized (_lockItems) {
-        return [_lockItems allObjects];
+    @synchronized (PDLLockItemLockItems) {
+        return [PDLLockItemLockItems allObjects];
     }
 }
 

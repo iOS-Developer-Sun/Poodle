@@ -387,7 +387,6 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/pdl_hook'
             ss.dependency pod_name + '/pdl_dispatch'
             ss.dependency pod_name + '/pdl_thread_storage'
-            ss.dependency pod_name + '/pdl_spinlock'
             ss.dependency pod_name + '/PDLProcessInfo'
             ss.dependency pod_name + '/PDLBacktrace'
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
