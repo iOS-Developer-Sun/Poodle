@@ -46,7 +46,7 @@
 }
 
 - (NSString *)queueThreadId {
-    return self.queueIdentifier ? [NSString stringWithFormat:@"q%@", self.queueIdentifier] : [NSString stringWithFormat:@"t%@", @(self.thread).stringValue];
+    return (self.queueIdentifier.length > 0) ? [NSString stringWithFormat:@"q%@", self.queueIdentifier] : [NSString stringWithFormat:@"t%@", @(self.thread).stringValue];
 }
 
 - (NSString *)description {
@@ -85,15 +85,15 @@
         } break;
     }
     NSString *threadString = [NSString stringWithFormat:@"[t%@]", @(self.thread)];
-    NSString *queueString = self.queueIdentifier ? [NSString stringWithFormat:@"[q%@(%@)]", self.queueIdentifier, self.queueLabel] : @"";
-    NSString *targetQueueString = self.targetQueueIdentifier ? [NSString stringWithFormat:@"[q%@(%@)]", self.targetQueueIdentifier, self.targetQueueLabel] : @"";
+    NSString *queueString = self.queueIdentifier.length > 0 ? [NSString stringWithFormat:@"[q%@(%@)]", self.queueIdentifier, self.queueLabel] : @"";
+    NSString *targetQueueString = self.targetQueueIdentifier.length > 0 ? [NSString stringWithFormat:@"[q%@(%@)]", self.targetQueueIdentifier, self.targetQueueLabel] : @"";
     NSString *timeString = [NSString stringWithFormat:@"[%.3f]", self.time];
     NSString *parentString = self.parent ? [NSString stringWithFormat:@"<parent: %p>", self.parent] : @"";
     NSMutableString *childrenString = [NSMutableString string];
-    NSArray *chindren = self.children;
-    if (chindren.count > 0) {
-        [childrenString appendFormat:@"<children: %@", @(chindren.count)];
-        for (PDLLockItemAction *child in chindren) {
+    NSArray *children = self.children;
+    if (children.count > 0) {
+        [childrenString appendFormat:@"<children: %@", @(children.count)];
+        for (PDLLockItemAction *child in children) {
             [childrenString appendFormat:@", %p", child];
         }
         [childrenString appendFormat:@">"];
@@ -105,6 +105,10 @@
 }
 
 - (NSArray<PDLLockItemAction *> *)children {
+    if (![PDLDeadLockObserver enabled]) {
+        return _children;
+    }
+
     @synchronized (_children) {
         return [_children copy];
     }
@@ -124,7 +128,7 @@
     for (PDLLockItemAction *child in children) {
         [array addObjectsFromArray:[child decendants]];
     }
-    return [array copy];
+    return array;
 }
 
 - (BOOL)showBacktrace:(NSString *)name {

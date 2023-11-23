@@ -109,8 +109,12 @@ static NSMutableSet *PDLLockItemSuspiciousDeadLockItems = nil;
 }
 
 - (PDLLockItemAction *)childContainsItem:(PDLLockItem *)item notInQueueThread:(NSString *)queueThreadId exceptions:(NSMutableSet *)exceptions {
-    for (PDLLockItemAction *action in self.actions) {
-        for (PDLLockItemAction *child in action.children) {
+    NSArray *actions = self.actions;
+    for (NSInteger i = 0; i < actions.count; i++) {
+        PDLLockItemAction *action = actions[i];
+        NSArray *children = action.children;
+        for (NSInteger j = 0; j < children.count; j++) {
+            PDLLockItemAction *child = children[j];
             if (child.type != PDLLockItemActionTypeLock) {
                 continue;
             }
@@ -150,7 +154,8 @@ static NSMutableSet *PDLLockItemSuspiciousDeadLockItems = nil;
                 if (child.type == PDLLockItemActionTypeLock) {
                     NSMutableArray *decendants = [[child decendants] mutableCopy];
                     [decendants addObject:child];
-                    for (PDLLockItemAction *decendant in decendants) {
+                    for (NSInteger k = 0; k < decendants.count; k++) {
+                        PDLLockItemAction *decendant = decendants[k];
                         NSMutableSet *exceptions = [NSMutableSet set];
                         [exceptions addObject:self];
                         PDLLockItemAction *lockAction = [decendant.item childContainsItem:self notInQueueThread:action.queueThreadId exceptions:exceptions];
