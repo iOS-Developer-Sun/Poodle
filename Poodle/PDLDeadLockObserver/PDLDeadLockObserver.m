@@ -162,6 +162,10 @@ __unused static void pdl_lock_items_destroy(void *arg) {
     [self storage].isObserving = NO;
 }
 
++ (BOOL)enabled {
+    return _enabled;
+}
+
 #define PDL_DEADLOCK_OBSERVING_ENTER if ([PDLDeadLockObserver enterObserving]) {
 #define PDL_DEADLOCK_OBSERVING_LEAVE [PDLDeadLockObserver leaveObserving];}
 
@@ -592,7 +596,8 @@ static void pdl_os_unfair_lock_unlock(os_unfair_lock_t lock) {
 + (void)check {
     _enabled = NO;
     NSArray *lockItems = [PDLLockItem lockItems];
-    for (PDLLockItem *lockItem in lockItems) {
+    for (NSInteger i = 0; i < lockItems.count; i++) {
+        PDLLockItem *lockItem = lockItems[i];
         [lockItem check];
     }
 }
