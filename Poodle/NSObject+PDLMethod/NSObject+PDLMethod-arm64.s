@@ -22,12 +22,21 @@ _PDLMethodEntry:
     bl      _PDLMethodBefore
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     ldr     x9, [x1, #0x10]
+    cbz     x9, L_PDLMethodEntrySuper
     ldr     x1, [x1]
 #ifdef __arm64e__
-    braaz  x9
+    braaz   x9
 #else
-    br     x9
+    br      x9
 #endif
+L_PDLMethodEntrySuper:
+    ldr     x9, [x1, #0x20]
+    add     x9, x9, #0x20
+    str     x0, [x9]
+    ldr     x10, [x1, #0x18]
+    str     x10, [x9, #0x8]
+    ldr     x1, [x1]
+    b       _objc_msgSendSuper2
 
 _PDLMethodEntry_stret:
     b   _PDLMethodEntry
@@ -38,12 +47,23 @@ _PDLMethodEntryFull:
     bl      _PDLMethodFullBefore
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     ldr     x9, [x1, #0x10]
+    cbz     x9, L_PDLMethodEntryFullSuper
     ldr     x1, [x1]
 #ifdef __arm64e__
     blraaz  x9
 #else
     blr     x9
 #endif
+    b       L_PDLMethodEntryFullAfter
+L_PDLMethodEntryFullSuper:
+    ldr     x9, [x1, #0x20]
+    add     x9, x9, #0x20
+    str     x0, [x9]
+    ldr     x10, [x1, #0x18]
+    str     x10, [x9, #0x8]
+    ldr     x1, [x1]
+    bl      _objc_msgSendSuper2
+L_PDLMethodEntryFullAfter:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
     bl      _PDLMethodFullAfter
     mov     x9, x0
