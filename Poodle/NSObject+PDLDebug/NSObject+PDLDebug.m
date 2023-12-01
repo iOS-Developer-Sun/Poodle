@@ -122,6 +122,61 @@ NSDictionary *pdl_propertiesDescriptionForClass(id self, Class aClass) {
     return [ret copy];
 }
 
+- (NSString *)pdl_debugDescription:(NSInteger)indentationLevel {
+    NSMutableString *ret = [NSMutableString string];
+    NSMutableString *indentation = [NSMutableString string];
+    for (NSInteger i = 0; i < indentationLevel; i++) {
+        [indentation appendString:@"\t"];
+    }
+    [ret appendString:indentation];
+    if ([self isKindOfClass:[NSDictionary class]]) {
+        NSDictionary *dictionary = (NSDictionary *)self;
+        NSUInteger count = dictionary.count;
+        [ret appendFormat:@"`%@<%p>(%lu)`", [self class], self, count];
+        [ret appendFormat:@"\n%@{", indentation];
+        for (id key in dictionary) {
+            id value = dictionary[key];
+            if ([value isKindOfClass:[NSDictionary class]]
+                || [value isKindOfClass:[NSArray class]]
+                || [value isKindOfClass:[NSSet class]]
+                || [value isKindOfClass:[NSOrderedSet class]]) {
+                [ret appendFormat:@"\n%@ :\n%@,", [key pdl_debugDescription:indentationLevel + 1], [value pdl_debugDescription:indentationLevel + 1]];
+            } else {
+                [ret appendFormat:@"\n%@ : %@,", [key pdl_debugDescription:indentationLevel + 1], [value pdl_debugDescription:0]];
+            }
+        }
+        [ret appendFormat:@"\n%@}", indentation];
+    } else if ([self isKindOfClass:[NSArray class]]) {
+        NSArray *array = (NSArray *)self;
+        NSUInteger count = array.count;
+        [ret appendFormat:@"`%@<%p>(%lu)`", [self class], self, count];
+        [ret appendFormat:@"\n%@[", indentation];
+        for (NSInteger i = 0; i < count; i++) {
+            id object = array[i];
+            [ret appendFormat:@"\n%@,", [object pdl_debugDescription:indentationLevel + 1]];
+        }
+        [ret appendFormat:@"\n%@]", indentation];
+    } else if ([self isKindOfClass:[NSSet class]] || [self isKindOfClass:[NSOrderedSet class]]) {
+        NSSet *set = (NSSet *)self;
+        NSUInteger count = set.count;
+        [ret appendFormat:@"`%@<%p>(%lu)`", [self class], self, count];
+        [ret appendFormat:@"\n%@[", indentation];
+        for (id object in set) {
+            [ret appendFormat:@"\n%@,", [object pdl_debugDescription:indentationLevel + 1]];
+        }
+        [ret appendFormat:@"\n%@]", indentation];
+    } else {
+        [ret appendFormat:@"`%@ %p`%@", [self class], self, self];
+    }
+    return ret;
+}
+
+- (NSString *)pdl_debugDescription {
+    return [self pdl_debugDescription:0];
+}
+
+#pragma mark -
+
 NSArray *pdl_class_subclasses(Class aClass) {
     NSMutableArray *subclasses = [NSMutableArray array];
     unsigned int outCount = 0;
