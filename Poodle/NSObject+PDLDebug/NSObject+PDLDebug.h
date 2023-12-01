@@ -29,6 +29,8 @@ extern "C" {
 @property (readonly) NSString *pdl_propertiesDescription;
 @property (readonly) NSString *pdl_fullPropertiesDescription;
 
+@property (readonly) NSString *pdl_debugDescription;
+
 - (NSString *)pdl_propertiesDescriptionForClass:(Class)aClass;
 
 - (instancetype)pdl_retain;
