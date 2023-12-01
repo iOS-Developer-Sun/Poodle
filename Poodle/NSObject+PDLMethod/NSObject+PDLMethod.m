@@ -29,6 +29,8 @@ typedef struct {
 typedef struct {
     IMP beforeAction;
     IMP afterAction;
+    void *super_receiver;
+    void *super_class;
 } PDLMethodActions;
 
 #pragma mark - thread
@@ -125,8 +127,8 @@ static bool pdl_initialize(void) {
     return enabled;
 }
 
-static NSInteger addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
-#ifdef __i386__
+static NSInteger addInstanceMethodsActions(Class aClass, Class baseClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
+#ifndef __LP64__
     return 0;
 #else
     NSUInteger ret = -1;
@@ -155,7 +157,7 @@ static NSInteger addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAct
 
     ret = 0;
     unsigned int count = 0;
-    Method *methodList = class_copyMethodList(aClass, &count);
+    Method *methodList = class_copyMethodList(baseClass, &count);
     for (unsigned int i = 0; i < count; i++) {
         Method method = methodList[i];
         SEL selector = method_getName(method);
@@ -163,7 +165,7 @@ static NSInteger addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAct
             continue;
         }
 
-        BOOL result = pdl_interceptMethod(aClass, method, nil, ^IMP(NSNumber *__autoreleasing *isStructRetNumber, void **data) {
+        IMP (^block)(NSNumber *__autoreleasing *, void **) = ^IMP (NSNumber *__autoreleasing *isStructRetNumber, void **data) {
             NSNumber *number = *isStructRetNumber;
             if (number) {
                 *data = actions;
@@ -175,7 +177,17 @@ static NSInteger addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAct
             } else {
                 return NULL;
             }
-        });
+        };
+        BOOL result = NO;
+        if (aClass == baseClass) {
+            result = pdl_interceptMethod(aClass, method, nil, ^IMP(NSNumber *__autoreleasing *isStructRetNumber, void **data) {
+                return block(isStructRetNumber, data);
+            });
+        } else {
+            result = pdl_intercept(aClass, selector, nil, ^IMP(BOOL exists, NSNumber **isStructRetNumber, Method method, void **data) {
+                return block(isStructRetNumber, data);
+            });
+        }
 
         if (result) {
             ret++;
@@ -196,21 +208,21 @@ static NSInteger addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAct
 }
 
 + (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
-    return addInstanceMethodsActions(self, beforeAction, afterAction, methodFilter);
+    return addInstanceMethodsActions(self, self, beforeAction, afterAction, methodFilter);
 }
 
-NSInteger pdl_addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
+NSInteger pdl_addInstanceMethodsActions(Class aClass, Class _Nullable baseClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
     BOOL(^_Nullable filter)(SEL selector) = nil;
     if (methodFilter) {
         filter = ^BOOL(SEL selector) {
             return methodFilter(selector);
         };
     }
-    return addInstanceMethodsActions(aClass, beforeAction, afterAction, filter);
+    return addInstanceMethodsActions(aClass, baseClass ?: aClass, beforeAction, afterAction, filter);
 }
 
 BOOL pdl_addInstanceMethodActions(Class aClass, Method method, IMP _Nullable beforeAction, IMP _Nullable afterAction) {
-#ifdef __i386__
+#ifndef __LP64__
     return NO;
 #else
     BOOL ret = NO;

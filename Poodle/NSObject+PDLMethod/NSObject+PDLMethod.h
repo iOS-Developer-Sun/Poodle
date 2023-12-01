@@ -30,11 +30,12 @@ typedef void (*PDLSwiftMethodAction)(void *_Nonnull);
 
 /// hook all instance methods for class aClass
 /// @param aClass Class
+/// @param baseClass  class methods are from
 /// @param beforeAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @param afterAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @param methodFilter  return YES if you want to add.
 /// @return count added
-extern NSInteger pdl_addInstanceMethodsActions(Class aClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector));
+extern NSInteger pdl_addInstanceMethodsActions(Class aClass, Class _Nullable baseClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector));
 
 /// hook instance method for class aClass
 /// @param aClass Class
