@@ -134,7 +134,7 @@ NSDictionary *pdl_propertiesDescriptionForClass(id self, Class aClass) {
         NSUInteger count = dictionary.count;
         [ret appendFormat:@"`%@<%p>(%lu)`", [self class], self, count];
         [ret appendFormat:@"\n%@{", indentation];
-        for (id key in dictionary) {
+        for (id key in [dictionary.allKeys sortedArrayUsingSelector:@selector(compare:)]) {
             id value = dictionary[key];
             if ([value isKindOfClass:[NSDictionary class]]
                 || [value isKindOfClass:[NSArray class]]
