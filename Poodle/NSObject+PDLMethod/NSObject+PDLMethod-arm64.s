@@ -35,6 +35,7 @@ L_PDLMethodEntrySuper:
     str     x0, [x9]
     ldr     x10, [x1, #0x18]
     str     x10, [x9, #0x8]
+    mov     x0, x9
     ldr     x1, [x1]
     b       _objc_msgSendSuper2
 
@@ -61,6 +62,7 @@ L_PDLMethodEntryFullSuper:
     str     x0, [x9]
     ldr     x10, [x1, #0x18]
     str     x10, [x9, #0x8]
+    mov     x0, x9
     ldr     x1, [x1]
     bl      _objc_msgSendSuper2
 L_PDLMethodEntryFullAfter:

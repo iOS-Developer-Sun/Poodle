@@ -27,7 +27,7 @@ void *pdl_swift_validate_object(void *address) {
 //    pdl_malloc_find(address, NULL, &header);
 //    return header;
 
-    BOOL isNotPointer = address < (void *)0x100000000UL || address > (void *)0x000007FFFFFFFFFFUL;
+    BOOL isNotPointer = address < (void *)0x100000000UL || address > (void *)0x00007FFFFFFFFFFFUL;
     if (isNotPointer) {
         return NULL;
     }
