@@ -28,8 +28,8 @@ static void *_pdl_storage_key = &_pdl_storage_key;
 typedef struct {
     void *entry; // pdl_trampoline_entry
     void *original;
-    void(*before)(void *original, void *data);
-    void(*after)(void *original, void *data);
+    void(*before)(void *original, void *sp, void *data);
+    void(*after)(void *original, void *sp, void *data);
     void *data;
 } pdl_trampoline_object;
 
@@ -114,11 +114,11 @@ static pdl_list *pdl_thread_list(void) {
 }
 
 __attribute__((visibility("hidden")))
-void *pdl_trampoline_before(pdl_trampoline_object *object, void *lr) {
-    void(*before)(void *, void *) = object->before;
+void *pdl_trampoline_before(pdl_trampoline_object *object, void *lr, void *sp) {
+    void(*before)(void *, void *, void *) = object->before;
     void *original = object->original;
     if (before) {
-        before(original, object->data);
+        before(original, sp, object->data);
     }
 
     pdl_list *list = pdl_thread_list();
@@ -132,23 +132,23 @@ void *pdl_trampoline_before(pdl_trampoline_object *object, void *lr) {
 }
 
 __attribute__((visibility("hidden")))
-void *pdl_trampoline_after(void) {
+void *pdl_trampoline_after(void *sp) {
     pdl_list *list = pdl_thread_list();
     pdl_list_node *node = list->tail;
     pdl_list_remove(list, node);
     pdl_trampoline_thread_storage_node *data = (pdl_trampoline_thread_storage_node *)node;
     void *lr = data->lr;
     pdl_trampoline_object *object = data->trampoline;
-    void(*after)(void *, void *) = object->after;
+    void(*after)(void *, void *, void *) = object->after;
     void *original = object->original;
     if (after) {
-        after(original, object->data);
+        after(original, sp, object->data);
     }
     pdl_list_destroy_node(list, node);
     return lr;
 }
 
-void *pdl_trampoline(void *original, void(*before)(void *original, void *data), void(*after)(void *original, void *data), void *data) {
+void *pdl_trampoline(void *original, void(*before)(void *original, void *sp, void *data), void(*after)(void *original, void *sp, void *data), void *data) {
 #ifdef __LP64__
     static pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_lock(&lock);

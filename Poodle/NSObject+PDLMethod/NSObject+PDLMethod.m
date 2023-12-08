@@ -299,14 +299,14 @@ struct PDLTargetClassMetadata {
     //   - "tabulated" virtual methods
 };
 
-static void swiftBefore(void *original, void *data) {
+static void swiftBefore(void *original, void *sp, void *data) {
     PDLSwiftMethodAction action = ((void **)data)[0];
     if (action) {
         action(original);
     }
 }
 
-static void swiftAfter(void *original, void *data) {
+static void swiftAfter(void *original, void *sp, void *data) {
     PDLSwiftMethodAction action = ((void **)data)[1];
     if (action) {
         action(original);
