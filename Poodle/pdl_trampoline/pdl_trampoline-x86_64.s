@@ -131,6 +131,7 @@ _pdl_trampoline_page_end:
 .align PAGE_MAX_SHIFT
 _pdl_trampoline_entry:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
+    movq    %rsp, %rdx
     movq    0x8(%rbp), %rsi
     movq    %r11, %rdi
     call    _pdl_trampoline_before
@@ -140,6 +141,7 @@ _pdl_trampoline_entry:
     call     *%r11
     pushq   %rax
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
+    movq    %rsp, %rdi
     call    _pdl_trampoline_after
     mov     %rax, %r11
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE NORMAL

@@ -12,7 +12,7 @@
 extern "C" {
 #endif
 
-extern void *pdl_trampoline(void *original, void(*before)(void *original, void *data), void(*after)(void *original, void *data), void *data);
+extern void *pdl_trampoline(void *original, void(*before)(void *original, void *sp, void *data), void(*after)(void *original, void *sp, void *data), void *data);
 
 #ifdef __cplusplus
 }

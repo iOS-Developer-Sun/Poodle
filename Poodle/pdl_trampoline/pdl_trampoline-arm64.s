@@ -132,6 +132,7 @@ _pdl_trampoline_page_end:
 
 _pdl_trampoline_entry:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
+    mov     x2, sp
     mov     x1, lr
     mov     x0, x9
     bl      _pdl_trampoline_before
@@ -143,6 +144,7 @@ _pdl_trampoline_entry:
     blr     x9
 #endif
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
+    mov     x0, sp
     bl      _pdl_trampoline_after
     mov     x9, x0
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
