@@ -90,3 +90,11 @@ PDL_ASM_PERFORM_32768(instruction);\
 PDL_ASM_PERFORM_32768(instruction)
 
 #endif
+
+#ifndef PDL_ARG_BASE_OFFSET
+#if defined(__x86_64__)
+#define PDL_ARG_BASE_OFFSET 0x28
+#elif defined(__arm64__)
+#define PDL_ARG_BASE_OFFSET 0x80
+#endif
+#endif

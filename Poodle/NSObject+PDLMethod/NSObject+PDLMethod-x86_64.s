@@ -20,6 +20,7 @@
 _PDLMethodEntry:
 
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
+    movq    %rsp, %rdx
     call    _PDLMethodBefore
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
 
@@ -42,6 +43,7 @@ L_PDLMethodEntrySuper:
 _PDLMethodEntry_stret:
 
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
+    movq    %rsp, %rdx
     call    _PDLMethodBefore
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
 
@@ -63,18 +65,19 @@ L_PDLMethodEntrySuper_stret:
 _PDLMethodEntryFull:
 
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
-    movq    0x8(%rbp), %rdx     // save lr
+    movq    0x8(%rbp), %rdx // save lr
+    movq    %rsp, %rcx
     call    _PDLMethodFullBefore
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
 
-    popq    %rax    // fake sp begin
+    popq    %rax // fake sp begin
 
-    movq    0x10(%rsi), %rax    // fetch imp
+    movq    0x10(%rsi), %rax // fetch imp
     test    %rax, %rax
     je      L_PDLMethodEntryFullSuper
 
-    movq    (%rsi), %rsi    //  switch arg
-    call    *%rax   // call imp
+    movq    (%rsi), %rsi // switch arg
+    call    *%rax // call imp
     jmp     L_PDLMethodEntryFullAfter
 
 L_PDLMethodEntryFullSuper:
@@ -88,34 +91,36 @@ L_PDLMethodEntryFullSuper:
     call    _objc_msgSendSuper2
 
 L_PDLMethodEntryFullAfter:
-    pushq   %rax    // save ret
+    pushq   %rax // save ret
 
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE NORMAL
+    movq    %rsp, %rdi
     call    _PDLMethodFullAfter
-    movq    %rax, %r11  // save lr to r11
+    movq    %rax, %r11 // save lr to r11
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
 
-    popq    %rax        // load ret
+    popq    %rax // load ret
 
-    pushq    %r11    // restore lr, fake sp end
+    pushq    %r11 // restore lr, fake sp end
 
     ret
 
 _PDLMethodEntryFull_stret:
 
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
-    movq    0x8(%rbp), %rdx     // save lr
+    movq    0x8(%rbp), %rdx // save lr
+    movq    %rsp, %rcx
     call    _PDLMethodFullBefore
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
 
-    popq    %rax    // fake sp begin
+    popq    %rax // fake sp begin
 
-    movq    0x10(%rdx), %rax    // fetch imp
+    movq    0x10(%rdx), %rax // fetch imp
     test    %rax, %rax
     je      L_PDLMethodEntryFullSuper_stret
 
-    movq    (%rdx), %rdx    // switch arg
-    call    *%rax   // call imp
+    movq    (%rdx), %rdx // switch arg
+    call    *%rax // call imp
     jmp     L_PDLMethodEntryFullAfter_stret
 
 L_PDLMethodEntryFullSuper_stret:
@@ -129,16 +134,17 @@ L_PDLMethodEntryFullSuper_stret:
     call    _objc_msgSendSuper2_stret
 
 L_PDLMethodEntryFullAfter_stret:
-    pushq   %rax    // save ret
+    pushq   %rax // save ret
 
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE STRET
+    movq    %rsp, %rdi
     call    _PDLMethodFullAfter
-    movq    %rax, %r11  // save lr to r11
+    movq    %rax, %r11 // save lr to r11
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
 
-    popq    %rax        // load ret
+    popq    %rax // load ret
 
-    pushq    %r11    // restore lr, fake sp end
+    pushq    %r11 // restore lr, fake sp end
 
     ret
 

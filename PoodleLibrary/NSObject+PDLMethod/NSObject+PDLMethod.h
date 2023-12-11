@@ -13,37 +13,30 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface NSObject (PDLMethod)
 
-typedef void (*PDLSwiftMethodAction)(void *_Nonnull);
+typedef void (*PDLMethodAction)(__unsafe_unretained id self, struct PDLImplementationInterceptorData *interceptorData, void *sp);
+typedef void (*PDLSwiftMethodAction)(void *_Nonnull original, void *sp);
 
 /// hook all instance methods for class self
-/// @param beforeAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
-/// @param afterAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @return count added
-+ (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP _Nullable)beforeAction afterAction:(IMP _Nullable)afterAction;
++ (NSInteger)pdl_addInstanceMethodsBeforeAction:(PDLMethodAction _Nullable)beforeAction afterAction:(PDLMethodAction _Nullable)afterAction;
 
 /// hook all instance methods for class self
-/// @param beforeAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
-/// @param afterAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @param methodFilter  return YES if you want to add.
 /// @return count added
-+ (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP _Nullable)beforeAction afterAction:(IMP _Nullable)afterAction methodFilter:(BOOL(^_Nullable)(SEL selector))methodFilter;
++ (NSInteger)pdl_addInstanceMethodsBeforeAction:(PDLMethodAction _Nullable)beforeAction afterAction:(PDLMethodAction _Nullable)afterAction methodFilter:(BOOL(^_Nullable)(SEL selector))methodFilter;
 
 /// hook all instance methods for class aClass
 /// @param aClass Class
 /// @param baseClass  class methods are from
-/// @param beforeAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
-/// @param afterAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @param methodFilter  return YES if you want to add.
 /// @return count added
-extern NSInteger pdl_addInstanceMethodsActions(Class aClass, Class _Nullable baseClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector));
+extern NSInteger pdl_addInstanceMethodsActions(Class aClass, Class _Nullable baseClass, PDLMethodAction _Nullable beforeAction, PDLMethodAction _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector));
 
 /// hook instance method for class aClass
 /// @param aClass Class
 /// @param method Method
-/// @param beforeAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
-/// @param afterAction IMP like static void beforeAction(__unsafe_unretained id self, SEL _cmd);
 /// @return sucessed or not
-extern BOOL pdl_addInstanceMethodActions(Class aClass, Method method, IMP _Nullable beforeAction, IMP _Nullable afterAction);
+extern BOOL pdl_addInstanceMethodActions(Class aClass, Method method, PDLMethodAction _Nullable beforeAction, PDLMethodAction _Nullable afterAction);
 
 /// hook instance method for class aClass
 /// @param aClass Class

@@ -26,12 +26,12 @@ static id pdl_threadSafeMethodLock(__unsafe_unretained id self) {
     return lock;
 }
 
-__unused static void PDLThreadSafetifyMethodBefore(__unsafe_unretained id self, SEL _cmd) {
+__unused static void PDLThreadSafetifyMethodBefore(__unsafe_unretained id self, SEL _cmd, void *sp) {
     PDLImplementationInterceptorRecover(_cmd);
     objc_sync_enter(pdl_threadSafeMethodLock(self));
 }
 
-__unused static void PDLThreadSafetifyMethodAfter(__unsafe_unretained id self, SEL _cmd) {
+__unused static void PDLThreadSafetifyMethodAfter(__unsafe_unretained id self, SEL _cmd, void *sp) {
     PDLImplementationInterceptorRecover(_cmd);
     objc_sync_exit(pdl_threadSafeMethodLock(self));
 }
@@ -41,7 +41,7 @@ __unused static void PDLThreadSafetifyMethodAfter(__unsafe_unretained id self, S
 + (NSInteger)pdl_threadSafetifyMethods:(BOOL(^)(SEL selector))filter {
     NSInteger ret = 0;
 #ifndef __i386__
-    ret = [self pdl_addInstanceMethodsBeforeAction:(IMP)&PDLThreadSafetifyMethodBefore afterAction:(IMP)&PDLThreadSafetifyMethodAfter methodFilter:^BOOL(SEL  _Nonnull selector) {
+    ret = [self pdl_addInstanceMethodsBeforeAction:(PDLMethodAction)&PDLThreadSafetifyMethodBefore afterAction:(PDLMethodAction)&PDLThreadSafetifyMethodAfter methodFilter:^BOOL(SEL  _Nonnull selector) {
         if (sel_isEqual(selector, sel_registerName("retain"))) {return NO;}
         if (sel_isEqual(selector, sel_registerName("release"))) {return NO;}
         if (sel_isEqual(selector, sel_registerName("autorelease"))) {return NO;}
