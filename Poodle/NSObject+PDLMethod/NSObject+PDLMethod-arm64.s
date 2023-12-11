@@ -19,6 +19,7 @@
 
 _PDLMethodEntry:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
+    mov     x2, sp
     bl      _PDLMethodBefore
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
     ldr     x9, [x1, #0x10]
@@ -44,6 +45,7 @@ _PDLMethodEntry_stret:
 
 _PDLMethodEntryFull:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
+    mov     x3, sp
     mov     x2, lr
     bl      _PDLMethodFullBefore
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE
@@ -67,6 +69,7 @@ L_PDLMethodEntryFullSuper:
     bl      _objc_msgSendSuper2
 L_PDLMethodEntryFullAfter:
     PDL_ASM_OBJC_MESSAGE_STATE_SAVE
+    mov     x0, sp
     bl      _PDLMethodFullAfter
     mov     x9, x0
     PDL_ASM_OBJC_MESSAGE_STATE_RESTORE

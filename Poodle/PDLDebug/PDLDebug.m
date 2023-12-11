@@ -150,25 +150,25 @@ void pdl_debug_halt(void) {
 }
 
 __attribute__((used))
-static void pdl_instanceBefore(__unsafe_unretained id self, SEL _cmd) {
+static void pdl_instanceBefore(__unsafe_unretained id self, SEL _cmd, void *sp) {
     PDLImplementationInterceptorRecover(_cmd);
     printf("-[<%s:%p> %s]\n", class_getName(object_getClass(self)), self, sel_getName(_cmd));
 }
 
 __attribute__((used))
-static void pdl_classBefore(__unsafe_unretained id self, SEL _cmd) {
+static void pdl_classBefore(__unsafe_unretained id self, SEL _cmd, void *sp) {
     PDLImplementationInterceptorRecover(_cmd);
     printf("+[<%s:%p> %s]\n", class_getName(object_getClass(self)), self, sel_getName(_cmd));
 }
 
 __attribute__((used))
 NSInteger pdl_logInstanceMethods(Class aClass) {
-    return [aClass pdl_addInstanceMethodsBeforeAction:(IMP)&pdl_instanceBefore afterAction:NULL];
+    return [aClass pdl_addInstanceMethodsBeforeAction:(PDLMethodAction)&pdl_instanceBefore afterAction:NULL];
 }
 
 __attribute__((used))
 NSInteger pdl_logClassMethods(Class aClass) {
-    return [object_getClass(aClass) pdl_addInstanceMethodsBeforeAction:(IMP)&pdl_classBefore afterAction:NULL];
+    return [object_getClass(aClass) pdl_addInstanceMethodsBeforeAction:(PDLMethodAction)&pdl_classBefore afterAction:NULL];
 }
 
 static void enumerate_threads(void *data, void(*function)(void *, thread_t)) {

@@ -12,6 +12,7 @@
 #import "pdl_list.h"
 #import "pdl_thread_storage.h"
 #import "pdl_trampoline.h"
+#import "pdl_asm.h"
 
 @implementation NSObject (PDLMethod)
 
@@ -27,8 +28,8 @@ typedef struct {
 } PDLMethodDataListNode;
 
 typedef struct {
-    IMP beforeAction;
-    IMP afterAction;
+    PDLMethodAction beforeAction;
+    PDLMethodAction afterAction;
     void *super_receiver;
     void *super_class;
 } PDLMethodActions;
@@ -63,52 +64,46 @@ extern void PDLMethodEntryFull(__unsafe_unretained id, SEL);
 extern void PDLMethodEntryFull_stret(__unsafe_unretained id, SEL);
 
 __attribute__((visibility("hidden")))
-void PDLMethodBefore(__unsafe_unretained id self, SEL _cmd) {
-    struct PDLImplementationInterceptorData *interceptorData = (struct PDLImplementationInterceptorData *)(void *)_cmd;
-    PDLImplementationInterceptorRecover(_cmd);
-    PDLMethodActions *actions = _data;
-    void(*beforeAction)(id, struct PDLImplementationInterceptorData *) = (typeof(beforeAction))actions->beforeAction;
+void PDLMethodBefore(__unsafe_unretained id self, struct PDLImplementationInterceptorData *interceptorData, void *sp) {
+    PDLMethodActions *actions = interceptorData->data;
+    PDLMethodAction beforeAction = actions->beforeAction;
     if (beforeAction) {
-        beforeAction(self, interceptorData);
+        beforeAction(self, interceptorData, sp + PDL_ARG_BASE_OFFSET);
     }
 }
 
 __attribute__((visibility("hidden")))
-void PDLMethodFullBefore(__unsafe_unretained id self, SEL _cmd, void *lr) {
+void PDLMethodFullBefore(__unsafe_unretained id self, struct PDLImplementationInterceptorData *interceptorData, void *lr, void *sp) {
     // save all
     pdl_list *list = pdl_thread_list();
     pdl_list_node *node = pdl_list_create_node(list, sizeof(PDLMethodDataListNode) - sizeof(pdl_list_node));
     PDLMethodDataListNode *data = (PDLMethodDataListNode *)node;
     data->data.self = self;
-    data->data.data = (struct PDLImplementationInterceptorData *)(void *)_cmd;
+    data->data.data = interceptorData;
     data->data.lr = lr;
     pdl_list_add_tail(list, node);
 
-    struct PDLImplementationInterceptorData *interceptorData = (struct PDLImplementationInterceptorData *)(void *)_cmd;
-    PDLImplementationInterceptorRecover(_cmd);
-    PDLMethodActions *actions = _data;
-    void(*beforeAction)(id, struct PDLImplementationInterceptorData *) = (typeof(beforeAction))actions->beforeAction;
+    PDLMethodActions *actions = interceptorData->data;
+    PDLMethodAction beforeAction = actions->beforeAction;
     if (beforeAction) {
-        beforeAction(self, interceptorData);
+        beforeAction(self, interceptorData, sp + PDL_ARG_BASE_OFFSET);
     }
 }
 
 __attribute__((visibility("hidden")))
-void *PDLMethodFullAfter(void) {
+void *PDLMethodFullAfter(void *sp) {
     pdl_list *list = pdl_thread_list();
     pdl_list_node *node = list->tail;
     pdl_list_remove(list, node);
     PDLMethodDataListNode *data = (PDLMethodDataListNode *)node;
     __unsafe_unretained id self = data->data.self;
-    SEL _cmd = (SEL)(void *)data->data.data;
     void *lr = data->data.lr;
-    struct PDLImplementationInterceptorData *interceptorData = (struct PDLImplementationInterceptorData *)(void *)_cmd;
+    struct PDLImplementationInterceptorData *interceptorData = data->data.data;
     pdl_list_destroy_node(list, node);
-    PDLImplementationInterceptorRecover(_cmd);
-    PDLMethodActions *actions = _data;
-    void(*afterAction)(id, struct PDLImplementationInterceptorData *) = (typeof(afterAction))actions->afterAction;
+    PDLMethodActions *actions = interceptorData->data;
+    PDLMethodAction afterAction = actions->afterAction;
     if (afterAction) {
-        afterAction(self, interceptorData);
+        afterAction(self, interceptorData, sp + PDL_ARG_BASE_OFFSET);
     }
     return lr;
 }
@@ -127,7 +122,7 @@ static bool pdl_initialize(void) {
     return enabled;
 }
 
-static NSInteger addInstanceMethodsActions(Class aClass, Class baseClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
+static NSInteger addInstanceMethodsActions(Class aClass, Class baseClass, PDLMethodAction _Nullable beforeAction, PDLMethodAction _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
 #ifndef __LP64__
     return 0;
 #else
@@ -203,15 +198,15 @@ static NSInteger addInstanceMethodsActions(Class aClass, Class baseClass, IMP _N
 
 #pragma mark - public methods
 
-+ (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction {
++ (NSInteger)pdl_addInstanceMethodsBeforeAction:(PDLMethodAction)beforeAction afterAction:(PDLMethodAction)afterAction {
     return [self pdl_addInstanceMethodsBeforeAction:beforeAction afterAction:afterAction methodFilter:nil];
 }
 
-+ (NSInteger)pdl_addInstanceMethodsBeforeAction:(IMP)beforeAction afterAction:(IMP)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
++ (NSInteger)pdl_addInstanceMethodsBeforeAction:(PDLMethodAction)beforeAction afterAction:(PDLMethodAction)afterAction methodFilter:(BOOL(^)(SEL selector))methodFilter {
     return addInstanceMethodsActions(self, self, beforeAction, afterAction, methodFilter);
 }
 
-NSInteger pdl_addInstanceMethodsActions(Class aClass, Class _Nullable baseClass, IMP _Nullable beforeAction, IMP _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
+NSInteger pdl_addInstanceMethodsActions(Class aClass, Class _Nullable baseClass, PDLMethodAction _Nullable beforeAction, PDLMethodAction _Nullable afterAction, BOOL(^_Nullable methodFilter)(SEL selector)) {
     BOOL(^_Nullable filter)(SEL selector) = nil;
     if (methodFilter) {
         filter = ^BOOL(SEL selector) {
@@ -221,7 +216,7 @@ NSInteger pdl_addInstanceMethodsActions(Class aClass, Class _Nullable baseClass,
     return addInstanceMethodsActions(aClass, baseClass ?: aClass, beforeAction, afterAction, filter);
 }
 
-BOOL pdl_addInstanceMethodActions(Class aClass, Method method, IMP _Nullable beforeAction, IMP _Nullable afterAction) {
+BOOL pdl_addInstanceMethodActions(Class aClass, Method method, PDLMethodAction _Nullable beforeAction, PDLMethodAction _Nullable afterAction) {
 #ifndef __LP64__
     return NO;
 #else
@@ -302,14 +297,14 @@ struct PDLTargetClassMetadata {
 static void swiftBefore(void *original, void *sp, void *data) {
     PDLSwiftMethodAction action = ((void **)data)[0];
     if (action) {
-        action(original);
+        action(original, sp);
     }
 }
 
 static void swiftAfter(void *original, void *sp, void *data) {
     PDLSwiftMethodAction action = ((void **)data)[1];
     if (action) {
-        action(original);
+        action(original, sp);
     }
 }
 

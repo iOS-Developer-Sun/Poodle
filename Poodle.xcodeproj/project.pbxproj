@@ -476,6 +476,8 @@
 		B8E8204E25C10A3A00204009 /* PDLReuseItemManager.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E81E3325C109D900204009 /* PDLReuseItemManager.h */; };
 		C0080DC9276E5ECF00510D6A /* PDLDYLDSharedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */; };
 		C0080DCA276E5EFE00510D6A /* PDLDYLDSharedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */; };
+		C00870782B26B7FE00E4E2C0 /* pdl_trampoline-x86_64.s in Sources */ = {isa = PBXBuildFile; fileRef = C00870772B26B7FE00E4E2C0 /* pdl_trampoline-x86_64.s */; };
+		C00870792B26B80A00E4E2C0 /* pdl_trampoline-x86_64.s in Sources */ = {isa = PBXBuildFile; fileRef = C00870772B26B7FE00E4E2C0 /* pdl_trampoline-x86_64.s */; };
 		C010A6D927114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CA27114D8300A785E9 /* PDLNonThreadSafePropertyObserverProperty.m */; };
 		C010A6DA27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CB27114D8300A785E9 /* PDLNonThreadSafePropertyObserver.m */; };
 		C010A6DB27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C010A6CC27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m */; };
@@ -3038,6 +3040,7 @@
 		B8FC6DA122EFD979005B91DE /* libpdl_dynamic.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_dynamic.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLDYLDSharedCache.m; sourceTree = "<group>"; };
 		C0080DC8276E5ECE00510D6A /* PDLDYLDSharedCache.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLDYLDSharedCache.h; sourceTree = "<group>"; };
+		C00870772B26B7FE00E4E2C0 /* pdl_trampoline-x86_64.s */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.asm; path = "pdl_trampoline-x86_64.s"; sourceTree = "<group>"; };
 		C00F53682AC3136300916CD4 /* PoodleRemoveBuildVersion.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = PoodleRemoveBuildVersion.sh; sourceTree = "<group>"; };
 		C010A6C327114D8300A785E9 /* PDLNonThreadSafeObserverAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverAction.h; sourceTree = "<group>"; };
 		C010A6C427114D8300A785E9 /* PDLNonThreadSafeObserverCriticalResource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeObserverCriticalResource.h; sourceTree = "<group>"; };
@@ -5611,6 +5614,7 @@
 			isa = PBXGroup;
 			children = (
 				C0E537A32AFB7E2E00C5566A /* pdl_trampoline-arm64.s */,
+				C00870772B26B7FE00E4E2C0 /* pdl_trampoline-x86_64.s */,
 				C0E537932AFB74E300C5566A /* pdl_trampoline.c */,
 				C0E537942AFB74E300C5566A /* pdl_trampoline.h */,
 			);
@@ -10339,6 +10343,7 @@
 				B85D45D5240E859000CBF758 /* pdl_spinlock.m in Sources */,
 				B85D45D6240E859000CBF758 /* PDLAddressQueryViewController.m in Sources */,
 				B85D45D7240E859000CBF758 /* PDLCollectionViewFlowLayout.m in Sources */,
+				C00870782B26B7FE00E4E2C0 /* pdl_trampoline-x86_64.s in Sources */,
 				B85D45D8240E859000CBF758 /* PDLDatabase.m in Sources */,
 				B8220D362681DFA4002018D8 /* dsc_extractor.cpp in Sources */,
 				B897B5B1260112B200696E06 /* PDLColor.m in Sources */,
@@ -11260,6 +11265,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C00870792B26B80A00E4E2C0 /* pdl_trampoline-x86_64.s in Sources */,
 				C0E537A52AFB7E2E00C5566A /* pdl_trampoline-arm64.s in Sources */,
 				C0E5379F2AFB75AD00C5566A /* pdl_trampoline.c in Sources */,
 			);

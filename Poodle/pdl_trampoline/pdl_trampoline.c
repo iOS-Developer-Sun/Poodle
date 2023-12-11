@@ -16,6 +16,7 @@
 #include "pdl_vm.h"
 #include "pdl_thread_storage.h"
 #include "pdl_pac.h"
+#include "pdl_asm.h"
 
 extern char pdl_trampoline_page_begin;
 extern char pdl_trampoline_page_stubs;
@@ -118,7 +119,7 @@ void *pdl_trampoline_before(pdl_trampoline_object *object, void *lr, void *sp) {
     void(*before)(void *, void *, void *) = object->before;
     void *original = object->original;
     if (before) {
-        before(original, sp, object->data);
+        before(original, sp + PDL_ARG_BASE_OFFSET, object->data);
     }
 
     pdl_list *list = pdl_thread_list();
@@ -142,7 +143,7 @@ void *pdl_trampoline_after(void *sp) {
     void(*after)(void *, void *, void *) = object->after;
     void *original = object->original;
     if (after) {
-        after(original, sp, object->data);
+        after(original, sp + PDL_ARG_BASE_OFFSET, object->data);
     }
     pdl_list_destroy_node(list, node);
     return lr;
