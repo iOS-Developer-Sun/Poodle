@@ -132,7 +132,7 @@ NSDictionary *pdl_propertiesDescriptionForClass(id self, Class aClass) {
     if ([self isKindOfClass:[NSDictionary class]]) {
         NSDictionary *dictionary = (NSDictionary *)self;
         NSUInteger count = dictionary.count;
-        [ret appendFormat:@"`%@<%p>(%lu)`", [self class], self, count];
+        [ret appendFormat:@"`%@<%p(%zd)>(%lu)`", [self class], self, [self pdl_retainCount], count];
         [ret appendFormat:@"\n%@{", indentation];
         for (id key in [dictionary.allKeys sortedArrayUsingSelector:@selector(compare:)]) {
             id value = dictionary[key];
@@ -149,7 +149,7 @@ NSDictionary *pdl_propertiesDescriptionForClass(id self, Class aClass) {
     } else if ([self isKindOfClass:[NSArray class]]) {
         NSArray *array = (NSArray *)self;
         NSUInteger count = array.count;
-        [ret appendFormat:@"`%@<%p>(%lu)`", [self class], self, count];
+        [ret appendFormat:@"`%@<%p(%zd)>(%lu)`", [self class], self, [self pdl_retainCount], count];
         [ret appendFormat:@"\n%@[", indentation];
         for (NSInteger i = 0; i < count; i++) {
             id object = array[i];
@@ -159,14 +159,14 @@ NSDictionary *pdl_propertiesDescriptionForClass(id self, Class aClass) {
     } else if ([self isKindOfClass:[NSSet class]] || [self isKindOfClass:[NSOrderedSet class]]) {
         NSSet *set = (NSSet *)self;
         NSUInteger count = set.count;
-        [ret appendFormat:@"`%@<%p>(%lu)`", [self class], self, count];
+        [ret appendFormat:@"`%@<%p(%zd)>(%lu)`", [self class], self, [self pdl_retainCount], count];
         [ret appendFormat:@"\n%@[", indentation];
         for (id object in set) {
             [ret appendFormat:@"\n%@,", [object pdl_debugDescription:indentationLevel + 1]];
         }
         [ret appendFormat:@"\n%@]", indentation];
     } else {
-        [ret appendFormat:@"`%@ %p`%@", [self class], self, self];
+        [ret appendFormat:@"`%@<%p(%zd)>`%@", [self class], self, [self pdl_retainCount], self];
     }
     return ret;
 }
