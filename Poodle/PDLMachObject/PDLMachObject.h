@@ -28,6 +28,7 @@ typedef NS_ENUM(NSUInteger, PDLSwiftMethodKind) {
 @property (nonatomic, assign, readonly) pdl_mach_object_t *object;
 
 - (instancetype)initWithData:(NSData *)data;
+- (instancetype)initWithPath:(NSString *)path;
 
 - (uintptr_t)mainOffset;
 
