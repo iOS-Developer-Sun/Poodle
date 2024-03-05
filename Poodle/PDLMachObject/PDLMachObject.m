@@ -419,7 +419,6 @@ static BOOL isSectionExecutable(const pdl_section *section) {
     pdl_mach_object_t __object;
 }
 
-@property (nonatomic, copy, readonly) NSData *originalData;
 @property (nonatomic, strong, readonly) NSMutableData *data;
 @property (nonatomic, strong, readonly) NSMutableDictionary *bindInfo;
 @property (nonatomic, strong, readonly) NSMutableDictionary *dysymInfo;
@@ -439,13 +438,11 @@ static BOOL isSectionExecutable(const pdl_section *section) {
 
 @implementation PDLMachObject
 
-- (instancetype)initWithData:(NSData *)data {
+- (instancetype)initWithMutableData:(NSMutableData *)data {
     self = [super init];
     if (self) {
         _object = &__object;
-
-        _originalData = [data copy];
-        _data = [_originalData mutableCopy];
+        _data = data;
 
         struct mach_header *header = (struct mach_header *)_data.bytes;
         BOOL ret = pdl_get_mach_object_with_header(header, -1, NULL, (pdl_mach_object *)_object);
@@ -469,6 +466,16 @@ static BOOL isSectionExecutable(const pdl_section *section) {
         [self setup];
     }
     return self;
+}
+
+- (instancetype)initWithData:(NSData *)data {
+    NSMutableData *mutableData = [data mutableCopy];
+    return [self initWithMutableData:mutableData];
+}
+
+- (instancetype)initWithPath:(NSString *)path {
+    NSMutableData *mutableData = [NSMutableData dataWithContentsOfFile:path];
+    return [self initWithMutableData:mutableData];
 }
 
 - (uintptr_t)mainOffset {
