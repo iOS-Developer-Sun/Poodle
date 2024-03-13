@@ -12,10 +12,13 @@
 extern "C" {
 #endif
 
-extern unsigned int pdl_zombie_duration(void);
-extern void pdl_zombie_set_zombie_duration(unsigned int zombie_duration);
-extern bool pdl_zombie_is_zombie(__unsafe_unretained id object);
-extern bool pdl_zombie_enable(bool(*filter)(__unsafe_unretained id object));
+extern BOOL pdl_zombie_enable(BOOL(*filter)(__unsafe_unretained id object));
+extern BOOL pdl_zombie_object_enabled(__unsafe_unretained id object);
+extern void pdl_zombie_set_object_enabled(__unsafe_unretained id object, BOOL enabled);
+extern NSTimeInterval pdl_zombie_object_duration(__unsafe_unretained id object);
+extern void pdl_zombie_set_object_duration(__unsafe_unretained id object, NSTimeInterval duration);
+extern BOOL pdl_zombie_object_is_zombie(__unsafe_unretained id object);
+extern void pdl_zombie_free_object(__unsafe_unretained id object);
 
 #ifdef __cplusplus
 }

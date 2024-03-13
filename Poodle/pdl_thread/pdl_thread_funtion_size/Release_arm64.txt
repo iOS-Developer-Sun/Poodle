@@ -75,7 +75,7 @@ ______PDL_THREAD_FAKE_END_____:
      10c:	03 00 00 14	b	0x118
      110:	79 01 1f f8	stur	x25, [x11, #-16]
      114:	ef 03 00 aa	mov	x15, x0
-     118:	af 7a 2e f8	str	x15, [x21, x14, lsl  #3]
+     118:	af 7a 2e f8	str	x15, [x21, x14, lsl #3]
      11c:	08 09 00 91	add	x8, x8, #2
      120:	8c 01 0d 8b	add	x12, x12, x13
      124:	f7 22 00 91	add	x23, x23, #8
@@ -94,7 +94,7 @@ ______PDL_THREAD_FAKE_END_____:
      158:	03 00 00 14	b	0x164
      15c:	b9 02 00 f9	str	x25, [x21]
      160:	28 00 80 52	mov	w8, #1
-     164:	a0 7a 28 f8	str	x0, [x21, x8, lsl  #3]
+     164:	a0 7a 28 f8	str	x0, [x21, x8, lsl #3]
      168:	e0 03 15 aa	mov	x0, x21
      16c:	e1 03 14 aa	mov	x1, x20
      170:	e2 03 13 aa	mov	x2, x19
