@@ -18,6 +18,9 @@ extern "C" {
 @property (readonly) NSString *_shortMethodDescription;
 @property (readonly) NSString *_methodDescription;
 @property (readonly) NSString *_copyDescription;
+
+- (NSString *)__ivarDescriptionForClass:(Class)aClass;
+
 #if !TARGET_IPHONE_SIMULATOR
 @property (readonly) NSString *_briefDescription;
 @property (readonly) NSString *_rawBriefDescription;
