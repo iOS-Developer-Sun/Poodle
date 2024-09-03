@@ -11,7 +11,7 @@
 #include <mach/mach.h>
 #include <mach/vm_map.h>
 
-vm_prot_t pdl_vm_get_protection(void *address) {
+bool pdl_vm_get_protection(void *address, vm_prot_t *prot) {
     mach_port_t task = mach_task_self();
     vm_size_t size = 0;
     vm_address_t *addr = (vm_address_t *)&address;
@@ -26,24 +26,56 @@ vm_prot_t pdl_vm_get_protection(void *address) {
     kern_return_t info_ret = vm_region(task, addr, &size, VM_REGION_BASIC_INFO, (vm_region_info_t)&info, &count, &object);
 #endif
     if (info_ret == KERN_SUCCESS) {
-        return info.protection;
+        if (prot) {
+            *prot = info.protection;
+        }
+        return true;
     } else {
-        return VM_PROT_READ;
+        return false;
     }
+}
+
+bool pdl_vm_read(void **address, void **value) {
+    bool changed = false;
+    vm_prot_t prot = VM_PROT_NONE;
+    bool ret = pdl_vm_get_protection(address, &prot);
+    if (!ret) {
+        return false;
+    }
+
+    if ((prot & VM_PROT_READ) == 0) {
+        changed = true;
+        kern_return_t success = vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot | VM_PROT_READ);
+        if (success != KERN_SUCCESS) {
+            return false;
+        }
+    }
+    if (value) {
+        *value = *address;
+    }
+    if (changed) {
+        vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot);
+    }
+    return true;
 }
 
 bool pdl_vm_write(void **address, void *value, void **original) {
     bool changed = false;
-    vm_prot_t prot = pdl_vm_get_protection(address);
-    if (original && (prot & VM_PROT_READ)) {
-        *original = *address;
+    vm_prot_t prot = VM_PROT_NONE;
+    bool ret = pdl_vm_get_protection(address, &prot);
+    if (!ret) {
+        return false;
     }
-    if ((prot & VM_PROT_WRITE) == 0) {
+
+    if ((prot & VM_PROT_READ) == 0 || (prot & VM_PROT_WRITE) == 0) {
         changed = true;
-        kern_return_t success = vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot | VM_PROT_WRITE);
+        kern_return_t success = vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot | VM_PROT_READ | VM_PROT_WRITE);
         if (success != KERN_SUCCESS) {
             return false;
         }
+    }
+    if (original) {
+        *original = *address;
     }
     *address = value;
     if (changed) {
