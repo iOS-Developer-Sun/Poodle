@@ -71,7 +71,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         preserve_paths = '*.{md,sh,py,rb,plist}'.freeze
         library_files = '*.a'.freeze
         osx_version = '11.0'.freeze
-        ios_version = '10.0'.freeze
+        ios_version = '11.0'.freeze
 
         # extra storage
         class << s

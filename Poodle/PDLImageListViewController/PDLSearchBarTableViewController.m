@@ -67,6 +67,14 @@
     [[PDLKeyboardNotificationObserver observerForDelegate:self] stopObserving];
 }
 
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+
+    UIEdgeInsets edgeInsets = self.view.safeAreaInsets;
+    self.searchBar.frame = CGRectMake(edgeInsets.left, edgeInsets.top, self.view.frame.size.width - edgeInsets.left - edgeInsets.right, 44);
+    self.tableView.frame = CGRectMake(edgeInsets.left, self.searchBar.frame.origin.y + self.searchBar.frame.size.height, self.view.frame.size.width - edgeInsets.left - edgeInsets.right, self.view.frame.size.height - (self.searchBar.frame.origin.y + self.searchBar.frame.size.height) - edgeInsets.bottom);
+}
+
 - (void)keyboardShowAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
     self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.view.frame.size.height - (self.searchBar.frame.origin.y + self.searchBar.frame.size.height) - keyboardHeight);
 }

@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface PDLApplication : NSObject
 
 @property (nonatomic, assign, class) BOOL eventFeedbackEnabled;
+@property (nonatomic, readonly, class) NSDictionary *launchOptions;
 
 + (void)registerEventFeedbackLayerInitializer:(void(^)(CALayer *layer, void(^defaultInitializer)(CALayer *layer)))initializer;
 
@@ -26,12 +27,12 @@ NS_ASSUME_NONNULL_BEGIN
 + (void)registerDevelopmentToolAction:(BOOL(^)(void))action;
 
 + (BOOL)enableDevelopmentTool;
++ (BOOL)enableSafemode;
 
 + (BOOL)registerShakeAction:(void(^)(void))shakeAction;
 
 + (void)exitApplication;
 + (void)terminate;
-
 
 + (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions;
 + (BOOL)handleUrl:(NSURL *)url;

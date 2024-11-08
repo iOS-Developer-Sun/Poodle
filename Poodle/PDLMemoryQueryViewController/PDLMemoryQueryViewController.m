@@ -302,32 +302,28 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
 @property (nonatomic, strong) NSMutableArray *results;
 @property (nonatomic, strong) NSMutableArray *arguments;
 
-@property (nonatomic, strong, class, readonly) NSMutableArray *constantTitles;
-@property (nonatomic, strong, class, readonly) NSMutableArray *constantActions;
+@property (nonatomic, strong) NSMutableArray *constantTitles;
+@property (nonatomic, strong) NSMutableArray *constantActions;
 
 @end
 
 @implementation PDLMemoryQueryViewController
 
-+ (NSMutableArray *)constantTitles {
-    static NSMutableArray *constantTitles = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        constantTitles = [NSMutableArray array];
-    });
-    return constantTitles;
+- (NSMutableArray *)constantTitles {
+    if (!_constantTitles) {
+        _constantTitles = [NSMutableArray array];
+    }
+    return _constantTitles;
 }
 
-+ (NSMutableArray *)constantActions {
-    static NSMutableArray *constantActions = nil;
-    static dispatch_once_t onceToken;
-    dispatch_once(&onceToken, ^{
-        constantActions = [NSMutableArray array];
-    });
-    return constantActions;
+- (NSMutableArray *)constantActions {
+    if (!_constantActions) {
+        _constantActions = [NSMutableArray array];
+    }
+    return _constantActions;
 }
 
-+ (void)addConstantQueryWithTitle:(NSString *)title action:(void (^)(PDLMemoryQueryResult *))action {
+- (void)addConstantQueryWithTitle:(NSString *)title action:(void (^)(PDLMemoryQueryResult *))action {
     if (title && action) {
         [self.constantTitles addObject:title];
         [self.constantActions addObject:action];
@@ -341,9 +337,9 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Execute" style:UIBarButtonItemStylePlain target:self action:@selector(executeQuery)];
 
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.containerView.frame.size.width, 200)];
     headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:headerView];
+    [self.containerView addSubview:headerView];
     self.headerView = headerView;
 
     UITextView *textView = [[UITextView alloc] initWithFrame:CGRectInset(headerView.bounds, 5, 5)];
@@ -353,10 +349,10 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
     self.outputView.backgroundColor = [UIColor clearColor];
     self.outputView.editable = NO;
 
-    CGFloat footerViewHeight = self.view.frame.size.height - headerView.frame.size.height;
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - footerViewHeight, self.view.frame.size.width, footerViewHeight)];
+    CGFloat footerViewHeight = self.containerView.frame.size.height - headerView.frame.size.height;
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.containerView.frame.size.height - footerViewHeight, self.containerView.frame.size.width, footerViewHeight)];
     footerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.view addSubview:footerView];
+    [self.containerView addSubview:footerView];
     self.footerView = footerView;
 
     UITableView *tableView = [[UITableView alloc] initWithFrame:footerView.bounds style:UITableViewStyleGrouped];
@@ -368,8 +364,8 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
     tap.delegate = self;
-    [self.view addGestureRecognizer:tap];
     tap.cancelsTouchesInView = NO;
+    [self.containerView addGestureRecognizer:tap];
 
     self.results = [NSMutableArray array];
     self.arguments = [NSMutableArray array];
@@ -393,7 +389,7 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
 }
 
 - (PDLMemoryQueryResult *)constantResult:(NSInteger)index {
-    void (^action)(PDLMemoryQueryResult *result) = self.class.constantActions[index];
+    void (^action)(PDLMemoryQueryResult *result) = self.constantActions[index];
     PDLMemoryQueryResult *result = [[PDLMemoryQueryResult alloc] init];
     action(result);
     return result;
@@ -405,7 +401,7 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
-    BOOL ret = ![touch.view isKindOfClass:[UITextView class]];
+    BOOL ret = touch.view != self.outputView;
     return ret;
 }
 
@@ -466,7 +462,7 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
     } else if (section == 1) {
         return self.results.count;
     } else {
-        return self.class.constantTitles.count;
+        return self.constantTitles.count;
     }
 }
 
@@ -512,7 +508,7 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
         if (cell == nil) {
             cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:constantCell];
         }
-        cell.textLabel.text = self.class.constantTitles[indexPath.row];
+        cell.textLabel.text = self.constantTitles[indexPath.row];
         cell.tag = indexPath.row;
         return cell;
     }

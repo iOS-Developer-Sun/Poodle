@@ -13,6 +13,7 @@
 
 @implementation PDLApplication
 
+static NSDictionary *_launchOptions;
 static void(^_developmentToolInitializer)(UIWindow *) = nil;
 static void(^_eventFeedbackLayerInitializer)(CALayer *layer, void(^defaultInitializer)(CALayer *layer)) = nil;
 static UIWindow *_developmentToolWindow = nil;
@@ -190,7 +191,7 @@ static NSString *_developmentToolIdentifier = nil;
             UILabel *label = [[UILabel alloc] initWithFrame:view.bounds];
             label.font = [UIFont systemFontOfSize:10];
             label.textColor = [UIColor whiteColor];
-            label.text = @"安全模式";
+            label.text = @"SAFEMODE";
             [label sizeToFit];
             [view addSubview:label];
             switch (i) {
@@ -295,15 +296,12 @@ static NSString *_developmentToolIdentifier = nil;
 
 static BOOL applicationDidFinishLaunchingWithOptions(__unsafe_unretained id <UIApplicationDelegate> self, SEL _cmd, __unsafe_unretained UIApplication *application, NSDictionary *launchOptions) {
     PDLImplementationInterceptorRecover(_cmd);
-    BOOL isSafeMode = [PDLApplication isLaunchOptionsSafeMode:launchOptions];
-    if (isSafeMode == NO) {
-        return ((typeof(&applicationDidFinishLaunchingWithOptions))_imp)(self, _cmd, application, launchOptions);
-    } else {
-        UIWindow *window = [PDLApplication window:isSafeMode];
-        [PDLApplication setMainWindow:window];
-        [window makeKeyAndVisible];
+    BOOL succeeded = [PDLApplication application:application didFinishLaunchingWithOptions:launchOptions];
+    if (succeeded) {
         return YES;
     }
+
+    return ((typeof(&applicationDidFinishLaunchingWithOptions))_imp)(self, _cmd, application, launchOptions);
 }
 
 static BOOL applicationOpenURLOptions(__unsafe_unretained UIApplication *self, SEL _cmd, __unsafe_unretained UIApplication *application, __unsafe_unretained NSURL *url, __unsafe_unretained NSDictionary<UIApplicationOpenURLOptionsKey,id> *options) {
@@ -375,8 +373,10 @@ static void applicationSetShortcutItems(__unsafe_unretained UIApplication *self,
 }
 
 + (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    _launchOptions = launchOptions;
+
     BOOL isSafeMode = [PDLApplication isLaunchOptionsSafeMode:launchOptions];
-    if (isSafeMode) {
+    if (isSafeMode && PDLApplicationSafemodeEnabled) {
         UIWindow *window = [PDLApplication window:isSafeMode];
         [PDLApplication setMainWindow:window];
         [window makeKeyAndVisible];
@@ -406,7 +406,7 @@ static void applicationSetShortcutItems(__unsafe_unretained UIApplication *self,
 }
 
 + (UIApplicationShortcutItem *)safeModeShortcutItem {
-    UIApplicationShortcutItem *safeModeShortcutItem = [[UIApplicationShortcutItem alloc] initWithType:@"safemode" localizedTitle:@"安全模式" localizedSubtitle:nil icon:nil userInfo:nil];
+    UIApplicationShortcutItem *safeModeShortcutItem = [[UIApplicationShortcutItem alloc] initWithType:@"safemode" localizedTitle:@"SAFEMODE" localizedSubtitle:nil icon:nil userInfo:nil];
     return safeModeShortcutItem;
 }
 
@@ -415,10 +415,19 @@ static void applicationSetShortcutItems(__unsafe_unretained UIApplication *self,
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         BOOL ret = [UIApplication pdl_interceptSelector:@selector(setDelegate:) withInterceptorImplementation:(IMP)&applicationSetDelegate];
-        ret = ret && [UIApplication pdl_interceptSelector:@selector(setShortcutItems:) withInterceptorImplementation:(IMP)&applicationSetShortcutItems];
         enabled = ret;
     });
     return enabled;
+}
+
+static BOOL PDLApplicationSafemodeEnabled = NO;
++ (BOOL)enableSafemode {
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        BOOL ret = [UIApplication pdl_interceptSelector:@selector(setShortcutItems:) withInterceptorImplementation:(IMP)&applicationSetShortcutItems];
+        PDLApplicationSafemodeEnabled = ret;
+    });
+    return PDLApplicationSafemodeEnabled;
 }
 
 #pragma mark -
@@ -561,6 +570,10 @@ static void pdl_prepareSendEvent(void) {
     dispatch_once(&onceToken, ^{
         __unused BOOL ret = [UIApplication pdl_interceptSelector:@selector(sendEvent:) withInterceptorImplementation:(IMP)&applicationSendEvent];
     });
+}
+
++ (NSDictionary *)launchOptions {
+    return _launchOptions;
 }
 
 + (BOOL)eventFeedbackEnabled {

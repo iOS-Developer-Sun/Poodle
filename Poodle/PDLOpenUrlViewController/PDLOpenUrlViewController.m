@@ -65,9 +65,9 @@ static void (^PDLOpenUrlViewControllerOpenUrlAction)(NSString *urlString) = nil;
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Open" style:UIBarButtonItemStylePlain target:self action:@selector(openUrl)];
 
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.containerView.frame.size.width, 200)];
     headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:headerView];
+    [self.containerView addSubview:headerView];
     self.headerView = headerView;
 
     UITextView *textView = [[UITextView alloc] initWithFrame:CGRectInset(headerView.bounds, 5, 5)];
@@ -76,10 +76,10 @@ static void (^PDLOpenUrlViewControllerOpenUrlAction)(NSString *urlString) = nil;
     [headerView addSubview:textView];
     self.textView = textView;
 
-    CGFloat footerViewHeight = self.view.frame.size.height - headerView.frame.size.height;
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - footerViewHeight, self.view.frame.size.width, footerViewHeight)];
+    CGFloat footerViewHeight = self.containerView.frame.size.height - headerView.frame.size.height;
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.containerView.frame.size.height - footerViewHeight, self.containerView.frame.size.width, footerViewHeight)];
     footerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.view addSubview:footerView];
+    [self.containerView addSubview:footerView];
     self.footerView = footerView;
 
     UITableView *tableView = [[UITableView alloc] initWithFrame:footerView.bounds style:UITableViewStyleGrouped];
@@ -91,8 +91,8 @@ static void (^PDLOpenUrlViewControllerOpenUrlAction)(NSString *urlString) = nil;
 
     UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap:)];
     tap.delegate = self;
-    [self.view addGestureRecognizer:tap];
     tap.cancelsTouchesInView = NO;
+    [self.containerView addGestureRecognizer:tap];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -130,7 +130,7 @@ static void (^PDLOpenUrlViewControllerOpenUrlAction)(NSString *urlString) = nil;
 }
 
 - (void)openUrl {
-    [self.view endEditing:YES];
+    [self.containerView endEditing:YES];
 
     NSString *urlString = self.textView.text;
     if (urlString.length > 0 && self.class.openUrlAction) {
@@ -166,11 +166,11 @@ static void (^PDLOpenUrlViewControllerOpenUrlAction)(NSString *urlString) = nil;
 #pragma mark - PDLKeyboardNotificationObserver
 
 - (void)keyboardShowAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
-    self.footerView.frame = CGRectMake(self.footerView.frame.origin.x, self.footerView.frame.origin.y, self.footerView.frame.size.width, self.view.frame.size.height - self.headerView.frame.size.height - keyboardHeight);
+    self.footerView.frame = CGRectMake(self.footerView.frame.origin.x, self.footerView.frame.origin.y, self.footerView.frame.size.width, self.containerView.frame.size.height - self.headerView.frame.size.height - keyboardHeight);
 }
 
 - (void)keyboardHideAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
-    self.footerView.frame = CGRectMake(self.footerView.frame.origin.x, self.footerView.frame.origin.y, self.footerView.frame.size.width, self.view.frame.size.height - self.headerView.frame.size.height);
+    self.footerView.frame = CGRectMake(self.footerView.frame.origin.x, self.footerView.frame.origin.y, self.footerView.frame.size.width, self.containerView.frame.size.height - self.headerView.frame.size.height);
 }
 
 @end

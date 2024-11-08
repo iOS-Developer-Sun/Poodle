@@ -7,6 +7,7 @@
 //
 
 #import "PDLViewControllerListViewController.h"
+#import "PDLColor.h"
 
 typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
     PDLViewControllerRelationshipNone,
@@ -257,10 +258,10 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:reusedIdentifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:reusedIdentifier];
-        cell.textLabel.textColor = [UIColor blackColor];
+        cell.textLabel.textColor = PDLColorTextColor();
         cell.textLabel.font = [UIFont systemFontOfSize:10];
         cell.textLabel.numberOfLines = 0;
-        cell.backgroundColor = [UIColor whiteColor];
+        cell.backgroundColor = PDLColorBackgroundColor();
     }
     PDLViewControllerListViewControllerViewControllerItem *item = self.data[indexPath.section].items[indexPath.row];
     UIViewController *viewController = item.viewController;
@@ -294,7 +295,7 @@ typedef NS_ENUM(NSInteger, PDLViewControllerRelationship) {
     if (header == nil) {
         header = [[UITableViewHeaderFooterView alloc] initWithReuseIdentifier:reusedIdentifier];
         UILabel *label = [[UILabel alloc] initWithFrame:header.contentView.bounds];
-        label.textColor = [UIColor blackColor];
+        label.textColor = PDLColorTextColor();
         label.font = [UIFont boldSystemFontOfSize:12];
         label.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [header.contentView addSubview:label];

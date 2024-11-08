@@ -24,12 +24,12 @@
 
     self.title = @"File System";
 
-    UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:self.containerView.bounds style:UITableViewStyleGrouped];
     tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     tableView.dataSource = self;
     tableView.delegate = self;
     tableView.tableFooterView = [[UIView alloc] init];
-    [self.view addSubview:tableView];
+    [self.containerView addSubview:tableView];
     self.tableView = tableView;
 
     UIView *tableHeaderView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 60)];

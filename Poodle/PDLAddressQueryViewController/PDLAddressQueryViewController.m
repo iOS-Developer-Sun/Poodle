@@ -27,14 +27,14 @@
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Execute" style:UIBarButtonItemStylePlain target:self action:@selector(executeQuery)];
 
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.containerView.frame.size.width, 200)];
     headerView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
-    [self.view addSubview:headerView];
+    [self.containerView addSubview:headerView];
 
-    CGFloat footerViewHeight = self.view.frame.size.height - headerView.frame.size.height;
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.view.frame.size.height - footerViewHeight, self.view.frame.size.width, footerViewHeight)];
+    CGFloat footerViewHeight = self.containerView.frame.size.height - headerView.frame.size.height;
+    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, self.containerView.frame.size.height - footerViewHeight, self.containerView.frame.size.width, footerViewHeight)];
     footerView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    [self.view addSubview:footerView];
+    [self.containerView addSubview:footerView];
 
     UITextView *inputView = [[UITextView alloc] initWithFrame:CGRectInset(headerView.bounds, 5, 5)];
     inputView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;

@@ -12,6 +12,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface PDLViewController : UIViewController
 
+@property (nonatomic, weak, readonly) UIView *containerView;
+
 @end
 
 NS_ASSUME_NONNULL_END

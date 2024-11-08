@@ -47,6 +47,6 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryResultType) {
 
 @interface PDLMemoryQueryViewController : PDLViewController
 
-+ (void)addConstantQueryWithTitle:(NSString *)title action:(void(^)(PDLMemoryQueryResult *result))action;
+- (void)addConstantQueryWithTitle:(NSString *)title action:(void(^)(PDLMemoryQueryResult *result))action;
 
 @end
