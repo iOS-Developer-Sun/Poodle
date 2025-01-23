@@ -36,6 +36,10 @@
         NSString *name2 = (NSString *)obj2;
         return [name1 compare:name2];
     }];
+    NSString *systemFamilyName = [UIFont systemFontOfSize:[UIFont systemFontSize]].familyName;
+    if (systemFamilyName) {
+        self.fontFamilyNames = [@[systemFamilyName] arrayByAddingObjectsFromArray:self.fontFamilyNames];
+    }
 
     self.title = [NSString stringWithFormat:@"Font(%@)", @(self.fontFamilyNames.count)];
 
@@ -148,7 +152,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *identifier = @"FontViewControllerTableViewCellIdentifier";
+    NSString *identifier = @"";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
     if (cell == nil) {
         cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];

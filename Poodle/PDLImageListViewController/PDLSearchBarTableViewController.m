@@ -52,7 +52,6 @@
     self.tapGestureRecognizer = tapGestureRecognizer;
 
     [self loadData];
-    [self filterWithString:nil];
 }
 
 - (void)viewWillAppear:(BOOL)animated {
@@ -89,6 +88,26 @@
 
 - (void)loadData {
     ;
+}
+
+- (void)setData:(NSArray *)data {
+    if (_data == data || [_data isEqualToArray:data]) {
+        return;
+    }
+
+    _data = [data copy];
+
+    [self filterWithString:self.searchBar.text];
+}
+
+- (void)setFilteredData:(NSArray *)filteredData {
+    if (_filteredData == filteredData || [_filteredData isEqualToArray:filteredData]) {
+        return;
+    }
+
+    _filteredData = [filteredData copy];
+
+    [self.tableView reloadData];
 }
 
 - (void)filterWithString:(NSString *)string {
@@ -140,7 +159,6 @@
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText {
     NSString *text = searchBar.text;
     [self filterWithString:text];
-    [self.tableView reloadData];
 }
 
 - (BOOL)searchBar:(UISearchBar *)searchBar shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)text {

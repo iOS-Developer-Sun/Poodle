@@ -365,9 +365,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 @interface PDLDirectoryViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
 
-@property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, copy) NSString *directory;
-@property (nonatomic, copy) NSArray *contents;
 @property (nonatomic, weak) UIBarButtonItem *rightBarButtonItem;
 @property (nonatomic, weak) UILabel *infoLabel;
 
@@ -375,10 +373,18 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 @property (nonatomic, weak) UIButton *checkboxButton;
 @property (nonatomic, weak) UIButton *actButton;
 @property (nonatomic, strong) NSMutableArray *selected;
-
+@property (nonatomic, strong, class) NSArray *currentContents;
 @end
 
 @implementation PDLDirectoryViewController
+
+static NSArray *_currentContents = nil;
++ (NSArray *)currentContents {
+    return _currentContents;
+}
++ (void)setCurrentContents:(NSArray *)currentContents {
+    _currentContents = [currentContents copy];
+}
 
 - (instancetype)initWithDirectory:(NSString *)directory {
     self = [super init];
@@ -398,30 +404,25 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     self.navigationItem.rightBarButtonItem = rightBarButtonItem;
     self.rightBarButtonItem = rightBarButtonItem;
 
-    UITableView *tableView = [[UITableView alloc] initWithFrame:self.view.bounds style:UITableViewStyleGrouped];
-    tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    tableView.dataSource = self;
-    tableView.delegate = self;
-    [self.view addSubview:tableView];
-    self.tableView = tableView;
+    [self.tableView addGestureRecognizer:[[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressTableView:)]];
 
-    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 44)];
+    UIRefreshControl *refreshControl = [[UIRefreshControl alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 44)];
     [refreshControl addTarget:self action:@selector(reloadData) forControlEvents:UIControlEventValueChanged];
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 10) {
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunguarded-availability"
 #pragma clang diagnostic ignored "-Wunguarded-availability-new"
-        tableView.refreshControl = refreshControl;
+        self.tableView.refreshControl = refreshControl;
 #pragma clang diagnostic pop
     } else {
         // Fallback on earlier versions
     }
 
-    UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 22)];
+    UILabel *infoLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.tableView.frame.size.width, 22)];
     infoLabel.textAlignment = NSTextAlignmentCenter;
     infoLabel.textColor = [UIColor darkGrayColor];
     infoLabel.font = [UIFont systemFontOfSize:10];
-    tableView.tableHeaderView = infoLabel;
+    self.tableView.tableHeaderView = infoLabel;
     self.infoLabel = infoLabel;
 
     CGFloat bottom = 0;
@@ -473,11 +474,6 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     [self reloadData];
 }
 
-- (void)dealloc {
-    _tableView.dataSource = nil;
-    _tableView.delegate = nil;
-}
-
 - (void)reloadData {
     self.rightBarButtonItem.enabled = NO;
     self.infoLabel.text = @"Loading...";
@@ -496,7 +492,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
             [contents addObject:content];
             content.sizeCalculatingCompletion = ^(PDLDirectoryContent *content) {
                 __strong __typeof(self) self = weakSelf;
-                NSInteger index = [self.contents indexOfObject:content];
+                NSInteger index = [self.filteredData indexOfObject:content];
                 NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:0];
                 NSArray *indexPathsForVisibleRows = self.tableView.indexPathsForVisibleRows;
                 if ([indexPathsForVisibleRows containsObject:indexPath]) {
@@ -521,15 +517,39 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
                 // Fallback on earlier versions
             }
             self.rightBarButtonItem.enabled = YES;
-            self.contents = contents;
-            self.infoLabel.text = [NSString stringWithFormat:@"%@ %@", @(self.contents.count), (self.contents.count > 1 ? @"items" : @"item")];
-            [self.tableView reloadData];
+            self.data = contents;
         });
     });
 }
 
+- (void)filterWithString:(NSString *)string {
+    [super filterWithString:string];
+
+    if (string.length == 0) {
+        self.filteredData = self.data;
+        return;
+    }
+
+    NSMutableArray *filtered = [NSMutableArray array];
+    for (PDLDirectoryContent *content in self.data) {
+        NSRange range = [content.filename rangeOfString:string options:NSCaseInsensitiveSearch];
+        if (range.location == 0 && range.length == content.filename.length) {
+            [filtered insertObject:content atIndex:0];
+        } else if (range.location != NSNotFound) {
+            [filtered addObject:content];
+        }
+    }
+    self.filteredData = filtered;
+}
+
 - (void)edit {
     self.isEditing = !self.isEditing;
+}
+
+- (void)setFilteredData:(NSArray *)filteredData {
+    [super setFilteredData:filteredData];
+
+    self.infoLabel.text = [NSString stringWithFormat:@"%@ %@", @(self.filteredData.count), (self.filteredData.count > 1 ? @"items" : @"item")];
 }
 
 - (void)reloadDataSilently {
@@ -537,7 +557,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     for (NSIndexPath *indexPath in indexPaths) {
         PDLDirectoryTableViewCell *cell = [self.tableView cellForRowAtIndexPath:indexPath];
         if (cell) {
-            PDLDirectoryContent *content = self.contents[indexPath.row];
+            PDLDirectoryContent *content = self.filteredData[indexPath.row];
             [self applyContent:content forCell:cell];
             cell.cellSelected = ([self.selected containsObject:content]);
         }
@@ -545,12 +565,12 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 }
 
 - (void)refreshCheckbox {
-    self.checkboxButton.selected = ((self.selected.count > 0) && (self.selected.count >= self.contents.count));
+    self.checkboxButton.selected = ((self.selected.count > 0) && (self.selected.count >= self.filteredData.count));
     self.actButton.enabled = (self.selected.count > 0);
 }
 
 - (void)refreshRightButton {
-    if (self.contents.count == 0) {
+    if (self.filteredData.count == 0) {
         self.rightBarButtonItem.title = @"";
     } else {
         self.rightBarButtonItem.title = self.isEditing ? @"Done" : @"Edit";
@@ -585,7 +605,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     checkboxButton.selected = !checkboxButton.selected;
     [self.selected removeAllObjects];
     if (checkboxButton.selected) {
-        [self.selected addObjectsFromArray:self.contents];
+        [self.selected addObjectsFromArray:self.filteredData];
     }
     [self.tableView reloadData];
     [self refreshCheckbox];
@@ -594,6 +614,9 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 - (void)actButtonDidTouchUpInside:(UIButton *)actButton {
     __weak __typeof(self) weakSelf = self;
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Actions" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Copy" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [weakSelf copySelected];
+    }]];
     [alertController addAction:[UIAlertAction actionWithTitle:@"Delete" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
         [weakSelf deleteSelected];
     }]];
@@ -624,6 +647,10 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     [self reloadData];
 }
 
+- (void)copySelected {
+    PDLDirectoryViewController.currentContents = self.selected;
+}
+
 - (void)doOtherForSelected {
     NSMutableArray *urls = [NSMutableArray array];
     for (PDLDirectoryContent *content in self.selected) {
@@ -642,7 +669,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
             return;
         }
 
-        PDLDirectoryContent *content = self.contents[indexPath.row];
+        PDLDirectoryContent *content = self.filteredData[indexPath.row];
         __weak __typeof(self) weakSelf = self;
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Actions" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a text file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -688,8 +715,71 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     }
 }
 
+- (void)longPressTableView:(UILongPressGestureRecognizer *)longPressGestureRecognizer {
+    if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan) {
+        if (PDLDirectoryViewController.currentContents.count == 0) {
+            return;
+        }
+
+        __weak __typeof(self) weakSelf = self;
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Actions" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+        NSString *pasteTitle = @"Paste(1 item)";
+        if (PDLDirectoryViewController.currentContents.count > 1) {
+            pasteTitle = [NSString stringWithFormat:@"Paste(%@ items)", @(PDLDirectoryViewController.currentContents.count)];
+        }
+        [alertController addAction:[UIAlertAction actionWithTitle:pasteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [weakSelf pasteCurrentContents];
+        }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            ;
+        }]];
+        [self presentViewController:alertController animated:YES completion:nil];
+    } else if(longPressGestureRecognizer.state == UIGestureRecognizerStateChanged) {
+        ;
+    } else if(longPressGestureRecognizer.state == UIGestureRecognizerStateEnded) {
+        ;
+    } else if(longPressGestureRecognizer.state == UIGestureRecognizerStateCancelled) {
+        ;
+    }
+}
+
 - (void)tapImageView:(UITapGestureRecognizer *)tapGestureRecognizer {
     [tapGestureRecognizer.view removeFromSuperview];
+}
+
+- (BOOL)pasteCurrentContent:(PDLDirectoryContent *)content {
+    NSString *source = content.filePath;
+    if (![[NSFileManager defaultManager] fileExistsAtPath:source]) {
+        [self alertWithTitle:@"Error" message:[NSString stringWithFormat:@"File '%@' does not exist.", source]];
+        return NO;
+    }
+
+    NSError *error = nil;
+    NSString *destination = [self.directory stringByAppendingPathComponent:source.lastPathComponent];
+    if ([source isEqualToString:destination]) {
+        return YES;
+    }
+
+    if ([[NSFileManager defaultManager] fileExistsAtPath:destination]) {
+        [[NSFileManager defaultManager] removeItemAtPath:destination error:NULL];
+    }
+
+    [[NSFileManager defaultManager] copyItemAtPath:source toPath:destination error:&error];
+    if (error) {
+        [self alertWithTitle:@"Error" message:error.localizedDescription];
+        return NO;
+    }
+    return YES;
+}
+
+- (void)pasteCurrentContents {
+    for (PDLDirectoryContent *content in PDLDirectoryViewController.currentContents) {
+        BOOL ret = [self pasteCurrentContent:content];
+        if (!ret) {
+            break;
+        }
+    }
+    [self reloadData];
 }
 
 - (void)openContent:(PDLDirectoryContent *)content {
@@ -698,6 +788,21 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
     }
 
     [self openContent:content type:content.type];
+}
+
+- (void)renameContent:(PDLDirectoryContent *)content filename:(NSString *)filename {
+    if (filename.length == 0 || [filename isEqualToString:content.filename]) {
+        return;
+    }
+
+    NSString *target = [self.directory stringByAppendingPathComponent:filename];
+    NSError *error = nil;
+    [[NSFileManager defaultManager] moveItemAtPath:content.filePath toPath:target error:&error];
+    if (!error) {
+        [self reloadData];
+    } else {
+        [self alertWithTitle:@"Error" message:error.localizedDescription];
+    }
 }
 
 - (void)openContent:(PDLDirectoryContent *)content type:(PDLDirectoryContentType)type {
@@ -809,11 +914,6 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 #pragma mark - UITableViewDataSource & UITableViewDelegate
 
-- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    NSInteger numbers = self.contents.count;
-    return numbers;
-}
-
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 50;
 }
@@ -833,7 +933,7 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
         [cell addGestureRecognizer:longPressGestureRecognizer];
         cell.longPressGestureRecognizer = longPressGestureRecognizer;
     }
-    PDLDirectoryContent *content = self.contents[indexPath.row];
+    PDLDirectoryContent *content = self.filteredData[indexPath.row];
     [self applyContent:content forCell:cell];
     cell.cellSelected = ([self.selected containsObject:content]);
     cell.longPressGestureRecognizer.enabled = !tableView.isEditing;
@@ -841,8 +941,8 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [tableView deselectRowAtIndexPath:indexPath animated:NO];
-    PDLDirectoryContent *content = self.contents[indexPath.row];
+    [super tableView:tableView didSelectRowAtIndexPath:indexPath];
+    PDLDirectoryContent *content = self.filteredData[indexPath.row];
     if (tableView.isEditing) {
         PDLDirectoryTableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
         if ([self.selected containsObject:content]) {
@@ -868,16 +968,14 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 }
 
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-    PDLDirectoryContent *content = self.contents[indexPath.row];
+    PDLDirectoryContent *content = self.filteredData[indexPath.row];
     NSString *filePath = content.filePath;
     NSError *error = nil;
     BOOL isRemoved = [[NSFileManager defaultManager] removeItemAtPath:filePath error:&error];
     if (isRemoved) {
-        NSMutableArray *contents = [self.contents mutableCopy];
-        [contents removeObjectAtIndex:indexPath.row];
-        self.contents = contents;
-        self.infoLabel.text = [NSString stringWithFormat:@"%@ %@", @(self.contents.count), (self.contents.count > 1 ? @"items" : @"item")];
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        NSMutableArray *contents = [self.data mutableCopy];
+        [contents removeObject:content];
+        self.data = contents;
     } else {
         [self alertWithTitle:@"Error" message:error.localizedDescription];
     }
@@ -885,16 +983,33 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 - (NSArray<UITableViewRowAction *> *)tableView:(UITableView *)tableView editActionsForRowAtIndexPath:(NSIndexPath *)indexPath {
     __weak __typeof(self) weakSelf = self;
-    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"删除" handler:^(UITableViewRowAction *action, NSIndexPath * indexPath) {
+    UITableViewRowAction *deleteAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Delete" handler:^(UITableViewRowAction *action, NSIndexPath * indexPath) {
         [weakSelf tableView:tableView commitEditingStyle:UITableViewCellEditingStyleDelete forRowAtIndexPath:indexPath];
     }];
-    UITableViewRowAction *infoAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"信息" handler:^(UITableViewRowAction *action, NSIndexPath * indexPath) {
+    UITableViewRowAction *copyAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Copy" handler:^(UITableViewRowAction *action, NSIndexPath * indexPath) {
         weakSelf.tableView.editing = NO;
-        PDLDirectoryContent *content = weakSelf.contents[indexPath.row];
-        [weakSelf alertWithTitle:@"Info" message:content.contentDescription];
+        PDLDirectoryContent *content = weakSelf.filteredData[indexPath.row];
+        PDLDirectoryViewController.currentContents = @[content];
+    }];
+    copyAction.backgroundColor = [UIColor greenColor];
+    UITableViewRowAction *infoAction = [UITableViewRowAction rowActionWithStyle:UITableViewRowActionStyleDefault title:@"Info" handler:^(UITableViewRowAction *action, NSIndexPath * indexPath) {
+        weakSelf.tableView.editing = NO;
+        PDLDirectoryContent *content = weakSelf.filteredData[indexPath.row];
+        UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Info" message:content.contentDescription preferredStyle:UIAlertControllerStyleAlert];
+        __weak __typeof(alertController) weakAlertController = alertController;
+        [alertController addTextFieldWithConfigurationHandler:^(UITextField * _Nonnull textField) {
+            textField.text = content.filename;
+        }];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [weakSelf renameContent:content filename:weakAlertController.textFields.firstObject.text];
+        }]];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+            ;
+        }]];
+        [weakSelf presentViewController:alertController animated:YES completion:nil];
     }];
     infoAction.backgroundColor = [UIColor blueColor];
-    return @[deleteAction, infoAction];
+    return @[deleteAction, copyAction, infoAction];
 }
 
 @end

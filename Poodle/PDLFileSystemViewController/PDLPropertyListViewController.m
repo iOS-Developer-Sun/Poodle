@@ -40,11 +40,11 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectInset(self.view.bounds, 5, 5)];
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectInset(self.containerView.bounds, 5, 5)];
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textView.font = [UIFont systemFontOfSize:10];
     textView.editable = NO;
-    [self.view addSubview:textView];
+    [self.containerView addSubview:textView];
     self.textView = textView;
 
     self.textView.text = self.plistObject.description;
