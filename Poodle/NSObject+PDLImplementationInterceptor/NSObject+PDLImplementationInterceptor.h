@@ -52,6 +52,16 @@ extern BOOL pdl_interceptMethod(Class aClass, Method method, NSNumber *isStructR
 extern NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP interceptorImplementation, NSNumber *isStructRetNumber, BOOL addIfNotExistent, void *data);
 extern NSUInteger pdl_interceptCluster(Class aClass, SEL selector, NSNumber *isStructRetNumber, IMP(^interceptor)(Class aClass, BOOL exists, NSNumber **isStructRetNumber, Method method, void **data));
 
+/*
+
+ struct objc_super su = {self, class_getSuperclass(object_getClass(self))};
+ void(*msgSendSuper)(struct objc_super *, SEL) = (void(*)(struct objc_super *, SEL))objc_msgSendSuper;
+ msgSendSuper(&su, _cmd);
+
+ */
+
+extern Class pdl_subclass(Class superclass, const char *className, Class targetClass);
+
 #ifdef __cplusplus
 }
 #endif

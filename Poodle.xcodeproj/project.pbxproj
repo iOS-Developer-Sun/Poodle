@@ -29,10 +29,6 @@
 		B81E710E2501185A00399E4B /* PDLInitialization.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E710D2501185A00399E4B /* PDLInitialization.m */; };
 		B81E710F2501185A00399E4B /* PDLInitialization.m in Sources */ = {isa = PBXBuildFile; fileRef = B81E710D2501185A00399E4B /* PDLInitialization.m */; };
 		B81E711225011A4E00399E4B /* PDLInitialization.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B81E710C2501185A00399E4B /* PDLInitialization.h */; };
-		B8220D352681DFA4002018D8 /* dsc_iterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8220D272681DFA4002018D8 /* dsc_iterator.cpp */; };
-		B8220D362681DFA4002018D8 /* dsc_extractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8220D282681DFA4002018D8 /* dsc_extractor.cpp */; };
-		B8220D372681DFE1002018D8 /* dsc_extractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8220D282681DFA4002018D8 /* dsc_extractor.cpp */; };
-		B8220D382681DFE1002018D8 /* dsc_iterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = B8220D272681DFA4002018D8 /* dsc_iterator.cpp */; };
 		B8220D3B2681DFFE002018D8 /* PDLSharedCache.m in Sources */ = {isa = PBXBuildFile; fileRef = B8220D3A2681DFFE002018D8 /* PDLSharedCache.m */; };
 		B828C1E32682DF930067A90A /* PDLSearchBarTableViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B842DD87267A0A0E00DD5A5F /* PDLSearchBarTableViewController.h */; };
 		B828C1E42682E6340067A90A /* PDLClassListViewController.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E9723D70019008D2DA1 /* PDLClassListViewController.h */; };
@@ -134,16 +130,7 @@
 		B85D45F2240E859000CBF758 /* PDLResizableImageView.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E4623D70017008D2DA1 /* PDLResizableImageView.m */; };
 		B85D45F3240E859000CBF758 /* NSArray+PDLSafeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EAF23D70019008D2DA1 /* NSArray+PDLSafeOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B85D45F4240E859000CBF758 /* NSDictionary+PDLSafeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EAE23D70019008D2DA1 /* NSDictionary+PDLSafeOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		B85D45F5240E859000CBF758 /* PDLLayerDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E0E23D70016008D2DA1 /* PDLLayerDebuggerWindow.m */; };
-		B85D45F6240E859000CBF758 /* PDLPropertyDebuggerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E0B23D70016008D2DA1 /* PDLPropertyDebuggerView.m */; };
 		B85D45F7240E859000CBF758 /* PDLScreenDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1D23D70016008D2DA1 /* PDLScreenDebugger.m */; };
-		B85D45F8240E859000CBF758 /* PDLScreenDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E0A23D70016008D2DA1 /* PDLScreenDebuggerWindow.m */; };
-		B85D45F9240E859000CBF758 /* PDLViewDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E0D23D70016008D2DA1 /* PDLViewDebuggerWindow.m */; };
-		B85D45FA240E859000CBF758 /* PDLBoolPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1323D70016008D2DA1 /* PDLBoolPropertyDebugger.m */; };
-		B85D45FB240E859000CBF758 /* PDLColorPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1623D70016008D2DA1 /* PDLColorPropertyDebugger.m */; };
-		B85D45FC240E859000CBF758 /* PDLFloatPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1423D70016008D2DA1 /* PDLFloatPropertyDebugger.m */; };
-		B85D45FD240E859000CBF758 /* PDLPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1223D70016008D2DA1 /* PDLPropertyDebugger.m */; };
-		B85D45FE240E859000CBF758 /* PDLRectPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1923D70016008D2DA1 /* PDLRectPropertyDebugger.m */; };
 		B85D45FF240E859000CBF758 /* PDLSystemImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E7823D70018008D2DA1 /* PDLSystemImage.m */; };
 		B85D4600240E859000CBF758 /* PDLViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56DF923D70016008D2DA1 /* PDLViewController.m */; };
 		B85D4601240E859000CBF758 /* UINavigationController+PDLLongPressPop.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EE023D7001A008D2DA1 /* UINavigationController+PDLLongPressPop.m */; };
@@ -178,7 +165,6 @@
 		B85D4620240E861A00CBF758 /* pdl_systemcall.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E0523D70016008D2DA1 /* pdl_systemcall.c */; };
 		B85D4621240E861A00CBF758 /* pdl_array.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56ED723D7001A008D2DA1 /* pdl_array.c */; };
 		B85D4622240E861A00CBF758 /* pdl_dictionary.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56ED423D7001A008D2DA1 /* pdl_dictionary.c */; };
-		B85D4623240E861A00CBF758 /* pdl_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EC923D7001A008D2DA1 /* pdl_hash.c */; };
 		B85D4625240E861A00CBF758 /* PDLDirectoryViewControllerResources.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EB523D7001A008D2DA1 /* PDLDirectoryViewControllerResources.c */; };
 		B864FA242523570300842343 /* PDLTaskManager.m in Sources */ = {isa = PBXBuildFile; fileRef = B864FA212523570300842343 /* PDLTaskManager.m */; };
 		B864FA252523570300842343 /* PDLTask.m in Sources */ = {isa = PBXBuildFile; fileRef = B864FA222523570300842343 /* PDLTask.m */; };
@@ -195,10 +181,6 @@
 		B86BE6982692B70700E90F06 /* PDLPudding.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6972692B70700E90F06 /* PDLPudding.m */; };
 		B86BE6992692B70700E90F06 /* PDLPudding.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6972692B70700E90F06 /* PDLPudding.m */; };
 		B86BE69E2693044A00E90F06 /* PDLPudding.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B86BE6962692B70700E90F06 /* PDLPudding.h */; };
-		B86BE6A32693390700E90F06 /* PDLPuddingString.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6A12693390700E90F06 /* PDLPuddingString.m */; };
-		B86BE6A42693390700E90F06 /* PDLPuddingString.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6A12693390700E90F06 /* PDLPuddingString.m */; };
-		B86BE6B1269556C000E90F06 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6AE269556C000E90F06 /* JPEngine.m */; };
-		B86BE6B3269556EA00E90F06 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = B86BE6AE269556C000E90F06 /* JPEngine.m */; };
 		B877A617257F6FE000580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A8BC257F70EA00580C6E /* UIViewController+PDLExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */; };
 		B877A911257F70F100580C6E /* UIViewController+PDLExtension.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B877A615257F6FE000580C6E /* UIViewController+PDLExtension.h */; };
@@ -397,7 +379,6 @@
 		B8E56F5A23D70348008D2DA1 /* pdl_systemcall.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E0323D70016008D2DA1 /* pdl_systemcall.h */; };
 		B8E56F5B23D7037C008D2DA1 /* pdl_array.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56ED723D7001A008D2DA1 /* pdl_array.c */; };
 		B8E56F5C23D7037C008D2DA1 /* pdl_dictionary.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56ED423D7001A008D2DA1 /* pdl_dictionary.c */; };
-		B8E56F5D23D7037C008D2DA1 /* pdl_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EC923D7001A008D2DA1 /* pdl_hash.c */; };
 		B8E56F5F23D70393008D2DA1 /* pdl_array.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56ED223D7001A008D2DA1 /* pdl_array.h */; };
 		B8E56F6023D70393008D2DA1 /* pdl_dictionary.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56ECA23D7001A008D2DA1 /* pdl_dictionary.h */; };
 		B8E56F6323D70393008D2DA1 /* pdl_utils.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56ED623D7001A008D2DA1 /* pdl_utils.h */; };
@@ -448,16 +429,7 @@
 		B8E56F9923D70504008D2DA1 /* PDLResizableImageView.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E4723D70017008D2DA1 /* PDLResizableImageView.h */; };
 		B8E56F9A23D7050B008D2DA1 /* NSArray+PDLSafeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EAF23D70019008D2DA1 /* NSArray+PDLSafeOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		B8E56F9B23D7050B008D2DA1 /* NSDictionary+PDLSafeOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56EAE23D70019008D2DA1 /* NSDictionary+PDLSafeOperation.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		B8E56F9E23D70551008D2DA1 /* PDLLayerDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E0E23D70016008D2DA1 /* PDLLayerDebuggerWindow.m */; };
-		B8E56F9F23D70551008D2DA1 /* PDLPropertyDebuggerView.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E0B23D70016008D2DA1 /* PDLPropertyDebuggerView.m */; };
 		B8E56FA023D70551008D2DA1 /* PDLScreenDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1D23D70016008D2DA1 /* PDLScreenDebugger.m */; };
-		B8E56FA123D70551008D2DA1 /* PDLScreenDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E0A23D70016008D2DA1 /* PDLScreenDebuggerWindow.m */; };
-		B8E56FA223D70551008D2DA1 /* PDLViewDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E0D23D70016008D2DA1 /* PDLViewDebuggerWindow.m */; };
-		B8E56FA323D70551008D2DA1 /* PDLBoolPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1323D70016008D2DA1 /* PDLBoolPropertyDebugger.m */; };
-		B8E56FA423D70551008D2DA1 /* PDLColorPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1623D70016008D2DA1 /* PDLColorPropertyDebugger.m */; };
-		B8E56FA523D70551008D2DA1 /* PDLFloatPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1423D70016008D2DA1 /* PDLFloatPropertyDebugger.m */; };
-		B8E56FA623D70551008D2DA1 /* PDLPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1223D70016008D2DA1 /* PDLPropertyDebugger.m */; };
-		B8E56FA723D70551008D2DA1 /* PDLRectPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E1923D70016008D2DA1 /* PDLRectPropertyDebugger.m */; };
 		B8E56FA823D7055D008D2DA1 /* PDLScreenDebugger.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E0C23D70016008D2DA1 /* PDLScreenDebugger.h */; };
 		B8E56FA923D7056A008D2DA1 /* PDLSystemImage.m in Sources */ = {isa = PBXBuildFile; fileRef = B8E56E7823D70018008D2DA1 /* PDLSystemImage.m */; };
 		B8E56FAA23D7056D008D2DA1 /* PDLSystemImage.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = B8E56E7923D70018008D2DA1 /* PDLSystemImage.h */; };
@@ -578,6 +550,41 @@
 		C0AEE4412A2DB4C400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE43F2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m */; };
 		C0AEE4442A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE4422A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m */; };
 		C0AEE4452A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE4422A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m */; };
+		C0B559872D4C97B300B7BBA2 /* dsc_extractor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0B559782D4C978400B7BBA2 /* dsc_extractor.cpp */; };
+		C0B559882D4C97B300B7BBA2 /* dsc_iterator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C0B5597A2D4C978400B7BBA2 /* dsc_iterator.cpp */; };
+		C0B559B32D4CE2B700B7BBA2 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559AD2D4CE2AD00B7BBA2 /* JPEngine.m */; };
+		C0B559B42D4CE2BF00B7BBA2 /* JPEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559AD2D4CE2AD00B7BBA2 /* JPEngine.m */; };
+		C0B559B52D4CE2C900B7BBA2 /* PDLPuddingString.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559B12D4CE2AD00B7BBA2 /* PDLPuddingString.m */; };
+		C0B559B62D4CE2CB00B7BBA2 /* PDLPuddingString.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559B12D4CE2AD00B7BBA2 /* PDLPuddingString.m */; };
+		C0B559C12D4CE36100B7BBA2 /* pdl_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = C0B559BE2D4CE36100B7BBA2 /* pdl_hash.c */; };
+		C0B559C22D4CE36100B7BBA2 /* pdl_hash.c in Sources */ = {isa = PBXBuildFile; fileRef = C0B559BE2D4CE36100B7BBA2 /* pdl_hash.c */; };
+		C0B559D82D4CE66800B7BBA2 /* PDLBoolPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559C52D4CE66800B7BBA2 /* PDLBoolPropertyDebugger.m */; };
+		C0B559D92D4CE66800B7BBA2 /* PDLBoolPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559C52D4CE66800B7BBA2 /* PDLBoolPropertyDebugger.m */; };
+		C0B559DA2D4CE66800B7BBA2 /* PDLColorPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559C72D4CE66800B7BBA2 /* PDLColorPropertyDebugger.m */; };
+		C0B559DB2D4CE66800B7BBA2 /* PDLColorPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559C72D4CE66800B7BBA2 /* PDLColorPropertyDebugger.m */; };
+		C0B559DC2D4CE66800B7BBA2 /* PDLFloatPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559C92D4CE66800B7BBA2 /* PDLFloatPropertyDebugger.m */; };
+		C0B559DD2D4CE66800B7BBA2 /* PDLFloatPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559C92D4CE66800B7BBA2 /* PDLFloatPropertyDebugger.m */; };
+		C0B559DE2D4CE66800B7BBA2 /* PDLPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559CB2D4CE66800B7BBA2 /* PDLPropertyDebugger.m */; };
+		C0B559DF2D4CE66800B7BBA2 /* PDLPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559CB2D4CE66800B7BBA2 /* PDLPropertyDebugger.m */; };
+		C0B559E02D4CE66800B7BBA2 /* PDLRectPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559CD2D4CE66800B7BBA2 /* PDLRectPropertyDebugger.m */; };
+		C0B559E12D4CE66800B7BBA2 /* PDLRectPropertyDebugger.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559CD2D4CE66800B7BBA2 /* PDLRectPropertyDebugger.m */; };
+		C0B559E22D4CE66800B7BBA2 /* PDLLayerDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559D02D4CE66800B7BBA2 /* PDLLayerDebuggerWindow.m */; };
+		C0B559E32D4CE66800B7BBA2 /* PDLLayerDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559D02D4CE66800B7BBA2 /* PDLLayerDebuggerWindow.m */; };
+		C0B559E42D4CE66800B7BBA2 /* PDLPropertyDebuggerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559D22D4CE66800B7BBA2 /* PDLPropertyDebuggerView.m */; };
+		C0B559E52D4CE66800B7BBA2 /* PDLPropertyDebuggerView.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559D22D4CE66800B7BBA2 /* PDLPropertyDebuggerView.m */; };
+		C0B559E62D4CE66800B7BBA2 /* PDLScreenDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559D42D4CE66800B7BBA2 /* PDLScreenDebuggerWindow.m */; };
+		C0B559E72D4CE66800B7BBA2 /* PDLScreenDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559D42D4CE66800B7BBA2 /* PDLScreenDebuggerWindow.m */; };
+		C0B559E82D4CE66800B7BBA2 /* PDLViewDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559D62D4CE66800B7BBA2 /* PDLViewDebuggerWindow.m */; };
+		C0B559E92D4CE66800B7BBA2 /* PDLViewDebuggerWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B559D62D4CE66800B7BBA2 /* PDLViewDebuggerWindow.m */; };
+		C0B55B412D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B55B3B2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.m */; };
+		C0B55B422D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B55B3B2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.m */; };
+		C0B55B432D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B55B3D2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.m */; };
+		C0B55B442D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B55B3D2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.m */; };
+		C0B55B452D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B55B3F2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.m */; };
+		C0B55B462D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C0B55B3F2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.m */; };
+		C0B55B472D4CF1DE00B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0B55B3A2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.h */; };
+		C0B55B482D4CF1DE00B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0B55B3C2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.h */; };
+		C0B55B492D4CF1DE00B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0B55B3E2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.h */; };
 		C0BA480228C9EF7B009B9675 /* PDLLoad.c in Sources */ = {isa = PBXBuildFile; fileRef = B8C7A0EB25FFAF740047EF59 /* PDLLoad.c */; };
 		C0DAB09A28CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = C0DAB09928CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m */; };
 		C0E172B12ACEC91A0075DB1C /* pdl_swift.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E172B02ACEC9190075DB1C /* pdl_swift.m */; };
@@ -1920,6 +1927,9 @@
 			dstPath = "${TARGETNAME}";
 			dstSubfolderSpec = 16;
 			files = (
+				C0B55B472D4CF1DE00B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.h in CopyFiles */,
+				C0B55B482D4CF1DE00B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.h in CopyFiles */,
+				C0B55B492D4CF1DE00B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.h in CopyFiles */,
 				C08CF2DE2A4444D400E758F8 /* PDLNonThreadSafeArrayObserver.h in CopyFiles */,
 				C08CF2DF2A4444D400E758F8 /* PDLNonThreadSafeArrayObserverArray.h in CopyFiles */,
 				C08CF2E02A4444D400E758F8 /* PDLNonThreadSafeArrayObserverObject.h in CopyFiles */,
@@ -2577,7 +2587,6 @@
 		B801989E25C7ED5A00C5C1CE /* PDLProcessInfo.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLProcessInfo.h; sourceTree = "<group>"; };
 		B801989F25C7ED5A00C5C1CE /* PDLProcessInfo.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLProcessInfo.m; sourceTree = "<group>"; };
 		B80199B125C7ED9700C5C1CE /* libPDLProcessInfo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLProcessInfo.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B801D4402475029D000C85B1 /* utstack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utstack.h; sourceTree = "<group>"; };
 		B802AC9222F3372C00BF028E /* libUINavigationController+PDLLongPressPop.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libUINavigationController+PDLLongPressPop.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		B802ACC422F33A3400BF028E /* libPDLImageListViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLImageListViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B802ACD322F33A6A00BF028E /* libPDLFileSystemViewController.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLFileSystemViewController.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2599,21 +2608,6 @@
 		B81E710C2501185A00399E4B /* PDLInitialization.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLInitialization.h; sourceTree = "<group>"; };
 		B81E710D2501185A00399E4B /* PDLInitialization.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLInitialization.m; sourceTree = "<group>"; };
 		B8220D232681DF49002018D8 /* libPDLSharedCache.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLSharedCache.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		B8220D262681DFA4002018D8 /* dsc_iterator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dsc_iterator.h; sourceTree = "<group>"; };
-		B8220D272681DFA4002018D8 /* dsc_iterator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dsc_iterator.cpp; sourceTree = "<group>"; };
-		B8220D282681DFA4002018D8 /* dsc_extractor.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = dsc_extractor.cpp; sourceTree = "<group>"; };
-		B8220D292681DFA4002018D8 /* dsc_extractor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dsc_extractor.h; sourceTree = "<group>"; };
-		B8220D2A2681DFA4002018D8 /* ObjCLegacyAbstraction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ObjCLegacyAbstraction.hpp; sourceTree = "<group>"; };
-		B8220D2B2681DFA4002018D8 /* CacheFileAbstraction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = CacheFileAbstraction.hpp; sourceTree = "<group>"; };
-		B8220D2C2681DFA4002018D8 /* Architectures.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Architectures.hpp; sourceTree = "<group>"; };
-		B8220D2D2681DFA4002018D8 /* MachOTrie.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MachOTrie.hpp; sourceTree = "<group>"; };
-		B8220D2E2681DFA4002018D8 /* MachOBinder.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MachOBinder.hpp; sourceTree = "<group>"; };
-		B8220D2F2681DFA4002018D8 /* ObjCModernAbstraction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = ObjCModernAbstraction.hpp; sourceTree = "<group>"; };
-		B8220D302681DFA4002018D8 /* dyld_cache_format.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dyld_cache_format.h; sourceTree = "<group>"; };
-		B8220D312681DFA4002018D8 /* MachORebaser.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MachORebaser.hpp; sourceTree = "<group>"; };
-		B8220D322681DFA4002018D8 /* MachOFileAbstraction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MachOFileAbstraction.hpp; sourceTree = "<group>"; };
-		B8220D332681DFA4002018D8 /* FileAbstraction.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = FileAbstraction.hpp; sourceTree = "<group>"; };
-		B8220D342681DFA4002018D8 /* MachOLayout.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = MachOLayout.hpp; sourceTree = "<group>"; };
 		B8220D392681DFFE002018D8 /* PDLSharedCache.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLSharedCache.h; sourceTree = "<group>"; };
 		B8220D3A2681DFFE002018D8 /* PDLSharedCache.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLSharedCache.m; sourceTree = "<group>"; };
 		B82334AF23BC982900B1B15B /* libNSObject+PDLSelectorProxy.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libNSObject+PDLSelectorProxy.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2685,11 +2679,6 @@
 		B86BE68D2692B5AF00E90F06 /* libPDLPudding.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLPudding.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B86BE6962692B70700E90F06 /* PDLPudding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLPudding.h; sourceTree = "<group>"; };
 		B86BE6972692B70700E90F06 /* PDLPudding.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLPudding.m; sourceTree = "<group>"; };
-		B86BE6A12693390700E90F06 /* PDLPuddingString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLPuddingString.m; sourceTree = "<group>"; };
-		B86BE6A22693390700E90F06 /* PDLPuddingString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLPuddingString.h; sourceTree = "<group>"; };
-		B86BE6AE269556C000E90F06 /* JPEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JPEngine.m; sourceTree = "<group>"; };
-		B86BE6AF269556C000E90F06 /* JPEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JPEngine.h; sourceTree = "<group>"; };
-		B86BE6B0269556C000E90F06 /* JSPatch.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; path = JSPatch.js; sourceTree = "<group>"; };
 		B8724BB823AB9EDF003A4D2A /* libpdl_lldb_hook.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libpdl_lldb_hook.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		B877A615257F6FE000580C6E /* UIViewController+PDLExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "UIViewController+PDLExtension.h"; sourceTree = "<group>"; };
 		B877A616257F6FE000580C6E /* UIViewController+PDLExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+PDLExtension.m"; sourceTree = "<group>"; };
@@ -2824,26 +2813,8 @@
 		B8E56E0623D70016008D2DA1 /* pdl_systemcall-x86_64.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "pdl_systemcall-x86_64.s"; sourceTree = "<group>"; };
 		B8E56E0723D70016008D2DA1 /* pdl_systemcall-i386.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "pdl_systemcall-i386.s"; sourceTree = "<group>"; };
 		B8E56E0823D70016008D2DA1 /* pdl_systemcall-arm64.s */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.asm; path = "pdl_systemcall-arm64.s"; sourceTree = "<group>"; };
-		B8E56E0A23D70016008D2DA1 /* PDLScreenDebuggerWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLScreenDebuggerWindow.m; sourceTree = "<group>"; };
-		B8E56E0B23D70016008D2DA1 /* PDLPropertyDebuggerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLPropertyDebuggerView.m; sourceTree = "<group>"; };
 		B8E56E0C23D70016008D2DA1 /* PDLScreenDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLScreenDebugger.h; sourceTree = "<group>"; };
-		B8E56E0D23D70016008D2DA1 /* PDLViewDebuggerWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLViewDebuggerWindow.m; sourceTree = "<group>"; };
-		B8E56E0E23D70016008D2DA1 /* PDLLayerDebuggerWindow.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLLayerDebuggerWindow.m; sourceTree = "<group>"; };
-		B8E56E0F23D70016008D2DA1 /* PDLScreenDebuggerWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLScreenDebuggerWindow.h; sourceTree = "<group>"; };
-		B8E56E1023D70016008D2DA1 /* PDLPropertyDebuggerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLPropertyDebuggerView.h; sourceTree = "<group>"; };
-		B8E56E1223D70016008D2DA1 /* PDLPropertyDebugger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLPropertyDebugger.m; sourceTree = "<group>"; };
-		B8E56E1323D70016008D2DA1 /* PDLBoolPropertyDebugger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLBoolPropertyDebugger.m; sourceTree = "<group>"; };
-		B8E56E1423D70016008D2DA1 /* PDLFloatPropertyDebugger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLFloatPropertyDebugger.m; sourceTree = "<group>"; };
-		B8E56E1523D70016008D2DA1 /* PDLRectPropertyDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLRectPropertyDebugger.h; sourceTree = "<group>"; };
-		B8E56E1623D70016008D2DA1 /* PDLColorPropertyDebugger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLColorPropertyDebugger.m; sourceTree = "<group>"; };
-		B8E56E1723D70016008D2DA1 /* PDLBoolPropertyDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLBoolPropertyDebugger.h; sourceTree = "<group>"; };
-		B8E56E1823D70016008D2DA1 /* PDLPropertyDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLPropertyDebugger.h; sourceTree = "<group>"; };
-		B8E56E1923D70016008D2DA1 /* PDLRectPropertyDebugger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLRectPropertyDebugger.m; sourceTree = "<group>"; };
-		B8E56E1A23D70016008D2DA1 /* PDLFloatPropertyDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLFloatPropertyDebugger.h; sourceTree = "<group>"; };
-		B8E56E1B23D70016008D2DA1 /* PDLColorPropertyDebugger.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLColorPropertyDebugger.h; sourceTree = "<group>"; };
-		B8E56E1C23D70016008D2DA1 /* PDLViewDebuggerWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLViewDebuggerWindow.h; sourceTree = "<group>"; };
 		B8E56E1D23D70016008D2DA1 /* PDLScreenDebugger.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLScreenDebugger.m; sourceTree = "<group>"; };
-		B8E56E1E23D70016008D2DA1 /* PDLLayerDebuggerWindow.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLLayerDebuggerWindow.h; sourceTree = "<group>"; };
 		B8E56E2023D70017008D2DA1 /* pdl_pthread.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_pthread.h; sourceTree = "<group>"; };
 		B8E56E2123D70017008D2DA1 /* pdl_pthread.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = pdl_pthread.m; sourceTree = "<group>"; };
 		B8E56E2323D70017008D2DA1 /* NSObject+PDLExtension.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSObject+PDLExtension.h"; sourceTree = "<group>"; };
@@ -2901,12 +2872,6 @@
 		B8E56E6C23D70018008D2DA1 /* NSUserDefaults+PDLExtension.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSUserDefaults+PDLExtension.m"; sourceTree = "<group>"; };
 		B8E56E6E23D70018008D2DA1 /* PDLDatabase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLDatabase.m; sourceTree = "<group>"; };
 		B8E56E6F23D70018008D2DA1 /* PDLDatabase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLDatabase.h; sourceTree = "<group>"; };
-		B8E56E7123D70018008D2DA1 /* FMDatabase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
-		B8E56E7223D70018008D2DA1 /* FMResultSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
-		B8E56E7323D70018008D2DA1 /* FMDatabasePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
-		B8E56E7423D70018008D2DA1 /* FMDatabaseQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
-		B8E56E7523D70018008D2DA1 /* FMDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
-		B8E56E7623D70018008D2DA1 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
 		B8E56E7823D70018008D2DA1 /* PDLSystemImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLSystemImage.m; sourceTree = "<group>"; };
 		B8E56E7923D70018008D2DA1 /* PDLSystemImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLSystemImage.h; sourceTree = "<group>"; };
 		B8E56E7B23D70018008D2DA1 /* pdl_mach.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_mach.h; sourceTree = "<group>"; };
@@ -2968,15 +2933,8 @@
 		B8E56EC523D7001A008D2DA1 /* PDLDataQueryViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLDataQueryViewController.h; sourceTree = "<group>"; };
 		B8E56EC623D7001A008D2DA1 /* PDLDatabaseTableViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLDatabaseTableViewController.m; sourceTree = "<group>"; };
 		B8E56EC723D7001A008D2DA1 /* PDLTextViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLTextViewController.h; sourceTree = "<group>"; };
-		B8E56EC923D7001A008D2DA1 /* pdl_hash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pdl_hash.c; sourceTree = "<group>"; };
 		B8E56ECA23D7001A008D2DA1 /* pdl_dictionary.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_dictionary.h; sourceTree = "<group>"; };
-		B8E56ECD23D7001A008D2DA1 /* utlist.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utlist.h; sourceTree = "<group>"; };
-		B8E56ECE23D7001A008D2DA1 /* utarray.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utarray.h; sourceTree = "<group>"; };
-		B8E56ECF23D7001A008D2DA1 /* utringbuffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utringbuffer.h; sourceTree = "<group>"; };
-		B8E56ED023D7001A008D2DA1 /* uthash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = uthash.h; sourceTree = "<group>"; };
-		B8E56ED123D7001A008D2DA1 /* utstring.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = utstring.h; sourceTree = "<group>"; };
 		B8E56ED223D7001A008D2DA1 /* pdl_array.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_array.h; sourceTree = "<group>"; };
-		B8E56ED323D7001A008D2DA1 /* pdl_hash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_hash.h; sourceTree = "<group>"; };
 		B8E56ED423D7001A008D2DA1 /* pdl_dictionary.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pdl_dictionary.c; sourceTree = "<group>"; };
 		B8E56ED623D7001A008D2DA1 /* pdl_utils.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = pdl_utils.h; sourceTree = "<group>"; };
 		B8E56ED723D7001A008D2DA1 /* pdl_array.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pdl_array.c; sourceTree = "<group>"; };
@@ -3118,22 +3076,80 @@
 		C0AEE43F2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeSwiftVariableObserverObject.m; sourceTree = "<group>"; };
 		C0AEE4422A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeSwiftVariableObserverVariable.m; sourceTree = "<group>"; };
 		C0AEE4432A2DB72400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverVariable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeSwiftVariableObserverVariable.h; sourceTree = "<group>"; };
-		C0B055832AB3015B00F7B78B /* capstone.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = capstone.h; sourceTree = "<group>"; };
-		C0B055842AB3015B00F7B78B /* mips.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mips.h; sourceTree = "<group>"; };
-		C0B055852AB3015B00F7B78B /* sparc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sparc.h; sourceTree = "<group>"; };
-		C0B055862AB3015B00F7B78B /* systemz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = systemz.h; sourceTree = "<group>"; };
-		C0B055872AB3015B00F7B78B /* m68k.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = m68k.h; sourceTree = "<group>"; };
-		C0B055882AB3015B00F7B78B /* arm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arm.h; sourceTree = "<group>"; };
-		C0B055892AB3015B00F7B78B /* mos65xx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mos65xx.h; sourceTree = "<group>"; };
-		C0B0558A2AB3015B00F7B78B /* evm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = evm.h; sourceTree = "<group>"; };
-		C0B0558B2AB3015B00F7B78B /* x86.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x86.h; sourceTree = "<group>"; };
-		C0B0558C2AB3015B00F7B78B /* ppc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ppc.h; sourceTree = "<group>"; };
-		C0B0558D2AB3015B00F7B78B /* arm64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arm64.h; sourceTree = "<group>"; };
-		C0B0558E2AB3015B00F7B78B /* xcore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xcore.h; sourceTree = "<group>"; };
-		C0B0558F2AB3015B00F7B78B /* m680x.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = m680x.h; sourceTree = "<group>"; };
-		C0B055902AB3015B00F7B78B /* platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
-		C0B055912AB3015B00F7B78B /* tms320c64x.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tms320c64x.h; sourceTree = "<group>"; };
 		C0B055972AB311B100F7B78B /* PoodleMac.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = PoodleMac.podspec; sourceTree = "<group>"; };
+		C0B559762D4C978400B7BBA2 /* Architectures.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Architectures.hpp; sourceTree = "<group>"; };
+		C0B559772D4C978400B7BBA2 /* CacheFileAbstraction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = CacheFileAbstraction.hpp; sourceTree = "<group>"; };
+		C0B559782D4C978400B7BBA2 /* dsc_extractor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dsc_extractor.cpp; sourceTree = "<group>"; };
+		C0B559792D4C978400B7BBA2 /* dsc_extractor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dsc_extractor.h; sourceTree = "<group>"; };
+		C0B5597A2D4C978400B7BBA2 /* dsc_iterator.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = dsc_iterator.cpp; sourceTree = "<group>"; };
+		C0B5597B2D4C978400B7BBA2 /* dsc_iterator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dsc_iterator.h; sourceTree = "<group>"; };
+		C0B5597C2D4C978400B7BBA2 /* dyld_cache_format.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = dyld_cache_format.h; sourceTree = "<group>"; };
+		C0B5597D2D4C978400B7BBA2 /* FileAbstraction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = FileAbstraction.hpp; sourceTree = "<group>"; };
+		C0B5597E2D4C978400B7BBA2 /* MachOBinder.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MachOBinder.hpp; sourceTree = "<group>"; };
+		C0B5597F2D4C978400B7BBA2 /* MachOFileAbstraction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MachOFileAbstraction.hpp; sourceTree = "<group>"; };
+		C0B559802D4C978400B7BBA2 /* MachOLayout.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MachOLayout.hpp; sourceTree = "<group>"; };
+		C0B559812D4C978400B7BBA2 /* MachORebaser.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MachORebaser.hpp; sourceTree = "<group>"; };
+		C0B559822D4C978400B7BBA2 /* MachOTrie.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = MachOTrie.hpp; sourceTree = "<group>"; };
+		C0B559832D4C978400B7BBA2 /* ObjCLegacyAbstraction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ObjCLegacyAbstraction.hpp; sourceTree = "<group>"; };
+		C0B559842D4C978400B7BBA2 /* ObjCModernAbstraction.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = ObjCModernAbstraction.hpp; sourceTree = "<group>"; };
+		C0B559892D4CA32600B7BBA2 /* arm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arm.h; sourceTree = "<group>"; };
+		C0B5598A2D4CA32600B7BBA2 /* arm64.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = arm64.h; sourceTree = "<group>"; };
+		C0B5598B2D4CA32600B7BBA2 /* capstone.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = capstone.h; sourceTree = "<group>"; };
+		C0B5598C2D4CA32600B7BBA2 /* evm.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = evm.h; sourceTree = "<group>"; };
+		C0B5598D2D4CA32600B7BBA2 /* m68k.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = m68k.h; sourceTree = "<group>"; };
+		C0B5598E2D4CA32600B7BBA2 /* m680x.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = m680x.h; sourceTree = "<group>"; };
+		C0B5598F2D4CA32600B7BBA2 /* mips.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mips.h; sourceTree = "<group>"; };
+		C0B559902D4CA32600B7BBA2 /* mos65xx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = mos65xx.h; sourceTree = "<group>"; };
+		C0B559912D4CA32600B7BBA2 /* platform.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = platform.h; sourceTree = "<group>"; };
+		C0B559922D4CA32600B7BBA2 /* ppc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ppc.h; sourceTree = "<group>"; };
+		C0B559932D4CA32600B7BBA2 /* sparc.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = sparc.h; sourceTree = "<group>"; };
+		C0B559942D4CA32600B7BBA2 /* systemz.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = systemz.h; sourceTree = "<group>"; };
+		C0B559952D4CA32600B7BBA2 /* tms320c64x.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = tms320c64x.h; sourceTree = "<group>"; };
+		C0B559962D4CA32600B7BBA2 /* x86.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = x86.h; sourceTree = "<group>"; };
+		C0B559972D4CA32600B7BBA2 /* xcore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = xcore.h; sourceTree = "<group>"; };
+		C0B559A42D4CB58400B7BBA2 /* FMDatabase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabase.h; sourceTree = "<group>"; };
+		C0B559A52D4CB58400B7BBA2 /* FMDatabaseAdditions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabaseAdditions.h; sourceTree = "<group>"; };
+		C0B559A62D4CB58400B7BBA2 /* FMDatabasePool.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabasePool.h; sourceTree = "<group>"; };
+		C0B559A72D4CB58400B7BBA2 /* FMDatabaseQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDatabaseQueue.h; sourceTree = "<group>"; };
+		C0B559A82D4CB58400B7BBA2 /* FMDB.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMDB.h; sourceTree = "<group>"; };
+		C0B559A92D4CB58400B7BBA2 /* FMResultSet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FMResultSet.h; sourceTree = "<group>"; };
+		C0B559AC2D4CE2AD00B7BBA2 /* JPEngine.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = JPEngine.h; sourceTree = "<group>"; };
+		C0B559AD2D4CE2AD00B7BBA2 /* JPEngine.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = JPEngine.m; sourceTree = "<group>"; };
+		C0B559AE2D4CE2AD00B7BBA2 /* JSPatch.js */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.javascript; path = JSPatch.js; sourceTree = "<group>"; };
+		C0B559B02D4CE2AD00B7BBA2 /* PDLPuddingString.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDLPuddingString.h; sourceTree = "<group>"; };
+		C0B559B12D4CE2AD00B7BBA2 /* PDLPuddingString.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLPuddingString.m; sourceTree = "<group>"; };
+		C0B559B72D4CE36100B7BBA2 /* utarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utarray.h; sourceTree = "<group>"; };
+		C0B559B82D4CE36100B7BBA2 /* uthash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = uthash.h; sourceTree = "<group>"; };
+		C0B559B92D4CE36100B7BBA2 /* utlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utlist.h; sourceTree = "<group>"; };
+		C0B559BA2D4CE36100B7BBA2 /* utringbuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utringbuffer.h; sourceTree = "<group>"; };
+		C0B559BB2D4CE36100B7BBA2 /* utstack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utstack.h; sourceTree = "<group>"; };
+		C0B559BC2D4CE36100B7BBA2 /* utstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = utstring.h; sourceTree = "<group>"; };
+		C0B559BE2D4CE36100B7BBA2 /* pdl_hash.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pdl_hash.c; sourceTree = "<group>"; };
+		C0B559BF2D4CE36100B7BBA2 /* pdl_hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pdl_hash.h; sourceTree = "<group>"; };
+		C0B559C42D4CE66800B7BBA2 /* PDLBoolPropertyDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLBoolPropertyDebugger.h; sourceTree = "<group>"; };
+		C0B559C52D4CE66800B7BBA2 /* PDLBoolPropertyDebugger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLBoolPropertyDebugger.m; sourceTree = "<group>"; };
+		C0B559C62D4CE66800B7BBA2 /* PDLColorPropertyDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLColorPropertyDebugger.h; sourceTree = "<group>"; };
+		C0B559C72D4CE66800B7BBA2 /* PDLColorPropertyDebugger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLColorPropertyDebugger.m; sourceTree = "<group>"; };
+		C0B559C82D4CE66800B7BBA2 /* PDLFloatPropertyDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLFloatPropertyDebugger.h; sourceTree = "<group>"; };
+		C0B559C92D4CE66800B7BBA2 /* PDLFloatPropertyDebugger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLFloatPropertyDebugger.m; sourceTree = "<group>"; };
+		C0B559CA2D4CE66800B7BBA2 /* PDLPropertyDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLPropertyDebugger.h; sourceTree = "<group>"; };
+		C0B559CB2D4CE66800B7BBA2 /* PDLPropertyDebugger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLPropertyDebugger.m; sourceTree = "<group>"; };
+		C0B559CC2D4CE66800B7BBA2 /* PDLRectPropertyDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLRectPropertyDebugger.h; sourceTree = "<group>"; };
+		C0B559CD2D4CE66800B7BBA2 /* PDLRectPropertyDebugger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLRectPropertyDebugger.m; sourceTree = "<group>"; };
+		C0B559CF2D4CE66800B7BBA2 /* PDLLayerDebuggerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLLayerDebuggerWindow.h; sourceTree = "<group>"; };
+		C0B559D02D4CE66800B7BBA2 /* PDLLayerDebuggerWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLLayerDebuggerWindow.m; sourceTree = "<group>"; };
+		C0B559D12D4CE66800B7BBA2 /* PDLPropertyDebuggerView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLPropertyDebuggerView.h; sourceTree = "<group>"; };
+		C0B559D22D4CE66800B7BBA2 /* PDLPropertyDebuggerView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLPropertyDebuggerView.m; sourceTree = "<group>"; };
+		C0B559D32D4CE66800B7BBA2 /* PDLScreenDebuggerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLScreenDebuggerWindow.h; sourceTree = "<group>"; };
+		C0B559D42D4CE66800B7BBA2 /* PDLScreenDebuggerWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLScreenDebuggerWindow.m; sourceTree = "<group>"; };
+		C0B559D52D4CE66800B7BBA2 /* PDLViewDebuggerWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLViewDebuggerWindow.h; sourceTree = "<group>"; };
+		C0B559D62D4CE66800B7BBA2 /* PDLViewDebuggerWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLViewDebuggerWindow.m; sourceTree = "<group>"; };
+		C0B55B3A2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeSwiftObjectObserver.h; sourceTree = "<group>"; };
+		C0B55B3B2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeSwiftObjectObserver.m; sourceTree = "<group>"; };
+		C0B55B3C2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeSwiftObjectObserverObject.h; sourceTree = "<group>"; };
+		C0B55B3D2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeSwiftObjectObserverObject.m; sourceTree = "<group>"; };
+		C0B55B3E2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeSwiftObjectObserverSwiftObject.h; sourceTree = "<group>"; };
+		C0B55B3F2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeSwiftObjectObserverSwiftObject.m; sourceTree = "<group>"; };
 		C0DAB09928CEDC6D003C17E9 /* NSObject+PDLSelectorProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+PDLSelectorProxy.m"; sourceTree = "<group>"; };
 		C0DE25C327724A400039A556 /* PoodleLibraryMac.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; path = PoodleLibraryMac.podspec; sourceTree = "<group>"; };
 		C0E095D62A56A59C0045A3F6 /* PDLSwiftModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDLSwiftModule.m; sourceTree = "<group>"; };
@@ -3995,35 +4011,11 @@
 		B8220D242681DFA4002018D8 /* PDLSharedCache */ = {
 			isa = PBXGroup;
 			children = (
-				B8220D252681DFA4002018D8 /* launch-cache */,
-				C0080DC8276E5ECE00510D6A /* PDLDYLDSharedCache.h */,
-				C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */,
 				B8220D392681DFFE002018D8 /* PDLSharedCache.h */,
 				B8220D3A2681DFFE002018D8 /* PDLSharedCache.m */,
+				C0B559862D4C978400B7BBA2 /* private */,
 			);
 			path = PDLSharedCache;
-			sourceTree = "<group>";
-		};
-		B8220D252681DFA4002018D8 /* launch-cache */ = {
-			isa = PBXGroup;
-			children = (
-				B8220D2C2681DFA4002018D8 /* Architectures.hpp */,
-				B8220D2B2681DFA4002018D8 /* CacheFileAbstraction.hpp */,
-				B8220D282681DFA4002018D8 /* dsc_extractor.cpp */,
-				B8220D292681DFA4002018D8 /* dsc_extractor.h */,
-				B8220D272681DFA4002018D8 /* dsc_iterator.cpp */,
-				B8220D262681DFA4002018D8 /* dsc_iterator.h */,
-				B8220D302681DFA4002018D8 /* dyld_cache_format.h */,
-				B8220D332681DFA4002018D8 /* FileAbstraction.hpp */,
-				B8220D2E2681DFA4002018D8 /* MachOBinder.hpp */,
-				B8220D322681DFA4002018D8 /* MachOFileAbstraction.hpp */,
-				B8220D342681DFA4002018D8 /* MachOLayout.hpp */,
-				B8220D312681DFA4002018D8 /* MachORebaser.hpp */,
-				B8220D2D2681DFA4002018D8 /* MachOTrie.hpp */,
-				B8220D2A2681DFA4002018D8 /* ObjCLegacyAbstraction.hpp */,
-				B8220D2F2681DFA4002018D8 /* ObjCModernAbstraction.hpp */,
-			);
-			path = "launch-cache";
 			sourceTree = "<group>";
 		};
 		B8300F1F25BEB61600A02412 /* PDLScrollPageViewController */ = {
@@ -4131,12 +4123,11 @@
 				B893CBFD2524959D00174119 /* PDLFirstOrderedTaskScheduler.m */,
 				B864FA202523570300842343 /* PDLTask.h */,
 				B864FA222523570300842343 /* PDLTask.m */,
-				B893CC022524997000174119 /* PDLTaskInternal.h */,
 				B864FA232523570300842343 /* PDLTaskManager.h */,
 				B864FA212523570300842343 /* PDLTaskManager.m */,
 				B893CBF8252488D000174119 /* PDLTaskScheduler.h */,
 				B893CBF7252488D000174119 /* PDLTaskScheduler.m */,
-				B893CC03252499F600174119 /* PDLTaskSchedulerInternal.h */,
+				C0B559ED2D4CE80600B7BBA2 /* private */,
 			);
 			path = PDLTaskManager;
 			sourceTree = "<group>";
@@ -4155,31 +4146,11 @@
 		B86BE68E2692B61D00E90F06 /* PDLPudding */ = {
 			isa = PBXGroup;
 			children = (
-				B86BE6AC269556C000E90F06 /* JSPatch */,
 				B86BE6962692B70700E90F06 /* PDLPudding.h */,
 				B86BE6972692B70700E90F06 /* PDLPudding.m */,
-				B86BE6A22693390700E90F06 /* PDLPuddingString.h */,
-				B86BE6A12693390700E90F06 /* PDLPuddingString.m */,
+				C0B559B22D4CE2AD00B7BBA2 /* private */,
 			);
 			path = PDLPudding;
-			sourceTree = "<group>";
-		};
-		B86BE6AC269556C000E90F06 /* JSPatch */ = {
-			isa = PBXGroup;
-			children = (
-				B86BE6AD269556C000E90F06 /* JSPatch */,
-			);
-			path = JSPatch;
-			sourceTree = "<group>";
-		};
-		B86BE6AD269556C000E90F06 /* JSPatch */ = {
-			isa = PBXGroup;
-			children = (
-				B86BE6AF269556C000E90F06 /* JPEngine.h */,
-				B86BE6AE269556C000E90F06 /* JPEngine.m */,
-				B86BE6B0269556C000E90F06 /* JSPatch.js */,
-			);
-			path = JSPatch;
 			sourceTree = "<group>";
 		};
 		B877A614257F6FCD00580C6E /* UIViewController+PDLExtension */ = {
@@ -4233,7 +4204,6 @@
 		B879531A2486856000798005 /* pdl_thread */ = {
 			isa = PBXGroup;
 			children = (
-				B83CAA8B248BA622009C784A /* pdl_thread_define.h */,
 				B8DFB0A1248CBBFB00880B66 /* pdl_thread_funtion_size */,
 				B8DFB0A3248CC1E300880B66 /* pdl_thread_funtion_size.sh */,
 				B879532D248688D700798005 /* pdl_thread-arm.s */,
@@ -4242,6 +4212,7 @@
 				B879532F248688D700798005 /* pdl_thread-x86_64.s */,
 				B879531E248685B000798005 /* pdl_thread.c */,
 				B879531B2486856000798005 /* pdl_thread.h */,
+				C0B559EA2D4CE6E700B7BBA2 /* private */,
 			);
 			path = pdl_thread;
 			sourceTree = "<group>";
@@ -4687,36 +4658,11 @@
 		B8E56E0923D70016008D2DA1 /* PDLScreenDebugger */ = {
 			isa = PBXGroup;
 			children = (
-				B8E56E1E23D70016008D2DA1 /* PDLLayerDebuggerWindow.h */,
-				B8E56E0E23D70016008D2DA1 /* PDLLayerDebuggerWindow.m */,
-				B8E56E1023D70016008D2DA1 /* PDLPropertyDebuggerView.h */,
-				B8E56E0B23D70016008D2DA1 /* PDLPropertyDebuggerView.m */,
 				B8E56E0C23D70016008D2DA1 /* PDLScreenDebugger.h */,
 				B8E56E1D23D70016008D2DA1 /* PDLScreenDebugger.m */,
-				B8E56E0F23D70016008D2DA1 /* PDLScreenDebuggerWindow.h */,
-				B8E56E0A23D70016008D2DA1 /* PDLScreenDebuggerWindow.m */,
-				B8E56E1C23D70016008D2DA1 /* PDLViewDebuggerWindow.h */,
-				B8E56E0D23D70016008D2DA1 /* PDLViewDebuggerWindow.m */,
-				B8E56E1123D70016008D2DA1 /* PropertyDebugger */,
+				C0B559D72D4CE66800B7BBA2 /* private */,
 			);
 			path = PDLScreenDebugger;
-			sourceTree = "<group>";
-		};
-		B8E56E1123D70016008D2DA1 /* PropertyDebugger */ = {
-			isa = PBXGroup;
-			children = (
-				B8E56E1723D70016008D2DA1 /* PDLBoolPropertyDebugger.h */,
-				B8E56E1323D70016008D2DA1 /* PDLBoolPropertyDebugger.m */,
-				B8E56E1B23D70016008D2DA1 /* PDLColorPropertyDebugger.h */,
-				B8E56E1623D70016008D2DA1 /* PDLColorPropertyDebugger.m */,
-				B8E56E1A23D70016008D2DA1 /* PDLFloatPropertyDebugger.h */,
-				B8E56E1423D70016008D2DA1 /* PDLFloatPropertyDebugger.m */,
-				B8E56E1823D70016008D2DA1 /* PDLPropertyDebugger.h */,
-				B8E56E1223D70016008D2DA1 /* PDLPropertyDebugger.m */,
-				B8E56E1523D70016008D2DA1 /* PDLRectPropertyDebugger.h */,
-				B8E56E1923D70016008D2DA1 /* PDLRectPropertyDebugger.m */,
-			);
-			path = PropertyDebugger;
 			sourceTree = "<group>";
 		};
 		B8E56E1F23D70016008D2DA1 /* pdl_pthread */ = {
@@ -4934,24 +4880,11 @@
 		B8E56E6D23D70018008D2DA1 /* PDLDatabase */ = {
 			isa = PBXGroup;
 			children = (
-				B8E56E7023D70018008D2DA1 /* fmdb */,
+				C0B559AB2D4CB58400B7BBA2 /* exclude */,
 				B8E56E6F23D70018008D2DA1 /* PDLDatabase.h */,
 				B8E56E6E23D70018008D2DA1 /* PDLDatabase.m */,
 			);
 			path = PDLDatabase;
-			sourceTree = "<group>";
-		};
-		B8E56E7023D70018008D2DA1 /* fmdb */ = {
-			isa = PBXGroup;
-			children = (
-				B8E56E7123D70018008D2DA1 /* FMDatabase.h */,
-				B8E56E7623D70018008D2DA1 /* FMDatabaseAdditions.h */,
-				B8E56E7323D70018008D2DA1 /* FMDatabasePool.h */,
-				B8E56E7423D70018008D2DA1 /* FMDatabaseQueue.h */,
-				B8E56E7523D70018008D2DA1 /* FMDB.h */,
-				B8E56E7223D70018008D2DA1 /* FMResultSet.h */,
-			);
-			path = fmdb;
 			sourceTree = "<group>";
 		};
 		B8E56E7723D70018008D2DA1 /* PDLSystemImage */ = {
@@ -5127,8 +5060,6 @@
 				B8E56EB923D7001A008D2DA1 /* PDLDataQueryViewController.m */,
 				B8E56EC423D7001A008D2DA1 /* PDLDirectoryViewController.h */,
 				B8E56EBA23D7001A008D2DA1 /* PDLDirectoryViewController.m */,
-				B8E56EB523D7001A008D2DA1 /* PDLDirectoryViewControllerResources.c */,
-				B8E56EBE23D7001A008D2DA1 /* PDLDirectoryViewControllerResources.h */,
 				B8E56EBF23D7001A008D2DA1 /* PDLFileSystemViewController.h */,
 				B8E56EB823D7001A008D2DA1 /* PDLFileSystemViewController.m */,
 				B8E56EB723D7001A008D2DA1 /* PDLPropertyListViewController.h */,
@@ -5137,6 +5068,7 @@
 				B8E56EBC23D7001A008D2DA1 /* PDLTextViewController.m */,
 				B8E56EBB23D7001A008D2DA1 /* PDLWebViewController.h */,
 				B8E56EC223D7001A008D2DA1 /* PDLWebViewController.m */,
+				C0B559EB2D4CE79300B7BBA2 /* private */,
 			);
 			path = PDLFileSystemViewController;
 			sourceTree = "<group>";
@@ -5144,33 +5076,18 @@
 		B8E56EC823D7001A008D2DA1 /* pdl_utils */ = {
 			isa = PBXGroup;
 			children = (
+				B80DF29624C45E6300AE1B00 /* pdl_algorithm.c */,
+				B80DF29724C45E6300AE1B00 /* pdl_algorithm.h */,
 				B8E56ED723D7001A008D2DA1 /* pdl_array.c */,
 				B8E56ED223D7001A008D2DA1 /* pdl_array.h */,
 				B8E56ED423D7001A008D2DA1 /* pdl_dictionary.c */,
 				B8E56ECA23D7001A008D2DA1 /* pdl_dictionary.h */,
-				B8E56EC923D7001A008D2DA1 /* pdl_hash.c */,
-				B8E56ED323D7001A008D2DA1 /* pdl_hash.h */,
 				B8B7B5C7249CE7FD008D4604 /* pdl_list.c */,
 				B8B7B5C8249CE7FE008D4604 /* pdl_list.h */,
-				B80DF29624C45E6300AE1B00 /* pdl_algorithm.c */,
-				B80DF29724C45E6300AE1B00 /* pdl_algorithm.h */,
 				B8E56ED623D7001A008D2DA1 /* pdl_utils.h */,
-				B8E56ECC23D7001A008D2DA1 /* uthash */,
+				C0B559C02D4CE36100B7BBA2 /* private */,
 			);
 			path = pdl_utils;
-			sourceTree = "<group>";
-		};
-		B8E56ECC23D7001A008D2DA1 /* uthash */ = {
-			isa = PBXGroup;
-			children = (
-				B8E56ECE23D7001A008D2DA1 /* utarray.h */,
-				B8E56ED023D7001A008D2DA1 /* uthash.h */,
-				B8E56ECD23D7001A008D2DA1 /* utlist.h */,
-				B8E56ECF23D7001A008D2DA1 /* utringbuffer.h */,
-				B801D4402475029D000C85B1 /* utstack.h */,
-				B8E56ED123D7001A008D2DA1 /* utstring.h */,
-			);
-			path = uthash;
 			sourceTree = "<group>";
 		};
 		B8E56ED823D7001A008D2DA1 /* CAAnimation+PDLExtension */ = {
@@ -5187,8 +5104,7 @@
 			children = (
 				B8E56EDD23D7001A008D2DA1 /* PDLFormView.h */,
 				B8E56EDC23D7001A008D2DA1 /* PDLFormView.m */,
-				B8A6F4EF25428B7400426AD1 /* PDLFormViewCell.h */,
-				B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */,
+				C0B559EC2D4CE7D300B7BBA2 /* private */,
 			);
 			path = PDLFormView;
 			sourceTree = "<group>";
@@ -5384,6 +5300,7 @@
 				C010A6D727114D8300A785E9 /* PDLNonThreadSafeObserverObject.h */,
 				C010A6CE27114D8300A785E9 /* PDLNonThreadSafeObserverObject.m */,
 				C010A6C627114D8300A785E9 /* PDLNonThreadSafePropertyObserver */,
+				C0B55B402D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver */,
 				C0AEE4392A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver */,
 			);
 			path = PDLNonThreadSafeObserver;
@@ -5478,9 +5395,9 @@
 		C03D87732A8E2BCF008ABFD3 /* PDLMachObject */ = {
 			isa = PBXGroup;
 			children = (
-				C0B0557E2AB3015B00F7B78B /* capstone */,
 				C03D87752A8E2BCF008ABFD3 /* PDLMachObject.h */,
 				C03D87742A8E2BCF008ABFD3 /* PDLMachObject.m */,
+				C0B5599B2D4CA32600B7BBA2 /* private */,
 			);
 			path = PDLMachObject;
 			sourceTree = "<group>";
@@ -5554,42 +5471,227 @@
 			path = PDLNonThreadSafeSwiftVariableObserver;
 			sourceTree = "<group>";
 		};
-		C0B0557E2AB3015B00F7B78B /* capstone */ = {
+		C0B559852D4C978400B7BBA2 /* launch-cache */ = {
 			isa = PBXGroup;
 			children = (
-				C0B055812AB3015B00F7B78B /* include */,
+				C0B559762D4C978400B7BBA2 /* Architectures.hpp */,
+				C0B559772D4C978400B7BBA2 /* CacheFileAbstraction.hpp */,
+				C0B559782D4C978400B7BBA2 /* dsc_extractor.cpp */,
+				C0B559792D4C978400B7BBA2 /* dsc_extractor.h */,
+				C0B5597A2D4C978400B7BBA2 /* dsc_iterator.cpp */,
+				C0B5597B2D4C978400B7BBA2 /* dsc_iterator.h */,
+				C0B5597C2D4C978400B7BBA2 /* dyld_cache_format.h */,
+				C0B5597D2D4C978400B7BBA2 /* FileAbstraction.hpp */,
+				C0B5597E2D4C978400B7BBA2 /* MachOBinder.hpp */,
+				C0B5597F2D4C978400B7BBA2 /* MachOFileAbstraction.hpp */,
+				C0B559802D4C978400B7BBA2 /* MachOLayout.hpp */,
+				C0B559812D4C978400B7BBA2 /* MachORebaser.hpp */,
+				C0B559822D4C978400B7BBA2 /* MachOTrie.hpp */,
+				C0B559832D4C978400B7BBA2 /* ObjCLegacyAbstraction.hpp */,
+				C0B559842D4C978400B7BBA2 /* ObjCModernAbstraction.hpp */,
+			);
+			path = "launch-cache";
+			sourceTree = "<group>";
+		};
+		C0B559862D4C978400B7BBA2 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				C0B559852D4C978400B7BBA2 /* launch-cache */,
+				C0080DC8276E5ECE00510D6A /* PDLDYLDSharedCache.h */,
+				C0080DC7276E5ECE00510D6A /* PDLDYLDSharedCache.m */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		C0B559982D4CA32600B7BBA2 /* capstone */ = {
+			isa = PBXGroup;
+			children = (
+				C0B559892D4CA32600B7BBA2 /* arm.h */,
+				C0B5598A2D4CA32600B7BBA2 /* arm64.h */,
+				C0B5598B2D4CA32600B7BBA2 /* capstone.h */,
+				C0B5598C2D4CA32600B7BBA2 /* evm.h */,
+				C0B5598D2D4CA32600B7BBA2 /* m68k.h */,
+				C0B5598E2D4CA32600B7BBA2 /* m680x.h */,
+				C0B5598F2D4CA32600B7BBA2 /* mips.h */,
+				C0B559902D4CA32600B7BBA2 /* mos65xx.h */,
+				C0B559912D4CA32600B7BBA2 /* platform.h */,
+				C0B559922D4CA32600B7BBA2 /* ppc.h */,
+				C0B559932D4CA32600B7BBA2 /* sparc.h */,
+				C0B559942D4CA32600B7BBA2 /* systemz.h */,
+				C0B559952D4CA32600B7BBA2 /* tms320c64x.h */,
+				C0B559962D4CA32600B7BBA2 /* x86.h */,
+				C0B559972D4CA32600B7BBA2 /* xcore.h */,
 			);
 			path = capstone;
 			sourceTree = "<group>";
 		};
-		C0B055812AB3015B00F7B78B /* include */ = {
+		C0B559992D4CA32600B7BBA2 /* include */ = {
 			isa = PBXGroup;
 			children = (
-				C0B055822AB3015B00F7B78B /* capstone */,
+				C0B559982D4CA32600B7BBA2 /* capstone */,
 			);
 			path = include;
 			sourceTree = "<group>";
 		};
-		C0B055822AB3015B00F7B78B /* capstone */ = {
+		C0B5599A2D4CA32600B7BBA2 /* capstone */ = {
 			isa = PBXGroup;
 			children = (
-				C0B055882AB3015B00F7B78B /* arm.h */,
-				C0B0558D2AB3015B00F7B78B /* arm64.h */,
-				C0B055832AB3015B00F7B78B /* capstone.h */,
-				C0B0558A2AB3015B00F7B78B /* evm.h */,
-				C0B055872AB3015B00F7B78B /* m68k.h */,
-				C0B0558F2AB3015B00F7B78B /* m680x.h */,
-				C0B055842AB3015B00F7B78B /* mips.h */,
-				C0B055892AB3015B00F7B78B /* mos65xx.h */,
-				C0B055902AB3015B00F7B78B /* platform.h */,
-				C0B0558C2AB3015B00F7B78B /* ppc.h */,
-				C0B055852AB3015B00F7B78B /* sparc.h */,
-				C0B055862AB3015B00F7B78B /* systemz.h */,
-				C0B055912AB3015B00F7B78B /* tms320c64x.h */,
-				C0B0558B2AB3015B00F7B78B /* x86.h */,
-				C0B0558E2AB3015B00F7B78B /* xcore.h */,
+				C0B559992D4CA32600B7BBA2 /* include */,
 			);
 			path = capstone;
+			sourceTree = "<group>";
+		};
+		C0B5599B2D4CA32600B7BBA2 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				C0B5599A2D4CA32600B7BBA2 /* capstone */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		C0B559AA2D4CB58400B7BBA2 /* fmdb */ = {
+			isa = PBXGroup;
+			children = (
+				C0B559A42D4CB58400B7BBA2 /* FMDatabase.h */,
+				C0B559A52D4CB58400B7BBA2 /* FMDatabaseAdditions.h */,
+				C0B559A62D4CB58400B7BBA2 /* FMDatabasePool.h */,
+				C0B559A72D4CB58400B7BBA2 /* FMDatabaseQueue.h */,
+				C0B559A82D4CB58400B7BBA2 /* FMDB.h */,
+				C0B559A92D4CB58400B7BBA2 /* FMResultSet.h */,
+			);
+			path = fmdb;
+			sourceTree = "<group>";
+		};
+		C0B559AB2D4CB58400B7BBA2 /* exclude */ = {
+			isa = PBXGroup;
+			children = (
+				C0B559AA2D4CB58400B7BBA2 /* fmdb */,
+			);
+			path = exclude;
+			sourceTree = "<group>";
+		};
+		C0B559AF2D4CE2AD00B7BBA2 /* JSPatch */ = {
+			isa = PBXGroup;
+			children = (
+				C0B559AC2D4CE2AD00B7BBA2 /* JPEngine.h */,
+				C0B559AD2D4CE2AD00B7BBA2 /* JPEngine.m */,
+				C0B559AE2D4CE2AD00B7BBA2 /* JSPatch.js */,
+			);
+			path = JSPatch;
+			sourceTree = "<group>";
+		};
+		C0B559B22D4CE2AD00B7BBA2 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				C0B559AF2D4CE2AD00B7BBA2 /* JSPatch */,
+				C0B559B02D4CE2AD00B7BBA2 /* PDLPuddingString.h */,
+				C0B559B12D4CE2AD00B7BBA2 /* PDLPuddingString.m */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		C0B559BD2D4CE36100B7BBA2 /* uthash */ = {
+			isa = PBXGroup;
+			children = (
+				C0B559B72D4CE36100B7BBA2 /* utarray.h */,
+				C0B559B82D4CE36100B7BBA2 /* uthash.h */,
+				C0B559B92D4CE36100B7BBA2 /* utlist.h */,
+				C0B559BA2D4CE36100B7BBA2 /* utringbuffer.h */,
+				C0B559BB2D4CE36100B7BBA2 /* utstack.h */,
+				C0B559BC2D4CE36100B7BBA2 /* utstring.h */,
+			);
+			path = uthash;
+			sourceTree = "<group>";
+		};
+		C0B559C02D4CE36100B7BBA2 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				C0B559BE2D4CE36100B7BBA2 /* pdl_hash.c */,
+				C0B559BF2D4CE36100B7BBA2 /* pdl_hash.h */,
+				C0B559BD2D4CE36100B7BBA2 /* uthash */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		C0B559CE2D4CE66800B7BBA2 /* PropertyDebugger */ = {
+			isa = PBXGroup;
+			children = (
+				C0B559C42D4CE66800B7BBA2 /* PDLBoolPropertyDebugger.h */,
+				C0B559C52D4CE66800B7BBA2 /* PDLBoolPropertyDebugger.m */,
+				C0B559C62D4CE66800B7BBA2 /* PDLColorPropertyDebugger.h */,
+				C0B559C72D4CE66800B7BBA2 /* PDLColorPropertyDebugger.m */,
+				C0B559C82D4CE66800B7BBA2 /* PDLFloatPropertyDebugger.h */,
+				C0B559C92D4CE66800B7BBA2 /* PDLFloatPropertyDebugger.m */,
+				C0B559CA2D4CE66800B7BBA2 /* PDLPropertyDebugger.h */,
+				C0B559CB2D4CE66800B7BBA2 /* PDLPropertyDebugger.m */,
+				C0B559CC2D4CE66800B7BBA2 /* PDLRectPropertyDebugger.h */,
+				C0B559CD2D4CE66800B7BBA2 /* PDLRectPropertyDebugger.m */,
+			);
+			path = PropertyDebugger;
+			sourceTree = "<group>";
+		};
+		C0B559D72D4CE66800B7BBA2 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				C0B559CF2D4CE66800B7BBA2 /* PDLLayerDebuggerWindow.h */,
+				C0B559D02D4CE66800B7BBA2 /* PDLLayerDebuggerWindow.m */,
+				C0B559D12D4CE66800B7BBA2 /* PDLPropertyDebuggerView.h */,
+				C0B559D22D4CE66800B7BBA2 /* PDLPropertyDebuggerView.m */,
+				C0B559D32D4CE66800B7BBA2 /* PDLScreenDebuggerWindow.h */,
+				C0B559D42D4CE66800B7BBA2 /* PDLScreenDebuggerWindow.m */,
+				C0B559D52D4CE66800B7BBA2 /* PDLViewDebuggerWindow.h */,
+				C0B559D62D4CE66800B7BBA2 /* PDLViewDebuggerWindow.m */,
+				C0B559CE2D4CE66800B7BBA2 /* PropertyDebugger */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		C0B559EA2D4CE6E700B7BBA2 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				B83CAA8B248BA622009C784A /* pdl_thread_define.h */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		C0B559EB2D4CE79300B7BBA2 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				B8E56EB523D7001A008D2DA1 /* PDLDirectoryViewControllerResources.c */,
+				B8E56EBE23D7001A008D2DA1 /* PDLDirectoryViewControllerResources.h */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		C0B559EC2D4CE7D300B7BBA2 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				B8A6F4EF25428B7400426AD1 /* PDLFormViewCell.h */,
+				B8A6F4EE25428B7400426AD1 /* PDLFormViewCell.m */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		C0B559ED2D4CE80600B7BBA2 /* private */ = {
+			isa = PBXGroup;
+			children = (
+				B893CC022524997000174119 /* PDLTaskInternal.h */,
+				B893CC03252499F600174119 /* PDLTaskSchedulerInternal.h */,
+			);
+			path = private;
+			sourceTree = "<group>";
+		};
+		C0B55B402D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver */ = {
+			isa = PBXGroup;
+			children = (
+				C0B55B3A2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.h */,
+				C0B55B3B2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.m */,
+				C0B55B3C2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.h */,
+				C0B55B3D2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.m */,
+				C0B55B3E2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.h */,
+				C0B55B3F2D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.m */,
+			);
+			path = PDLNonThreadSafeSwiftObjectObserver;
 			sourceTree = "<group>";
 		};
 		C0E095D52A56A59C0045A3F6 /* PDLSwiftModule */ = {
@@ -10145,9 +10247,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				B88E959626821222008CDA4D /* PDLSharedCache.m in Sources */,
-				B8220D372681DFE1002018D8 /* dsc_extractor.cpp in Sources */,
-				B8220D382681DFE1002018D8 /* dsc_iterator.cpp in Sources */,
 				C0080DCA276E5EFE00510D6A /* PDLDYLDSharedCache.m in Sources */,
+				C0B559872D4C97B300B7BBA2 /* dsc_extractor.cpp in Sources */,
+				C0B559882D4C97B300B7BBA2 /* dsc_iterator.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10245,7 +10347,9 @@
 				B85D461B240E861A00CBF758 /* pdl_lldb_hook.c in Sources */,
 				B88865FB24C03FB300D58BC7 /* NSObject+PDLMethod-arm.s in Sources */,
 				B85D461C240E861A00CBF758 /* pdl_mach_o_symbols.c in Sources */,
+				C0B559E22D4CE66800B7BBA2 /* PDLLayerDebuggerWindow.m in Sources */,
 				C03C40242AD55EE0005836A4 /* PDLDeadLockObserver.m in Sources */,
+				C0B559DC2D4CE66800B7BBA2 /* PDLFloatPropertyDebugger.m in Sources */,
 				C010A6DB27114D8300A785E9 /* PDLNonThreadSafePropertyObserverObject.m in Sources */,
 				B8795335248688D800798005 /* pdl_thread-x86_64.s in Sources */,
 				B85D461D240E861A00CBF758 /* pdl_mach_object.c in Sources */,
@@ -10258,17 +10362,19 @@
 				B85D4621240E861A00CBF758 /* pdl_array.c in Sources */,
 				B85D4622240E861A00CBF758 /* pdl_dictionary.c in Sources */,
 				C0123A482AD79604009EB95A /* PDLGlobalLockItem.m in Sources */,
-				B85D4623240E861A00CBF758 /* pdl_hash.c in Sources */,
 				B85D4625240E861A00CBF758 /* PDLDirectoryViewControllerResources.c in Sources */,
 				B842DD89267A0A0E00DD5A5F /* PDLSearchBarTableViewController.m in Sources */,
 				B85D4605240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-arm.s in Sources */,
 				B85D4606240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-arm64.s in Sources */,
 				B80A5AA0262527E0003EAA7D /* PDLDebug.m in Sources */,
+				C0B559E62D4CE66800B7BBA2 /* PDLScreenDebuggerWindow.m in Sources */,
 				B88865FD24C03FB300D58BC7 /* NSObject+PDLMethod-x86_64.s in Sources */,
+				C0B559E42D4CE66800B7BBA2 /* PDLPropertyDebuggerView.m in Sources */,
 				B85D4607240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-i386.s in Sources */,
 				B85D4608240E85A600CBF758 /* NSObject+PDLImplementationInterceptor-x86_64.s in Sources */,
 				B8E81E3525C109D900204009 /* PDLReuseItemManager.m in Sources */,
 				B85D4609240E85A600CBF758 /* NSObject+PDLSelectorProxy-arm.s in Sources */,
+				C0B55B432D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.m in Sources */,
 				B85D460A240E85A600CBF758 /* NSObject+PDLSelectorProxy-arm64.s in Sources */,
 				B8795331248688D800798005 /* pdl_thread-arm.s in Sources */,
 				B8795305248512A200798005 /* PDLBacktrace.m in Sources */,
@@ -10276,6 +10382,7 @@
 				C0123A4A2AD79604009EB95A /* PDLLockItem.m in Sources */,
 				C0123A462AD79604009EB95A /* PDLObjectLockItem.m in Sources */,
 				B85D460C240E85A600CBF758 /* NSObject+PDLSelectorProxy-x86_64.s in Sources */,
+				C0B559B62D4CE2CB00B7BBA2 /* PDLPuddingString.m in Sources */,
 				B85D460D240E85A600CBF758 /* pdl_die-arm.s in Sources */,
 				B890851D24AF48C700DAC261 /* pdl_dispatch.m in Sources */,
 				B85D460E240E85A600CBF758 /* pdl_die-arm64.s in Sources */,
@@ -10285,7 +10392,6 @@
 				B85D4610240E85A600CBF758 /* pdl_die-x86_64.s in Sources */,
 				B85D4611240E85A600CBF758 /* pdl_objc_message-arm.s in Sources */,
 				B85D4612240E85A600CBF758 /* pdl_objc_message-arm64.s in Sources */,
-				B86BE6B1269556C000E90F06 /* JPEngine.m in Sources */,
 				B85D4613240E85A600CBF758 /* pdl_objc_message-i386.s in Sources */,
 				B85B447A24A0EC6200B25A3E /* pdl_allocation.m in Sources */,
 				B85D4614240E85A600CBF758 /* pdl_objc_message-x86_64.s in Sources */,
@@ -10319,7 +10425,6 @@
 				B85D45C8240E859000CBF758 /* NSObject+PDLImplementationInterceptor.m in Sources */,
 				C01B8B2A272A8DFF0083030A /* NSMutableDictionary+PDLThreadSafety.m in Sources */,
 				B8079BBF261C785D007E7A17 /* pdl_system_leak.m in Sources */,
-				B86BE6A32693390700E90F06 /* PDLPuddingString.m in Sources */,
 				B85D45C9240E859000CBF758 /* NSObject+PDLSelectorProxy.m in Sources */,
 				B8A6F5042546CA4000426AD1 /* PDLPageController.m in Sources */,
 				B85D45CA240E859000CBF758 /* NSObject+PDLThreadSafetifyProperty.m in Sources */,
@@ -10345,8 +10450,9 @@
 				B85D45D7240E859000CBF758 /* PDLCollectionViewFlowLayout.m in Sources */,
 				C00870782B26B7FE00E4E2C0 /* pdl_trampoline-x86_64.s in Sources */,
 				B85D45D8240E859000CBF758 /* PDLDatabase.m in Sources */,
-				B8220D362681DFA4002018D8 /* dsc_extractor.cpp in Sources */,
+				C0B559D82D4CE66800B7BBA2 /* PDLBoolPropertyDebugger.m in Sources */,
 				B897B5B1260112B200696E06 /* PDLColor.m in Sources */,
+				C0B55B452D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.m in Sources */,
 				B8B869C62643F418004D9656 /* pdl_hook.m in Sources */,
 				B85D45D9240E859000CBF758 /* PDLDatabaseTableViewController.m in Sources */,
 				B85D45DA240E859000CBF758 /* PDLDatabaseViewController.m in Sources */,
@@ -10358,6 +10464,8 @@
 				B8B3AA0124B71E2B008EFBE0 /* NSObject+PDLAssociation.m in Sources */,
 				B80DF29824C45E6300AE1B00 /* pdl_algorithm.c in Sources */,
 				B8866BDA2607890B00458D3F /* PDLCrash.mm in Sources */,
+				C0B559E02D4CE66800B7BBA2 /* PDLRectPropertyDebugger.m in Sources */,
+				C0B559B32D4CE2B700B7BBA2 /* JPEngine.m in Sources */,
 				B81E710E2501185A00399E4B /* PDLInitialization.m in Sources */,
 				C079F6E82A7BBF7A00D4FA0B /* PDLDSym.m in Sources */,
 				B8528192255132CA00B74F87 /* PDLRunLoopObserver.m in Sources */,
@@ -10366,8 +10474,10 @@
 				B85D45DD240E859000CBF758 /* PDLFileSystemViewController.m in Sources */,
 				B85D45DE240E859000CBF758 /* PDLPropertyListViewController.m in Sources */,
 				B85D45DF240E859000CBF758 /* PDLTextViewController.m in Sources */,
+				C0B559DA2D4CE66800B7BBA2 /* PDLColorPropertyDebugger.m in Sources */,
 				B888660D24C0439C00D58BC7 /* NSObject+PDLThreadSafetifyMethod.m in Sources */,
 				B85D45E0240E859000CBF758 /* PDLWebViewController.m in Sources */,
+				C0B559E82D4CE66800B7BBA2 /* PDLViewDebuggerWindow.m in Sources */,
 				B8A6F4F025428B7400426AD1 /* PDLFormViewCell.m in Sources */,
 				B8528195255132CA00B74F87 /* PDLBacktraceRecorder.m in Sources */,
 				B85D45E1240E859000CBF758 /* PDLFontViewController.m in Sources */,
@@ -10381,6 +10491,7 @@
 				B85D45E5240E859000CBF758 /* PDLImageListViewController.m in Sources */,
 				B88865F924C03FB300D58BC7 /* NSObject+PDLMethod-i386.s in Sources */,
 				B85D45E6240E859000CBF758 /* PDLProtocolListViewController.m in Sources */,
+				C0B559C12D4CE36100B7BBA2 /* pdl_hash.c in Sources */,
 				B85D45E7240E859000CBF758 /* PDLProtocolViewController.m in Sources */,
 				C010A6E127114D8300A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m in Sources */,
 				B80AF8D724769E78009B9AF8 /* pdl_malloc.c in Sources */,
@@ -10404,6 +10515,7 @@
 				B88668CE260783B300458D3F /* PDLFileSystem.m in Sources */,
 				B85D45F1240E859000CBF758 /* NSObject+PDLPrivate.m in Sources */,
 				B85D45F2240E859000CBF758 /* PDLResizableImageView.m in Sources */,
+				C0B55B412D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.m in Sources */,
 				B85D45F3240E859000CBF758 /* NSArray+PDLSafeOperation.m in Sources */,
 				B879531F248685B000798005 /* pdl_thread.c in Sources */,
 				B8300F2225BEB61600A02412 /* PDLScrollPageViewController.m in Sources */,
@@ -10411,31 +10523,22 @@
 				C010A6DD27114D8300A785E9 /* PDLNonThreadSafeObserverObject.m in Sources */,
 				C0AEE43C2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m in Sources */,
 				B893CBF9252488D000174119 /* PDLTaskScheduler.m in Sources */,
-				B85D45F5240E859000CBF758 /* PDLLayerDebuggerWindow.m in Sources */,
 				B86BE6982692B70700E90F06 /* PDLPudding.m in Sources */,
-				B85D45F6240E859000CBF758 /* PDLPropertyDebuggerView.m in Sources */,
 				B899F9EF245065DA00EFBB39 /* PDLViewControllerListViewController.m in Sources */,
 				B80AF8D524769E78009B9AF8 /* pdl_malloc_zone.c in Sources */,
+				C0B559DE2D4CE66800B7BBA2 /* PDLPropertyDebugger.m in Sources */,
 				C0123A4C2AD79604009EB95A /* PDLLockItemAction.m in Sources */,
 				C03D59212A3B03540039053F /* PDLNonThreadSafeClusterObserverObject.m in Sources */,
 				B85D45F7240E859000CBF758 /* PDLScreenDebugger.m in Sources */,
 				B88865D024BF21AE00D58BC7 /* NSObject+PDLMethod.m in Sources */,
-				B85D45F8240E859000CBF758 /* PDLScreenDebuggerWindow.m in Sources */,
 				B88865FF24C03FB300D58BC7 /* NSObject+PDLMethod-arm64.s in Sources */,
-				B85D45F9240E859000CBF758 /* PDLViewDebuggerWindow.m in Sources */,
-				B85D45FA240E859000CBF758 /* PDLBoolPropertyDebugger.m in Sources */,
-				B85D45FB240E859000CBF758 /* PDLColorPropertyDebugger.m in Sources */,
-				B85D45FC240E859000CBF758 /* PDLFloatPropertyDebugger.m in Sources */,
 				C03D59172A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m in Sources */,
 				B88865F324C02F1A00D58BC7 /* pdl_thread_storage.c in Sources */,
-				B8220D352681DFA4002018D8 /* dsc_iterator.cpp in Sources */,
 				C03D591F2A3B03540039053F /* PDLNonThreadSafeClusterObserverCluster.m in Sources */,
 				C0E537A42AFB7E2E00C5566A /* pdl_trampoline-arm64.s in Sources */,
 				B8528194255132CA00B74F87 /* PDLBacktraceRecord.m in Sources */,
 				C010A6E027114D8300A785E9 /* PDLNonThreadSafeObserverAction.m in Sources */,
-				B85D45FD240E859000CBF758 /* PDLPropertyDebugger.m in Sources */,
 				C03D591B2A3B03540039053F /* PDLNonThreadSafeArrayObserver.m in Sources */,
-				B85D45FE240E859000CBF758 /* PDLRectPropertyDebugger.m in Sources */,
 				B85D45FF240E859000CBF758 /* PDLSystemImage.m in Sources */,
 				B85D4600240E859000CBF758 /* PDLViewController.m in Sources */,
 				C083BA1628CAE9E50016E214 /* pdl_pac.m in Sources */,
@@ -10452,16 +10555,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B8E56F9E23D70551008D2DA1 /* PDLLayerDebuggerWindow.m in Sources */,
-				B8E56F9F23D70551008D2DA1 /* PDLPropertyDebuggerView.m in Sources */,
+				C0B559E92D4CE66800B7BBA2 /* PDLViewDebuggerWindow.m in Sources */,
+				C0B559E32D4CE66800B7BBA2 /* PDLLayerDebuggerWindow.m in Sources */,
+				C0B559E52D4CE66800B7BBA2 /* PDLPropertyDebuggerView.m in Sources */,
+				C0B559D92D4CE66800B7BBA2 /* PDLBoolPropertyDebugger.m in Sources */,
+				C0B559E72D4CE66800B7BBA2 /* PDLScreenDebuggerWindow.m in Sources */,
+				C0B559DF2D4CE66800B7BBA2 /* PDLPropertyDebugger.m in Sources */,
+				C0B559E12D4CE66800B7BBA2 /* PDLRectPropertyDebugger.m in Sources */,
+				C0B559DD2D4CE66800B7BBA2 /* PDLFloatPropertyDebugger.m in Sources */,
+				C0B559DB2D4CE66800B7BBA2 /* PDLColorPropertyDebugger.m in Sources */,
 				B8E56FA023D70551008D2DA1 /* PDLScreenDebugger.m in Sources */,
-				B8E56FA123D70551008D2DA1 /* PDLScreenDebuggerWindow.m in Sources */,
-				B8E56FA223D70551008D2DA1 /* PDLViewDebuggerWindow.m in Sources */,
-				B8E56FA323D70551008D2DA1 /* PDLBoolPropertyDebugger.m in Sources */,
-				B8E56FA423D70551008D2DA1 /* PDLColorPropertyDebugger.m in Sources */,
-				B8E56FA523D70551008D2DA1 /* PDLFloatPropertyDebugger.m in Sources */,
-				B8E56FA623D70551008D2DA1 /* PDLPropertyDebugger.m in Sources */,
-				B8E56FA723D70551008D2DA1 /* PDLRectPropertyDebugger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10538,9 +10641,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B86BE6B3269556EA00E90F06 /* JPEngine.m in Sources */,
-				B86BE6A42693390700E90F06 /* PDLPuddingString.m in Sources */,
+				C0B559B52D4CE2C900B7BBA2 /* PDLPuddingString.m in Sources */,
 				B86BE6992692B70700E90F06 /* PDLPudding.m in Sources */,
+				C0B559B42D4CE2BF00B7BBA2 /* JPEngine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10725,8 +10828,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0B55B462D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverSwiftObject.m in Sources */,
 				C010A6E927114E5E00A785E9 /* PDLNonThreadSafeDictionaryObserver.m in Sources */,
 				C03D59182A3B03540039053F /* PDLNonThreadSafeArrayObserverObject.m in Sources */,
+				C0B55B422D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserver.m in Sources */,
+				C0B55B442D4CF1A800B7BBA2 /* PDLNonThreadSafeSwiftObjectObserverObject.m in Sources */,
 				C0AEE4412A2DB4C400CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m in Sources */,
 				C010A6EA27114E5E00A785E9 /* PDLNonThreadSafeDictionaryObserverObject.m in Sources */,
 				C010A6EB27114E5E00A785E9 /* PDLNonThreadSafePropertyObserver.m in Sources */,
@@ -11145,10 +11251,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				B8B7B5CA249CE80E008D4604 /* pdl_list.c in Sources */,
+				C0B559C22D4CE36100B7BBA2 /* pdl_hash.c in Sources */,
 				B80DF29924C45E6300AE1B00 /* pdl_algorithm.c in Sources */,
 				B8E56F5B23D7037C008D2DA1 /* pdl_array.c in Sources */,
 				B8E56F5C23D7037C008D2DA1 /* pdl_dictionary.c in Sources */,
-				B8E56F5D23D7037C008D2DA1 /* pdl_hash.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

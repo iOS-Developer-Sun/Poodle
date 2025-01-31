@@ -15,6 +15,7 @@ def PoodleSubspec(s, name, platform)
     support_osx = platform.key?(:osx)
     support_ios = platform.key?(:ios)
     hash = s.pdl_hash
+    base = hash[:base]
     is_library = hash[:is_library]
     is_macos = hash[:is_macos]
     source_files = hash[:source_files]
@@ -29,28 +30,29 @@ def PoodleSubspec(s, name, platform)
     end
 
     ss = s.subspec name do |ss|
-        base = s.pdl_hash[:base]
-
         ss.frameworks = 'Foundation'
         ss.preserve_paths = preserve_paths
+        ss.exclude_files = base + '/' + name + '/exclude/' + '**/' + '*'
         #ss.pod_target_xcconfig = { "DEFINES_MODULE" => "YES" }
         if is_library
-            ss.source_files = base + name + '/' + '**/' + source_files
+            ss.source_files = base + '/' + name + '/' + '**/' + source_files
             if is_macos
                 ss.osx.deployment_target = platform[:osx]
-                ss.vendored_library = base + name + '/macos/' + library_files
+                ss.vendored_library = base + '/' + name + '/macos/' + library_files
             else
                 ss.ios.deployment_target = platform[:ios]
-                ss.vendored_library = base + name + '/ios/' + library_files
+                ss.vendored_library = base + '/' + name + '/ios/' + library_files
             end
         else
             ss.osx.deployment_target = platform[:osx] if support_osx
             ss.ios.deployment_target = platform[:ios] if support_ios
-            ss.source_files = base + name + '/' + '**/' + source_files
+            ss.source_files = base + '/' + name + '/' + '**/' + source_files
+            ss.private_header_files = base + '/' + name + '/private/' + '**/' + header_files
+
             if is_macos
-                ss.vendored_library = base + name + '/lib/macos/**/' + library_files
+                ss.vendored_library = base + '/' + name + '/lib/macos/**/' + library_files
             else
-                ss.vendored_library = base + name + '/lib/ios/**/' + library_files
+                ss.vendored_library = base + '/' + name + '/lib/ios/**/' + library_files
             end
         end
         hash[:toolkit_osx].append name if support_osx
@@ -63,7 +65,7 @@ end
 def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subspec: nil)
     Pod::Spec.new do |s|
         path = name if path == nil
-        base = path + '/'
+        base = path
 
         # constants
         source_files = '*.{h,hpp,c,cc,cpp,m,mm,s,S,o}'.freeze
@@ -198,7 +200,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         PoodleSubspec(s, 'NSUserDefaults+PDLExtension', platform_universal)
 
         PoodleSubspec(s, 'pdl_asm', platform_universal) do |ss|
-            ss.public_header_files = base + 'pdl_asm/' + 'pdl_asm.h'
+            ss.public_header_files = base + '/' + 'pdl_asm' + '/' + '**/' + header_files
         end
 
         PoodleSubspec(s, 'pdl_allocation', platform_universal) do |ss|
@@ -271,7 +273,6 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         end
 
         PoodleSubspec(s, 'pdl_objc_message_hook', platform_universal) do |ss|
-            ss.public_header_files = base + 'pdl_objc_message_hook/' + 'pdl_objc_message_hook.h'
             ss.dependency pod_name + '/pdl_dynamic'
             ss.dependency pod_name + '/pdl_asm'
             ss.dependency pod_name + '/pdl_objc_message'
@@ -401,10 +402,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/pdl_mach_object'
         end
 
-        PoodleSubspec(s, 'PDLDatabase', platform_universal) do |ss|
-            ss.source_files = base + 'PDLDatabase/' + source_files
-            ss.public_header_files = base + 'PDLDatabase/' + '*.h'
-        end
+        PoodleSubspec(s, 'PDLDatabase', platform_universal)
 
         PoodleSubspec(s, 'PDLFileSystem', platform_universal)
 
@@ -415,6 +413,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLCrash'
             ss.dependency pod_name + '/PDLColor'
             ss.dependency pod_name + '/PDLFormView'
+            ss.dependency pod_name + '/PDLImageListViewController'
         end
 
         PoodleSubspec(s, 'PDLFontViewController', platform_ios) do |ss|
@@ -529,7 +528,6 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         end
 
         PoodleSubspec(s, 'PDLSharedCache', platform_universal) do |ss|
-            ss.public_header_files = base + 'PDLSharedCache/' + '**/*.h'
             ss.libraries = 'c++'
             ss.dependency pod_name + '/pdl_mach_object'
             ss.dependency pod_name + '/pdl_mach_o_symbols'

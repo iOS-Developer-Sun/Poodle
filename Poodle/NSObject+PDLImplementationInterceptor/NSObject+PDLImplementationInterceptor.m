@@ -249,4 +249,45 @@ NSUInteger pdl_interceptClusterSelector(Class aClass, SEL selector, IMP intercep
     return pdl_interceptClusterSelector(self, selector, interceptorImplementation, isStructRet, addIfNotExistent, data);
 }
 
+Class pdl_subclass(Class superclass, const char *className, Class targetClass) {
+    if (strcmp(class_getName(targetClass), className) == 0) {
+        abort();
+    }
+
+    Class subclass = objc_allocateClassPair(superclass, className, 0);
+    if (subclass) {
+        // new class not registered
+        objc_registerClassPair(subclass);
+
+        // add method -(Class)class;
+        SEL classSelector = @selector(class);
+        id classBlock = ^Class (__unsafe_unretained id self) {
+            struct objc_super su = {self, superclass};
+            Class(*msgSendSuper)(struct objc_super *, SEL) = (Class(*)(struct objc_super *, SEL))objc_msgSendSuper;
+            Class ret = msgSendSuper(&su, classSelector);
+            if (ret == subclass) {
+                ret = superclass;
+            }
+            return ret;
+        };
+
+        IMP classImp = imp_implementationWithBlock(classBlock);
+        class_addMethod(subclass, classSelector, classImp, method_getTypeEncoding(class_getInstanceMethod(superclass, classSelector)));
+
+        if (targetClass) {
+            unsigned int count = 0;
+            Method *methodList = class_copyMethodList(targetClass, &count);
+            for (unsigned int i = 0; i < count; i++) {
+                Method method = methodList[i];
+                class_addMethod(subclass, method_getName(method), method_getImplementation(method), method_getTypeEncoding(method));
+            }
+            free(methodList);
+        }
+    } else {
+        // class is already registered
+        subclass = objc_getClass(className);
+    }
+    return subclass;
+}
+
 @end
