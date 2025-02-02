@@ -15,7 +15,7 @@
     NSError *error = nil;
     id object = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
     if (error) {
-        NSAssert(NO, @"PDLJSONSerialization error: %@", error.localizedDescription);
+        NSLog(@"PDLJSONSerialization error: %@", error.localizedDescription);
     }
     return object;
 }
@@ -29,7 +29,7 @@
     NSError *error = nil;
     id object = [NSJSONSerialization JSONObjectWithData:data options:NSJSONReadingAllowFragments error:&error];
     if (error) {
-        NSAssert(NO, @"PDLJSONSerialization error: %@", error.localizedDescription);
+        NSLog(@"PDLJSONSerialization error: %@", error.localizedDescription);
     }
     return object;
 }
@@ -39,21 +39,21 @@
 @implementation NSArray (PDLJSONSerialization)
 
 - (NSData *)pdl_JSONData {
+    if (![NSJSONSerialization isValidJSONObject:self]) {
+        return nil;
+    }
+
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:self options:0 error:&error];
-    if (error) {
-        NSAssert(NO, @"PDLJSONSerialization error: %@", error.localizedDescription);
-    }
     return data;
 }
 
 - (NSString *)pdl_JSONString {
-    NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:self options:0 error:&error];
-    if (error) {
-        NSAssert(NO, @"PDLJSONSerialization error: %@", error.localizedDescription);
+    NSString *string = nil;
+    NSData *data = [self pdl_JSONData];
+    if (data) {
+        string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     }
-    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return string;
 }
 
@@ -62,21 +62,21 @@
 @implementation NSDictionary (PDLJSONSerialization)
 
 - (NSData *)pdl_JSONData {
+    if (![NSJSONSerialization isValidJSONObject:self]) {
+        return nil;
+    }
+
     NSError *error = nil;
     NSData *data = [NSJSONSerialization dataWithJSONObject:self options:0 error:&error];
-    if (error) {
-        NSAssert(NO, @"PDLJSONSerialization error: %@", error.localizedDescription);
-    }
     return data;
 }
 
 - (NSString *)pdl_JSONString {
-    NSError *error = nil;
-    NSData *data = [NSJSONSerialization dataWithJSONObject:self options:0 error:&error];
-    if (error) {
-        NSAssert(NO, @"PDLJSONSerialization error: %@", error.localizedDescription);
+    NSString *string = nil;
+    NSData *data = [self pdl_JSONData];
+    if (data) {
+        string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     }
-    NSString *string = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
     return string;
 }
 

@@ -378,6 +378,14 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 @implementation PDLDirectoryViewController
 
+static  id <PDLDirectoryViewControllerDelegate> _delegate;
++ (id<PDLDirectoryViewControllerDelegate>)delegate {
+    return _delegate;
+}
++ (void)setDelegate:(id<PDLDirectoryViewControllerDelegate>)delegate {
+    _delegate = delegate;
+}
+
 static NSArray *_currentContents = nil;
 + (NSArray *)currentContents {
     return _currentContents;
@@ -699,6 +707,25 @@ static NSArray *_currentContents = nil;
         [alertController addAction:[UIAlertAction actionWithTitle:@"Open as a crash file" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [weakSelf openContent:content type:PDLDirectoryContentTypeCrash];
         }]];
+
+        NSString *filePath = content.filePath;
+        NSInteger customActionCount = 0;
+        id <PDLDirectoryViewControllerDelegate> delegate = PDLDirectoryViewController.delegate;
+        if ([delegate respondsToSelector:@selector(directoryViewController:numberOfCustomActions:)]) {
+            customActionCount = [delegate directoryViewController:self numberOfCustomActions:filePath];
+        }
+        for (NSInteger i = 0; i < customActionCount; i++) {
+            NSString *title = nil;
+            if ([delegate respondsToSelector:@selector(directoryViewController:customActionTitle:index:)]) {
+                title = [delegate directoryViewController:self customActionTitle:filePath index:i];
+            }
+            title = title ?: [NSString stringWithFormat:@"Custom-%@", @(i)];
+            [alertController addAction:[UIAlertAction actionWithTitle:title style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                if ([delegate respondsToSelector:@selector(directoryViewController:customActionDidClick:index:)]) {
+                    [delegate directoryViewController:self customActionDidClick:filePath index:i];
+                }
+            }]];
+        }
         [alertController addAction:[UIAlertAction actionWithTitle:@"Other" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [weakSelf openContent:content type:PDLDirectoryContentTypeOther];
         }]];
@@ -857,7 +884,6 @@ static NSArray *_currentContents = nil;
             [self.navigationController pushViewController:viewController animated:YES];
         } break;
         case PDLDirectoryContentTypeDynamicLibrary: {
-#ifdef DEBUG
             void *ret = dlopen(content.filePath.UTF8String, RTLD_NOW);
             if (ret) {
                 [self alertWithTitle:@"Success" message:nil];
@@ -865,7 +891,6 @@ static NSArray *_currentContents = nil;
             } else {
                 [self alertWithTitle:@"Failure" message:nil];
             }
-#endif
         } break;
         case PDLDirectoryContentTypeCrash: {
             PDLCrashViewController *viewController = [[PDLCrashViewController alloc] initWithPath:content.filePath];

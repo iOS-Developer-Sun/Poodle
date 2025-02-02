@@ -304,24 +304,45 @@ static BOOL applicationDidFinishLaunchingWithOptions(__unsafe_unretained id <UIA
     return ((typeof(&applicationDidFinishLaunchingWithOptions))_imp)(self, _cmd, application, launchOptions);
 }
 
-static BOOL applicationOpenURLOptions(__unsafe_unretained UIApplication *self, SEL _cmd, __unsafe_unretained UIApplication *application, __unsafe_unretained NSURL *url, __unsafe_unretained NSDictionary<UIApplicationOpenURLOptionsKey,id> *options) {
+static BOOL applicationOpenURLOptions(__unsafe_unretained id <UIApplicationDelegate> self, SEL _cmd, __unsafe_unretained UIApplication *application, __unsafe_unretained NSURL *url, __unsafe_unretained NSDictionary<UIApplicationOpenURLOptionsKey,id> *options) {
     PDLImplementationInterceptorRecover(_cmd);
-    BOOL ret = [PDLApplication handleUrl:url];
+    BOOL ret = applicationOpenURLOptionsAdded(self, _cmd, application, url, options);
     if (_imp) {
-        return ((typeof(&applicationOpenURLOptions))_imp)(self, _cmd, application, url, options);
+        ret = ((typeof(&applicationOpenURLOptions))_imp)(self, _cmd, application, url, options);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        ret = ((BOOL (*)(struct objc_super *, SEL, __unsafe_unretained UIApplication *, __unsafe_unretained NSURL *, __unsafe_unretained NSDictionary<UIApplicationOpenURLOptionsKey,id> *))objc_msgSendSuper)(&su, _cmd, application, url, options);
     }
     return ret;
 }
 
-static BOOL applicationOpenURLOptionsAdded(__unsafe_unretained UIApplication *self, SEL _cmd, __unsafe_unretained UIApplication *application, __unsafe_unretained NSURL *url, __unsafe_unretained NSDictionary<UIApplicationOpenURLOptionsKey,id> *options) {
+static BOOL applicationOpenURLOptionsAdded(__unsafe_unretained id <UIApplicationDelegate> self, SEL _cmd, __unsafe_unretained UIApplication *application, __unsafe_unretained NSURL *url, __unsafe_unretained NSDictionary<UIApplicationOpenURLOptionsKey,id> *options) {
     return [PDLApplication handleUrl:url];
+}
+
+static void applicationPerformActionForShortcutItemCompletionHandler(__unsafe_unretained id <UIApplicationDelegate> self, SEL _cmd, __unsafe_unretained UIApplication *application, __unsafe_unretained UIApplicationShortcutItem *shortcutItem, void (^completionHandler)(BOOL)) {
+    PDLImplementationInterceptorRecover(_cmd);
+    applicationPerformActionForShortcutItemCompletionHandlerAdded(self, _cmd, application, shortcutItem, completionHandler);
+    if (_imp) {
+        ((typeof(&applicationPerformActionForShortcutItemCompletionHandler))_imp)(self, _cmd, application, shortcutItem, completionHandler);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        ((BOOL (*)(struct objc_super *, SEL, __unsafe_unretained UIApplication *, __unsafe_unretained UIApplicationShortcutItem *, void (^)(BOOL)))objc_msgSendSuper)(&su, _cmd, application, shortcutItem, completionHandler);
+    }
+}
+
+static void applicationPerformActionForShortcutItemCompletionHandlerAdded(__unsafe_unretained id <UIApplicationDelegate> self, SEL _cmd, __unsafe_unretained UIApplication *application, __unsafe_unretained UIApplicationShortcutItem *shortcutItem, void (^completionHandler)(BOOL)) {
+    [PDLApplication handleShortcutItem:shortcutItem];
 }
 
 static BOOL applicationOpenURLSourceApplicationAnnotation(__unsafe_unretained id <UIApplicationDelegate> self, SEL _cmd, __unsafe_unretained UIApplication *application, __unsafe_unretained NSURL *url, __unsafe_unretained NSString *sourceApplication, __unsafe_unretained id annotation) {
     PDLImplementationInterceptorRecover(_cmd);
     BOOL ret = [PDLApplication handleUrl:url];
     if (_imp) {
-        return ((typeof(&applicationOpenURLSourceApplicationAnnotation))_imp)(self, _cmd, application, url, sourceApplication, annotation);
+        ret = ((typeof(&applicationOpenURLSourceApplicationAnnotation))_imp)(self, _cmd, application, url, sourceApplication, annotation);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        ret = ((BOOL (*)(struct objc_super *, SEL, __unsafe_unretained UIApplication *, __unsafe_unretained NSURL *, __unsafe_unretained NSString *, __unsafe_unretained id))objc_msgSendSuper)(&su, _cmd, application, url, sourceApplication, annotation);
     }
     return ret;
 }
@@ -330,7 +351,10 @@ static BOOL applicationHandleOpenURL(__unsafe_unretained id <UIApplicationDelega
     PDLImplementationInterceptorRecover(_cmd);
     BOOL ret = [PDLApplication handleUrl:url];
     if (_imp) {
-        return ((typeof(&applicationHandleOpenURL))_imp)(self, _cmd, application, url);
+        ret = ((typeof(&applicationHandleOpenURL))_imp)(self, _cmd, application, url);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        ret = ((BOOL (*)(struct objc_super *, SEL, __unsafe_unretained UIApplication *, __unsafe_unretained NSURL *))objc_msgSendSuper)(&su, _cmd, application, url);
     }
     return ret;
 }
@@ -342,15 +366,20 @@ static BOOL applicationHandleOpenURL(__unsafe_unretained id <UIApplicationDelega
 
     Class aClass = object_getClass(delegate);
     [aClass pdl_interceptSelector:@selector(application:didFinishLaunchingWithOptions:) withInterceptorImplementation:(IMP)&applicationDidFinishLaunchingWithOptions];
-    BOOL ret = [aClass pdl_interceptSelector:@selector(application:openURL:options:) withInterceptorImplementation:(IMP)&applicationOpenURLOptions];
+    BOOL ret = [aClass pdl_interceptSelector:@selector(application:openURL:options:) withInterceptorImplementation:(IMP)&applicationOpenURLOptions isStructRet:nil addIfNotExistent:YES data:NULL];
     if (!ret) {
-        ret = [aClass pdl_interceptSelector:@selector(application:openURL:sourceApplication:annotation:) withInterceptorImplementation:(IMP)&applicationOpenURLSourceApplicationAnnotation];
+        ret = [aClass pdl_interceptSelector:@selector(application:openURL:sourceApplication:annotation:) withInterceptorImplementation:(IMP)&applicationOpenURLSourceApplicationAnnotation isStructRet:nil addIfNotExistent:YES data:NULL];
     }
     if (!ret) {
-        ret = [aClass pdl_interceptSelector:@selector(application:handleOpenURL:) withInterceptorImplementation:(IMP)&applicationHandleOpenURL];
+        ret = [aClass pdl_interceptSelector:@selector(application:handleOpenURL:) withInterceptorImplementation:(IMP)&applicationHandleOpenURL isStructRet:nil addIfNotExistent:YES data:NULL];
     }
     if (!ret) {
         ret = class_addMethod(aClass, @selector(application:openURL:options:), (IMP)&applicationOpenURLOptionsAdded, NULL);
+    }
+
+    ret = [aClass pdl_interceptSelector:@selector(application:performActionForShortcutItem:completionHandler:) withInterceptorImplementation:(IMP)&applicationPerformActionForShortcutItemCompletionHandler isStructRet:nil addIfNotExistent:YES data:NULL];
+    if (!ret) {
+        ret = class_addMethod(aClass, @selector(application:performActionForShortcutItem:completionHandler:), (IMP)&applicationPerformActionForShortcutItemCompletionHandlerAdded, NULL);
     }
 }
 
@@ -362,6 +391,71 @@ static void applicationSetDelegate(__unsafe_unretained UIApplication *self, SEL 
     if (self.shortcutItems.count == 0) {
         self.shortcutItems = @[];
     }
+}
+
+static void sceneOpenURLContextsAdded(__unsafe_unretained id self, SEL _cmd, id scene, NSSet *openURLContexts) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+    for (UIOpenURLContext *context in openURLContexts) {
+        [PDLApplication handleUrl:context.URL];
+    }
+#pragma clang diagnostic pop
+}
+
+static void sceneOpenURLContexts(__unsafe_unretained id self, SEL _cmd, id scene, NSSet *openURLContexts) {
+    PDLImplementationInterceptorRecover(_cmd);
+    sceneOpenURLContextsAdded(self, _cmd, scene, openURLContexts);
+    if (_imp) {
+        ((typeof(&sceneOpenURLContexts))_imp)(self, _cmd, scene, openURLContexts);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        ((BOOL (*)(struct objc_super *, SEL, id, NSSet *))objc_msgSendSuper)(&su, _cmd, scene, openURLContexts);
+    }
+}
+
+static void windowScenePerformActionForShortcutItemCompletionHandler(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id windowScene, __unsafe_unretained UIApplicationShortcutItem *shortcutItem, void (^completionHandler)(BOOL)) {
+    PDLImplementationInterceptorRecover(_cmd);
+    windowScenePerformActionForShortcutItemCompletionHandlerAdded(self, _cmd, windowScene, shortcutItem, completionHandler);
+    if (_imp) {
+        ((typeof(&windowScenePerformActionForShortcutItemCompletionHandler))_imp)(self, _cmd, windowScene, shortcutItem, completionHandler);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        ((void (*)(struct objc_super *, SEL, id, __unsafe_unretained UIApplicationShortcutItem *, void(^)(BOOL)))objc_msgSendSuper)(&su, _cmd, windowScene, shortcutItem, completionHandler);
+    }
+}
+
+static void windowScenePerformActionForShortcutItemCompletionHandlerAdded(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id windowScene, __unsafe_unretained UIApplicationShortcutItem *shortcutItem, void (^completionHandler)(BOOL)) {
+    [PDLApplication handleShortcutItem:shortcutItem];
+}
+
+static void sceneWillConnectToSessionOptions(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id scene, __unsafe_unretained id session, id options) {
+    PDLImplementationInterceptorRecover(_cmd);
+    sceneWillConnectToSessionOptionsAdded(self, _cmd, scene, session, options);
+    if (_imp) {
+        ((typeof(&sceneWillConnectToSessionOptions))_imp)(self, _cmd, scene, session, options);
+    } else {
+        struct objc_super su = {self, class_getSuperclass(_class)};
+        ((void (*)(struct objc_super *, SEL, id, id, id))objc_msgSendSuper)(&su, _cmd, scene, session, options);
+    }
+}
+
+static void sceneWillConnectToSessionOptionsAdded(__unsafe_unretained id self, SEL _cmd, __unsafe_unretained id scene, __unsafe_unretained id session, id options) {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunguarded-availability"
+#pragma clang diagnostic ignored "-Wunguarded-availability-new"
+    UISceneConnectionOptions *op = options;
+    BOOL isSafeMode = [op.shortcutItem.type isEqualToString:@"safemode"];
+    if (isSafeMode && PDLApplicationSafemodeEnabled) {
+        UIWindowScene *windowScene = scene;
+        if ([windowScene isKindOfClass:[UIWindowScene class]]) {
+            UIWindow *sceneWindow = windowScene.windows.firstObject;
+            UIWindow *window = [PDLApplication window:isSafeMode];
+            [PDLApplication setMainWindow:sceneWindow];
+            sceneWindow.rootViewController = window.rootViewController;
+        }
+    }
+#pragma clang diagnostic pop
 }
 
 static void applicationSetShortcutItems(__unsafe_unretained UIApplication *self, SEL _cmd, NSArray *shortcutItems) {
@@ -405,6 +499,23 @@ static void applicationSetShortcutItems(__unsafe_unretained UIApplication *self,
     return ret;
 }
 
++ (void)handleShortcutItem:(UIApplicationShortcutItem *)shortcutItem {
+    if ([shortcutItem.type isEqualToString:@"safemode"]) {
+        if (_developmentToolAction) {
+            BOOL handled = _developmentToolAction();
+            if (!handled) {
+                if (!_developmentToolWindow) {
+                    [self showDevelopmentToolWindow:YES completion:nil];
+                }
+            }
+        } else {
+            if (!_developmentToolWindow) {
+                [self showDevelopmentToolWindow:YES completion:nil];
+            }
+        }
+    }
+}
+
 + (UIApplicationShortcutItem *)safeModeShortcutItem {
     UIApplicationShortcutItem *safeModeShortcutItem = [[UIApplicationShortcutItem alloc] initWithType:@"safemode" localizedTitle:@"SAFEMODE" localizedSubtitle:nil icon:nil userInfo:nil];
     return safeModeShortcutItem;
@@ -414,8 +525,43 @@ static void applicationSetShortcutItems(__unsafe_unretained UIApplication *self,
     static BOOL enabled = NO;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        BOOL ret = [UIApplication pdl_interceptSelector:@selector(setDelegate:) withInterceptorImplementation:(IMP)&applicationSetDelegate];
-        enabled = ret;
+        enabled = [UIApplication pdl_interceptSelector:@selector(setDelegate:) withInterceptorImplementation:(IMP)&applicationSetDelegate];
+        if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 13) {
+            NSDictionary *infoDictionary = [NSBundle mainBundle].infoDictionary;
+            NSDictionary *sceneManifest = infoDictionary[@"UIApplicationSceneManifest"];
+            NSDictionary *sceneConfigurations = sceneManifest[@"UISceneConfigurations"];
+            NSArray *configurations = sceneConfigurations[@"UIWindowSceneSessionRoleApplication"];
+            NSMutableSet *classNames = [NSMutableSet set];
+            for (NSDictionary *configuration in configurations) {
+                NSString *className = configuration[@"UISceneDelegateClassName"];
+                if (!className) {
+                    continue;
+                }
+                [classNames addObject:className];
+            }
+            if (classNames.count > 0) {
+                for (NSString *className in classNames) {
+                    Class aClass = NSClassFromString(className);
+                    SEL sel = @selector(scene:openURLContexts:);
+                    BOOL ret = [aClass pdl_interceptSelector:sel withInterceptorImplementation:(IMP)&sceneOpenURLContexts isStructRet:nil addIfNotExistent:YES data:NULL];
+                    if (!ret) {
+                        ret = class_addMethod(aClass, sel, (IMP)&sceneOpenURLContextsAdded, NULL);
+                    }
+
+                    sel = @selector(windowScene:performActionForShortcutItem:completionHandler:);
+                    ret = [aClass pdl_interceptSelector:sel withInterceptorImplementation:(IMP)&windowScenePerformActionForShortcutItemCompletionHandler isStructRet:nil addIfNotExistent:YES data:NULL];
+                    if (!ret) {
+                        ret = class_addMethod(aClass, sel, (IMP)&windowScenePerformActionForShortcutItemCompletionHandlerAdded, NULL);
+                    }
+
+                    sel = @selector(scene:willConnectToSession:options:);
+                    ret = [aClass pdl_interceptSelector:sel withInterceptorImplementation:(IMP)&sceneWillConnectToSessionOptions isStructRet:nil addIfNotExistent:YES data:NULL];
+                    if (!ret) {
+                        ret = class_addMethod(aClass, sel, (IMP)&sceneWillConnectToSessionOptionsAdded, NULL);
+                    }
+                }
+            }
+        }
     });
     return enabled;
 }
