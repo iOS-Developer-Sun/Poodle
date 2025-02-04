@@ -15,14 +15,14 @@
 
 static NSDictionary *_launchOptions;
 static void(^_developmentToolInitializer)(UIWindow *) = nil;
-static void(^_eventFeedbackLayerInitializer)(CALayer *layer, void(^defaultInitializer)(CALayer *layer)) = nil;
+static CALayer *(^_eventFeedbackLayerInitializer)(CALayer *(^defaultInitializer)(UITouch *), UITouch *touch) = nil;
 static UIWindow *_developmentToolWindow = nil;
 static __weak UIWindow *_previousKeyWindow = nil;
 static BOOL(^_developmentToolAction)(void) = nil;
 static NSString *_developmentToolVersion = nil;
 static NSString *_developmentToolIdentifier = nil;
 
-+ (void)registerEventFeedbackLayerInitializer:(void(^)(CALayer *layer, void(^defaultInitializer)(CALayer *layer))) initializer {
++ (void)registerEventFeedbackLayerInitializer:(CALayer *(^)(CALayer * (^)(UITouch *), UITouch *))initializer {
     _eventFeedbackLayerInitializer = [initializer copy];
 }
 
@@ -647,31 +647,20 @@ static void pdl_handleTouches(__unsafe_unretained UIEvent *event) {
         return;
     }
 
-    NSSet *allTouches = [event allTouches];
-    for (UITouch *touch in allTouches) {
-        UIWindow *window = touch.window;
-        CGPoint locationInWindow = [touch locationInView:window];
-        UIColor *color = pdl_colorForTouch(touch);
-        CALayer *rootLayer = [window valueForKeyPath:@"_rootLayer"];
+    CALayer *(^defaultInitializer)(UITouch *) = ^CALayer *(UITouch *touch) {
         CGFloat length = 20;
-
+        UIColor *color = pdl_colorForTouch(touch);
         CALayer *layer = [[CALayer alloc] init];
-        void(^defaultInitializer)(CALayer *) = ^(CALayer *layer) {
-            layer.borderColor = color.CGColor;
-            layer.borderWidth = 2;
-            layer.cornerRadius = length;
-        };
         layer.bounds = CGRectMake(0, 0, length * 2, length * 2);
-        if (_eventFeedbackLayerInitializer) {
-            _eventFeedbackLayerInitializer(layer, defaultInitializer);
-        } else {
-            defaultInitializer(layer);
-        }
+        layer.borderColor = color.CGColor;
+        layer.borderWidth = 2;
+        layer.cornerRadius = length;
+        layer.shadowColor = [UIColor blackColor].CGColor;
+        layer.shadowOffset = CGSizeZero;
+        layer.shadowRadius = 1;
+        layer.shadowOpacity = 1;
 
-        CGPoint position = [window.layer convertPoint:locationInWindow toLayer:rootLayer];
-        layer.position = position;
         layer.transform = CATransform3DMakeScale(0, 0, 1);
-        [rootLayer addSublayer:layer];
 
         NSTimeInterval duration = 1;
 
@@ -694,6 +683,30 @@ static void pdl_handleTouches(__unsafe_unretained UIEvent *event) {
         };
 
         [layer addAnimation:group forKey:nil];
+        return layer;
+    };
+
+    NSSet *allTouches = [event allTouches];
+    for (UITouch *touch in allTouches) {
+        UIWindow *window = touch.window;
+        CGPoint locationInWindow = [touch locationInView:window];
+        CALayer *rootLayer = [window valueForKeyPath:@"_rootLayer"];
+
+        CALayer *layer = nil;
+        if (_eventFeedbackLayerInitializer) {
+            layer = _eventFeedbackLayerInitializer(defaultInitializer, touch);
+        } else {
+            layer = defaultInitializer(touch);
+        }
+        if (layer) {
+            if (layer.superlayer != rootLayer) {
+                [rootLayer addSublayer:layer];
+            }
+
+            CGPoint position = [window.layer convertPoint:locationInWindow toLayer:rootLayer];
+            layer.position = position;
+            [layer removeAnimationForKey:@"position"];
+        }
     }
 }
 

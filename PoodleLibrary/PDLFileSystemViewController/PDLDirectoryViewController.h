@@ -8,7 +8,19 @@
 
 #import "PDLSearchBarTableViewController.h"
 
+@class PDLDirectoryViewController;
+
+@protocol PDLDirectoryViewControllerDelegate <NSObject>
+
+- (NSInteger)directoryViewController:(PDLDirectoryViewController *)directoryViewController numberOfCustomActions:(NSString *)filePath;
+- (NSString *)directoryViewController:(PDLDirectoryViewController *)directoryViewController customActionTitle:(NSString *)filePath index:(NSInteger)index;
+- (void)directoryViewController:(PDLDirectoryViewController *)directoryViewController customActionDidClick:(NSString *)filePath index:(NSInteger)index;
+
+@end
+
 @interface PDLDirectoryViewController : PDLSearchBarTableViewController
+
+@property (nonatomic, weak, class) id <PDLDirectoryViewControllerDelegate> delegate;
 
 - (instancetype)initWithDirectory:(NSString *)directory;
 
