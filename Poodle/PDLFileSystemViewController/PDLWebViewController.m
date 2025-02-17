@@ -38,10 +38,10 @@ static void *WebViewControllerObservingEstimatedProgressContext = NULL;
 
     self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"More" style:UIBarButtonItemStylePlain target:self action:@selector(showMenu)];
 
-    UIView *addressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    UIView *addressView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.containerView.frame.size.width, 44)];
     addressView.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     addressView.backgroundColor = [UIColor grayColor];
-    [self.view addSubview:addressView];
+    [self.containerView addSubview:addressView];
     self.addressView = addressView;
 
     UITextField *addressTextField = [[UITextField alloc] initWithFrame:CGRectInset(addressView.bounds, 10, 5)];
@@ -55,10 +55,10 @@ static void *WebViewControllerObservingEstimatedProgressContext = NULL;
     self.addressTextField = addressTextField;
     addressTextField.text = self.urlString;
 
-    WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, addressView.frame.size.height, self.view.frame.size.width, self.view.frame.size.height - 44)];
+    WKWebView *webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, addressView.frame.size.height, self.containerView.frame.size.width, self.containerView.frame.size.height - 44)];
     webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     webView.navigationDelegate = self;
-    [self.view addSubview:webView];
+    [self.containerView addSubview:webView];
     self.webView = webView;
 
     [self.webView addObserver:self forKeyPath:@"title" options:NSKeyValueObservingOptionOld context:&WebViewControllerObservingTitleContext];
@@ -70,7 +70,7 @@ static void *WebViewControllerObservingEstimatedProgressContext = NULL;
     progressView.trackTintColor = [UIColor clearColor];
     progressView.progressTintColor = [[UIColor redColor] colorWithAlphaComponent:0.5];
     progressView.clipsToBounds = YES;
-    [self.view addSubview:progressView];
+    [self.containerView addSubview:progressView];
     self.progressView = progressView;
 
     [self setProgress:0];
