@@ -7,9 +7,9 @@
 //
 
 #import "PDLOpenUrlViewController.h"
-#import "PDLKeyboardNotificationObserver.h"
+#import "PDLGeometry.h"
 
-@interface PDLOpenUrlViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, PDLKeyboardNotificationObserver>
+@interface PDLOpenUrlViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) UIView *headerView;
 @property (nonatomic, weak) UIView *footerView;
@@ -95,21 +95,12 @@ static void (^PDLOpenUrlViewControllerOpenUrlAction)(NSString *urlString) = nil;
     [self.containerView addGestureRecognizer:tap];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)layoutContainerView {
+    [super layoutContainerView];
 
-    [[PDLKeyboardNotificationObserver observerForDelegate:self] startObserving];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-
-    [[PDLKeyboardNotificationObserver observerForDelegate:self] stopObserving];
-}
-
-- (void)dealloc {
-    _tableView.dataSource = nil;
-    _tableView.delegate = nil;
+    self.headerView.pdl_height = self.containerView.pdl_height * 0.4;
+    self.footerView.pdl_height = self.containerView.pdl_height * 0.6;
+    self.footerView.pdl_top = self.headerView.pdl_bottom;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
@@ -133,8 +124,17 @@ static void (^PDLOpenUrlViewControllerOpenUrlAction)(NSString *urlString) = nil;
     [self.containerView endEditing:YES];
 
     NSString *urlString = self.textView.text;
-    if (urlString.length > 0 && self.class.openUrlAction) {
+    if (urlString.length == 0) {
+        return;
+    }
+
+    if (self.class.openUrlAction) {
         self.class.openUrlAction(urlString);
+    } else {
+        NSURL *url = [NSURL URLWithString:urlString];
+        if ([[UIApplication sharedApplication] canOpenURL:url]) {
+            [[UIApplication sharedApplication] openURL:url options:@{} completionHandler:nil];
+        }
     }
 }
 
@@ -161,16 +161,6 @@ static void (^PDLOpenUrlViewControllerOpenUrlAction)(NSString *urlString) = nil;
     cell.textLabel.text = self.class.constantTitles[indexPath.row];
     cell.tag = indexPath.row;
     return cell;
-}
-
-#pragma mark - PDLKeyboardNotificationObserver
-
-- (void)keyboardShowAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
-    self.footerView.frame = CGRectMake(self.footerView.frame.origin.x, self.footerView.frame.origin.y, self.footerView.frame.size.width, self.containerView.frame.size.height - self.headerView.frame.size.height - keyboardHeight);
-}
-
-- (void)keyboardHideAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
-    self.footerView.frame = CGRectMake(self.footerView.frame.origin.x, self.footerView.frame.origin.y, self.footerView.frame.size.width, self.containerView.frame.size.height - self.headerView.frame.size.height);
 }
 
 @end

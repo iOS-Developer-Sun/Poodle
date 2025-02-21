@@ -130,7 +130,7 @@ static void *WebViewControllerObservingEstimatedProgressContext = NULL;
     UIPasteboard *pasteboard = [UIPasteboard generalPasteboard];
     pasteboard.string = self.webView.URL.absoluteString;
 
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"已复制到剪切板" message:self.webView.URL.absoluteString preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Copied" message:self.webView.URL.absoluteString preferredStyle:UIAlertControllerStyleAlert];
     [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
         ;
     }]];
@@ -138,7 +138,7 @@ static void *WebViewControllerObservingEstimatedProgressContext = NULL;
 }
 
 - (void)openWithSafari {
-    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.webView.URL.absoluteString]];
+    [[UIApplication sharedApplication] openURL:[NSURL URLWithString:self.webView.URL.absoluteString] options:@{} completionHandler:nil];
 }
 
 - (void)clearCache {

@@ -79,11 +79,6 @@
     [self.tableView reloadData];
 }
 
-- (void)dealloc {
-    _tableView.dataSource = nil;
-    _tableView.delegate = nil;
-}
-
 - (void)setupCell:(UITableViewCell *)cell {
     UILabel *textLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 0, cell.contentView.frame.size.width - 30, 30)];
     textLabel.autoresizingMask = UIViewAutoresizingFlexibleWidth;

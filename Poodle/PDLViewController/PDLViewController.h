@@ -7,12 +7,18 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "PDLKeyboardNotificationObserver.h"
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PDLViewController : UIViewController
+@interface PDLViewController : UIViewController <PDLKeyboardNotificationObserver>
 
 @property (nonatomic, weak, readonly) UIView *containerView;
+
+// default YES.
+@property (nonatomic, assign) BOOL adjustContainerViewSizeForKeyboardEventAutomatically;
+
+- (void)layoutContainerView;
 
 @end
 

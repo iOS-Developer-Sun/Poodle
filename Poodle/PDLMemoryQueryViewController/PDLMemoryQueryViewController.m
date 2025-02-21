@@ -9,7 +9,7 @@
 #import "PDLMemoryQueryViewController.h"
 #import <stdlib.h>
 #import "pdl_malloc.h"
-#import "PDLKeyboardNotificationObserver.h"
+#import "PDLGeometry.h"
 
 typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentType) {
     PDLMemoryQueryArgumentTypeClass,
@@ -292,7 +292,7 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
 
 @end
 
-@interface PDLMemoryQueryViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, PDLMemoryQueryArgumentCellDelegate, PDLKeyboardNotificationObserver>
+@interface PDLMemoryQueryViewController () <UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, PDLMemoryQueryArgumentCellDelegate>
 
 @property (nonatomic, weak) UIView *headerView;
 @property (nonatomic, weak) UIView *footerView;
@@ -376,16 +376,12 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
     [self.arguments addObject:selectorArgument];
 }
 
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
+- (void)layoutContainerView {
+    [super layoutContainerView];
 
-    [[PDLKeyboardNotificationObserver observerForDelegate:self] startObserving];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-
-    [[PDLKeyboardNotificationObserver observerForDelegate:self] stopObserving];
+    self.headerView.pdl_height = self.containerView.pdl_height * 0.4;
+    self.footerView.pdl_height = self.containerView.pdl_height * 0.6;
+    self.footerView.pdl_top = self.headerView.pdl_bottom;
 }
 
 - (PDLMemoryQueryResult *)constantResult:(NSInteger)index {
@@ -393,11 +389,6 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
     PDLMemoryQueryResult *result = [[PDLMemoryQueryResult alloc] init];
     action(result);
     return result;
-}
-
-- (void)dealloc {
-    _tableView.dataSource = nil;
-    _tableView.delegate = nil;
 }
 
 - (BOOL)gestureRecognizer:(UIGestureRecognizer *)gestureRecognizer shouldReceiveTouch:(UITouch *)touch {
@@ -555,16 +546,6 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
         PDLMemoryQueryArgumentCell *cell = (PDLMemoryQueryArgumentCell *)[tableView cellForRowAtIndexPath:indexPath];
         cell.detailButton.userInteractionEnabled = YES;
     }
-}
-
-#pragma mark - PDLKeyboardNotificationObserver
-
-- (void)keyboardShowAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
-    self.footerView.frame = CGRectMake(self.footerView.frame.origin.x, 0, self.footerView.frame.size.width, self.view.frame.size.height - keyboardHeight);
-}
-
-- (void)keyboardHideAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
-    self.footerView.frame = CGRectMake(self.footerView.frame.origin.x, self.headerView.frame.size.height, self.footerView.frame.size.width, self.view.frame.size.height - self.headerView.frame.size.height);
 }
 
 #pragma mark - PDLMemoryQueryArgumentCellDelegate

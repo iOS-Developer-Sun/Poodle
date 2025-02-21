@@ -14,8 +14,6 @@
 /// private indexed ivar
 @property (readonly) pthread_mutex_t *mutex;
 /// private indexed ivar
-@property (readonly) pthread_t thread API_DEPRECATED("UNAVAILABLE", ios(2.0,11.0));
-/// private indexed ivar
 @property (readonly) pthread_mutex_t *cond_mutex;
 /// private indexed ivar
 @property (readonly) pthread_cond_t *cond_cond;

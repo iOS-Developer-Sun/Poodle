@@ -45,11 +45,6 @@
     [self loadProtocol];
 }
 
-- (void)dealloc {
-    _tableView.dataSource = nil;
-    _tableView.delegate = nil;
-}
-
 - (void)loadProtocol {
     Protocol *protocol = NSProtocolFromString(self.protocolName);
     if (protocol == Nil) {

@@ -9,7 +9,10 @@
 #import "PDLViewController.h"
 #import "PDLColor.h"
 
-@interface PDLViewController ()
+@interface PDLViewController () {
+    BOOL _isViewAppearing;
+    CGFloat _keyboardHeight;
+}
 
 @property (nonatomic, weak) UIView *containerView;
 
@@ -20,6 +23,8 @@
 - (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
+        _adjustContainerViewSizeForKeyboardEventAutomatically = YES;
+        
         self.hidesBottomBarWhenPushed = YES;
 //        self.extendedLayoutIncludesOpaqueBars = NO;
 //        self.edgesForExtendedLayout = UIRectEdgeNone;
@@ -42,15 +47,40 @@
     self.view.backgroundColor = PDLColorBackgroundColor();
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
+    _isViewAppearing = YES;
+
+    if (self.adjustContainerViewSizeForKeyboardEventAutomatically) {
+        [[PDLKeyboardNotificationObserver observerForDelegate:self] startObserving];
+    }
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    [[PDLKeyboardNotificationObserver observerForDelegate:self] stopObserving];
+
+    _isViewAppearing = NO;
+}
+
+- (void)layoutContainerView {
+    UIEdgeInsets edgeInsets = self.view.safeAreaInsets;
+    UIView *containerView = _containerView;
+    if (containerView) {
+        if (_keyboardHeight > 0) {
+            containerView.frame = CGRectMake(edgeInsets.left, edgeInsets.top, self.view.frame.size.width - edgeInsets.left - edgeInsets.right, self.view.frame.size.height - edgeInsets.top - _keyboardHeight);
+        } else {
+            containerView.frame = CGRectMake(edgeInsets.left, edgeInsets.top, self.view.frame.size.width - edgeInsets.left - edgeInsets.right, self.view.frame.size.height - edgeInsets.top - edgeInsets.bottom);
+        }
+    }
+}
+
 - (void)viewDidLayoutSubviews {
     [super viewDidLayoutSubviews];
 
-    UIEdgeInsets edgeInsets = self.view.safeAreaInsets;
-
-    UIView *containerView = _containerView;
-    if (containerView) {
-        containerView.frame = CGRectMake(edgeInsets.left, edgeInsets.top, self.view.frame.size.width - edgeInsets.left - edgeInsets.right, self.view.frame.size.height - edgeInsets.top - edgeInsets.bottom);
-    }
+    [self layoutContainerView];
 }
 
 - (UIView *)containerView {
@@ -61,6 +91,31 @@
         _containerView = containerView;
     }
     return containerView;
+}
+
+- (void)setAdjustContainerViewSizeForKeyboardEventAutomatically:(BOOL)adjustContainerViewSizeForKeyboardEventAutomatically {
+    if (_adjustContainerViewSizeForKeyboardEventAutomatically == adjustContainerViewSizeForKeyboardEventAutomatically) {
+        return;
+    }
+
+
+    if (_isViewAppearing) {
+        if (adjustContainerViewSizeForKeyboardEventAutomatically) {
+            [[PDLKeyboardNotificationObserver observerForDelegate:self] startObserving];
+        } else {
+            [[PDLKeyboardNotificationObserver observerForDelegate:self] stopObserving];
+        }
+    }
+}
+
+- (void)keyboardShowAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
+    _keyboardHeight = keyboardHeight;
+    [self layoutContainerView];
+}
+
+- (void)keyboardHideAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
+    _keyboardHeight = 0;
+    [self layoutContainerView];
 }
 
 @end

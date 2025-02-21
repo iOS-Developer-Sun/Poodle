@@ -9,9 +9,8 @@
 #import "PDLSearchBarTableViewController.h"
 #import <objc/runtime.h>
 #import <objc/message.h>
-#import "PDLKeyboardNotificationObserver.h"
 
-@interface PDLSearchBarTableViewController () <UISearchBarDelegate, UIGestureRecognizerDelegate, PDLKeyboardNotificationObserver>
+@interface PDLSearchBarTableViewController () <UISearchBarDelegate, UIGestureRecognizerDelegate>
 
 @property (nonatomic, weak) UITableView *tableView;
 @property (nonatomic, weak) UISearchBar *searchBar;
@@ -21,29 +20,23 @@
 
 @implementation PDLSearchBarTableViewController
 
-- (void)dealloc {
-    _tableView.dataSource = nil;
-    _tableView.delegate = nil;
-    _searchBar.delegate = nil;
-}
-
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view.
 
-    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 44)];
+    UISearchBar *searchBar = [[UISearchBar alloc] initWithFrame:CGRectMake(0, 0, self.containerView.frame.size.width, 44)];
     searchBar.autoresizingMask = UIViewAutoresizingFlexibleWidth;
     searchBar.delegate = self;
     searchBar.keyboardType = UIKeyboardTypeASCIICapable;
-    [self.view addSubview:searchBar];
+    [self.containerView addSubview:searchBar];
     self.searchBar = searchBar;
 
-    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, searchBar.frame.origin.y + searchBar.frame.size.height, self.view.frame.size.width, self.view.frame.size.height - (searchBar.frame.origin.y + searchBar.frame.size.height)) style:UITableViewStylePlain];
+    UITableView *tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, searchBar.frame.origin.y + searchBar.frame.size.height, self.containerView.frame.size.width, self.containerView.frame.size.height - (searchBar.frame.origin.y + searchBar.frame.size.height)) style:UITableViewStylePlain];
     tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     tableView.dataSource = self;
     tableView.delegate = self;
     tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
-    [self.view addSubview:tableView];
+    [self.containerView addSubview:tableView];
     self.tableView = tableView;
 
     UITapGestureRecognizer *tapGestureRecognizer = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tap)];
@@ -52,34 +45,6 @@
     self.tapGestureRecognizer = tapGestureRecognizer;
 
     [self loadData];
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    [super viewWillAppear:animated];
-
-    [[PDLKeyboardNotificationObserver observerForDelegate:self] startObserving];
-}
-
-- (void)viewDidDisappear:(BOOL)animated {
-    [super viewDidDisappear:animated];
-
-    [[PDLKeyboardNotificationObserver observerForDelegate:self] stopObserving];
-}
-
-- (void)viewDidLayoutSubviews {
-    [super viewDidLayoutSubviews];
-
-    UIEdgeInsets edgeInsets = self.view.safeAreaInsets;
-    self.searchBar.frame = CGRectMake(edgeInsets.left, edgeInsets.top, self.view.frame.size.width - edgeInsets.left - edgeInsets.right, 44);
-    self.tableView.frame = CGRectMake(edgeInsets.left, self.searchBar.frame.origin.y + self.searchBar.frame.size.height, self.view.frame.size.width - edgeInsets.left - edgeInsets.right, self.view.frame.size.height - (self.searchBar.frame.origin.y + self.searchBar.frame.size.height) - edgeInsets.bottom);
-}
-
-- (void)keyboardShowAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
-    self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.view.frame.size.height - (self.searchBar.frame.origin.y + self.searchBar.frame.size.height) - keyboardHeight);
-}
-
-- (void)keyboardHideAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight {
-    self.tableView.frame = CGRectMake(self.tableView.frame.origin.x, self.tableView.frame.origin.y, self.tableView.frame.size.width, self.view.frame.size.height - (self.searchBar.frame.origin.y + self.searchBar.frame.size.height));
 }
 
 - (void)tap {

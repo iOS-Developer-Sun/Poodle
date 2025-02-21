@@ -43,11 +43,11 @@
         self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Save" style:UIBarButtonItemStylePlain target:self action:@selector(save)];
     }
 
-    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectInset(self.view.bounds, 5, 5)];
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectInset(self.containerView.bounds, 5, 5)];
     textView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
     textView.font = [UIFont systemFontOfSize:10];
     textView.editable = !self.isReadOnly;
-    [self.view addSubview:textView];
+    [self.containerView addSubview:textView];
     self.textView = textView;
 
     [self loadString];

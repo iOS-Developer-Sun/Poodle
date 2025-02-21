@@ -10,6 +10,9 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wincomplete-implementation"
+
 @implementation NSObject (PDLPrivate)
 
 @dynamic _ivarDescription;
@@ -24,3 +27,5 @@
 @dynamic _isDeallocating;
 
 @end
+
+#pragma clang diagnostic pop

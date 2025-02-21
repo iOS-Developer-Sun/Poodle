@@ -49,11 +49,6 @@
     self.tables = self.database.customTables;
 }
 
-- (void)dealloc {
-    _tableView.dataSource = nil;
-    _tableView.delegate = nil;
-}
-
 - (void)executeQuery {
     PDLDataQueryViewController *dataQueryViewController = [[PDLDataQueryViewController alloc] init];
     dataQueryViewController.database = self.database;

@@ -75,11 +75,6 @@
     return self;
 }
 
-- (void)dealloc {
-    _tableView.dataSource = nil;
-    _tableView.delegate = nil;
-}
-
 - (void)setHidden:(BOOL)hidden {
     [super setHidden:hidden];
 

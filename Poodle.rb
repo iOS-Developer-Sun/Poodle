@@ -414,6 +414,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLColor'
             ss.dependency pod_name + '/PDLFormView'
             ss.dependency pod_name + '/PDLImageListViewController'
+            ss.dependency pod_name + '/PDLKeyboardNotificationObserver'
         end
 
         PoodleSubspec(s, 'PDLFontViewController', platform_ios) do |ss|
@@ -423,6 +424,8 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         PoodleSubspec(s, 'PDLFormView', platform_ios) do |ss|
             ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
+
+        PoodleSubspec(s, 'PDLGeometry', platform_ios)
 
         PoodleSubspec(s, 'PDLImageListViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLViewController'

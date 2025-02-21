@@ -43,15 +43,6 @@ typedef struct {
     }
 }
 
-- (pthread_t)thread {
-    if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
-        return NULL;
-    } else {
-        NSLockIndexedIvars *indexedIvars = object_getIndexedIvars(self);
-        return indexedIvars->thread;
-    }
-}
-
 - (pthread_mutex_t *)cond_mutex {
     if ([NSProcessInfo processInfo].operatingSystemVersion.majorVersion >= 11) {
         NSLockIndexedIvars2 *indexedIvars = object_getIndexedIvars(self);
