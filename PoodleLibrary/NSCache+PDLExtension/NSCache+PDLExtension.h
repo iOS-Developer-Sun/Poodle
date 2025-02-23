@@ -13,7 +13,7 @@
 /// private API
 @property (readonly) NSArray *allObjects;
 
-- (id)objectForKeyedSubscript:(id)key;
-- (void)setObject:(id)obj forKeyedSubscript:(id)key;
+- (id)objectForKeyedSubscript:(id)key __attribute__((objc_direct));
+- (void)setObject:(id)obj forKeyedSubscript:(id)key __attribute__((objc_direct));
 
 @end

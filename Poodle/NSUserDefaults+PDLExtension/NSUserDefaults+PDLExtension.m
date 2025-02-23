@@ -8,6 +8,7 @@
 
 #import "NSUserDefaults+PDLExtension.h"
 
+__attribute__((objc_direct_members))
 @implementation NSUserDefaults (PDLExtension)
 
 - (id)objectForKeyedSubscript:(id)key {
@@ -16,11 +17,7 @@
 }
 
 - (void)setObject:(id)obj forKeyedSubscript:(id)key {
-    if (obj) {
-        [self setObject:obj forKey:key];
-    } else {
-        [self removeObjectForKey:key];
-    }
+    [self setObject:obj forKey:key];
 }
 
 @end

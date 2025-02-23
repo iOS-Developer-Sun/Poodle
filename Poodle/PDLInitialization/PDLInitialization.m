@@ -175,7 +175,7 @@ static void pdl_load(__unsafe_unretained id self, SEL _cmd) {
             }
 
             if ([set containsObject:@((unsigned long)(void *)method)]) {
-                continue;;
+                continue;
             }
 
             IMP imp = method_getImplementation(method);

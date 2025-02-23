@@ -136,6 +136,8 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'NSCharacterSet+PDLExtension', platform_universal)
 
+        PoodleSubspec(s, 'NSData+PDLExtension', platform_universal)
+
         PoodleSubspec(s, 'NSDictionary+PDLObjectForKey', platform_universal)
 
         PoodleSubspec(s, 'NSJSONSerialization+PDLExtension', platform_universal)
@@ -190,6 +192,8 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
         PoodleSubspec(s, 'NSObject+PDLWeakifyUnsafeUnretainedProperty', platform_universal) do |ss|
             ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
         end
+
+        PoodleSubspec(s, 'NSString+PDLExtension', platform_universal)
 
         PoodleSubspec(s, 'NSThread+PDLExtension', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_pthread'

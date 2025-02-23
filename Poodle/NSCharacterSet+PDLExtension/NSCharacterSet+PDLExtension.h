@@ -13,6 +13,6 @@
 @property (class, readonly, copy) NSCharacterSet *pdl_emptyCharacterSet;
 @property (class, readonly, copy) NSCharacterSet *pdl_allCharacterSet;
 
-@property (class, readonly, copy) NSCharacterSet *pdl_URLAllowedCharacterSet API_AVAILABLE(macos(10.9), ios(7.0), watchos(2.0), tvos(9.0));
+@property (class, readonly, copy) NSCharacterSet *pdl_URLAllowedCharacterSet;
 
 @end

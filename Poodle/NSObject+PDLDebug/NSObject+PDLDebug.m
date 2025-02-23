@@ -187,7 +187,7 @@ NSArray *pdl_class_subclasses(Class aClass) {
         while (superclass) {
             if (superclass == aClass) {
                 [subclasses addObject:@(class_getName(eachClass))];
-                break;;
+                break;
             }
             superclass = class_getSuperclass(superclass);
         }
