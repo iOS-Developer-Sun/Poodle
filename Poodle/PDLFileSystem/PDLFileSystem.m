@@ -7,7 +7,7 @@
 //
 
 #import "PDLFileSystem.h"
-#import <CommonCrypto/CommonCrypto.h>
+#import "NSData+PDLExtension.h"
 
 @implementation PDLFileSystem
 
@@ -152,9 +152,7 @@
     if (!md5 || (date != systemDate)) {
         @autoreleasepool {
             NSData *data = [[NSData alloc] initWithContentsOfFile:filePath];
-            unsigned char result[CC_MD5_DIGEST_LENGTH];
-            CC_MD5([data bytes], (CC_LONG)[data length], result);
-            md5 = [NSData dataWithBytes:result length:CC_MD5_DIGEST_LENGTH];
+            md5 = [data pdl_md5];
             if (md5) {
                 NSMutableDictionary *dictionary = [attr ?: @{} mutableCopy];
                 dictionary[attributesKey] = md5;
@@ -168,18 +166,8 @@
 }
 
 + (NSString *)md5String:(NSString *)filePath {
-    NSString *string = nil;
     NSData *data = [self md5:filePath];
-    if (data) {
-        NSUInteger length = data.length;
-        const unsigned char *bytes = (const unsigned char *)data.bytes;
-        NSMutableString *hexString = [NSMutableString string];
-        for (NSUInteger i = 0; i < length; i++) {
-            [hexString appendFormat:@"%02x", bytes[i]];
-        }
-        string = [hexString copy];
-    }
-    return string;
+    return [data pdl_hexString];
 }
 
 

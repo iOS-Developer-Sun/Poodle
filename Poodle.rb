@@ -138,6 +138,8 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'NSData+PDLExtension', platform_universal)
 
+        PoodleSubspec(s, 'NSDate+PDLExtension', platform_universal)
+
         PoodleSubspec(s, 'NSDictionary+PDLObjectForKey', platform_universal)
 
         PoodleSubspec(s, 'NSJSONSerialization+PDLExtension', platform_universal)
@@ -408,7 +410,9 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'PDLDatabase', platform_universal)
 
-        PoodleSubspec(s, 'PDLFileSystem', platform_universal)
+        PoodleSubspec(s, 'PDLFileSystem', platform_universal) do |ss|
+            ss.dependency pod_name + '/NSData+PDLExtension'
+        end
 
         PoodleSubspec(s, 'PDLFileSystemViewController', platform_ios) do |ss|
             ss.dependency pod_name + '/PDLFileSystem'
@@ -419,6 +423,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/PDLFormView'
             ss.dependency pod_name + '/PDLImageListViewController'
             ss.dependency pod_name + '/PDLKeyboardNotificationObserver'
+            ss.dependency pod_name + '/NSDate+PDLExtension'
         end
 
         PoodleSubspec(s, 'PDLFontViewController', platform_ios) do |ss|

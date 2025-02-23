@@ -17,6 +17,8 @@
 #import "PDLCrashViewController.h"
 #import "PDLColor.h"
 #import "PDLFileSystem.h"
+#import "NSDate+PDLExtension.h"
+#import "PDLFileObserver.h"
 
 static UIImage *PDLDirectoryViewControllerAspectFitImageWithImageAndSize(UIImage *image, CGSize size) {
     if (image == nil) {
@@ -260,7 +262,30 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 
 - (NSString *)contentDescription {
     NSString *contentDescription = self.filePath;
-    contentDescription = [contentDescription stringByAppendingFormat:@"\nfile size:%@ bytes", @(self.size)];
+    contentDescription = [contentDescription stringByAppendingFormat:@"\nFile Size:%@ bytes", @(self.size)];
+    NSDictionary *fileAttr = [[NSFileManager defaultManager] attributesOfItemAtPath:self.filePath error:NULL];
+    if (fileAttr) {
+        NSString *fileType = [fileAttr fileType];
+        if (fileType) {
+            contentDescription = [contentDescription stringByAppendingFormat:@"\nFile Type: %@", fileType];
+        }
+
+        NSString *fileOwnerAccountName = [fileAttr fileOwnerAccountName];
+        NSNumber *fileOwnerAccountID = [fileAttr fileOwnerAccountID];
+        if (fileOwnerAccountName || fileOwnerAccountID) {
+            contentDescription = [contentDescription stringByAppendingFormat:@"\nGroup Owner Account: %@(%@)", fileOwnerAccountName ?: @"", fileOwnerAccountID];
+        }
+
+        NSString *groupOwnerAccountName = [fileAttr fileGroupOwnerAccountName];
+        NSNumber *groupOwnerAccountID = [fileAttr fileGroupOwnerAccountID];
+        if (groupOwnerAccountName || groupOwnerAccountID) {
+            contentDescription = [contentDescription stringByAppendingFormat:@"\nGroup Owner Account: %@(%@)", groupOwnerAccountName ?: @"", groupOwnerAccountID];
+        }
+
+        NSInteger permission = [fileAttr filePosixPermissions];
+        contentDescription = [contentDescription stringByAppendingFormat:@"\nmod: %04lo", permission];
+    }
+
     switch (self.type) {
         case PDLDirectoryContentTypeDirectory:
             break;
@@ -373,7 +398,9 @@ typedef NS_ENUM(NSInteger, PDLDirectoryContentType) {
 @property (nonatomic, weak) UIButton *checkboxButton;
 @property (nonatomic, weak) UIButton *actButton;
 @property (nonatomic, strong) NSMutableArray *selected;
-@property (nonatomic, strong, class) NSArray *currentContents;
+@property (nonatomic, strong, class) NSArray *currentContents; // copy paste
+@property (nonatomic, strong) PDLFileObserver *fileObserver;
+
 @end
 
 @implementation PDLDirectoryViewController
@@ -479,7 +506,25 @@ static NSArray *_currentContents = nil;
     [self.view addSubview:selectAllView];
     self.selectAllView = selectAllView;
 
+    PDLFileObserver *fileObserver = [[PDLFileObserver alloc] initWithFilePath:self.directory];
+    self.fileObserver = fileObserver;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+
     [self reloadData];
+
+    __weak __typeof(self) weakSelf = self;
+    [self.fileObserver startObserving:^(uintptr_t flags) {
+        [weakSelf reloadData];
+    }];
+}
+
+- (void)viewDidDisappear:(BOOL)animated {
+    [super viewDidDisappear:animated];
+
+    [self.fileObserver stopObserving];
 }
 
 - (void)reloadData {
@@ -744,19 +789,20 @@ static NSArray *_currentContents = nil;
 
 - (void)longPressTableView:(UILongPressGestureRecognizer *)longPressGestureRecognizer {
     if (longPressGestureRecognizer.state == UIGestureRecognizerStateBegan) {
-        if (PDLDirectoryViewController.currentContents.count == 0) {
-            return;
-        }
-
         __weak __typeof(self) weakSelf = self;
         UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"Actions" message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-        NSString *pasteTitle = @"Paste(1 item)";
-        if (PDLDirectoryViewController.currentContents.count > 1) {
-            pasteTitle = [NSString stringWithFormat:@"Paste(%@ items)", @(PDLDirectoryViewController.currentContents.count)];
-        }
-        [alertController addAction:[UIAlertAction actionWithTitle:pasteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            [weakSelf pasteCurrentContents];
+        [alertController addAction:[UIAlertAction actionWithTitle:@"New File" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [weakSelf createNewFile];
         }]];
+        if (PDLDirectoryViewController.currentContents.count > 0) {
+            NSString *pasteTitle = @"Paste(1 item)";
+            if (PDLDirectoryViewController.currentContents.count > 1) {
+                pasteTitle = [NSString stringWithFormat:@"Paste(%@ items)", @(PDLDirectoryViewController.currentContents.count)];
+            }
+            [alertController addAction:[UIAlertAction actionWithTitle:pasteTitle style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                [weakSelf pasteCurrentContents];
+            }]];
+        }
         [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
             ;
         }]];
@@ -772,6 +818,18 @@ static NSArray *_currentContents = nil;
 
 - (void)tapImageView:(UITapGestureRecognizer *)tapGestureRecognizer {
     [tapGestureRecognizer.view removeFromSuperview];
+}
+
+- (void)createNewFile {
+    NSString *filename = @"New File";
+    NSString *filePath = [self.directory stringByAppendingPathComponent:filename];
+    NSString *newFilePath = filePath;
+    NSInteger index = 2;
+    while ([[NSFileManager defaultManager] fileExistsAtPath:newFilePath]) {
+        newFilePath = [filePath stringByAppendingFormat:@" %@", @(index)];
+        index++;
+    }
+    [[NSFileManager defaultManager] createFileAtPath:newFilePath contents:nil attributes:nil];
 }
 
 - (BOOL)pasteCurrentContent:(PDLDirectoryContent *)content {
@@ -925,7 +983,26 @@ static NSArray *_currentContents = nil;
 - (void)applyContent:(PDLDirectoryContent *)content forCell:(PDLDirectoryTableViewCell *)cell {
     cell.imageView.image = content.thumbnailImage;
     cell.textLabel.text = content.filename;
-    cell.detailTextLabel.text = content.hasFinishCalculatingSize ? [PDLFileSystem sizeStringOfBytes:content.size] : @"calculating size...";
+    NSString *detail = content.hasFinishCalculatingSize ? [PDLFileSystem sizeStringOfBytes:content.size] : @"calculating size...";
+
+    NSDictionary *fileAttr = [[NSFileManager defaultManager] attributesOfItemAtPath:content.filePath error:NULL];
+    if (fileAttr) {
+        NSDate *creationDate = [fileAttr fileCreationDate];
+        NSString *creationTime = [creationDate pdl_ymdhmsDescription];
+        if (creationTime.length > 0) {
+            detail = [detail stringByAppendingString:@"\n"];
+            detail = [detail stringByAppendingString:creationTime];
+        }
+
+        NSDate *modificationDate = [fileAttr fileModificationDate];
+        NSString *modificationTime = [modificationDate pdl_ymdhmsDescription];
+        if (modificationTime.length > 0) {
+            detail = [detail stringByAppendingString:@" - "];
+            detail = [detail stringByAppendingString:modificationTime];
+        }
+    }
+
+    cell.detailTextLabel.text = detail;
     cell.accessoryType = content.isDirectory ? UITableViewCellAccessoryDisclosureIndicator : UITableViewCellAccessoryNone;
 }
 
@@ -953,6 +1030,7 @@ static NSArray *_currentContents = nil;
     if (cell == nil) {
         cell = [[PDLDirectoryTableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:identifier];
         cell.textLabel.numberOfLines = 0;
+        cell.detailTextLabel.numberOfLines = 0;
         UILongPressGestureRecognizer *longPressGestureRecognizer = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
         longPressGestureRecognizer.delegate = self;
         [cell addGestureRecognizer:longPressGestureRecognizer];
