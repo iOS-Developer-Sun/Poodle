@@ -950,10 +950,10 @@ typedef NS_ENUM(NSUInteger, PDLMemoryQueryArgumentParseError) {
             char *cstring = *(char **)returnValue;
             result.result = @((long)cstring);
         } else if ([returnTypeString isEqualToString:@(@encode(CGPoint))]) {
-            result.type = PDLMemoryQueryResultTypeCGRect;
+            result.type = PDLMemoryQueryResultTypeCGPoint;
             result.result = @(*(CGPoint *)returnValue);
         } else if ([returnTypeString isEqualToString:@(@encode(CGSize))]) {
-            result.type = PDLMemoryQueryResultTypeCGRect;
+            result.type = PDLMemoryQueryResultTypeCGSize;
             result.result = @(*(CGSize *)returnValue);
         } else if ([returnTypeString isEqualToString:@(@encode(CGRect))]) {
             result.type = PDLMemoryQueryResultTypeCGRect;
