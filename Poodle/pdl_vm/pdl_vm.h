@@ -15,9 +15,10 @@ extern "C" {
 #endif
 
 extern bool pdl_vm_get_protection(void *address, vm_prot_t *prot);
-extern bool pdl_vm_read(void **address, void **value);
+extern bool pdl_vm_read(void *source, void *destination, size_t size);
 extern bool pdl_vm_write(void **address, void *value, void **original);
 extern vm_address_t pdl_vm_allocate_page_pair(void *code);
+
 
 #ifdef __cplusplus
 }

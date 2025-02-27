@@ -9,6 +9,7 @@
 #import "pdl_objc_runtime.h"
 #import <mach-o/getsect.h>
 #import "pdl_pac.h"
+#import "pdl_vm.h"
 
 struct list_t {
     uint32_t entsizeAndFlags;
@@ -208,4 +209,61 @@ Method pdl_objc_runtime_method_list_get_method(pdl_objc_runtime_method_list meth
         method = (Method)&(m->methods.big[index]);
     }
     return method;
+}
+
+#if __arm64__
+#define ISA_MASK 0x0000000ffffffff8ULL
+#elif __x86_64__
+#define ISA_MASK 0x00007ffffffffff8ULL
+#else
+#error unknown architecture
+#endif
+
+bool pdl_objc_is_object(void *address) {
+    if (!address) {
+        return false;
+    }
+
+    void *nsobject = (void *)(ISA_MASK & (unsigned long)objc_getMetaClass("NSObject"));
+    void *nsproxy = (void *)(ISA_MASK & (unsigned long)objc_getMetaClass("NSProxy"));
+    void *object = (void *)(ISA_MASK & (unsigned long)address);
+    if (object == nsobject || object == nsproxy) {
+        return true;
+    }
+
+    void *class = 0;
+    bool success = pdl_vm_read(object, &class, sizeof(address));
+    if (!success) {
+        return false;
+    }
+
+    class = (void *)(ISA_MASK & (unsigned long)class);
+    if (class == nsobject || class == nsproxy) {
+        return true;
+    }
+
+
+    void *meta = 0;
+    success = pdl_vm_read(class, &meta, sizeof(address));
+    if (!success) {
+        return false;
+    }
+
+    meta = (void *)(ISA_MASK & (unsigned long)meta);
+    if (meta == nsobject || meta == nsproxy) {
+        return true;
+    }
+
+    void *root = 0;
+    success = pdl_vm_read(meta, &root, sizeof(address));
+    if (!success) {
+        return false;
+    }
+
+    root = (void *)(ISA_MASK & (unsigned long)root);
+    if (root == nsobject || root == nsproxy) {
+        return true;
+    }
+
+    return false;
 }

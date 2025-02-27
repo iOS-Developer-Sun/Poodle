@@ -287,6 +287,7 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         PoodleSubspec(s, 'pdl_objc_runtime', platform_universal) do |ss|
             ss.dependency pod_name + '/pdl_pac'
+            ss.dependency pod_name + '/pdl_vm'
         end
 
         PoodleSubspec(s, 'pdl_os', platform_universal)

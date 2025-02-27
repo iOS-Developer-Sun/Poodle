@@ -33,6 +33,9 @@ extern pdl_objc_runtime_method_list pdl_objc_runtime_category_get_instance_metho
 extern uint32_t pdl_objc_runtime_method_list_get_count(pdl_objc_runtime_method_list method_list);
 extern Method pdl_objc_runtime_method_list_get_method(pdl_objc_runtime_method_list method_list, uint32_t index);
 
+// tagged pointer not supported
+extern bool pdl_objc_is_object(void *address);
+
 #ifdef __cplusplus
 }
 #endif
