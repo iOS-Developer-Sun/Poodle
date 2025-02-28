@@ -36,6 +36,21 @@ bool pdl_vm_get_protection(void *address, vm_prot_t *prot) {
 }
 
 bool pdl_vm_read(void *source, void *destination, size_t size) {
+    bool changed = false;
+    vm_prot_t prot = VM_PROT_NONE;
+    bool ret = pdl_vm_get_protection(source, &prot);
+    if (!ret) {
+        return false;
+    }
+
+    if ((prot & VM_PROT_READ) == 0) {
+        changed = true;
+        kern_return_t success = vm_protect(mach_task_self(), (vm_address_t)source, size, false, prot | VM_PROT_READ);
+        if (success != KERN_SUCCESS) {
+            return false;
+        }
+    }
+
     vm_offset_t data;
     mach_msg_type_number_t data_size = 0;
     kern_return_t success = vm_read(mach_task_self(), (vm_address_t)source, size, &data, &data_size);
@@ -44,34 +59,36 @@ bool pdl_vm_read(void *source, void *destination, size_t size) {
             memcpy(destination, (void *)data, data_size);
         }
         vm_deallocate(mach_task_self(), data, data_size);
-        return true;
     }
-    return false;
+
+    if (changed) {
+        vm_protect(mach_task_self(), (vm_address_t)destination, size, false, prot);
+    }
+    return success == KERN_SUCCESS;
 }
 
-bool pdl_vm_write(void **address, void *value, void **original) {
+bool pdl_vm_write(void *source, void *destination, size_t size) {
     bool changed = false;
     vm_prot_t prot = VM_PROT_NONE;
-    bool ret = pdl_vm_get_protection(address, &prot);
+    bool ret = pdl_vm_get_protection(destination, &prot);
     if (!ret) {
         return false;
     }
 
-    if ((prot & VM_PROT_READ) == 0 || (prot & VM_PROT_WRITE) == 0) {
+    if ((prot & VM_PROT_WRITE) == 0) {
         changed = true;
-        kern_return_t success = vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot | VM_PROT_READ | VM_PROT_WRITE);
+        kern_return_t success = vm_protect(mach_task_self(), (vm_address_t)destination, size, false, prot | VM_PROT_WRITE);
         if (success != KERN_SUCCESS) {
             return false;
         }
     }
-    if (original) {
-        *original = *address;
-    }
-    *address = value;
+
+    kern_return_t success = vm_write(mach_task_self(), (vm_address_t)destination, (vm_offset_t)source, (mach_msg_type_number_t)size);
     if (changed) {
-        vm_protect(mach_task_self(), (vm_address_t)address, sizeof(void *), false, prot);
+        vm_protect(mach_task_self(), (vm_address_t)destination, size, false, prot);
     }
-    return true;
+
+    return success == KERN_SUCCESS;
 }
 
 vm_address_t pdl_vm_allocate_page_pair(void *code) {

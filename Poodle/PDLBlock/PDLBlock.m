@@ -336,7 +336,8 @@ NSUInteger PDLBlockCheckEnable(BOOL(*descriptorFilter)(NSString *symbol)) {
                     map[@(key)] = @(value);
                 }
 
-                pdl_vm_write((void **)&desc->copy, pdl_ptrauth_sign_unauthenticated_function(pdl_ptrauth_strip_function(&PDLBlockDescCopy), &desc->copy), NULL);
+                void *data = pdl_ptrauth_sign_unauthenticated_function(pdl_ptrauth_strip_function(&PDLBlockDescCopy), &desc->copy);
+                pdl_vm_write(&data, &desc->copy, sizeof(data));
 
             }];
             ret = PDLBlockCopyMap.count;
