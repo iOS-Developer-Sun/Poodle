@@ -34,7 +34,8 @@
 @property (readonly) uint64_t minorVersion;
 @property (readonly) uint64_t revisionVersion;
 
-@property (readonly) NSString *uuidString;
+@property (readonly) NSString *UUIDString; // uppercase with '-'
+@property (readonly) NSString *uuidString; // lowercase without '-'
 @property (readonly) NSString *cpuTypeString;
 @property (readonly) NSString *cpuSubtypeString;
 @property (readonly) NSString *crashLogString;

@@ -212,6 +212,16 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
     return description;
 }
 
+- (NSString *)UUIDString {
+    NSString *uuidString = nil;
+    if (!uuid_is_null(self.uuid)) {
+        uuid_string_t uuid_string;
+        uuid_unparse_upper(self.uuid, uuid_string);
+        uuidString = @(uuid_string);
+    }
+    return uuidString;
+}
+
 - (NSString *)uuidString {
     NSString *uuidString = nil;
     if (!uuid_is_null(self.uuid)) {
@@ -318,7 +328,8 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
         },
         @(CPU_TYPE_ARM64) : @{
                 @(CPU_SUBTYPE_ARM64_ALL) : @"arm64",
-                @(CPU_SUBTYPE_ARM64_V8) : @"arm64_v8"
+                @(CPU_SUBTYPE_ARM64_V8) : @"arm64_v8",
+                @(CPU_SUBTYPE_ARM64E) : @"arm64e"
         },
         @(CPU_TYPE_MC88000) : @{
                 @(CPU_SUBTYPE_MC88000_ALL) : @"mc88000",
@@ -350,7 +361,7 @@ static void pdl_systemImageRemoved(const struct mach_header *header, intptr_t vm
         @(CPU_TYPE_POWERPC64) : @{}
     };
     NSDictionary *cpuSubtypeStringDictionary = cpuSubtypeStringDictionaryDictionary[@(self.cpuType)];
-    NSString *string = cpuSubtypeStringDictionary[@(self.cpuSubtype)];
+    NSString *string = cpuSubtypeStringDictionary[@(self.cpuSubtype & ~CPU_SUBTYPE_MASK)];
     NSString *cpuSubtypeString = string ?: @(self.cpuSubtype).stringValue;
     return cpuSubtypeString;
 }
