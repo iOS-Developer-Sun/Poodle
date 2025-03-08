@@ -6,6 +6,8 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
+#ifdef __ASSEMBLER__
+
 #ifdef __arm__
 
 #define NORMAL 0
@@ -27,5 +29,7 @@
     add    sp, #0x8
     pop.w  {r0, r1, r2, r3, r7, lr}
 .endmacro
+
+#endif
 
 #endif

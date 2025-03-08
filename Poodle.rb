@@ -98,14 +98,14 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
 
         if is_library
             s.pod_target_xcconfig = {
-                'OTHER_LDFLAGS' => '$(inherited) -lObjC'
+                'OTHER_LDFLAGS' => '$(inherited) -ObjC'
             }
             s.user_target_xcconfig = {
-                'OTHER_LDFLAGS' => '$(inherited) -lObjC'
+                'OTHER_LDFLAGS' => '$(inherited) -ObjC'
             }
         else
             s.pod_target_xcconfig = {
-                'OTHER_LDFLAGS' => '$(inherited) -lObjC'
+                'OTHER_LDFLAGS' => '$(inherited) -ObjC'
             }
         end
 

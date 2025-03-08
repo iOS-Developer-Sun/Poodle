@@ -8,26 +8,9 @@
 
 #import <UIKit/UIKit.h>
 
-@protocol PDLKeyboardNotificationObserver;
+@class PDLKeyboardNotificationObserver;
 
-@interface PDLKeyboardNotificationObserver : NSObject
-
-@property (nonatomic, assign, readonly, class) CGFloat keyboardHeight;
-
-@property (nonatomic, assign, readonly) BOOL isObserving;
-@property (nonatomic, weak) id <PDLKeyboardNotificationObserver>delegate;
-@property (nonatomic, copy, readonly) NSDictionary *currentInfo;
-
-+ (void)enable;
-
-+ (instancetype)observerForDelegate:(id <PDLKeyboardNotificationObserver>)delegate;
-
-- (void)startObserving;
-- (void)stopObserving;
-
-@end
-
-@protocol PDLKeyboardNotificationObserver <NSObject>
+@protocol PDLKeyboardNotificationObserverDelegate <NSObject>
 
 @optional
 
@@ -38,5 +21,22 @@
 
 - (void)keyboardShowAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight;
 - (void)keyboardHideAnimation:(PDLKeyboardNotificationObserver *)observer withKeyboardHeight:(CGFloat)keyboardHeight;
+
+@end
+
+@interface PDLKeyboardNotificationObserver : NSObject
+
+@property (nonatomic, assign, readonly, class) CGFloat keyboardHeight;
+
+@property (nonatomic, assign, readonly) BOOL isObserving;
+@property (nonatomic, weak) id <PDLKeyboardNotificationObserverDelegate> delegate;
+@property (nonatomic, copy, readonly) NSDictionary *currentInfo;
+
++ (void)enable;
+
++ (instancetype)observerForDelegate:(id <PDLKeyboardNotificationObserverDelegate>)delegate;
+
+- (void)startObserving;
+- (void)stopObserving;
 
 @end

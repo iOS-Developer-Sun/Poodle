@@ -6,6 +6,8 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
+#ifdef __ASSEMBLER__
+
 #ifdef __i386__
 
 #define NORMAL 0
@@ -38,5 +40,7 @@
     movdqa  1*16(%esp), %xmm0
     leave
 .endmacro
+
+#endif
 
 #endif

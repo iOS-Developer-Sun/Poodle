@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 54;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -547,6 +547,10 @@
 		C0962ACE292336AF00A838D1 /* PDLMemoryTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C0962AD8292336D900A838D1 /* PDLMemoryTracer.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C0962ACC292336AF00A838D1 /* PDLMemoryTracer.h */; };
 		C0962AD9292336DE00A838D1 /* PDLMemoryTracer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		C0A873E92D7C3919000D1FFA /* libcapstone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A873E42D7C3919000D1FFA /* libcapstone.a */; };
+		C0A873EA2D7C3919000D1FFA /* libcapstone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A873E42D7C3919000D1FFA /* libcapstone.a */; platformFilters = (macos, ); };
+		C0A873EB2D7C3919000D1FFA /* libcapstone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A873E62D7C3919000D1FFA /* libcapstone.a */; };
+		C0A873EC2D7C3919000D1FFA /* libcapstone.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C0A873E62D7C3919000D1FFA /* libcapstone.a */; platformFilter = ios; };
 		C0AEE43C2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE43A2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m */; };
 		C0AEE43D2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE43A2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m */; };
 		C0AEE4402A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m in Sources */ = {isa = PBXBuildFile; fileRef = C0AEE43F2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.m */; };
@@ -3155,6 +3159,8 @@
 		C0962ACC292336AF00A838D1 /* PDLMemoryTracer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLMemoryTracer.h; sourceTree = "<group>"; };
 		C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLMemoryTracer.m; sourceTree = "<group>"; };
 		C0962AD7292336BD00A838D1 /* libPDLMemoryTracer.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPDLMemoryTracer.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		C0A873E42D7C3919000D1FFA /* libcapstone.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcapstone.a; sourceTree = "<group>"; };
+		C0A873E62D7C3919000D1FFA /* libcapstone.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libcapstone.a; sourceTree = "<group>"; };
 		C0AEE43A2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDLNonThreadSafeSwiftVariableObserver.m; sourceTree = "<group>"; };
 		C0AEE43B2A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeSwiftVariableObserver.h; sourceTree = "<group>"; };
 		C0AEE43E2A2DB47500CFBA67 /* PDLNonThreadSafeSwiftVariableObserverObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDLNonThreadSafeSwiftVariableObserverObject.h; sourceTree = "<group>"; };
@@ -3404,6 +3410,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0A873EB2D7C3919000D1FFA /* libcapstone.a in Frameworks */,
+				C0A873E92D7C3919000D1FFA /* libcapstone.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4006,6 +4014,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C0A873EC2D7C3919000D1FFA /* libcapstone.a in Frameworks */,
+				C0A873EA2D7C3919000D1FFA /* libcapstone.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5529,6 +5539,7 @@
 		C03D87732A8E2BCF008ABFD3 /* PDLMachObject */ = {
 			isa = PBXGroup;
 			children = (
+				C0A873E82D7C3919000D1FFA /* lib */,
 				C03D87752A8E2BCF008ABFD3 /* PDLMachObject.h */,
 				C03D87742A8E2BCF008ABFD3 /* PDLMachObject.m */,
 				C0B5599B2D4CA32600B7BBA2 /* private */,
@@ -5599,6 +5610,31 @@
 				C0962ACD292336AF00A838D1 /* PDLMemoryTracer.m */,
 			);
 			path = PDLMemoryTracer;
+			sourceTree = "<group>";
+		};
+		C0A873E52D7C3919000D1FFA /* ios */ = {
+			isa = PBXGroup;
+			children = (
+				C0A873E42D7C3919000D1FFA /* libcapstone.a */,
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		C0A873E72D7C3919000D1FFA /* macos */ = {
+			isa = PBXGroup;
+			children = (
+				C0A873E62D7C3919000D1FFA /* libcapstone.a */,
+			);
+			path = macos;
+			sourceTree = "<group>";
+		};
+		C0A873E82D7C3919000D1FFA /* lib */ = {
+			isa = PBXGroup;
+			children = (
+				C0A873E52D7C3919000D1FFA /* ios */,
+				C0A873E72D7C3919000D1FFA /* macos */,
+			);
+			path = lib;
 			sourceTree = "<group>";
 		};
 		C0AEE4392A2D8B6A00CFBA67 /* PDLNonThreadSafeSwiftVariableObserver */ = {
@@ -12800,6 +12836,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Poodle/PDLMachObject/lib/ios",
+					"$(PROJECT_DIR)/Poodle/PDLMachObject/lib/macos",
+				);
 				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = zjs.PoodleAppEmpty;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -12817,6 +12858,11 @@
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Poodle/PDLMachObject/lib/ios",
+					"$(PROJECT_DIR)/Poodle/PDLMachObject/lib/macos",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = zjs.PoodleAppEmpty;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -14907,6 +14953,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Poodle/PDLMachObject/capstone/macos",
 					"$(PROJECT_DIR)/Poodle/PDLMachObject/capstone/ios",
+					"$(PROJECT_DIR)/Poodle/PDLMachObject/lib/ios",
+					"$(PROJECT_DIR)/Poodle/PDLMachObject/lib/macos",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -14923,6 +14971,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Poodle/PDLMachObject/capstone/macos",
 					"$(PROJECT_DIR)/Poodle/PDLMachObject/capstone/ios",
+					"$(PROJECT_DIR)/Poodle/PDLMachObject/lib/ios",
+					"$(PROJECT_DIR)/Poodle/PDLMachObject/lib/macos",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";

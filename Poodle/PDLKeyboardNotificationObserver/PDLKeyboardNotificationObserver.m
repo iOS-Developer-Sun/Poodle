@@ -55,7 +55,7 @@ static CGFloat PDLKeyboardNotificationObserverKeyboardHeight = 0;
     return observers;
 }
 
-+ (instancetype)observerForDelegate:(id <PDLKeyboardNotificationObserver>)delegate {
++ (instancetype)observerForDelegate:(id <PDLKeyboardNotificationObserverDelegate>)delegate {
     NSMapTable *observers = self.observers;
     PDLKeyboardNotificationObserver *observer = [observers objectForKey:delegate];
     if (observer == nil) {

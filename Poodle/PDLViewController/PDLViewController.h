@@ -11,7 +11,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface PDLViewController : UIViewController <PDLKeyboardNotificationObserver>
+@interface PDLViewController : UIViewController <PDLKeyboardNotificationObserverDelegate>
 
 @property (nonatomic, weak, readonly) UIView *containerView;
 

@@ -13,8 +13,8 @@ mkdir -p "${TARGETNAME}"
 cd "${TARGETNAME}"
 rm -rf *
 
-cp -rf $scripts/Poodle/${TARGETNAME}/lib/ios .
-cp -rf $scripts/Poodle/${TARGETNAME}/lib/macos .
+#cp -rf $scripts/Poodle/${TARGETNAME}/lib/ios .
+#cp -rf $scripts/Poodle/${TARGETNAME}/lib/macos .
 
 # iOS
 pdl_iphoneos_build="${BUILD_DIR}/${CONFIGURATION}-iphoneos"

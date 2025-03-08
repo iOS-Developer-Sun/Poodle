@@ -6,6 +6,8 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
+#ifdef __ASSEMBLER__
+
 #ifdef __arm64__
 
 .macro PDL_ASM_OBJC_MESSAGE_STATE_SAVE
@@ -36,5 +38,7 @@
     mov    sp, x29
     ldp    x29, x30, [sp], #0x10
 .endmacro
+
+#endif
 
 #endif

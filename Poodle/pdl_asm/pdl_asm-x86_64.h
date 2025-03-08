@@ -6,6 +6,8 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
+#ifdef __ASSEMBLER__
+
 #ifdef __x86_64__
 
 #define NORMAL 0
@@ -73,5 +75,7 @@
     movdqa    -0x10(%rbp), %xmm7
     leave
 .endmacro
+
+#endif
 
 #endif
