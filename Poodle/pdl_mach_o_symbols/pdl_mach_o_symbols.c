@@ -39,7 +39,7 @@ static pdl_mach_o_symbol *_get_mach_o_symbol(pdl_mach_o_symbol *pointer, struct 
         uint8_t type = 0;
         uint8_t sect = 0;
         int16_t desc = 0;
-        u_long value = 0;
+        unsigned long value = 0;
         if (mach_object.is64 == false) {
             const struct nlist *symtab = &symtab_list[i];
             strx = symtab->n_un.n_strx;
@@ -53,7 +53,7 @@ static pdl_mach_o_symbol *_get_mach_o_symbol(pdl_mach_o_symbol *pointer, struct 
             type = symtab->n_type;
             sect = symtab->n_sect;
             desc = symtab->n_desc;
-            value = (u_long)symtab->n_value;
+            value = (unsigned long)symtab->n_value;
         }
 
         const char *str = strtab + strx;

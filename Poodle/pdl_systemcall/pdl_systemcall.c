@@ -6,12 +6,13 @@
 //  Copyright © 2019 Poodle. All rights reserved.
 //
 
+#include "pdl_systemcall.h"
 #include <unistd.h>
 #include <dlfcn.h>
 #include <assert.h>
 #include <sys/syscall.h>
 #include <string.h>
-#include "pdl_systemcall.h"
+#include <pthread.h>
 
 #define ATTRIBUTE_VISIBILITY_HIDDEN __attribute__((visibility("hidden")))
 
@@ -67,6 +68,6 @@ pid_t pdl_systemcall_getpid(void) {
 }
 
 ATTRIBUTE_VISIBILITY_HIDDEN
-int pdl_systemcall_sysctl(int *a1, u_int a2, void *a3, size_t *a4, void *a5, size_t a6) {
+int pdl_systemcall_sysctl(int *a1, unsigned int a2, void *a3, size_t *a4, void *a5, size_t a6) {
     return pdl_systemcall(SYS_sysctl, a1, a2, a3, a4, a5, a6);
 }

@@ -9,6 +9,7 @@
 #include "pdl_mach_object.h"
 #include <mach-o/ldsyms.h>
 #include <dlfcn.h>
+#include <sys/_endian.h>
 
 bool pdl_get_mach_object_with_header(const struct mach_header *header, intptr_t vmaddr_slide, const char *name, pdl_mach_object *mach_object) {
     if (header == NULL) {

@@ -7,6 +7,8 @@
 //
 
 #include <sys/syscall.h>
+#include <sys/_types/_pid_t.h>
+#include <sys/_types/_u_int.h>
 
 #ifdef __cplusplus
 extern "C" {

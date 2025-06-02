@@ -8,6 +8,8 @@
 
 #include <malloc/malloc.h>
 #include <stdbool.h>
+#include <sys/_pthread/_pthread_t.h>
+#include <sys/_pthread/_pthread_attr_t.h>
 
 #ifdef __cplusplus
 extern "C" {

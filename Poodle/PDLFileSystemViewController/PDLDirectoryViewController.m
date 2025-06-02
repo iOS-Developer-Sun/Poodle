@@ -506,8 +506,8 @@ static NSArray *_currentContents = nil;
     [self.view addSubview:selectAllView];
     self.selectAllView = selectAllView;
 
-    PDLFileObserver *fileObserver = [[PDLFileObserver alloc] initWithFilePath:self.directory];
-    self.fileObserver = fileObserver;
+//    PDLFileObserver *fileObserver = [[PDLFileObserver alloc] initWithFilePath:self.directory];
+//    self.fileObserver = fileObserver;
 }
 
 - (void)viewWillAppear:(BOOL)animated {
