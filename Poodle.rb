@@ -510,7 +510,9 @@ def PoodleSpec(name, path: nil, is_library: false, is_macos: false, default_subs
             ss.dependency pod_name + '/NSMapTable+PDLExtension'
         end
 
-        PoodleSubspec(s, 'PDLProcessInfo', platform_universal)
+        PoodleSubspec(s, 'PDLProcessInfo', platform_universal) do |ss|
+            ss.dependency pod_name + '/NSObject+PDLImplementationInterceptor'
+        end
 
         PoodleSubspec(s, 'PDLPrivate', platform_universal)
 

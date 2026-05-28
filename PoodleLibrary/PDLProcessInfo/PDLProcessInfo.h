@@ -14,6 +14,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (readonly) NSDate *processStartDate;
 @property (readonly) NSTimeInterval processStartMediaTime;
+@property (copy) NSDictionary<NSString *, NSString *> *environment;
+@property (copy) NSArray<NSString *> *arguments;
 
 + (instancetype)sharedInstance;
 
